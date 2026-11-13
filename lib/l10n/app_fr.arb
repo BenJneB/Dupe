@@ -1,0 +1,20 @@
+{
+  "@@locale": "fr",
+  "appTitle": "Dupe",
+  "tabMangas": "Mangas",
+  "tabBd": "BD",
+  "tabComics": "Comics",
+  "tabBooks": "Livres",
+  "tabMore": "Plus",
+  "scan": "Scanner",
+  "searchHint": "Rechercher dans ma collection",
+  "emptyCollectionTitle": "Aucun ouvrage pour l’instant",
+  "emptyCollectionBody": "Scanne un code-barres ou ajoute un ouvrage pour commencer.",
+  "moreWishlist": "Liste d’envies",
+  "moreLoans": "Prêts",
+  "moreStats": "Statistiques",
+  "moreSettings": "Paramètres",
+  "moreSettingsSubtitle": "Compte, synchronisation, export/import, sources",
+  "comingSoon": "Bientôt disponible",
+  "scanUnavailableDesktop": "Pas de caméra sur cette plateforme : saisis l’ISBN ou utilise une douchette USB."
+}
