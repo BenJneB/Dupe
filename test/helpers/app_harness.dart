@@ -2,6 +2,7 @@ import 'package:dupe/app/app.dart';
 import 'package:dupe/core/database/app_database.dart';
 import 'package:dupe/core/database/database_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/misc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -12,6 +13,7 @@ const desktopSize = Size(1280, 800);
 Future<AppDatabase> pumpApp(
   WidgetTester tester, {
   Size size = phoneSize,
+  List<Override> overrides = const [],
 }) async {
   tester.view.physicalSize = size;
   tester.view.devicePixelRatio = 1;
@@ -19,7 +21,7 @@ Future<AppDatabase> pumpApp(
   final db = AppDatabase.memory();
   await tester.pumpWidget(
     ProviderScope(
-      overrides: [appDatabaseProvider.overrideWithValue(db)],
+      overrides: [appDatabaseProvider.overrideWithValue(db), ...overrides],
       child: const DupeApp(),
     ),
   );

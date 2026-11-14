@@ -7,7 +7,9 @@ import 'package:dupe/features/collection/data/collection_repository.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
 import 'package:dupe/features/collection/domain/enums.dart';
 import 'package:dupe/features/collection/domain/item.dart';
+import 'package:dupe/features/collection/domain/metadata_mapping.dart';
 import 'package:dupe/features/collection/presentation/item/item_form_controllers.dart';
+import 'package:dupe/features/collection/presentation/item/item_text_input.dart';
 import 'package:dupe/features/collection/presentation/labels.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -21,6 +23,7 @@ class ItemFormScreen extends ConsumerStatefulWidget {
     this.itemId,
     this.seriesId,
     this.volumeNumber,
+    this.prefill,
     super.key,
   });
 
@@ -33,6 +36,9 @@ class ItemFormScreen extends ConsumerStatefulWidget {
   final String? seriesId;
   final String? volumeNumber;
 
+  /// For a new item: metadata from an online result.
+  final ItemPrefill? prefill;
+
   @override
   ConsumerState<ItemFormScreen> createState() => _ItemFormScreenState();
 }
@@ -40,14 +46,6 @@ class ItemFormScreen extends ConsumerStatefulWidget {
 class _ItemFormScreenState extends ConsumerState<ItemFormScreen> {
   final _formKey = GlobalKey<FormState>();
   final _c = ItemFormControllers();
-  Ownership _ownership = Ownership.possede;
-  ReadingStatus _readingStatus = ReadingStatus.nonLu;
-  int? _rating;
-  int? _priority;
-  var _firstEdition = false;
-  var _variant = false;
-  DateTime? _readDate;
-  DateTime? _purchaseDate;
   Item? _original;
   var _saving = false;
 
@@ -68,11 +66,13 @@ class _ItemFormScreenState extends ConsumerState<ItemFormScreen> {
       item = await repo.getItem(itemId);
     } else {
       final series = seriesId == null ? null : await repo.getSeries(seriesId);
-      item = repo.newItem(
+      final draft = repo.newItem(
         widget.type,
         series: series,
         volumeNumber: widget.volumeNumber,
       );
+      final prefill = widget.prefill;
+      item = prefill == null ? draft : applyMetadata(draft, prefill);
     }
     if (!mounted || item == null) return;
     setState(() => _fill(item!));
@@ -81,14 +81,6 @@ class _ItemFormScreenState extends ConsumerState<ItemFormScreen> {
   void _fill(Item i) {
     _original = i;
     _c.fill(i);
-    _ownership = i.ownership;
-    _readingStatus = i.readingStatus;
-    _rating = i.rating;
-    _priority = i.wishlistPriority;
-    _firstEdition = i.isFirstEdition;
-    _variant = i.isVariant;
-    _readDate = i.readDate;
-    _purchaseDate = i.purchaseDate;
   }
 
   @override
@@ -101,18 +93,7 @@ class _ItemFormScreenState extends ConsumerState<ItemFormScreen> {
     final original = _original;
     if (original == null || !_formKey.currentState!.validate()) return;
     setState(() => _saving = true);
-    final item = _c
-        .applyTo(original)
-        .copyWith(
-          ownership: _ownership,
-          readingStatus: _readingStatus,
-          readDate: _readDate,
-          rating: _rating,
-          isFirstEdition: _firstEdition,
-          isVariant: _variant,
-          purchaseDate: _purchaseDate,
-          wishlistPriority: _priority,
-        );
+    final item = _c.applyTo(original);
     await ref.read(collectionRepositoryProvider).saveItem(item);
     if (!mounted) return;
     if (_isNew && item.seriesId == null) {
@@ -127,33 +108,6 @@ class _ItemFormScreenState extends ConsumerState<ItemFormScreen> {
     final l10n = AppLocalizations.of(context);
     final locale = l10n.localeName;
     final loaded = _original != null;
-    String? decimal(String? v) =>
-        (v == null || v.trim().isEmpty || Formatters.parseDecimal(v) != null)
-        ? null
-        : l10n.invalidNumber;
-    Widget text(
-      ItemTextField f,
-      String label, {
-      bool digits = false,
-      int lines = 1,
-      FormFieldValidator<String>? validator,
-      String? helper,
-    }) => Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: FormText(
-        fieldKey: Key('field-${f.name}'),
-        controller: _c[f],
-        label: label,
-        digitsOnly: digits,
-        maxLines: lines,
-        validator: validator,
-        helper: helper,
-        keyboardType: validator == decimal
-            ? const TextInputType.numberWithOptions(decimal: true)
-            : null,
-      ),
-    );
-
     return Scaffold(
       appBar: AppBar(
         title: Text(_isNew ? l10n.newItemTitle : l10n.editItem),
@@ -177,151 +131,115 @@ class _ItemFormScreenState extends ConsumerState<ItemFormScreen> {
                       for (final o in Ownership.values)
                         ButtonSegment(value: o, label: Text(o.label(l10n))),
                     ],
-                    selected: {_ownership},
+                    selected: {_c.ownership},
                     onSelectionChanged: (s) =>
-                        setState(() => _ownership = s.first),
+                        setState(() => _c.ownership = s.first),
                   ),
                   FormSection(l10n.sectionGeneral),
-                  text(
-                    ItemTextField.title,
-                    l10n.fieldTitle,
-                    validator: (v) => (v == null || v.trim().isEmpty)
-                        ? l10n.requiredField
-                        : null,
-                  ),
-                  text(
-                    ItemTextField.volume,
-                    l10n.fieldVolumeNumber,
-                    helper: l10n.fieldVolumeNumberHelper,
-                  ),
-                  text(
-                    ItemTextField.authors,
-                    l10n.fieldAuthors,
-                    helper: l10n.commaSeparated,
-                  ),
-                  text(ItemTextField.publisher, l10n.fieldPublisher),
-                  text(ItemTextField.edition, l10n.fieldEdition),
-                  text(ItemTextField.format, l10n.fieldFormat),
-                  text(ItemTextField.publishDate, l10n.fieldPublishDate),
-                  text(
-                    ItemTextField.pageCount,
-                    l10n.fieldPageCount,
-                    digits: true,
-                  ),
-                  text(ItemTextField.language, l10n.fieldLanguage),
-                  text(ItemTextField.isbn, l10n.fieldIsbn),
-                  text(ItemTextField.upc, l10n.fieldUpc),
-                  text(ItemTextField.coverUrl, l10n.fieldCoverUrl),
-                  text(
-                    ItemTextField.description,
-                    l10n.fieldDescription,
-                    lines: 5,
-                  ),
+                  ItemGeneralFields(_c),
                   FormSection(l10n.sectionReading),
-                  DropdownButtonFormField<ReadingStatus>(
-                    isExpanded: true,
-                    initialValue: _readingStatus,
-                    decoration: InputDecoration(
-                      labelText: l10n.fieldReadingStatus,
-                      border: const OutlineInputBorder(),
-                    ),
-                    items: [
-                      for (final s in ReadingStatus.values)
-                        DropdownMenuItem(value: s, child: Text(s.label(l10n))),
-                    ],
-                    onChanged: (s) =>
-                        setState(() => _readingStatus = s ?? _readingStatus),
+                  FormDropdown<ReadingStatus>(
+                    label: l10n.fieldReadingStatus,
+                    value: _c.readingStatus,
+                    items: {
+                      for (final s in ReadingStatus.values) s: s.label(l10n),
+                    },
+                    onChanged: (s) => setState(() => _c.readingStatus = s),
                   ),
                   formGap,
                   FormDate(
                     label: l10n.fieldReadDate,
-                    value: _readDate,
+                    value: _c.readDate,
                     format: (d) => Formatters.date(d, locale),
-                    onChanged: (d) => setState(() => _readDate = d),
+                    onChanged: (d) => setState(() => _c.readDate = d),
                   ),
                   formGap,
-                  DropdownButtonFormField<int?>(
-                    isExpanded: true,
-                    initialValue: _rating,
-                    decoration: InputDecoration(
-                      labelText: l10n.fieldRating,
-                      border: const OutlineInputBorder(),
-                    ),
-                    items: [
-                      DropdownMenuItem(child: Text(l10n.none)),
-                      for (var r = 0; r <= 5; r++)
-                        DropdownMenuItem(value: r, child: Text('$r/5')),
-                    ],
-                    onChanged: (r) => setState(() => _rating = r),
+                  FormDropdown<int?>(
+                    label: l10n.fieldRating,
+                    value: _c.rating,
+                    items: {
+                      null: l10n.none,
+                      for (var r = 0; r <= 5; r++) r: '$r/5',
+                    },
+                    onChanged: (r) => setState(() => _c.rating = r),
                   ),
                   FormSection(l10n.sectionCopy),
                   SwitchListTile(
                     contentPadding: EdgeInsets.zero,
                     title: Text(l10n.fieldFirstEdition),
-                    value: _firstEdition,
-                    onChanged: (v) => setState(() => _firstEdition = v),
+                    value: _c.firstEdition,
+                    onChanged: (v) => setState(() => _c.firstEdition = v),
                   ),
                   SwitchListTile(
                     contentPadding: EdgeInsets.zero,
                     title: Text(l10n.fieldVariant),
-                    value: _variant,
-                    onChanged: (v) => setState(() => _variant = v),
+                    value: _c.variant,
+                    onChanged: (v) => setState(() => _c.variant = v),
                   ),
-                  text(ItemTextField.condition, l10n.fieldCondition),
-                  text(
+                  ItemTextInput(
+                    _c,
+                    ItemTextField.condition,
+                    l10n.fieldCondition,
+                  ),
+                  ItemTextInput(
+                    _c,
                     ItemTextField.location,
                     l10n.fieldLocation,
                     helper: l10n.fieldLocationHelper,
                   ),
                   FormSection(l10n.sectionPrice),
-                  text(
+                  ItemTextInput(
+                    _c,
                     ItemTextField.purchasePrice,
                     l10n.fieldPurchasePrice,
-                    validator: decimal,
+                    decimal: true,
                   ),
                   FormDate(
                     label: l10n.fieldPurchaseDate,
-                    value: _purchaseDate,
+                    value: _c.purchaseDate,
                     format: (d) => Formatters.date(d, locale),
-                    onChanged: (d) => setState(() => _purchaseDate = d),
+                    onChanged: (d) => setState(() => _c.purchaseDate = d),
                   ),
                   formGap,
-                  text(
+                  ItemTextInput(
+                    _c,
                     ItemTextField.coverPrice,
                     l10n.fieldCoverPrice,
-                    validator: decimal,
+                    decimal: true,
                   ),
-                  text(
+                  ItemTextInput(
+                    _c,
                     ItemTextField.estimatedValue,
                     l10n.fieldEstimatedValue,
-                    validator: decimal,
+                    decimal: true,
                   ),
-                  text(ItemTextField.currency, l10n.fieldCurrency),
-                  if (_ownership == Ownership.envie) ...[
+                  ItemTextInput(_c, ItemTextField.currency, l10n.fieldCurrency),
+                  if (_c.ownership == Ownership.envie) ...[
                     FormSection(l10n.sectionWishlist),
-                    DropdownButtonFormField<int?>(
-                      isExpanded: true,
-                      initialValue: _priority,
-                      decoration: InputDecoration(
-                        labelText: l10n.fieldWishlistPriority,
-                        border: const OutlineInputBorder(),
-                      ),
-                      items: [
-                        DropdownMenuItem(child: Text(l10n.none)),
-                        for (var p = 1; p <= 3; p++)
-                          DropdownMenuItem(value: p, child: Text('$p')),
-                      ],
-                      onChanged: (p) => setState(() => _priority = p),
+                    FormDropdown<int?>(
+                      label: l10n.fieldWishlistPriority,
+                      value: _c.priority,
+                      items: {
+                        null: l10n.none,
+                        for (var p = 1; p <= 3; p++) p: '$p',
+                      },
+                      onChanged: (p) => setState(() => _c.priority = p),
                     ),
                     formGap,
-                    text(
+                    ItemTextInput(
+                      _c,
                       ItemTextField.maxPrice,
                       l10n.fieldWishlistMaxPrice,
-                      validator: decimal,
+                      decimal: true,
                     ),
                   ],
                   FormSection(l10n.fieldNotes),
-                  text(ItemTextField.notes, l10n.fieldNotes, lines: 3),
+                  ItemTextInput(
+                    _c,
+                    ItemTextField.notes,
+                    l10n.fieldNotes,
+                    lines: 3,
+                  ),
                 ],
               ),
             ),

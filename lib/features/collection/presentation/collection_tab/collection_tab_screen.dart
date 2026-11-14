@@ -39,6 +39,10 @@ class CollectionTabScreen extends ConsumerWidget {
             onSelected: (route) => context.push(route),
             itemBuilder: (context) => [
               PopupMenuItem(
+                value: AppRoutes.onlineSearch(type: type),
+                child: Text(l10n.onlineSearchTitle),
+              ),
+              PopupMenuItem(
                 value: AppRoutes.newSeries(type),
                 child: Text(type.newSeriesLabel(l10n)),
               ),

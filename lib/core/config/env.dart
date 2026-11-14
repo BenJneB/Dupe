@@ -9,6 +9,12 @@ abstract final class Env {
     'GOOGLE_BOOKS_API_KEY',
   );
 
+  /// Contact email sent to Open Library in the User-Agent (raises its rate
+  /// limit from 1 to 3 req/s). Optional.
+  static const openLibraryContact = String.fromEnvironment(
+    'OPEN_LIBRARY_CONTACT',
+  );
+
   /// Whether cloud sync can be enabled (the app stays usable offline).
   static bool get hasSupabase =>
       supabaseUrl.isNotEmpty && supabaseAnonKey.isNotEmpty;

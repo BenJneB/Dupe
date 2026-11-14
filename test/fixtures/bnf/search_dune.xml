@@ -1,0 +1,2668 @@
+<?xml version="1.0" encoding="UTF-8"?><srw:searchRetrieveResponse xmlns:srw="http://www.loc.gov/zing/srw/" xmlns="http://catalogue.bnf.fr/namespaces/InterXMarc" xmlns:ixm="http://catalogue.bnf.fr/namespaces/InterXMarc" xmlns:mn="http://catalogue.bnf.fr/namespaces/motsnotices" xmlns:sd="http://www.loc.gov/zing/srw/diagnostic/">
+<srw:version>1.2</srw:version>
+<srw:echoedSearchRetrieveRequest>
+<srw:version>1.2</srw:version>
+<srw:query>bib.anywhere all "dune herbert" and bib.doctype any "a"</srw:query>
+</srw:echoedSearchRetrieveRequest>
+<srw:numberOfRecords>186</srw:numberOfRecords>
+<srw:records>
+<srw:record>
+<srw:recordSchema>marcxchange</srw:recordSchema>
+<srw:recordPacking>xml</srw:recordPacking>
+<srw:recordData>
+<mxc:record xmlns:mxc="info:lc/xmlns/marcxchange-v2" format="UNIMARC" id="ark:/12148/cb371048193" type="Bibliographic">
+<mxc:leader>     cam  22        450 </mxc:leader>
+<mxc:controlfield tag="001">FRBNF371048190000002</mxc:controlfield>
+<mxc:controlfield tag="003">http://catalogue.bnf.fr/ark:/12148/cb371048193</mxc:controlfield>
+<mxc:datafield tag="010" ind1=" " ind2=" ">
+<mxc:subfield code="a">2-7441-3192-X</mxc:subfield>
+<mxc:subfield code="b">br.</mxc:subfield>
+<mxc:subfield code="d">96 F</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="020" ind1=" " ind2=" ">
+<mxc:subfield code="a">FR</mxc:subfield>
+<mxc:subfield code="b">00048876</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="039" ind1=" " ind2=" ">
+<mxc:subfield code="o">OPL</mxc:subfield>
+<mxc:subfield code="a">025398416</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="100" ind1=" " ind2=" ">
+<mxc:subfield code="a">20000530d1999    m  y0frey50      ba</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="101" ind1="1" ind2=" ">
+<mxc:subfield code="a">fre</mxc:subfield>
+<mxc:subfield code="c">eng</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="102" ind1=" " ind2=" ">
+<mxc:subfield code="a">FR</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="105" ind1=" " ind2=" ">
+<mxc:subfield code="a">||||z   00|a|</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="106" ind1=" " ind2=" ">
+<mxc:subfield code="a">r</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="181" ind1=" " ind2="0">
+<mxc:subfield code="6">01</mxc:subfield>
+<mxc:subfield code="a">i </mxc:subfield>
+<mxc:subfield code="b">xxxe  </mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="181" ind1=" " ind2=" ">
+<mxc:subfield code="6">02</mxc:subfield>
+<mxc:subfield code="c">txt</mxc:subfield>
+<mxc:subfield code="2">rdacontent</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="182" ind1=" " ind2="0">
+<mxc:subfield code="6">01</mxc:subfield>
+<mxc:subfield code="a">n</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="182" ind1=" " ind2=" ">
+<mxc:subfield code="6">02</mxc:subfield>
+<mxc:subfield code="c">n</mxc:subfield>
+<mxc:subfield code="2">rdamedia</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="200" ind1="1" ind2=" ">
+<mxc:subfield code="a">Dune</mxc:subfield>
+<mxc:subfield code="b">Texte imprimé</mxc:subfield>
+<mxc:subfield code="a">[suivi de] Le messie de Dune</mxc:subfield>
+<mxc:subfield code="f">Frank Herbert</mxc:subfield>
+<mxc:subfield code="g">traduit de l'américain par Michel Demuth</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="210" ind1=" " ind2=" ">
+<mxc:subfield code="a">Paris</mxc:subfield>
+<mxc:subfield code="c">Éd. France loisirs</mxc:subfield>
+<mxc:subfield code="d">1999</mxc:subfield>
+<mxc:subfield code="e">18-Saint-Amand-Montrond</mxc:subfield>
+<mxc:subfield code="g">Bussière Camedan impr.</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="215" ind1=" " ind2=" ">
+<mxc:subfield code="a">746 p.</mxc:subfield>
+<mxc:subfield code="d">20 cm</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="300" ind1=" " ind2=" ">
+<mxc:subfield code="a">Trad. de : "Dune" ; "The Massiah of Dune"</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="454" ind1=" " ind2="0">
+<mxc:subfield code="t">Dune</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="686" ind1=" " ind2=" ">
+<mxc:subfield code="a">823</mxc:subfield>
+<mxc:subfield code="2">Cadre de classement de la Bibliographie nationale française</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="700" ind1=" " ind2="|">
+<mxc:subfield code="3">11907313</mxc:subfield>
+<mxc:subfield code="o">ISNI0000000121347853</mxc:subfield>
+<mxc:subfield code="a">Herbert</mxc:subfield>
+<mxc:subfield code="b">Frank</mxc:subfield>
+<mxc:subfield code="f">1920-1986</mxc:subfield>
+<mxc:subfield code="4">070</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="702" ind1=" " ind2="|">
+<mxc:subfield code="3">11899546</mxc:subfield>
+<mxc:subfield code="o">ISNI0000000073604252</mxc:subfield>
+<mxc:subfield code="a">Demuth</mxc:subfield>
+<mxc:subfield code="b">Michel</mxc:subfield>
+<mxc:subfield code="f">1939-2006</mxc:subfield>
+<mxc:subfield code="4">730</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="801" ind1=" " ind2="0">
+<mxc:subfield code="a">FR</mxc:subfield>
+<mxc:subfield code="b">FR-751131015</mxc:subfield>
+<mxc:subfield code="c">20000530</mxc:subfield>
+<mxc:subfield code="g">AFNOR</mxc:subfield>
+<mxc:subfield code="h">FRBNF371048190000002</mxc:subfield>
+<mxc:subfield code="2">intermrc</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="930" ind1=" " ind2=" ">
+<mxc:subfield code="5">FR-751131010:37104819001001</mxc:subfield>
+<mxc:subfield code="a">2000-80465</mxc:subfield>
+<mxc:subfield code="b">759999999</mxc:subfield>
+<mxc:subfield code="c">Tolbiac - Rez de Jardin - Littérature et art - Magasin</mxc:subfield>
+<mxc:subfield code="d">O</mxc:subfield>
+</mxc:datafield>
+</mxc:record>      </srw:recordData>
+<srw:recordIdentifier>ark:/12148/cb371048193</srw:recordIdentifier>
+<srw:recordPosition>1</srw:recordPosition>
+<srw:extraRecordData>
+<ixm:attr name="CreationDate">20000530</ixm:attr>
+<ixm:attr name="LastModificationDate">20000623</ixm:attr>
+<mn:score>12.785594</mn:score>
+</srw:extraRecordData>
+</srw:record>
+<srw:record>
+<srw:recordSchema>marcxchange</srw:recordSchema>
+<srw:recordPacking>xml</srw:recordPacking>
+<srw:recordData>
+<mxc:record xmlns:mxc="info:lc/xmlns/marcxchange-v2" format="UNIMARC" id="ark:/12148/cb37214460t" type="Bibliographic">
+<mxc:leader>     nam  22        450 </mxc:leader>
+<mxc:controlfield tag="001">FRBNF372144600000003</mxc:controlfield>
+<mxc:controlfield tag="003">http://catalogue.bnf.fr/ark:/12148/cb37214460t</mxc:controlfield>
+<mxc:datafield tag="010" ind1=" " ind2=" ">
+<mxc:subfield code="a">2-7441-4085-6</mxc:subfield>
+<mxc:subfield code="b">br.</mxc:subfield>
+<mxc:subfield code="d">104 F</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="020" ind1=" " ind2=" ">
+<mxc:subfield code="a">FR</mxc:subfield>
+<mxc:subfield code="b">00111450</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="039" ind1=" " ind2=" ">
+<mxc:subfield code="o">OPL</mxc:subfield>
+<mxc:subfield code="a">026165482</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="100" ind1=" " ind2=" ">
+<mxc:subfield code="a">20010301d2000    m  y0frey50      ba</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="101" ind1="1" ind2=" ">
+<mxc:subfield code="a">fre</mxc:subfield>
+<mxc:subfield code="c">eng</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="102" ind1=" " ind2=" ">
+<mxc:subfield code="a">FR</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="105" ind1=" " ind2=" ">
+<mxc:subfield code="a">a   z   00|a|</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="106" ind1=" " ind2=" ">
+<mxc:subfield code="a">r</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="181" ind1=" " ind2="0">
+<mxc:subfield code="6">01</mxc:subfield>
+<mxc:subfield code="a">i </mxc:subfield>
+<mxc:subfield code="b">xxxe  </mxc:subfield>
+<mxc:subfield code="a">b </mxc:subfield>
+<mxc:subfield code="b">xb2e  </mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="181" ind1=" " ind2=" ">
+<mxc:subfield code="6">02</mxc:subfield>
+<mxc:subfield code="c">txt</mxc:subfield>
+<mxc:subfield code="c">sti</mxc:subfield>
+<mxc:subfield code="2">rdacontent</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="182" ind1=" " ind2="0">
+<mxc:subfield code="6">01</mxc:subfield>
+<mxc:subfield code="a">n</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="182" ind1=" " ind2=" ">
+<mxc:subfield code="6">02</mxc:subfield>
+<mxc:subfield code="c">n</mxc:subfield>
+<mxc:subfield code="2">rdamedia</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="200" ind1="1" ind2=" ">
+<mxc:subfield code="a">La maison des Atréides</mxc:subfield>
+<mxc:subfield code="b">Texte imprimé</mxc:subfield>
+<mxc:subfield code="f">Brian Herbert et Kevin J. Anderson</mxc:subfield>
+<mxc:subfield code="g">[trad. par Michel Demuth]</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="210" ind1=" " ind2=" ">
+<mxc:subfield code="a">Paris</mxc:subfield>
+<mxc:subfield code="c">Éd. France loisirs</mxc:subfield>
+<mxc:subfield code="d">2000</mxc:subfield>
+<mxc:subfield code="e">18-Saint-Amand-Montrond</mxc:subfield>
+<mxc:subfield code="g">Bussière Camedan impr.</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="215" ind1=" " ind2=" ">
+<mxc:subfield code="a">615 p.</mxc:subfield>
+<mxc:subfield code="c">cartes</mxc:subfield>
+<mxc:subfield code="d">20 cm</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="225" ind1="1" ind2="9">
+<mxc:subfield code="a">Avant Dune.</mxc:subfield>
+<mxc:subfield code="v">1</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="300" ind1=" " ind2=" ">
+<mxc:subfield code="a">D'après le cycle de "Dune" de Frank Herbert</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="454" ind1=" " ind2="1">
+<mxc:subfield code="t">Dune house Atreides</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="461" ind1=" " ind2="0">
+<mxc:subfield code="0">37135774</mxc:subfield>
+<mxc:subfield code="t">Avant Dune.</mxc:subfield>
+<mxc:subfield code="v">1</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="517" ind1="1" ind2=" ">
+<mxc:subfield code="a">Dune, la maison des Atréides</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="686" ind1=" " ind2=" ">
+<mxc:subfield code="a">823</mxc:subfield>
+<mxc:subfield code="2">Cadre de classement de la Bibliographie nationale française</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="700" ind1=" " ind2="|">
+<mxc:subfield code="3">12719725</mxc:subfield>
+<mxc:subfield code="o">ISNI0000000109108972</mxc:subfield>
+<mxc:subfield code="a">Herbert</mxc:subfield>
+<mxc:subfield code="b">Brian</mxc:subfield>
+<mxc:subfield code="f">1947-....</mxc:subfield>
+<mxc:subfield code="4">070</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="701" ind1=" " ind2="|">
+<mxc:subfield code="3">12527373</mxc:subfield>
+<mxc:subfield code="o">ISNI000000044038255X</mxc:subfield>
+<mxc:subfield code="a">Anderson</mxc:subfield>
+<mxc:subfield code="b">Kevin J.</mxc:subfield>
+<mxc:subfield code="f">1962-....</mxc:subfield>
+<mxc:subfield code="4">070</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="702" ind1=" " ind2="|">
+<mxc:subfield code="3">11899546</mxc:subfield>
+<mxc:subfield code="o">ISNI0000000073604252</mxc:subfield>
+<mxc:subfield code="a">Demuth</mxc:subfield>
+<mxc:subfield code="b">Michel</mxc:subfield>
+<mxc:subfield code="f">1939-2006</mxc:subfield>
+<mxc:subfield code="4">730</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="702" ind1=" " ind2="|">
+<mxc:subfield code="3">11907313</mxc:subfield>
+<mxc:subfield code="o">ISNI0000000121347853</mxc:subfield>
+<mxc:subfield code="a">Herbert</mxc:subfield>
+<mxc:subfield code="b">Frank</mxc:subfield>
+<mxc:subfield code="f">1920-1986</mxc:subfield>
+<mxc:subfield code="4">100</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="801" ind1=" " ind2="0">
+<mxc:subfield code="a">FR</mxc:subfield>
+<mxc:subfield code="b">FR-751131015</mxc:subfield>
+<mxc:subfield code="c">20010301</mxc:subfield>
+<mxc:subfield code="g">AFNOR</mxc:subfield>
+<mxc:subfield code="h">FRBNF372144600000003</mxc:subfield>
+<mxc:subfield code="2">intermrc</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="930" ind1=" " ind2=" ">
+<mxc:subfield code="5">FR-751131010:37214460001001</mxc:subfield>
+<mxc:subfield code="a">2001-52291</mxc:subfield>
+<mxc:subfield code="b">759999999</mxc:subfield>
+<mxc:subfield code="c">Tolbiac - Rez de Jardin - Littérature et art - Magasin</mxc:subfield>
+<mxc:subfield code="d">O</mxc:subfield>
+</mxc:datafield>
+</mxc:record>      </srw:recordData>
+<srw:recordIdentifier>ark:/12148/cb37214460t</srw:recordIdentifier>
+<srw:recordPosition>2</srw:recordPosition>
+<srw:extraRecordData>
+<ixm:attr name="CreationDate">20010301</ixm:attr>
+<ixm:attr name="LastModificationDate">20010320</ixm:attr>
+<mn:score>12.568851</mn:score>
+</srw:extraRecordData>
+</srw:record>
+<srw:record>
+<srw:recordSchema>marcxchange</srw:recordSchema>
+<srw:recordPacking>xml</srw:recordPacking>
+<srw:recordData>
+<mxc:record xmlns:mxc="info:lc/xmlns/marcxchange-v2" format="UNIMARC" id="ark:/12148/cb347313402" type="Bibliographic">
+<mxc:leader>     nam  22        450 </mxc:leader>
+<mxc:controlfield tag="001">FRBNF347313400000007</mxc:controlfield>
+<mxc:controlfield tag="003">http://catalogue.bnf.fr/ark:/12148/cb347313402</mxc:controlfield>
+<mxc:datafield tag="010" ind1=" " ind2=" ">
+<mxc:subfield code="a">2-7242-1298-3</mxc:subfield>
+<mxc:subfield code="b">Rel.</mxc:subfield>
+<mxc:subfield code="d">52 F</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="020" ind1=" " ind2=" ">
+<mxc:subfield code="a">FR</mxc:subfield>
+<mxc:subfield code="b">08300770</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="039" ind1=" " ind2=" ">
+<mxc:subfield code="o">OPL</mxc:subfield>
+<mxc:subfield code="a">002083692</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="100" ind1=" " ind2=" ">
+<mxc:subfield code="a">19821209d1982    m  y0frey50      ba</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="101" ind1="1" ind2=" ">
+<mxc:subfield code="a">fre</mxc:subfield>
+<mxc:subfield code="c">eng</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="102" ind1=" " ind2=" ">
+<mxc:subfield code="a">FR</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="105" ind1=" " ind2=" ">
+<mxc:subfield code="a">||||z   00|a|</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="106" ind1=" " ind2=" ">
+<mxc:subfield code="a">r</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="181" ind1=" " ind2="0">
+<mxc:subfield code="6">01</mxc:subfield>
+<mxc:subfield code="a">i </mxc:subfield>
+<mxc:subfield code="b">xxxe  </mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="181" ind1=" " ind2=" ">
+<mxc:subfield code="6">02</mxc:subfield>
+<mxc:subfield code="c">txt</mxc:subfield>
+<mxc:subfield code="2">rdacontent</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="182" ind1=" " ind2="0">
+<mxc:subfield code="6">01</mxc:subfield>
+<mxc:subfield code="a">n</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="182" ind1=" " ind2=" ">
+<mxc:subfield code="6">02</mxc:subfield>
+<mxc:subfield code="c">n</mxc:subfield>
+<mxc:subfield code="2">rdamedia</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="200" ind1="1" ind2=" ">
+<mxc:subfield code="a">Le Messie de Dune</mxc:subfield>
+<mxc:subfield code="b">Texte imprimé</mxc:subfield>
+<mxc:subfield code="a">(suivi de) Les Enfants de Dune</mxc:subfield>
+<mxc:subfield code="e">roman</mxc:subfield>
+<mxc:subfield code="f">Frank Herbert</mxc:subfield>
+<mxc:subfield code="g">traduit par Michel Demuth</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="210" ind1=" " ind2=" ">
+<mxc:subfield code="a">Paris</mxc:subfield>
+<mxc:subfield code="c">France loisirs</mxc:subfield>
+<mxc:subfield code="d">1982</mxc:subfield>
+<mxc:subfield code="e">18-Saint-Amand</mxc:subfield>
+<mxc:subfield code="g">Impr. S.E.P.C.</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="215" ind1=" " ind2=" ">
+<mxc:subfield code="a">668 p.</mxc:subfield>
+<mxc:subfield code="d">23 cm</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="454" ind1=" " ind2="1">
+<mxc:subfield code="t">Dune messiah</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="686" ind1=" " ind2=" ">
+<mxc:subfield code="a">83 </mxc:subfield>
+<mxc:subfield code="2">Cadre de classement de la Bibliographie nationale française</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="700" ind1=" " ind2="|">
+<mxc:subfield code="3">11907313</mxc:subfield>
+<mxc:subfield code="o">ISNI0000000121347853</mxc:subfield>
+<mxc:subfield code="a">Herbert</mxc:subfield>
+<mxc:subfield code="b">Frank</mxc:subfield>
+<mxc:subfield code="4">070</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="702" ind1=" " ind2="|">
+<mxc:subfield code="3">11899546</mxc:subfield>
+<mxc:subfield code="o">ISNI0000000073604252</mxc:subfield>
+<mxc:subfield code="a">Demuth</mxc:subfield>
+<mxc:subfield code="b">Michel</mxc:subfield>
+<mxc:subfield code="4">730</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="801" ind1=" " ind2="0">
+<mxc:subfield code="a">FR</mxc:subfield>
+<mxc:subfield code="b">FR-751131015</mxc:subfield>
+<mxc:subfield code="c">19821209</mxc:subfield>
+<mxc:subfield code="g">AFNOR</mxc:subfield>
+<mxc:subfield code="h">FRBNF347313400000007</mxc:subfield>
+<mxc:subfield code="2">intermrc</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="930" ind1=" " ind2=" ">
+<mxc:subfield code="5">FR-751131010:34731340001001</mxc:subfield>
+<mxc:subfield code="a">8-Y2-99696</mxc:subfield>
+<mxc:subfield code="b">759999999</mxc:subfield>
+<mxc:subfield code="c">Tolbiac - Rez de Jardin - Littérature et art - Magasin</mxc:subfield>
+<mxc:subfield code="d">O</mxc:subfield>
+</mxc:datafield>
+</mxc:record>      </srw:recordData>
+<srw:recordIdentifier>ark:/12148/cb347313402</srw:recordIdentifier>
+<srw:recordPosition>3</srw:recordPosition>
+<srw:extraRecordData>
+<ixm:attr name="CreationDate">19860717</ixm:attr>
+<ixm:attr name="LastModificationDate">20190301</ixm:attr>
+<mn:score>12.564482</mn:score>
+</srw:extraRecordData>
+</srw:record>
+<srw:record>
+<srw:recordSchema>marcxchange</srw:recordSchema>
+<srw:recordPacking>xml</srw:recordPacking>
+<srw:recordData>
+<mxc:record xmlns:mxc="info:lc/xmlns/marcxchange-v2" format="UNIMARC" id="ark:/12148/cb46976261h" type="Bibliographic">
+<mxc:leader>     nam  22     3  450 </mxc:leader>
+<mxc:controlfield tag="001">FRBNF469762610000009</mxc:controlfield>
+<mxc:controlfield tag="003">http://catalogue.bnf.fr/ark:/12148/cb46976261h</mxc:controlfield>
+<mxc:datafield tag="010" ind1=" " ind2=" ">
+<mxc:subfield code="a">978-0-593-20173-2</mxc:subfield>
+<mxc:subfield code="b">br.</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="100" ind1=" " ind2=" ">
+<mxc:subfield code="a">20220225d2020    m  y0frey50      ba</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="101" ind1="0" ind2=" ">
+<mxc:subfield code="a">eng</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="102" ind1=" " ind2=" ">
+<mxc:subfield code="a">US</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="105" ind1=" " ind2=" ">
+<mxc:subfield code="a">y   z   00|a|</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="106" ind1=" " ind2=" ">
+<mxc:subfield code="a">z</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="181" ind1=" " ind2="0">
+<mxc:subfield code="6">01</mxc:subfield>
+<mxc:subfield code="a">i </mxc:subfield>
+<mxc:subfield code="b">xxxe  </mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="181" ind1=" " ind2=" ">
+<mxc:subfield code="6">02</mxc:subfield>
+<mxc:subfield code="c">txt</mxc:subfield>
+<mxc:subfield code="2">rdacontent</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="182" ind1=" " ind2="0">
+<mxc:subfield code="6">01</mxc:subfield>
+<mxc:subfield code="a">n</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="182" ind1=" " ind2=" ">
+<mxc:subfield code="6">02</mxc:subfield>
+<mxc:subfield code="c">n</mxc:subfield>
+<mxc:subfield code="2">rdamedia</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="200" ind1="1" ind2=" ">
+<mxc:subfield code="a">Dune messiah</mxc:subfield>
+<mxc:subfield code="b">Texte imprimé</mxc:subfield>
+<mxc:subfield code="f">Frank Herbert</mxc:subfield>
+<mxc:subfield code="g">with an introduction by Brian Herbert</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="214" ind1=" " ind2="0">
+<mxc:subfield code="a">New York</mxc:subfield>
+<mxc:subfield code="c">Ace</mxc:subfield>
+<mxc:subfield code="d">2020</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="215" ind1=" " ind2=" ">
+<mxc:subfield code="a">1 vol. (XIII-281 p.)</mxc:subfield>
+<mxc:subfield code="c">1 portrait</mxc:subfield>
+<mxc:subfield code="d">21 cm</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="461" ind1=" " ind2="0">
+<mxc:subfield code="0">46967378</mxc:subfield>
+<mxc:subfield code="t">Dune chronicles</mxc:subfield>
+<mxc:subfield code="v">2</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="676" ind1=" " ind2=" ">
+<mxc:subfield code="a">813.54 (oeuvre)</mxc:subfield>
+<mxc:subfield code="v">23</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="700" ind1=" " ind2="|">
+<mxc:subfield code="3">11907313</mxc:subfield>
+<mxc:subfield code="o">ISNI0000000121347853</mxc:subfield>
+<mxc:subfield code="a">Herbert</mxc:subfield>
+<mxc:subfield code="b">Frank</mxc:subfield>
+<mxc:subfield code="f">1920-1986</mxc:subfield>
+<mxc:subfield code="4">070</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="702" ind1=" " ind2="|">
+<mxc:subfield code="3">12719725</mxc:subfield>
+<mxc:subfield code="o">ISNI0000000109108972</mxc:subfield>
+<mxc:subfield code="a">Herbert</mxc:subfield>
+<mxc:subfield code="b">Brian</mxc:subfield>
+<mxc:subfield code="f">1947-....</mxc:subfield>
+<mxc:subfield code="4">080</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="801" ind1=" " ind2="0">
+<mxc:subfield code="a">FR</mxc:subfield>
+<mxc:subfield code="b">FR-751131015</mxc:subfield>
+<mxc:subfield code="c">20220225</mxc:subfield>
+<mxc:subfield code="g">AFNOR</mxc:subfield>
+<mxc:subfield code="h">FRBNF469762610000009</mxc:subfield>
+<mxc:subfield code="2">intermrc</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="930" ind1=" " ind2=" ">
+<mxc:subfield code="5">FR-751131010:46976261001001</mxc:subfield>
+<mxc:subfield code="a">81/4 HERB 4 dune</mxc:subfield>
+<mxc:subfield code="b">759999999</mxc:subfield>
+<mxc:subfield code="c">Tolbiac - Haut de Jardin - Littérature et art - Salle G - Libre accès</mxc:subfield>
+<mxc:subfield code="d">N</mxc:subfield>
+<mxc:subfield code="v">vol. 2</mxc:subfield>
+</mxc:datafield>
+</mxc:record>      </srw:recordData>
+<srw:recordIdentifier>ark:/12148/cb46976261h</srw:recordIdentifier>
+<srw:recordPosition>4</srw:recordPosition>
+<srw:extraRecordData>
+<ixm:attr name="CreationDate">20220225</ixm:attr>
+<ixm:attr name="LastModificationDate">20220225</ixm:attr>
+<mn:score>12.491833</mn:score>
+</srw:extraRecordData>
+</srw:record>
+<srw:record>
+<srw:recordSchema>marcxchange</srw:recordSchema>
+<srw:recordPacking>xml</srw:recordPacking>
+<srw:recordData>
+<mxc:record xmlns:mxc="info:lc/xmlns/marcxchange-v2" format="UNIMARC" id="ark:/12148/cb38807792z" type="Bibliographic">
+<mxc:leader>     nam  22        450 </mxc:leader>
+<mxc:controlfield tag="001">FRBNF388077920000001</mxc:controlfield>
+<mxc:controlfield tag="003">http://catalogue.bnf.fr/ark:/12148/cb38807792z</mxc:controlfield>
+<mxc:datafield tag="010" ind1=" " ind2=" ">
+<mxc:subfield code="a">2-221-08991-X</mxc:subfield>
+<mxc:subfield code="b">br.</mxc:subfield>
+<mxc:subfield code="d">Prix : 22,70 EUR : 148,90 F</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="020" ind1=" " ind2=" ">
+<mxc:subfield code="a">FR</mxc:subfield>
+<mxc:subfield code="b">00209697</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="100" ind1=" " ind2=" ">
+<mxc:subfield code="a">20020322d2002    m  y0frey50      ba</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="101" ind1="1" ind2=" ">
+<mxc:subfield code="a">fre</mxc:subfield>
+<mxc:subfield code="c">eng</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="102" ind1=" " ind2=" ">
+<mxc:subfield code="a">FR</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="105" ind1=" " ind2=" ">
+<mxc:subfield code="a">||||z   00|a|</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="106" ind1=" " ind2=" ">
+<mxc:subfield code="a">r</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="181" ind1=" " ind2="0">
+<mxc:subfield code="6">01</mxc:subfield>
+<mxc:subfield code="a">i </mxc:subfield>
+<mxc:subfield code="b">xxxe  </mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="181" ind1=" " ind2=" ">
+<mxc:subfield code="6">02</mxc:subfield>
+<mxc:subfield code="c">txt</mxc:subfield>
+<mxc:subfield code="2">rdacontent</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="182" ind1=" " ind2="0">
+<mxc:subfield code="6">01</mxc:subfield>
+<mxc:subfield code="a">n</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="182" ind1=" " ind2=" ">
+<mxc:subfield code="6">02</mxc:subfield>
+<mxc:subfield code="c">n</mxc:subfield>
+<mxc:subfield code="2">rdamedia</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="200" ind1="1" ind2=" ">
+<mxc:subfield code="a">La maison Corrino</mxc:subfield>
+<mxc:subfield code="b">Texte imprimé</mxc:subfield>
+<mxc:subfield code="f">Brian Herbert et Kevin J. Anderson</mxc:subfield>
+<mxc:subfield code="g">trad. de l'américain par Michel Demuth</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="210" ind1=" " ind2=" ">
+<mxc:subfield code="a">Paris</mxc:subfield>
+<mxc:subfield code="c">R. Laffont</mxc:subfield>
+<mxc:subfield code="d">2002</mxc:subfield>
+<mxc:subfield code="e">72-La Flèche</mxc:subfield>
+<mxc:subfield code="g">Impr. Brodard et Taupin</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="215" ind1=" " ind2=" ">
+<mxc:subfield code="a">644 p.</mxc:subfield>
+<mxc:subfield code="c">cartes, couv. ill. en coul.</mxc:subfield>
+<mxc:subfield code="d">22 cm</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="225" ind1="1" ind2="9">
+<mxc:subfield code="a">Avant Dune.</mxc:subfield>
+<mxc:subfield code="v">3</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="225" ind1="|" ind2=" ">
+<mxc:subfield code="a">Ailleurs et demain</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="300" ind1=" " ind2=" ">
+<mxc:subfield code="a">D'après le cycle de "Dune" de Frank Herbert</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="410" ind1=" " ind2="0">
+<mxc:subfield code="0">34228102</mxc:subfield>
+<mxc:subfield code="t">Ailleurs et demain</mxc:subfield>
+<mxc:subfield code="x">0244-6073</mxc:subfield>
+<mxc:subfield code="d">2002</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="454" ind1=" " ind2="1">
+<mxc:subfield code="t">Dune house Corrino</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="461" ind1=" " ind2="0">
+<mxc:subfield code="0">37126958</mxc:subfield>
+<mxc:subfield code="t">Avant Dune.</mxc:subfield>
+<mxc:subfield code="v">3</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="517" ind1="1" ind2=" ">
+<mxc:subfield code="a">Dune, la maison Corrino</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="686" ind1=" " ind2=" ">
+<mxc:subfield code="a">803</mxc:subfield>
+<mxc:subfield code="2">Cadre de classement de la Bibliographie nationale française</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="700" ind1=" " ind2="|">
+<mxc:subfield code="3">12719725</mxc:subfield>
+<mxc:subfield code="o">ISNI0000000109108972</mxc:subfield>
+<mxc:subfield code="a">Herbert</mxc:subfield>
+<mxc:subfield code="b">Brian</mxc:subfield>
+<mxc:subfield code="f">1947-....</mxc:subfield>
+<mxc:subfield code="4">070</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="701" ind1=" " ind2="|">
+<mxc:subfield code="3">12527373</mxc:subfield>
+<mxc:subfield code="o">ISNI000000044038255X</mxc:subfield>
+<mxc:subfield code="a">Anderson</mxc:subfield>
+<mxc:subfield code="b">Kevin J.</mxc:subfield>
+<mxc:subfield code="f">1962-....</mxc:subfield>
+<mxc:subfield code="4">070</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="702" ind1=" " ind2="|">
+<mxc:subfield code="3">11899546</mxc:subfield>
+<mxc:subfield code="o">ISNI0000000073604252</mxc:subfield>
+<mxc:subfield code="a">Demuth</mxc:subfield>
+<mxc:subfield code="b">Michel</mxc:subfield>
+<mxc:subfield code="f">1939-2006</mxc:subfield>
+<mxc:subfield code="4">730</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="702" ind1=" " ind2="|">
+<mxc:subfield code="3">11907313</mxc:subfield>
+<mxc:subfield code="o">ISNI0000000121347853</mxc:subfield>
+<mxc:subfield code="a">Herbert</mxc:subfield>
+<mxc:subfield code="b">Frank</mxc:subfield>
+<mxc:subfield code="f">1920-1986</mxc:subfield>
+<mxc:subfield code="4">100</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="801" ind1=" " ind2="0">
+<mxc:subfield code="a">FR</mxc:subfield>
+<mxc:subfield code="b">FR-751131015</mxc:subfield>
+<mxc:subfield code="c">20020322</mxc:subfield>
+<mxc:subfield code="g">AFNOR</mxc:subfield>
+<mxc:subfield code="h">FRBNF388077920000001</mxc:subfield>
+<mxc:subfield code="2">intermrc</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="930" ind1=" " ind2=" ">
+<mxc:subfield code="5">FR-751131010:38807792001001</mxc:subfield>
+<mxc:subfield code="a">2002-35053</mxc:subfield>
+<mxc:subfield code="b">759999999</mxc:subfield>
+<mxc:subfield code="c">Tolbiac - Rez de Jardin - Littérature et art - Magasin</mxc:subfield>
+<mxc:subfield code="d">O</mxc:subfield>
+</mxc:datafield>
+</mxc:record>      </srw:recordData>
+<srw:recordIdentifier>ark:/12148/cb38807792z</srw:recordIdentifier>
+<srw:recordPosition>5</srw:recordPosition>
+<srw:extraRecordData>
+<ixm:attr name="CreationDate">20020322</ixm:attr>
+<ixm:attr name="LastModificationDate">20020322</ixm:attr>
+<mn:score>12.419671</mn:score>
+</srw:extraRecordData>
+</srw:record>
+<srw:record>
+<srw:recordSchema>marcxchange</srw:recordSchema>
+<srw:recordPacking>xml</srw:recordPacking>
+<srw:recordData>
+<mxc:record xmlns:mxc="info:lc/xmlns/marcxchange-v2" format="UNIMARC" id="ark:/12148/cb372214175" type="Bibliographic">
+<mxc:leader>     nam  22        450 </mxc:leader>
+<mxc:controlfield tag="001">FRBNF372214170000002</mxc:controlfield>
+<mxc:controlfield tag="003">http://catalogue.bnf.fr/ark:/12148/cb372214175</mxc:controlfield>
+<mxc:datafield tag="010" ind1=" " ind2=" ">
+<mxc:subfield code="a">2-221-08990-1</mxc:subfield>
+<mxc:subfield code="b">br.</mxc:subfield>
+<mxc:subfield code="d">Prix : 149 F : 22,71 EUR</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="020" ind1=" " ind2=" ">
+<mxc:subfield code="a">FR</mxc:subfield>
+<mxc:subfield code="b">00119900</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="039" ind1=" " ind2=" ">
+<mxc:subfield code="o">OPL</mxc:subfield>
+<mxc:subfield code="a">026310593</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="100" ind1=" " ind2=" ">
+<mxc:subfield code="a">20010507d2001    m  y0frey50      ba</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="101" ind1="1" ind2=" ">
+<mxc:subfield code="a">fre</mxc:subfield>
+<mxc:subfield code="c">eng</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="102" ind1=" " ind2=" ">
+<mxc:subfield code="a">FR</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="105" ind1=" " ind2=" ">
+<mxc:subfield code="a">a   z   00|a|</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="106" ind1=" " ind2=" ">
+<mxc:subfield code="a">r</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="181" ind1=" " ind2="0">
+<mxc:subfield code="6">01</mxc:subfield>
+<mxc:subfield code="a">i </mxc:subfield>
+<mxc:subfield code="b">xxxe  </mxc:subfield>
+<mxc:subfield code="a">b </mxc:subfield>
+<mxc:subfield code="b">xb2e  </mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="181" ind1=" " ind2=" ">
+<mxc:subfield code="6">02</mxc:subfield>
+<mxc:subfield code="c">txt</mxc:subfield>
+<mxc:subfield code="c">sti</mxc:subfield>
+<mxc:subfield code="2">rdacontent</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="182" ind1=" " ind2="0">
+<mxc:subfield code="6">01</mxc:subfield>
+<mxc:subfield code="a">n</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="182" ind1=" " ind2=" ">
+<mxc:subfield code="6">02</mxc:subfield>
+<mxc:subfield code="c">n</mxc:subfield>
+<mxc:subfield code="2">rdamedia</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="200" ind1="1" ind2=" ">
+<mxc:subfield code="a">La maison Harkonnen</mxc:subfield>
+<mxc:subfield code="b">Texte imprimé</mxc:subfield>
+<mxc:subfield code="f">Brian Herbert et Kevin J. Anderson</mxc:subfield>
+<mxc:subfield code="g">trad. de l'américain par Michel Demuth</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="210" ind1=" " ind2=" ">
+<mxc:subfield code="a">Paris</mxc:subfield>
+<mxc:subfield code="c">R. Laffont</mxc:subfield>
+<mxc:subfield code="d">2001</mxc:subfield>
+<mxc:subfield code="e">72-La Flèche</mxc:subfield>
+<mxc:subfield code="g">Impr. Brodard et Taupin</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="215" ind1=" " ind2=" ">
+<mxc:subfield code="a">669 p.</mxc:subfield>
+<mxc:subfield code="c">cartes, couv. ill. en coul.</mxc:subfield>
+<mxc:subfield code="d">22 cm</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="225" ind1="1" ind2="9">
+<mxc:subfield code="a">Avant Dune.</mxc:subfield>
+<mxc:subfield code="v">2</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="225" ind1="|" ind2=" ">
+<mxc:subfield code="a">Ailleurs et demain</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="300" ind1=" " ind2=" ">
+<mxc:subfield code="a">D'après le cycle de "Dune" de Frank Herbert</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="410" ind1=" " ind2="0">
+<mxc:subfield code="0">34228102</mxc:subfield>
+<mxc:subfield code="t">Ailleurs et demain</mxc:subfield>
+<mxc:subfield code="x">0244-6073</mxc:subfield>
+<mxc:subfield code="d">2001</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="454" ind1=" " ind2="1">
+<mxc:subfield code="t">Dune house Harkonnen</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="461" ind1=" " ind2="0">
+<mxc:subfield code="0">37126958</mxc:subfield>
+<mxc:subfield code="t">Avant Dune.</mxc:subfield>
+<mxc:subfield code="v">2</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="517" ind1="1" ind2=" ">
+<mxc:subfield code="a">Dune, la maison Harkonnen</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="686" ind1=" " ind2=" ">
+<mxc:subfield code="a">823</mxc:subfield>
+<mxc:subfield code="2">Cadre de classement de la Bibliographie nationale française</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="700" ind1=" " ind2="|">
+<mxc:subfield code="3">12719725</mxc:subfield>
+<mxc:subfield code="o">ISNI0000000109108972</mxc:subfield>
+<mxc:subfield code="a">Herbert</mxc:subfield>
+<mxc:subfield code="b">Brian</mxc:subfield>
+<mxc:subfield code="f">1947-....</mxc:subfield>
+<mxc:subfield code="4">070</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="701" ind1=" " ind2="|">
+<mxc:subfield code="3">12527373</mxc:subfield>
+<mxc:subfield code="o">ISNI000000044038255X</mxc:subfield>
+<mxc:subfield code="a">Anderson</mxc:subfield>
+<mxc:subfield code="b">Kevin J.</mxc:subfield>
+<mxc:subfield code="f">1962-....</mxc:subfield>
+<mxc:subfield code="4">070</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="702" ind1=" " ind2="|">
+<mxc:subfield code="3">11899546</mxc:subfield>
+<mxc:subfield code="o">ISNI0000000073604252</mxc:subfield>
+<mxc:subfield code="a">Demuth</mxc:subfield>
+<mxc:subfield code="b">Michel</mxc:subfield>
+<mxc:subfield code="f">1939-2006</mxc:subfield>
+<mxc:subfield code="4">730</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="702" ind1=" " ind2="|">
+<mxc:subfield code="3">11907313</mxc:subfield>
+<mxc:subfield code="o">ISNI0000000121347853</mxc:subfield>
+<mxc:subfield code="a">Herbert</mxc:subfield>
+<mxc:subfield code="b">Frank</mxc:subfield>
+<mxc:subfield code="f">1920-1986</mxc:subfield>
+<mxc:subfield code="4">100</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="801" ind1=" " ind2="0">
+<mxc:subfield code="a">FR</mxc:subfield>
+<mxc:subfield code="b">FR-751131015</mxc:subfield>
+<mxc:subfield code="c">20010507</mxc:subfield>
+<mxc:subfield code="g">AFNOR</mxc:subfield>
+<mxc:subfield code="h">FRBNF372214170000002</mxc:subfield>
+<mxc:subfield code="2">intermrc</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="930" ind1=" " ind2=" ">
+<mxc:subfield code="5">FR-751131010:37221417001001</mxc:subfield>
+<mxc:subfield code="a">2001-73565</mxc:subfield>
+<mxc:subfield code="b">759999999</mxc:subfield>
+<mxc:subfield code="c">Tolbiac - Rez de Jardin - Littérature et art - Magasin</mxc:subfield>
+<mxc:subfield code="d">O</mxc:subfield>
+</mxc:datafield>
+</mxc:record>      </srw:recordData>
+<srw:recordIdentifier>ark:/12148/cb372214175</srw:recordIdentifier>
+<srw:recordPosition>6</srw:recordPosition>
+<srw:extraRecordData>
+<ixm:attr name="CreationDate">20010507</ixm:attr>
+<ixm:attr name="LastModificationDate">20010528</ixm:attr>
+<mn:score>12.419671</mn:score>
+</srw:extraRecordData>
+</srw:record>
+<srw:record>
+<srw:recordSchema>marcxchange</srw:recordSchema>
+<srw:recordPacking>xml</srw:recordPacking>
+<srw:recordData>
+<mxc:record xmlns:mxc="info:lc/xmlns/marcxchange-v2" format="UNIMARC" id="ark:/12148/cb371192682" type="Bibliographic">
+<mxc:leader>     cam  22        450 </mxc:leader>
+<mxc:controlfield tag="001">FRBNF371192680000000</mxc:controlfield>
+<mxc:controlfield tag="003">http://catalogue.bnf.fr/ark:/12148/cb371192682</mxc:controlfield>
+<mxc:datafield tag="010" ind1=" " ind2=" ">
+<mxc:subfield code="a">2-221-08891-3</mxc:subfield>
+<mxc:subfield code="b">br.</mxc:subfield>
+<mxc:subfield code="d">Prix : 149 F : 22,71 EUR</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="020" ind1=" " ind2=" ">
+<mxc:subfield code="a">FR</mxc:subfield>
+<mxc:subfield code="b">00063778</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="039" ind1=" " ind2=" ">
+<mxc:subfield code="o">OPL</mxc:subfield>
+<mxc:subfield code="a">025714686</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="100" ind1=" " ind2=" ">
+<mxc:subfield code="a">20000906d2000    m  y0frey50      ba</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="101" ind1="1" ind2=" ">
+<mxc:subfield code="a">fre</mxc:subfield>
+<mxc:subfield code="c">eng</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="102" ind1=" " ind2=" ">
+<mxc:subfield code="a">FR</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="105" ind1=" " ind2=" ">
+<mxc:subfield code="a">a   z   00|a|</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="106" ind1=" " ind2=" ">
+<mxc:subfield code="a">r</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="181" ind1=" " ind2="0">
+<mxc:subfield code="6">01</mxc:subfield>
+<mxc:subfield code="a">i </mxc:subfield>
+<mxc:subfield code="b">xxxe  </mxc:subfield>
+<mxc:subfield code="a">b </mxc:subfield>
+<mxc:subfield code="b">xb2e  </mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="181" ind1=" " ind2=" ">
+<mxc:subfield code="6">02</mxc:subfield>
+<mxc:subfield code="c">txt</mxc:subfield>
+<mxc:subfield code="c">sti</mxc:subfield>
+<mxc:subfield code="2">rdacontent</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="182" ind1=" " ind2="0">
+<mxc:subfield code="6">01</mxc:subfield>
+<mxc:subfield code="a">n</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="182" ind1=" " ind2=" ">
+<mxc:subfield code="6">02</mxc:subfield>
+<mxc:subfield code="c">n</mxc:subfield>
+<mxc:subfield code="2">rdamedia</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="200" ind1="1" ind2=" ">
+<mxc:subfield code="a">La maison des Atréides</mxc:subfield>
+<mxc:subfield code="b">Texte imprimé</mxc:subfield>
+<mxc:subfield code="f">Brian Herbert et Kevin J. Anderson</mxc:subfield>
+<mxc:subfield code="g">trad. de l'américain par Michel Demuth</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="210" ind1=" " ind2=" ">
+<mxc:subfield code="a">Paris</mxc:subfield>
+<mxc:subfield code="c">R. Laffont</mxc:subfield>
+<mxc:subfield code="d">2000</mxc:subfield>
+<mxc:subfield code="e">72-La Flèche</mxc:subfield>
+<mxc:subfield code="g">Impr. Brodard et Taupin</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="215" ind1=" " ind2=" ">
+<mxc:subfield code="a">621 p.</mxc:subfield>
+<mxc:subfield code="c">cartes, couv. ill. en coul.</mxc:subfield>
+<mxc:subfield code="d">22 cm</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="225" ind1="1" ind2="9">
+<mxc:subfield code="a">Avant Dune.</mxc:subfield>
+<mxc:subfield code="v">1</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="225" ind1="|" ind2=" ">
+<mxc:subfield code="a">Ailleurs et demain</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="300" ind1=" " ind2=" ">
+<mxc:subfield code="a">D'après le cycle de "Dune" de Frank Herbert</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="410" ind1=" " ind2="0">
+<mxc:subfield code="0">34228102</mxc:subfield>
+<mxc:subfield code="t">Ailleurs et demain</mxc:subfield>
+<mxc:subfield code="x">0244-6073</mxc:subfield>
+<mxc:subfield code="d">2000</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="454" ind1=" " ind2="1">
+<mxc:subfield code="t">Dune house Atreides</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="461" ind1=" " ind2="0">
+<mxc:subfield code="0">37126958</mxc:subfield>
+<mxc:subfield code="t">Avant Dune.</mxc:subfield>
+<mxc:subfield code="v">1</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="517" ind1="1" ind2=" ">
+<mxc:subfield code="a">Dune, la maison des Atréides</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="686" ind1=" " ind2=" ">
+<mxc:subfield code="a">823</mxc:subfield>
+<mxc:subfield code="2">Cadre de classement de la Bibliographie nationale française</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="700" ind1=" " ind2="|">
+<mxc:subfield code="3">12719725</mxc:subfield>
+<mxc:subfield code="o">ISNI0000000109108972</mxc:subfield>
+<mxc:subfield code="a">Herbert</mxc:subfield>
+<mxc:subfield code="b">Brian</mxc:subfield>
+<mxc:subfield code="f">1947-....</mxc:subfield>
+<mxc:subfield code="4">070</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="701" ind1=" " ind2="|">
+<mxc:subfield code="3">12527373</mxc:subfield>
+<mxc:subfield code="o">ISNI000000044038255X</mxc:subfield>
+<mxc:subfield code="a">Anderson</mxc:subfield>
+<mxc:subfield code="b">Kevin J.</mxc:subfield>
+<mxc:subfield code="f">1962-....</mxc:subfield>
+<mxc:subfield code="4">070</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="702" ind1=" " ind2="|">
+<mxc:subfield code="3">11899546</mxc:subfield>
+<mxc:subfield code="o">ISNI0000000073604252</mxc:subfield>
+<mxc:subfield code="a">Demuth</mxc:subfield>
+<mxc:subfield code="b">Michel</mxc:subfield>
+<mxc:subfield code="f">1939-2006</mxc:subfield>
+<mxc:subfield code="4">730</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="702" ind1=" " ind2="|">
+<mxc:subfield code="3">11907313</mxc:subfield>
+<mxc:subfield code="o">ISNI0000000121347853</mxc:subfield>
+<mxc:subfield code="a">Herbert</mxc:subfield>
+<mxc:subfield code="b">Frank</mxc:subfield>
+<mxc:subfield code="f">1920-1986</mxc:subfield>
+<mxc:subfield code="4">100</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="801" ind1=" " ind2="0">
+<mxc:subfield code="a">FR</mxc:subfield>
+<mxc:subfield code="b">FR-751131015</mxc:subfield>
+<mxc:subfield code="c">20000906</mxc:subfield>
+<mxc:subfield code="g">AFNOR</mxc:subfield>
+<mxc:subfield code="h">FRBNF371192680000000</mxc:subfield>
+<mxc:subfield code="2">intermrc</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="930" ind1=" " ind2=" ">
+<mxc:subfield code="5">FR-751131010:37119268001001</mxc:subfield>
+<mxc:subfield code="a">2000-88419</mxc:subfield>
+<mxc:subfield code="b">759999999</mxc:subfield>
+<mxc:subfield code="c">Tolbiac - Rez de Jardin - Littérature et art - Magasin</mxc:subfield>
+<mxc:subfield code="d">O</mxc:subfield>
+</mxc:datafield>
+</mxc:record>      </srw:recordData>
+<srw:recordIdentifier>ark:/12148/cb371192682</srw:recordIdentifier>
+<srw:recordPosition>7</srw:recordPosition>
+<srw:extraRecordData>
+<ixm:attr name="CreationDate">20000906</ixm:attr>
+<ixm:attr name="LastModificationDate">20000927</ixm:attr>
+<mn:score>12.419671</mn:score>
+</srw:extraRecordData>
+</srw:record>
+<srw:record>
+<srw:recordSchema>marcxchange</srw:recordSchema>
+<srw:recordPacking>xml</srw:recordPacking>
+<srw:recordData>
+<mxc:record xmlns:mxc="info:lc/xmlns/marcxchange-v2" format="UNIMARC" id="ark:/12148/cb345641290" type="Bibliographic">
+<mxc:leader>     cam  22        450 </mxc:leader>
+<mxc:controlfield tag="001">FRBNF345641290000008</mxc:controlfield>
+<mxc:controlfield tag="003">http://catalogue.bnf.fr/ark:/12148/cb345641290</mxc:controlfield>
+<mxc:datafield tag="010" ind1=" " ind2=" ">
+<mxc:subfield code="b">Br.</mxc:subfield>
+<mxc:subfield code="d">45 F</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="020" ind1=" " ind2=" ">
+<mxc:subfield code="a">FR</mxc:subfield>
+<mxc:subfield code="b">07505310</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="039" ind1=" " ind2=" ">
+<mxc:subfield code="o">OPL</mxc:subfield>
+<mxc:subfield code="a">000173415</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="100" ind1=" " ind2=" ">
+<mxc:subfield code="a">19750408d1975    m  y0frey50      ba</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="101" ind1="1" ind2=" ">
+<mxc:subfield code="a">fre</mxc:subfield>
+<mxc:subfield code="c">eng</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="102" ind1=" " ind2=" ">
+<mxc:subfield code="a">FR</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="105" ind1=" " ind2=" ">
+<mxc:subfield code="a">a   z   00|a|</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="106" ind1=" " ind2=" ">
+<mxc:subfield code="a">r</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="181" ind1=" " ind2="0">
+<mxc:subfield code="6">01</mxc:subfield>
+<mxc:subfield code="a">i </mxc:subfield>
+<mxc:subfield code="b">xxxe  </mxc:subfield>
+<mxc:subfield code="a">b </mxc:subfield>
+<mxc:subfield code="b">xb2e  </mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="181" ind1=" " ind2=" ">
+<mxc:subfield code="6">02</mxc:subfield>
+<mxc:subfield code="c">txt</mxc:subfield>
+<mxc:subfield code="c">sti</mxc:subfield>
+<mxc:subfield code="2">rdacontent</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="182" ind1=" " ind2="0">
+<mxc:subfield code="6">01</mxc:subfield>
+<mxc:subfield code="a">n</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="182" ind1=" " ind2=" ">
+<mxc:subfield code="6">02</mxc:subfield>
+<mxc:subfield code="c">n</mxc:subfield>
+<mxc:subfield code="2">rdamedia</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="200" ind1="1" ind2=" ">
+<mxc:subfield code="a">Dune</mxc:subfield>
+<mxc:subfield code="b">Texte imprimé</mxc:subfield>
+<mxc:subfield code="a">(suivi de) Le Messie de Dune</mxc:subfield>
+<mxc:subfield code="e">roman</mxc:subfield>
+<mxc:subfield code="f">Frank Herbert</mxc:subfield>
+<mxc:subfield code="g">traduit de l'américain par Michel Demuth</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="210" ind1=" " ind2=" ">
+<mxc:subfield code="a">Paris</mxc:subfield>
+<mxc:subfield code="c">R. Laffont</mxc:subfield>
+<mxc:subfield code="d">1975</mxc:subfield>
+<mxc:subfield code="e">86-Poitiers</mxc:subfield>
+<mxc:subfield code="g">impr. Aubin</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="215" ind1=" " ind2=" ">
+<mxc:subfield code="a">246 p.</mxc:subfield>
+<mxc:subfield code="c">carte</mxc:subfield>
+<mxc:subfield code="d">22 cm</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="225" ind1="|" ind2=" ">
+<mxc:subfield code="a">Ailleurs et demain</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="410" ind1=" " ind2="0">
+<mxc:subfield code="0">34228102</mxc:subfield>
+<mxc:subfield code="t">Ailleurs et demain</mxc:subfield>
+<mxc:subfield code="x">0244-6073</mxc:subfield>
+<mxc:subfield code="v">[35]</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="454" ind1=" " ind2="1">
+<mxc:subfield code="t">Dune</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="454" ind1=" " ind2="1">
+<mxc:subfield code="t">The Messiah of Dune</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="686" ind1=" " ind2=" ">
+<mxc:subfield code="a">823</mxc:subfield>
+<mxc:subfield code="2">Cadre de classement de la Bibliographie nationale française</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="700" ind1=" " ind2="|">
+<mxc:subfield code="3">11907313</mxc:subfield>
+<mxc:subfield code="o">ISNI0000000121347853</mxc:subfield>
+<mxc:subfield code="a">Herbert</mxc:subfield>
+<mxc:subfield code="b">Frank</mxc:subfield>
+<mxc:subfield code="4">070</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="702" ind1=" " ind2="|">
+<mxc:subfield code="3">11899546</mxc:subfield>
+<mxc:subfield code="o">ISNI0000000073604252</mxc:subfield>
+<mxc:subfield code="a">Demuth</mxc:subfield>
+<mxc:subfield code="b">Michel</mxc:subfield>
+<mxc:subfield code="4">730</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="801" ind1=" " ind2="0">
+<mxc:subfield code="a">FR</mxc:subfield>
+<mxc:subfield code="b">FR-751131015</mxc:subfield>
+<mxc:subfield code="c">19750408</mxc:subfield>
+<mxc:subfield code="g">AFNOR</mxc:subfield>
+<mxc:subfield code="h">FRBNF345641290000008</mxc:subfield>
+<mxc:subfield code="2">intermrc</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="930" ind1=" " ind2=" ">
+<mxc:subfield code="5">FR-751131010:34564129001001</mxc:subfield>
+<mxc:subfield code="a">8-Z-40525 (35)</mxc:subfield>
+<mxc:subfield code="b">759999999</mxc:subfield>
+<mxc:subfield code="c">Tolbiac - Rez de Jardin - Littérature et art - Magasin</mxc:subfield>
+<mxc:subfield code="d">O</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="930" ind1=" " ind2=" ">
+<mxc:subfield code="5">FR-751041002:34564129002001</mxc:subfield>
+<mxc:subfield code="a">8-DELTA-60797</mxc:subfield>
+<mxc:subfield code="b">759999999</mxc:subfield>
+<mxc:subfield code="c">Arsenal - Magasin</mxc:subfield>
+<mxc:subfield code="d">N</mxc:subfield>
+</mxc:datafield>
+</mxc:record>      </srw:recordData>
+<srw:recordIdentifier>ark:/12148/cb345641290</srw:recordIdentifier>
+<srw:recordPosition>8</srw:recordPosition>
+<srw:extraRecordData>
+<ixm:attr name="CreationDate">19860717</ixm:attr>
+<ixm:attr name="LastModificationDate">20250311</ixm:attr>
+<mn:score>12.349691</mn:score>
+</srw:extraRecordData>
+</srw:record>
+<srw:record>
+<srw:recordSchema>marcxchange</srw:recordSchema>
+<srw:recordPacking>xml</srw:recordPacking>
+<srw:recordData>
+<mxc:record xmlns:mxc="info:lc/xmlns/marcxchange-v2" format="UNIMARC" id="ark:/12148/cb48521407m" type="Bibliographic">
+<mxc:leader>     cam  22        450 </mxc:leader>
+<mxc:controlfield tag="001">FRBNF485214070000007</mxc:controlfield>
+<mxc:controlfield tag="003">http://catalogue.bnf.fr/ark:/12148/cb48521407m</mxc:controlfield>
+<mxc:datafield tag="010" ind1=" " ind2=" ">
+<mxc:subfield code="b">Rel.</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="100" ind1=" " ind2=" ">
+<mxc:subfield code="a">20250527g2024    m  y0frey50      ba</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="101" ind1="1" ind2=" ">
+<mxc:subfield code="a">fre</mxc:subfield>
+<mxc:subfield code="c">eng</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="102" ind1=" " ind2=" ">
+<mxc:subfield code="a">FR</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="105" ind1=" " ind2=" ">
+<mxc:subfield code="a">||||t   00|a|</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="106" ind1=" " ind2=" ">
+<mxc:subfield code="a">r</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="181" ind1=" " ind2="0">
+<mxc:subfield code="6">01</mxc:subfield>
+<mxc:subfield code="a">i </mxc:subfield>
+<mxc:subfield code="b">xxxe  </mxc:subfield>
+<mxc:subfield code="a">b </mxc:subfield>
+<mxc:subfield code="b">xb2e  </mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="181" ind1=" " ind2=" ">
+<mxc:subfield code="6">02</mxc:subfield>
+<mxc:subfield code="c">txt</mxc:subfield>
+<mxc:subfield code="c">sti</mxc:subfield>
+<mxc:subfield code="2">rdacontent</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="182" ind1=" " ind2="0">
+<mxc:subfield code="6">01</mxc:subfield>
+<mxc:subfield code="a">n</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="182" ind1=" " ind2=" ">
+<mxc:subfield code="6">02</mxc:subfield>
+<mxc:subfield code="c">n</mxc:subfield>
+<mxc:subfield code="2">rdamedia</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="200" ind1="1" ind2=" ">
+<mxc:subfield code="a">Dune</mxc:subfield>
+<mxc:subfield code="b">Texte imprimé</mxc:subfield>
+<mxc:subfield code="e">maison Harkonnen</mxc:subfield>
+<mxc:subfield code="f">scénario, Brian Herbert &amp; Kevin J. Anderson</mxc:subfield>
+<mxc:subfield code="g">[d'après Frank Herbert]</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="214" ind1=" " ind2="0">
+<mxc:subfield code="a">Paris</mxc:subfield>
+<mxc:subfield code="a">New-York</mxc:subfield>
+<mxc:subfield code="c">Huginn &amp; Muninn</mxc:subfield>
+<mxc:subfield code="d">DL 2024-</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="215" ind1=" " ind2=" ">
+<mxc:subfield code="d">26 cm</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="300" ind1=" " ind2=" ">
+<mxc:subfield code="a">Notice réd. d'après le vol. 2</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="300" ind1=" " ind2=" ">
+<mxc:subfield code="a">Adapté du roman "Avant Dune : la maison des Harkonnen"</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="454" ind1=" " ind2="1">
+<mxc:subfield code="t">Dune : house Harkonnen</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="700" ind1=" " ind2="|">
+<mxc:subfield code="3">12719725</mxc:subfield>
+<mxc:subfield code="o">ISNI0000000109108972</mxc:subfield>
+<mxc:subfield code="a">Herbert</mxc:subfield>
+<mxc:subfield code="b">Brian</mxc:subfield>
+<mxc:subfield code="f">1947-....</mxc:subfield>
+<mxc:subfield code="4">070</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="701" ind1=" " ind2="|">
+<mxc:subfield code="3">12527373</mxc:subfield>
+<mxc:subfield code="o">ISNI000000044038255X</mxc:subfield>
+<mxc:subfield code="a">Anderson</mxc:subfield>
+<mxc:subfield code="b">Kevin J.</mxc:subfield>
+<mxc:subfield code="f">1962-....</mxc:subfield>
+<mxc:subfield code="4">070</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="801" ind1=" " ind2="0">
+<mxc:subfield code="a">FR</mxc:subfield>
+<mxc:subfield code="b">FR-751131015</mxc:subfield>
+<mxc:subfield code="c">20250527</mxc:subfield>
+<mxc:subfield code="g">AFNOR</mxc:subfield>
+<mxc:subfield code="h">FRBNF485214070000007</mxc:subfield>
+<mxc:subfield code="2">intermrc</mxc:subfield>
+</mxc:datafield>
+</mxc:record>      </srw:recordData>
+<srw:recordIdentifier>ark:/12148/cb48521407m</srw:recordIdentifier>
+<srw:recordPosition>9</srw:recordPosition>
+<srw:extraRecordData>
+<ixm:attr name="CreationDate">20250527</ixm:attr>
+<ixm:attr name="LastModificationDate">20251211</ixm:attr>
+<mn:score>12.316242</mn:score>
+</srw:extraRecordData>
+</srw:record>
+<srw:record>
+<srw:recordSchema>marcxchange</srw:recordSchema>
+<srw:recordPacking>xml</srw:recordPacking>
+<srw:recordData>
+<mxc:record xmlns:mxc="info:lc/xmlns/marcxchange-v2" format="UNIMARC" id="ark:/12148/cb37135774t" type="Bibliographic">
+<mxc:leader>     nam  22        450 </mxc:leader>
+<mxc:controlfield tag="001">FRBNF371357740000004</mxc:controlfield>
+<mxc:controlfield tag="003">http://catalogue.bnf.fr/ark:/12148/cb37135774t</mxc:controlfield>
+<mxc:datafield tag="010" ind1=" " ind2=" ">
+<mxc:subfield code="b">Br.</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="039" ind1=" " ind2=" ">
+<mxc:subfield code="o">OPL</mxc:subfield>
+<mxc:subfield code="a">026165525</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="100" ind1=" " ind2=" ">
+<mxc:subfield code="a">20010301g2000    m  y0frey50      ba</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="101" ind1="1" ind2=" ">
+<mxc:subfield code="a">fre</mxc:subfield>
+<mxc:subfield code="c">eng</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="102" ind1=" " ind2=" ">
+<mxc:subfield code="a">FR</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="105" ind1=" " ind2=" ">
+<mxc:subfield code="a">||||z   00|a|</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="106" ind1=" " ind2=" ">
+<mxc:subfield code="a">r</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="181" ind1=" " ind2="0">
+<mxc:subfield code="6">01</mxc:subfield>
+<mxc:subfield code="a">i </mxc:subfield>
+<mxc:subfield code="b">xxxe  </mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="181" ind1=" " ind2=" ">
+<mxc:subfield code="6">02</mxc:subfield>
+<mxc:subfield code="c">txt</mxc:subfield>
+<mxc:subfield code="2">rdacontent</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="182" ind1=" " ind2="0">
+<mxc:subfield code="6">01</mxc:subfield>
+<mxc:subfield code="a">n</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="182" ind1=" " ind2=" ">
+<mxc:subfield code="6">02</mxc:subfield>
+<mxc:subfield code="c">n</mxc:subfield>
+<mxc:subfield code="2">rdamedia</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="200" ind1="1" ind2=" ">
+<mxc:subfield code="a">Avant Dune</mxc:subfield>
+<mxc:subfield code="b">Texte imprimé</mxc:subfield>
+<mxc:subfield code="f">Brian Herbert et Kevin J. Anderson</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="210" ind1=" " ind2=" ">
+<mxc:subfield code="a">Paris</mxc:subfield>
+<mxc:subfield code="c">Éd. France loisirs</mxc:subfield>
+<mxc:subfield code="d">2000-</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="215" ind1=" " ind2=" ">
+<mxc:subfield code="d">20 cm</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="300" ind1=" " ind2=" ">
+<mxc:subfield code="a">D'après le cycle de "Dune" de Frank Herbert</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="517" ind1="1" ind2=" ">
+<mxc:subfield code="a">Dune</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="686" ind1=" " ind2=" ">
+<mxc:subfield code="a">823</mxc:subfield>
+<mxc:subfield code="2">Cadre de classement de la Bibliographie nationale française</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="700" ind1=" " ind2="|">
+<mxc:subfield code="3">12719725</mxc:subfield>
+<mxc:subfield code="o">ISNI0000000109108972</mxc:subfield>
+<mxc:subfield code="a">Herbert</mxc:subfield>
+<mxc:subfield code="b">Brian</mxc:subfield>
+<mxc:subfield code="f">1947-....</mxc:subfield>
+<mxc:subfield code="4">070</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="701" ind1=" " ind2="|">
+<mxc:subfield code="3">12527373</mxc:subfield>
+<mxc:subfield code="o">ISNI000000044038255X</mxc:subfield>
+<mxc:subfield code="a">Anderson</mxc:subfield>
+<mxc:subfield code="b">Kevin J.</mxc:subfield>
+<mxc:subfield code="f">1962-....</mxc:subfield>
+<mxc:subfield code="4">070</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="702" ind1=" " ind2="|">
+<mxc:subfield code="3">11907313</mxc:subfield>
+<mxc:subfield code="o">ISNI0000000121347853</mxc:subfield>
+<mxc:subfield code="a">Herbert</mxc:subfield>
+<mxc:subfield code="b">Frank</mxc:subfield>
+<mxc:subfield code="f">1920-1986</mxc:subfield>
+<mxc:subfield code="4">100</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="801" ind1=" " ind2="0">
+<mxc:subfield code="a">FR</mxc:subfield>
+<mxc:subfield code="b">FR-751131015</mxc:subfield>
+<mxc:subfield code="c">20010301</mxc:subfield>
+<mxc:subfield code="g">AFNOR</mxc:subfield>
+<mxc:subfield code="h">FRBNF371357740000004</mxc:subfield>
+<mxc:subfield code="2">intermrc</mxc:subfield>
+</mxc:datafield>
+</mxc:record>      </srw:recordData>
+<srw:recordIdentifier>ark:/12148/cb37135774t</srw:recordIdentifier>
+<srw:recordPosition>10</srw:recordPosition>
+<srw:extraRecordData>
+<ixm:attr name="CreationDate">20010301</ixm:attr>
+<ixm:attr name="LastModificationDate">20010302</ixm:attr>
+<mn:score>12.307761</mn:score>
+</srw:extraRecordData>
+</srw:record>
+<srw:record>
+<srw:recordSchema>marcxchange</srw:recordSchema>
+<srw:recordPacking>xml</srw:recordPacking>
+<srw:recordData>
+<mxc:record xmlns:mxc="info:lc/xmlns/marcxchange-v2" format="UNIMARC" id="ark:/12148/cb38997114j" type="Bibliographic">
+<mxc:leader>     cam  22        450 </mxc:leader>
+<mxc:controlfield tag="001">FRBNF389971140000008</mxc:controlfield>
+<mxc:controlfield tag="003">http://catalogue.bnf.fr/ark:/12148/cb38997114j</mxc:controlfield>
+<mxc:datafield tag="010" ind1=" " ind2=" ">
+<mxc:subfield code="b">Br.</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="100" ind1=" " ind2=" ">
+<mxc:subfield code="a">20030514g2003    m  y0frey50      ba</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="101" ind1="1" ind2=" ">
+<mxc:subfield code="a">fre</mxc:subfield>
+<mxc:subfield code="c">eng</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="102" ind1=" " ind2=" ">
+<mxc:subfield code="a">FR</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="105" ind1=" " ind2=" ">
+<mxc:subfield code="a">||||z   00|a|</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="106" ind1=" " ind2=" ">
+<mxc:subfield code="a">r</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="181" ind1=" " ind2="0">
+<mxc:subfield code="6">01</mxc:subfield>
+<mxc:subfield code="a">i </mxc:subfield>
+<mxc:subfield code="b">xxxe  </mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="181" ind1=" " ind2=" ">
+<mxc:subfield code="6">02</mxc:subfield>
+<mxc:subfield code="c">txt</mxc:subfield>
+<mxc:subfield code="2">rdacontent</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="182" ind1=" " ind2="0">
+<mxc:subfield code="6">01</mxc:subfield>
+<mxc:subfield code="a">n</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="182" ind1=" " ind2=" ">
+<mxc:subfield code="6">02</mxc:subfield>
+<mxc:subfield code="c">n</mxc:subfield>
+<mxc:subfield code="2">rdamedia</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="200" ind1="1" ind2=" ">
+<mxc:subfield code="a">Dune, la genèse</mxc:subfield>
+<mxc:subfield code="b">Texte imprimé</mxc:subfield>
+<mxc:subfield code="f">Brian Herbert et Kevin J. Anderson</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="210" ind1=" " ind2=" ">
+<mxc:subfield code="a">Paris</mxc:subfield>
+<mxc:subfield code="c">R. Laffont</mxc:subfield>
+<mxc:subfield code="d">2003-</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="215" ind1=" " ind2=" ">
+<mxc:subfield code="d">22 cm</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="225" ind1="|" ind2=" ">
+<mxc:subfield code="a">Ailleurs et demain</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="300" ind1=" " ind2=" ">
+<mxc:subfield code="a">D'après le cycle de "Dune" de Frank Herbert</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="410" ind1=" " ind2="0">
+<mxc:subfield code="0">34228102</mxc:subfield>
+<mxc:subfield code="t">Ailleurs et demain</mxc:subfield>
+<mxc:subfield code="x">0244-6073</mxc:subfield>
+<mxc:subfield code="d">2003-</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="517" ind1="1" ind2=" ">
+<mxc:subfield code="a">Dune</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="700" ind1=" " ind2="|">
+<mxc:subfield code="3">12719725</mxc:subfield>
+<mxc:subfield code="o">ISNI0000000109108972</mxc:subfield>
+<mxc:subfield code="a">Herbert</mxc:subfield>
+<mxc:subfield code="b">Brian</mxc:subfield>
+<mxc:subfield code="f">1947-....</mxc:subfield>
+<mxc:subfield code="4">070</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="701" ind1=" " ind2="|">
+<mxc:subfield code="3">12527373</mxc:subfield>
+<mxc:subfield code="o">ISNI000000044038255X</mxc:subfield>
+<mxc:subfield code="a">Anderson</mxc:subfield>
+<mxc:subfield code="b">Kevin J.</mxc:subfield>
+<mxc:subfield code="f">1962-....</mxc:subfield>
+<mxc:subfield code="4">070</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="702" ind1=" " ind2="|">
+<mxc:subfield code="3">11907313</mxc:subfield>
+<mxc:subfield code="o">ISNI0000000121347853</mxc:subfield>
+<mxc:subfield code="a">Herbert</mxc:subfield>
+<mxc:subfield code="b">Frank</mxc:subfield>
+<mxc:subfield code="f">1920-1986</mxc:subfield>
+<mxc:subfield code="4">100</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="801" ind1=" " ind2="0">
+<mxc:subfield code="a">FR</mxc:subfield>
+<mxc:subfield code="b">FR-751131015</mxc:subfield>
+<mxc:subfield code="c">20030514</mxc:subfield>
+<mxc:subfield code="g">AFNOR</mxc:subfield>
+<mxc:subfield code="h">FRBNF389971140000008</mxc:subfield>
+<mxc:subfield code="2">intermrc</mxc:subfield>
+</mxc:datafield>
+</mxc:record>      </srw:recordData>
+<srw:recordIdentifier>ark:/12148/cb38997114j</srw:recordIdentifier>
+<srw:recordPosition>11</srw:recordPosition>
+<srw:extraRecordData>
+<ixm:attr name="CreationDate">20030514</ixm:attr>
+<ixm:attr name="LastModificationDate">20030514</ixm:attr>
+<mn:score>12.307761</mn:score>
+</srw:extraRecordData>
+</srw:record>
+<srw:record>
+<srw:recordSchema>marcxchange</srw:recordSchema>
+<srw:recordPacking>xml</srw:recordPacking>
+<srw:recordData>
+<mxc:record xmlns:mxc="info:lc/xmlns/marcxchange-v2" format="UNIMARC" id="ark:/12148/cb41136230b" type="Bibliographic">
+<mxc:leader>     nam  22        450 </mxc:leader>
+<mxc:controlfield tag="001">FRBNF411362300000007</mxc:controlfield>
+<mxc:controlfield tag="003">http://catalogue.bnf.fr/ark:/12148/cb41136230b</mxc:controlfield>
+<mxc:datafield tag="010" ind1=" " ind2=" ">
+<mxc:subfield code="b">Br.</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="100" ind1=" " ind2=" ">
+<mxc:subfield code="a">20071019g2007    m  y0frey50      ba</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="101" ind1="1" ind2=" ">
+<mxc:subfield code="a">fre</mxc:subfield>
+<mxc:subfield code="c">eng</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="102" ind1=" " ind2=" ">
+<mxc:subfield code="a">FR</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="105" ind1=" " ind2=" ">
+<mxc:subfield code="a">||||z   00|a|</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="106" ind1=" " ind2=" ">
+<mxc:subfield code="a">r</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="181" ind1=" " ind2="0">
+<mxc:subfield code="6">01</mxc:subfield>
+<mxc:subfield code="a">i </mxc:subfield>
+<mxc:subfield code="b">xxxe  </mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="181" ind1=" " ind2=" ">
+<mxc:subfield code="6">02</mxc:subfield>
+<mxc:subfield code="c">txt</mxc:subfield>
+<mxc:subfield code="2">rdacontent</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="182" ind1=" " ind2="0">
+<mxc:subfield code="6">01</mxc:subfield>
+<mxc:subfield code="a">n</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="182" ind1=" " ind2=" ">
+<mxc:subfield code="6">02</mxc:subfield>
+<mxc:subfield code="c">n</mxc:subfield>
+<mxc:subfield code="2">rdamedia</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="200" ind1="1" ind2=" ">
+<mxc:subfield code="a">Après Dune</mxc:subfield>
+<mxc:subfield code="b">Texte imprimé</mxc:subfield>
+<mxc:subfield code="f">Brian Herbert et Kevin J. Anderson</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="210" ind1=" " ind2=" ">
+<mxc:subfield code="a">Paris</mxc:subfield>
+<mxc:subfield code="c">R. Laffont</mxc:subfield>
+<mxc:subfield code="d">2007-</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="215" ind1=" " ind2=" ">
+<mxc:subfield code="d">22 cm</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="225" ind1="|" ind2=" ">
+<mxc:subfield code="a">Ailleurs et demain</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="300" ind1=" " ind2=" ">
+<mxc:subfield code="a">D'après le cycle de "Dune" de Frank Herbert</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="410" ind1=" " ind2="0">
+<mxc:subfield code="0">34228102</mxc:subfield>
+<mxc:subfield code="t">Ailleurs et demain</mxc:subfield>
+<mxc:subfield code="x">0244-6073</mxc:subfield>
+<mxc:subfield code="d">2007-</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="517" ind1="1" ind2=" ">
+<mxc:subfield code="a">Dune</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="700" ind1=" " ind2="|">
+<mxc:subfield code="3">12719725</mxc:subfield>
+<mxc:subfield code="o">ISNI0000000109108972</mxc:subfield>
+<mxc:subfield code="a">Herbert</mxc:subfield>
+<mxc:subfield code="b">Brian</mxc:subfield>
+<mxc:subfield code="f">1947-....</mxc:subfield>
+<mxc:subfield code="4">070</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="701" ind1=" " ind2="|">
+<mxc:subfield code="3">12527373</mxc:subfield>
+<mxc:subfield code="o">ISNI000000044038255X</mxc:subfield>
+<mxc:subfield code="a">Anderson</mxc:subfield>
+<mxc:subfield code="b">Kevin J.</mxc:subfield>
+<mxc:subfield code="f">1962-....</mxc:subfield>
+<mxc:subfield code="4">070</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="702" ind1=" " ind2="|">
+<mxc:subfield code="3">11907313</mxc:subfield>
+<mxc:subfield code="o">ISNI0000000121347853</mxc:subfield>
+<mxc:subfield code="a">Herbert</mxc:subfield>
+<mxc:subfield code="b">Frank</mxc:subfield>
+<mxc:subfield code="f">1920-1986</mxc:subfield>
+<mxc:subfield code="4">100</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="801" ind1=" " ind2="0">
+<mxc:subfield code="a">FR</mxc:subfield>
+<mxc:subfield code="b">FR-751131015</mxc:subfield>
+<mxc:subfield code="c">20071019</mxc:subfield>
+<mxc:subfield code="g">AFNOR</mxc:subfield>
+<mxc:subfield code="h">FRBNF411362300000007</mxc:subfield>
+<mxc:subfield code="2">intermrc</mxc:subfield>
+</mxc:datafield>
+</mxc:record>      </srw:recordData>
+<srw:recordIdentifier>ark:/12148/cb41136230b</srw:recordIdentifier>
+<srw:recordPosition>12</srw:recordPosition>
+<srw:extraRecordData>
+<ixm:attr name="CreationDate">20071019</ixm:attr>
+<ixm:attr name="LastModificationDate">20071019</ixm:attr>
+<mn:score>12.307547</mn:score>
+</srw:extraRecordData>
+</srw:record>
+<srw:record>
+<srw:recordSchema>marcxchange</srw:recordSchema>
+<srw:recordPacking>xml</srw:recordPacking>
+<srw:recordData>
+<mxc:record xmlns:mxc="info:lc/xmlns/marcxchange-v2" format="UNIMARC" id="ark:/12148/cb46750653s" type="Bibliographic">
+<mxc:leader>     nam  22        450 </mxc:leader>
+<mxc:controlfield tag="001">FRBNF467506530000009</mxc:controlfield>
+<mxc:controlfield tag="003">http://catalogue.bnf.fr/ark:/12148/cb46750653s</mxc:controlfield>
+<mxc:datafield tag="010" ind1=" " ind2=" ">
+<mxc:subfield code="b">Br.</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="100" ind1=" " ind2=" ">
+<mxc:subfield code="a">20210408g2021    m  y0frey50      ba</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="101" ind1="1" ind2=" ">
+<mxc:subfield code="a">fre</mxc:subfield>
+<mxc:subfield code="c">eng</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="102" ind1=" " ind2=" ">
+<mxc:subfield code="a">FR</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="105" ind1=" " ind2=" ">
+<mxc:subfield code="a">||||z   00|a|</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="106" ind1=" " ind2=" ">
+<mxc:subfield code="a">r</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="181" ind1=" " ind2="0">
+<mxc:subfield code="6">01</mxc:subfield>
+<mxc:subfield code="a">i </mxc:subfield>
+<mxc:subfield code="b">xxxe  </mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="181" ind1=" " ind2=" ">
+<mxc:subfield code="6">02</mxc:subfield>
+<mxc:subfield code="c">txt</mxc:subfield>
+<mxc:subfield code="2">rdacontent</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="182" ind1=" " ind2="0">
+<mxc:subfield code="6">01</mxc:subfield>
+<mxc:subfield code="a">n</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="182" ind1=" " ind2=" ">
+<mxc:subfield code="6">02</mxc:subfield>
+<mxc:subfield code="c">n</mxc:subfield>
+<mxc:subfield code="2">rdamedia</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="200" ind1="1" ind2=" ">
+<mxc:subfield code="a">Dune</mxc:subfield>
+<mxc:subfield code="b">Texte imprimé</mxc:subfield>
+<mxc:subfield code="f">Frank Herbert</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="205" ind1=" " ind2=" ">
+<mxc:subfield code="a">Éd. revue et corrigée</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="214" ind1=" " ind2="0">
+<mxc:subfield code="a">Paris</mxc:subfield>
+<mxc:subfield code="c">Robert Laffont</mxc:subfield>
+<mxc:subfield code="d">DL 2021-</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="215" ind1=" " ind2=" ">
+<mxc:subfield code="d">22 cm</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="225" ind1="|" ind2=" ">
+<mxc:subfield code="a">Ailleurs &amp; demain</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="410" ind1=" " ind2="0">
+<mxc:subfield code="0">34228102</mxc:subfield>
+<mxc:subfield code="t">Ailleurs et demain</mxc:subfield>
+<mxc:subfield code="x">0244-6073</mxc:subfield>
+<mxc:subfield code="d">2021-</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="454" ind1=" " ind2="1">
+<mxc:subfield code="t">Dune</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="700" ind1=" " ind2="|">
+<mxc:subfield code="3">11907313</mxc:subfield>
+<mxc:subfield code="o">ISNI0000000121347853</mxc:subfield>
+<mxc:subfield code="a">Herbert</mxc:subfield>
+<mxc:subfield code="b">Frank</mxc:subfield>
+<mxc:subfield code="f">1920-1986</mxc:subfield>
+<mxc:subfield code="4">070</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="801" ind1=" " ind2="0">
+<mxc:subfield code="a">FR</mxc:subfield>
+<mxc:subfield code="b">FR-751131015</mxc:subfield>
+<mxc:subfield code="c">20210408</mxc:subfield>
+<mxc:subfield code="g">AFNOR</mxc:subfield>
+<mxc:subfield code="h">FRBNF467506530000009</mxc:subfield>
+<mxc:subfield code="2">intermrc</mxc:subfield>
+</mxc:datafield>
+</mxc:record>      </srw:recordData>
+<srw:recordIdentifier>ark:/12148/cb46750653s</srw:recordIdentifier>
+<srw:recordPosition>13</srw:recordPosition>
+<srw:extraRecordData>
+<ixm:attr name="CreationDate">20210408</ixm:attr>
+<ixm:attr name="LastModificationDate">20210408</ixm:attr>
+<mn:score>12.289861</mn:score>
+</srw:extraRecordData>
+</srw:record>
+<srw:record>
+<srw:recordSchema>marcxchange</srw:recordSchema>
+<srw:recordPacking>xml</srw:recordPacking>
+<srw:recordData>
+<mxc:record xmlns:mxc="info:lc/xmlns/marcxchange-v2" format="UNIMARC" id="ark:/12148/cb34900734q" type="Bibliographic">
+<mxc:leader>     nam  22        450 </mxc:leader>
+<mxc:controlfield tag="001">FRBNF349007340000001</mxc:controlfield>
+<mxc:controlfield tag="003">http://catalogue.bnf.fr/ark:/12148/cb34900734q</mxc:controlfield>
+<mxc:datafield tag="010" ind1=" " ind2=" ">
+<mxc:subfield code="a">2-221-04912-8</mxc:subfield>
+<mxc:subfield code="b">Br.</mxc:subfield>
+<mxc:subfield code="d">95 F</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="020" ind1=" " ind2=" ">
+<mxc:subfield code="a">FR</mxc:subfield>
+<mxc:subfield code="b">08711160</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="039" ind1=" " ind2=" ">
+<mxc:subfield code="o">OPL</mxc:subfield>
+<mxc:subfield code="a">005336250</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="100" ind1=" " ind2=" ">
+<mxc:subfield code="a">19840420d1986    m  y0frey50      ba</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="101" ind1="1" ind2=" ">
+<mxc:subfield code="a">fre</mxc:subfield>
+<mxc:subfield code="c">eng</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="102" ind1=" " ind2=" ">
+<mxc:subfield code="a">FR</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="105" ind1=" " ind2=" ">
+<mxc:subfield code="a">||||z   00|a|</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="106" ind1=" " ind2=" ">
+<mxc:subfield code="a">r</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="181" ind1=" " ind2="0">
+<mxc:subfield code="6">01</mxc:subfield>
+<mxc:subfield code="a">i </mxc:subfield>
+<mxc:subfield code="b">xxxe  </mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="181" ind1=" " ind2=" ">
+<mxc:subfield code="6">02</mxc:subfield>
+<mxc:subfield code="c">txt</mxc:subfield>
+<mxc:subfield code="2">rdacontent</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="182" ind1=" " ind2="0">
+<mxc:subfield code="6">01</mxc:subfield>
+<mxc:subfield code="a">n</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="182" ind1=" " ind2=" ">
+<mxc:subfield code="6">02</mxc:subfield>
+<mxc:subfield code="c">n</mxc:subfield>
+<mxc:subfield code="2">rdamedia</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="200" ind1="1" ind2=" ">
+<mxc:subfield code="a">La Maison des mères</mxc:subfield>
+<mxc:subfield code="b">Texte imprimé</mxc:subfield>
+<mxc:subfield code="e">Dune</mxc:subfield>
+<mxc:subfield code="f">Frank Herbert</mxc:subfield>
+<mxc:subfield code="g">trad. de l'américain par Guy Abadia</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="210" ind1=" " ind2=" ">
+<mxc:subfield code="a">Paris</mxc:subfield>
+<mxc:subfield code="c">R. Laffont</mxc:subfield>
+<mxc:subfield code="d">1986</mxc:subfield>
+<mxc:subfield code="e">18-Saint-Amand-Montrond</mxc:subfield>
+<mxc:subfield code="g">Impr. SEPC</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="215" ind1=" " ind2=" ">
+<mxc:subfield code="a">506 p.</mxc:subfield>
+<mxc:subfield code="d">22 cm</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="225" ind1="|" ind2=" ">
+<mxc:subfield code="a">Ailleurs et demain</mxc:subfield>
+<mxc:subfield code="x">0244-6073</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="300" ind1=" " ind2=" ">
+<mxc:subfield code="a">Fait suite à : " Dune ", " Le Messie de Dune ", " Les Enfants de Dune ", " L'Empereur-dieu de Dune " et " Les Hérétiques de Dune "</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="410" ind1=" " ind2="0">
+<mxc:subfield code="0">34228102</mxc:subfield>
+<mxc:subfield code="t">Ailleurs et demain</mxc:subfield>
+<mxc:subfield code="x">0244-6073</mxc:subfield>
+<mxc:subfield code="v">101</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="454" ind1=" " ind2="1">
+<mxc:subfield code="t">Chapterhouse, Dune</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="686" ind1=" " ind2=" ">
+<mxc:subfield code="a">82 </mxc:subfield>
+<mxc:subfield code="2">Cadre de classement de la Bibliographie nationale française</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="700" ind1=" " ind2="|">
+<mxc:subfield code="3">11907313</mxc:subfield>
+<mxc:subfield code="o">ISNI0000000121347853</mxc:subfield>
+<mxc:subfield code="a">Herbert</mxc:subfield>
+<mxc:subfield code="b">Frank</mxc:subfield>
+<mxc:subfield code="4">070</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="702" ind1=" " ind2="|">
+<mxc:subfield code="3">11887933</mxc:subfield>
+<mxc:subfield code="o">ISNI0000000063039237</mxc:subfield>
+<mxc:subfield code="a">Abadia</mxc:subfield>
+<mxc:subfield code="b">Guy</mxc:subfield>
+<mxc:subfield code="4">730</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="801" ind1=" " ind2="0">
+<mxc:subfield code="a">FR</mxc:subfield>
+<mxc:subfield code="b">FR-751131015</mxc:subfield>
+<mxc:subfield code="c">19840420</mxc:subfield>
+<mxc:subfield code="g">AFNOR</mxc:subfield>
+<mxc:subfield code="h">FRBNF349007340000001</mxc:subfield>
+<mxc:subfield code="2">intermrc</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="930" ind1=" " ind2=" ">
+<mxc:subfield code="5">FR-751131010:34900734001001</mxc:subfield>
+<mxc:subfield code="a">8-Z-40525 (101)</mxc:subfield>
+<mxc:subfield code="b">759999999</mxc:subfield>
+<mxc:subfield code="c">Tolbiac - Rez de Jardin - Littérature et art - Magasin</mxc:subfield>
+<mxc:subfield code="d">O</mxc:subfield>
+</mxc:datafield>
+</mxc:record>      </srw:recordData>
+<srw:recordIdentifier>ark:/12148/cb34900734q</srw:recordIdentifier>
+<srw:recordPosition>14</srw:recordPosition>
+<srw:extraRecordData>
+<ixm:attr name="CreationDate">19871004</ixm:attr>
+<ixm:attr name="LastModificationDate">20190301</ixm:attr>
+<mn:score>12.247515</mn:score>
+</srw:extraRecordData>
+</srw:record>
+<srw:record>
+<srw:recordSchema>marcxchange</srw:recordSchema>
+<srw:recordPacking>xml</srw:recordPacking>
+<srw:recordData>
+<mxc:record xmlns:mxc="info:lc/xmlns/marcxchange-v2" format="UNIMARC" id="ark:/12148/cb46866978s" type="Bibliographic">
+<mxc:leader>     cam  22     3  450 </mxc:leader>
+<mxc:controlfield tag="001">FRBNF468669780000008</mxc:controlfield>
+<mxc:controlfield tag="003">http://catalogue.bnf.fr/ark:/12148/cb46866978s</mxc:controlfield>
+<mxc:datafield tag="010" ind1=" " ind2=" ">
+<mxc:subfield code="a">978-0-441-01359-3</mxc:subfield>
+<mxc:subfield code="b">br.</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="100" ind1=" " ind2=" ">
+<mxc:subfield code="a">20210913d2005    m  y0frey50      ba</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="101" ind1="0" ind2=" ">
+<mxc:subfield code="a">eng</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="102" ind1=" " ind2=" ">
+<mxc:subfield code="a">US</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="105" ind1=" " ind2=" ">
+<mxc:subfield code="a">y   z   00|a|</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="106" ind1=" " ind2=" ">
+<mxc:subfield code="a">z</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="181" ind1=" " ind2="0">
+<mxc:subfield code="6">01</mxc:subfield>
+<mxc:subfield code="a">i </mxc:subfield>
+<mxc:subfield code="b">xxxe  </mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="181" ind1=" " ind2=" ">
+<mxc:subfield code="6">02</mxc:subfield>
+<mxc:subfield code="c">txt</mxc:subfield>
+<mxc:subfield code="2">rdacontent</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="182" ind1=" " ind2="0">
+<mxc:subfield code="6">01</mxc:subfield>
+<mxc:subfield code="a">n</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="182" ind1=" " ind2=" ">
+<mxc:subfield code="6">02</mxc:subfield>
+<mxc:subfield code="c">n</mxc:subfield>
+<mxc:subfield code="2">rdamedia</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="200" ind1="1" ind2=" ">
+<mxc:subfield code="a">Dune</mxc:subfield>
+<mxc:subfield code="b">Texte imprimé</mxc:subfield>
+<mxc:subfield code="f">Frank Herbert</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="214" ind1=" " ind2="0">
+<mxc:subfield code="a">New York</mxc:subfield>
+<mxc:subfield code="c">Ace</mxc:subfield>
+<mxc:subfield code="d">2005</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="215" ind1=" " ind2=" ">
+<mxc:subfield code="a">1 vol. (687 p.)</mxc:subfield>
+<mxc:subfield code="c">1 portrait</mxc:subfield>
+<mxc:subfield code="d">21 cm</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="225" ind1="1" ind2="9">
+<mxc:subfield code="a">Dune chronicles</mxc:subfield>
+<mxc:subfield code="v">1</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="300" ind1=" " ind2=" ">
+<mxc:subfield code="a">Le cycle de "Dune" comprend six tomes, le premier se compose de 3 parties : "Book one, Dune" ; "Book two, Muad'Dib" ; "Book three, The prophet"</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="461" ind1=" " ind2="0">
+<mxc:subfield code="0">46967378</mxc:subfield>
+<mxc:subfield code="t">Dune chronicles</mxc:subfield>
+<mxc:subfield code="v">1</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="676" ind1=" " ind2=" ">
+<mxc:subfield code="a">813.54 (oeuvre)</mxc:subfield>
+<mxc:subfield code="v">23</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="700" ind1=" " ind2="|">
+<mxc:subfield code="3">11907313</mxc:subfield>
+<mxc:subfield code="o">ISNI0000000121347853</mxc:subfield>
+<mxc:subfield code="a">Herbert</mxc:subfield>
+<mxc:subfield code="b">Frank</mxc:subfield>
+<mxc:subfield code="f">1920-1986</mxc:subfield>
+<mxc:subfield code="4">070</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="801" ind1=" " ind2="0">
+<mxc:subfield code="a">FR</mxc:subfield>
+<mxc:subfield code="b">FR-751131015</mxc:subfield>
+<mxc:subfield code="c">20210913</mxc:subfield>
+<mxc:subfield code="g">AFNOR</mxc:subfield>
+<mxc:subfield code="h">FRBNF468669780000008</mxc:subfield>
+<mxc:subfield code="2">intermrc</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="930" ind1=" " ind2=" ">
+<mxc:subfield code="5">FR-751131010:46866978001001</mxc:subfield>
+<mxc:subfield code="a">81/4 HERB 4 dune</mxc:subfield>
+<mxc:subfield code="b">759999999</mxc:subfield>
+<mxc:subfield code="c">Tolbiac - Haut de Jardin - Littérature et art - Salle G - Libre accès</mxc:subfield>
+<mxc:subfield code="d">N</mxc:subfield>
+<mxc:subfield code="v">vol. 1</mxc:subfield>
+</mxc:datafield>
+</mxc:record>      </srw:recordData>
+<srw:recordIdentifier>ark:/12148/cb46866978s</srw:recordIdentifier>
+<srw:recordPosition>15</srw:recordPosition>
+<srw:extraRecordData>
+<ixm:attr name="CreationDate">20210913</ixm:attr>
+<ixm:attr name="LastModificationDate">20220318</ixm:attr>
+<mn:score>12.218085</mn:score>
+</srw:extraRecordData>
+</srw:record>
+<srw:record>
+<srw:recordSchema>marcxchange</srw:recordSchema>
+<srw:recordPacking>xml</srw:recordPacking>
+<srw:recordData>
+<mxc:record xmlns:mxc="info:lc/xmlns/marcxchange-v2" format="UNIMARC" id="ark:/12148/cb468522400" type="Bibliographic">
+<mxc:leader>     cam  22        450 </mxc:leader>
+<mxc:controlfield tag="001">FRBNF468522400000000</mxc:controlfield>
+<mxc:controlfield tag="003">http://catalogue.bnf.fr/ark:/12148/cb468522400</mxc:controlfield>
+<mxc:datafield tag="010" ind1=" " ind2=" ">
+<mxc:subfield code="a">978-2-36480-745-7</mxc:subfield>
+<mxc:subfield code="b">rel.</mxc:subfield>
+<mxc:subfield code="d">21,95 EUR</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="020" ind1=" " ind2=" ">
+<mxc:subfield code="a">FR</mxc:subfield>
+<mxc:subfield code="b">02209056</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="073" ind1=" " ind2="0">
+<mxc:subfield code="a">9782364807457</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="100" ind1=" " ind2=" ">
+<mxc:subfield code="a">20210812d2020    m  y0frey50      ba</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="101" ind1="1" ind2=" ">
+<mxc:subfield code="a">fre</mxc:subfield>
+<mxc:subfield code="c">eng</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="102" ind1=" " ind2=" ">
+<mxc:subfield code="a">FR</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="105" ind1=" " ind2=" ">
+<mxc:subfield code="a">||||t   00|a|</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="106" ind1=" " ind2=" ">
+<mxc:subfield code="a">r</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="181" ind1=" " ind2="0">
+<mxc:subfield code="6">01</mxc:subfield>
+<mxc:subfield code="a">i </mxc:subfield>
+<mxc:subfield code="b">xxxe  </mxc:subfield>
+<mxc:subfield code="a">b </mxc:subfield>
+<mxc:subfield code="b">xb2e  </mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="181" ind1=" " ind2=" ">
+<mxc:subfield code="6">02</mxc:subfield>
+<mxc:subfield code="c">txt</mxc:subfield>
+<mxc:subfield code="c">sti</mxc:subfield>
+<mxc:subfield code="2">rdacontent</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="182" ind1=" " ind2="0">
+<mxc:subfield code="6">01</mxc:subfield>
+<mxc:subfield code="a">n</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="182" ind1=" " ind2=" ">
+<mxc:subfield code="6">02</mxc:subfield>
+<mxc:subfield code="c">n</mxc:subfield>
+<mxc:subfield code="2">rdamedia</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="200" ind1="1" ind2=" ">
+<mxc:subfield code="a">Dune</mxc:subfield>
+<mxc:subfield code="h">[Livre 1]</mxc:subfield>
+<mxc:subfield code="b">Texte imprimé</mxc:subfield>
+<mxc:subfield code="f">Frank Herbert</mxc:subfield>
+<mxc:subfield code="g">adapté par Brian Herbert et Kevin J. Anderson</mxc:subfield>
+<mxc:subfield code="g">illustré par Raúl Allén et Patricia Martín</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="214" ind1=" " ind2="0">
+<mxc:subfield code="a">Paris</mxc:subfield>
+<mxc:subfield code="c">Huginn &amp; Muninn</mxc:subfield>
+<mxc:subfield code="d">DL 2020</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="214" ind1=" " ind2="3">
+<mxc:subfield code="a">52-Langres</mxc:subfield>
+<mxc:subfield code="c">Impr. de Champagne</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="215" ind1=" " ind2=" ">
+<mxc:subfield code="a">1 vol. (162 p.)</mxc:subfield>
+<mxc:subfield code="c">ill. en coul.</mxc:subfield>
+<mxc:subfield code="d">26 cm</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="454" ind1=" " ind2="1">
+<mxc:subfield code="t">Dune</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="461" ind1=" " ind2="0">
+<mxc:subfield code="0">46962023</mxc:subfield>
+<mxc:subfield code="t">Dune</mxc:subfield>
+<mxc:subfield code="v">1</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="686" ind1=" " ind2=" ">
+<mxc:subfield code="a">805</mxc:subfield>
+<mxc:subfield code="2">Cadre de classement de la Bibliographie nationale française</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="700" ind1=" " ind2="|">
+<mxc:subfield code="3">11907313</mxc:subfield>
+<mxc:subfield code="o">ISNI0000000121347853</mxc:subfield>
+<mxc:subfield code="a">Herbert</mxc:subfield>
+<mxc:subfield code="b">Frank</mxc:subfield>
+<mxc:subfield code="f">1920-1986</mxc:subfield>
+<mxc:subfield code="4">070</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="702" ind1=" " ind2="|">
+<mxc:subfield code="3">12719725</mxc:subfield>
+<mxc:subfield code="o">ISNI0000000109108972</mxc:subfield>
+<mxc:subfield code="a">Herbert</mxc:subfield>
+<mxc:subfield code="b">Brian</mxc:subfield>
+<mxc:subfield code="f">1947-....</mxc:subfield>
+<mxc:subfield code="4">010</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="702" ind1=" " ind2="|">
+<mxc:subfield code="3">12527373</mxc:subfield>
+<mxc:subfield code="o">ISNI000000044038255X</mxc:subfield>
+<mxc:subfield code="a">Anderson</mxc:subfield>
+<mxc:subfield code="b">Kevin J.</mxc:subfield>
+<mxc:subfield code="f">1962-....</mxc:subfield>
+<mxc:subfield code="4">010</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="702" ind1=" " ind2="|">
+<mxc:subfield code="3">17081696</mxc:subfield>
+<mxc:subfield code="o">ISNI0000000459759695</mxc:subfield>
+<mxc:subfield code="a">Allén</mxc:subfield>
+<mxc:subfield code="b">Raúl</mxc:subfield>
+<mxc:subfield code="4">440</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="702" ind1=" " ind2="|">
+<mxc:subfield code="3">17738372</mxc:subfield>
+<mxc:subfield code="a">Martín</mxc:subfield>
+<mxc:subfield code="b">Patricia</mxc:subfield>
+<mxc:subfield code="f">1985-....</mxc:subfield>
+<mxc:subfield code="4">440</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="801" ind1=" " ind2="0">
+<mxc:subfield code="a">FR</mxc:subfield>
+<mxc:subfield code="b">FR-751131015</mxc:subfield>
+<mxc:subfield code="c">20210812</mxc:subfield>
+<mxc:subfield code="g">AFNOR</mxc:subfield>
+<mxc:subfield code="h">FRBNF468522400000000</mxc:subfield>
+<mxc:subfield code="2">intermrc</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="930" ind1=" " ind2=" ">
+<mxc:subfield code="5">FR-751131010:46852240001001</mxc:subfield>
+<mxc:subfield code="a">2021-233679</mxc:subfield>
+<mxc:subfield code="b">759999999</mxc:subfield>
+<mxc:subfield code="c">Tolbiac - Rez de Jardin - Littérature et art - Magasin</mxc:subfield>
+<mxc:subfield code="d">O</mxc:subfield>
+</mxc:datafield>
+</mxc:record>      </srw:recordData>
+<srw:recordIdentifier>ark:/12148/cb468522400</srw:recordIdentifier>
+<srw:recordPosition>16</srw:recordPosition>
+<srw:extraRecordData>
+<ixm:attr name="CreationDate">20210812</ixm:attr>
+<ixm:attr name="LastModificationDate">20220223</ixm:attr>
+<mn:score>12.216832</mn:score>
+</srw:extraRecordData>
+</srw:record>
+<srw:record>
+<srw:recordSchema>marcxchange</srw:recordSchema>
+<srw:recordPacking>xml</srw:recordPacking>
+<srw:recordData>
+<mxc:record xmlns:mxc="info:lc/xmlns/marcxchange-v2" format="UNIMARC" id="ark:/12148/cb38949630m" type="Bibliographic">
+<mxc:leader>     cam  22        450 </mxc:leader>
+<mxc:controlfield tag="001">FRBNF38949630000000X</mxc:controlfield>
+<mxc:controlfield tag="003">http://catalogue.bnf.fr/ark:/12148/cb38949630m</mxc:controlfield>
+<mxc:datafield tag="010" ind1=" " ind2=" ">
+<mxc:subfield code="b">Br.</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="100" ind1=" " ind2=" ">
+<mxc:subfield code="a">20030204g2002    m  y0frey50      ba</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="101" ind1="1" ind2=" ">
+<mxc:subfield code="a">fre</mxc:subfield>
+<mxc:subfield code="c">eng</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="102" ind1=" " ind2=" ">
+<mxc:subfield code="a">FR</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="105" ind1=" " ind2=" ">
+<mxc:subfield code="a">||||z   00|a|</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="106" ind1=" " ind2=" ">
+<mxc:subfield code="a">r</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="181" ind1=" " ind2="0">
+<mxc:subfield code="6">01</mxc:subfield>
+<mxc:subfield code="a">i </mxc:subfield>
+<mxc:subfield code="b">xxxe  </mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="181" ind1=" " ind2=" ">
+<mxc:subfield code="6">02</mxc:subfield>
+<mxc:subfield code="c">txt</mxc:subfield>
+<mxc:subfield code="2">rdacontent</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="182" ind1=" " ind2="0">
+<mxc:subfield code="6">01</mxc:subfield>
+<mxc:subfield code="a">n</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="182" ind1=" " ind2=" ">
+<mxc:subfield code="6">02</mxc:subfield>
+<mxc:subfield code="c">n</mxc:subfield>
+<mxc:subfield code="2">rdamedia</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="200" ind1="1" ind2=" ">
+<mxc:subfield code="a">Avant Dune</mxc:subfield>
+<mxc:subfield code="b">Texte imprimé</mxc:subfield>
+<mxc:subfield code="f">Brian Herbert et Kevin J. Anderson</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="210" ind1=" " ind2=" ">
+<mxc:subfield code="a">Paris</mxc:subfield>
+<mxc:subfield code="c">Pocket</mxc:subfield>
+<mxc:subfield code="d">2002-</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="215" ind1=" " ind2=" ">
+<mxc:subfield code="d">18 cm</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="225" ind1="|" ind2=" ">
+<mxc:subfield code="a">Pocket</mxc:subfield>
+<mxc:subfield code="i">Science-fiction</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="300" ind1=" " ind2=" ">
+<mxc:subfield code="a">D'après le cycle de "Dune" de Frank Herbert</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="410" ind1=" " ind2="0">
+<mxc:subfield code="0">34231852</mxc:subfield>
+<mxc:subfield code="t">Presses pocket. Science fiction</mxc:subfield>
+<mxc:subfield code="x">0398-3749</mxc:subfield>
+<mxc:subfield code="d">2002-</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="410" ind1=" " ind2="0">
+<mxc:subfield code="0">34228117</mxc:subfield>
+<mxc:subfield code="t">Presses pocket (Paris)</mxc:subfield>
+<mxc:subfield code="x">0244-6405</mxc:subfield>
+<mxc:subfield code="d">2002-</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="517" ind1="1" ind2=" ">
+<mxc:subfield code="a">Dune</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="700" ind1=" " ind2="|">
+<mxc:subfield code="3">12719725</mxc:subfield>
+<mxc:subfield code="o">ISNI0000000109108972</mxc:subfield>
+<mxc:subfield code="a">Herbert</mxc:subfield>
+<mxc:subfield code="b">Brian</mxc:subfield>
+<mxc:subfield code="f">1947-....</mxc:subfield>
+<mxc:subfield code="4">070</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="701" ind1=" " ind2="|">
+<mxc:subfield code="3">12527373</mxc:subfield>
+<mxc:subfield code="o">ISNI000000044038255X</mxc:subfield>
+<mxc:subfield code="a">Anderson</mxc:subfield>
+<mxc:subfield code="b">Kevin J.</mxc:subfield>
+<mxc:subfield code="f">1962-....</mxc:subfield>
+<mxc:subfield code="4">070</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="702" ind1=" " ind2="|">
+<mxc:subfield code="3">11907313</mxc:subfield>
+<mxc:subfield code="o">ISNI0000000121347853</mxc:subfield>
+<mxc:subfield code="a">Herbert</mxc:subfield>
+<mxc:subfield code="b">Frank</mxc:subfield>
+<mxc:subfield code="f">1920-1986</mxc:subfield>
+<mxc:subfield code="4">100</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="801" ind1=" " ind2="0">
+<mxc:subfield code="a">FR</mxc:subfield>
+<mxc:subfield code="b">FR-751131015</mxc:subfield>
+<mxc:subfield code="c">20030204</mxc:subfield>
+<mxc:subfield code="g">AFNOR</mxc:subfield>
+<mxc:subfield code="h">FRBNF38949630000000X</mxc:subfield>
+<mxc:subfield code="2">intermrc</mxc:subfield>
+</mxc:datafield>
+</mxc:record>      </srw:recordData>
+<srw:recordIdentifier>ark:/12148/cb38949630m</srw:recordIdentifier>
+<srw:recordPosition>17</srw:recordPosition>
+<srw:extraRecordData>
+<ixm:attr name="CreationDate">20030204</ixm:attr>
+<ixm:attr name="LastModificationDate">20030204</ixm:attr>
+<mn:score>12.201023</mn:score>
+</srw:extraRecordData>
+</srw:record>
+<srw:record>
+<srw:recordSchema>marcxchange</srw:recordSchema>
+<srw:recordPacking>xml</srw:recordPacking>
+<srw:recordData>
+<mxc:record xmlns:mxc="info:lc/xmlns/marcxchange-v2" format="UNIMARC" id="ark:/12148/cb371269585" type="Bibliographic">
+<mxc:leader>     cam  22        450 </mxc:leader>
+<mxc:controlfield tag="001">FRBNF371269580000002</mxc:controlfield>
+<mxc:controlfield tag="003">http://catalogue.bnf.fr/ark:/12148/cb371269585</mxc:controlfield>
+<mxc:datafield tag="039" ind1=" " ind2=" ">
+<mxc:subfield code="o">OPL</mxc:subfield>
+<mxc:subfield code="a">025714540</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="100" ind1=" " ind2=" ">
+<mxc:subfield code="a">20000906g2000    m  y0frey50      ba</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="101" ind1="1" ind2=" ">
+<mxc:subfield code="a">fre</mxc:subfield>
+<mxc:subfield code="c">eng</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="102" ind1=" " ind2=" ">
+<mxc:subfield code="a">FR</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="105" ind1=" " ind2=" ">
+<mxc:subfield code="a">||||z   00|a|</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="106" ind1=" " ind2=" ">
+<mxc:subfield code="a">r</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="181" ind1=" " ind2="0">
+<mxc:subfield code="6">01</mxc:subfield>
+<mxc:subfield code="a">i </mxc:subfield>
+<mxc:subfield code="b">xxxe  </mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="181" ind1=" " ind2=" ">
+<mxc:subfield code="6">02</mxc:subfield>
+<mxc:subfield code="c">txt</mxc:subfield>
+<mxc:subfield code="2">rdacontent</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="182" ind1=" " ind2="0">
+<mxc:subfield code="6">01</mxc:subfield>
+<mxc:subfield code="a">n</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="182" ind1=" " ind2=" ">
+<mxc:subfield code="6">02</mxc:subfield>
+<mxc:subfield code="c">n</mxc:subfield>
+<mxc:subfield code="2">rdamedia</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="200" ind1="1" ind2=" ">
+<mxc:subfield code="a">Avant Dune</mxc:subfield>
+<mxc:subfield code="b">Texte imprimé</mxc:subfield>
+<mxc:subfield code="f">Brian Herbert et Kevin J. Anderson</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="210" ind1=" " ind2=" ">
+<mxc:subfield code="a">Paris</mxc:subfield>
+<mxc:subfield code="c">R. Laffont</mxc:subfield>
+<mxc:subfield code="d">2000-</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="215" ind1=" " ind2=" ">
+<mxc:subfield code="d">22 cm</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="225" ind1="|" ind2=" ">
+<mxc:subfield code="a">Ailleurs et demain</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="300" ind1=" " ind2=" ">
+<mxc:subfield code="a">D'après le cycle de "Dune" de Frank Herbert</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="410" ind1=" " ind2="0">
+<mxc:subfield code="0">34228102</mxc:subfield>
+<mxc:subfield code="t">Ailleurs et demain</mxc:subfield>
+<mxc:subfield code="x">0244-6073</mxc:subfield>
+<mxc:subfield code="d">2000-</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="517" ind1="1" ind2=" ">
+<mxc:subfield code="a">Dune</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="686" ind1=" " ind2=" ">
+<mxc:subfield code="a">823</mxc:subfield>
+<mxc:subfield code="2">Cadre de classement de la Bibliographie nationale française</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="700" ind1=" " ind2="|">
+<mxc:subfield code="3">12719725</mxc:subfield>
+<mxc:subfield code="o">ISNI0000000109108972</mxc:subfield>
+<mxc:subfield code="a">Herbert</mxc:subfield>
+<mxc:subfield code="b">Brian</mxc:subfield>
+<mxc:subfield code="f">1947-....</mxc:subfield>
+<mxc:subfield code="4">070</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="701" ind1=" " ind2="|">
+<mxc:subfield code="3">12527373</mxc:subfield>
+<mxc:subfield code="o">ISNI000000044038255X</mxc:subfield>
+<mxc:subfield code="a">Anderson</mxc:subfield>
+<mxc:subfield code="b">Kevin J.</mxc:subfield>
+<mxc:subfield code="f">1962-....</mxc:subfield>
+<mxc:subfield code="4">070</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="702" ind1=" " ind2="|">
+<mxc:subfield code="3">11907313</mxc:subfield>
+<mxc:subfield code="o">ISNI0000000121347853</mxc:subfield>
+<mxc:subfield code="a">Herbert</mxc:subfield>
+<mxc:subfield code="b">Frank</mxc:subfield>
+<mxc:subfield code="f">1920-1986</mxc:subfield>
+<mxc:subfield code="4">100</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="801" ind1=" " ind2="0">
+<mxc:subfield code="a">FR</mxc:subfield>
+<mxc:subfield code="b">FR-751131015</mxc:subfield>
+<mxc:subfield code="c">20000906</mxc:subfield>
+<mxc:subfield code="g">AFNOR</mxc:subfield>
+<mxc:subfield code="h">FRBNF371269580000002</mxc:subfield>
+<mxc:subfield code="2">intermrc</mxc:subfield>
+</mxc:datafield>
+</mxc:record>      </srw:recordData>
+<srw:recordIdentifier>ark:/12148/cb371269585</srw:recordIdentifier>
+<srw:recordPosition>18</srw:recordPosition>
+<srw:extraRecordData>
+<ixm:attr name="CreationDate">20000906</ixm:attr>
+<ixm:attr name="LastModificationDate">20000908</ixm:attr>
+<mn:score>12.201023</mn:score>
+</srw:extraRecordData>
+</srw:record>
+<srw:record>
+<srw:recordSchema>marcxchange</srw:recordSchema>
+<srw:recordPacking>xml</srw:recordPacking>
+<srw:recordData>
+<mxc:record xmlns:mxc="info:lc/xmlns/marcxchange-v2" format="UNIMARC" id="ark:/12148/cb39254850q" type="Bibliographic">
+<mxc:leader>     cam  22        450 </mxc:leader>
+<mxc:controlfield tag="001">FRBNF392548500000007</mxc:controlfield>
+<mxc:controlfield tag="003">http://catalogue.bnf.fr/ark:/12148/cb39254850q</mxc:controlfield>
+<mxc:datafield tag="010" ind1=" " ind2=" ">
+<mxc:subfield code="a">2-266-12178-2</mxc:subfield>
+<mxc:subfield code="b">br.</mxc:subfield>
+<mxc:subfield code="d">12,30 EUR</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="020" ind1=" " ind2=" ">
+<mxc:subfield code="a">FR</mxc:subfield>
+<mxc:subfield code="b">00447416</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="100" ind1=" " ind2=" ">
+<mxc:subfield code="a">20041013d2004    m  y0frey50      ba</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="101" ind1="1" ind2=" ">
+<mxc:subfield code="a">fre</mxc:subfield>
+<mxc:subfield code="c">eng</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="102" ind1=" " ind2=" ">
+<mxc:subfield code="a">FR</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="105" ind1=" " ind2=" ">
+<mxc:subfield code="a">||||z   00|a|</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="106" ind1=" " ind2=" ">
+<mxc:subfield code="a">r</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="181" ind1=" " ind2="0">
+<mxc:subfield code="6">01</mxc:subfield>
+<mxc:subfield code="a">i </mxc:subfield>
+<mxc:subfield code="b">xxxe  </mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="181" ind1=" " ind2=" ">
+<mxc:subfield code="6">02</mxc:subfield>
+<mxc:subfield code="c">txt</mxc:subfield>
+<mxc:subfield code="2">rdacontent</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="182" ind1=" " ind2="0">
+<mxc:subfield code="6">01</mxc:subfield>
+<mxc:subfield code="a">n</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="182" ind1=" " ind2=" ">
+<mxc:subfield code="6">02</mxc:subfield>
+<mxc:subfield code="c">n</mxc:subfield>
+<mxc:subfield code="2">rdamedia</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="200" ind1="1" ind2=" ">
+<mxc:subfield code="a">La maison Harkonnen</mxc:subfield>
+<mxc:subfield code="b">Texte imprimé</mxc:subfield>
+<mxc:subfield code="f">Brian Herbert et Kevin J. Anderson</mxc:subfield>
+<mxc:subfield code="g">trad. de l'américain par Michel Demuth</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="210" ind1=" " ind2=" ">
+<mxc:subfield code="a">Paris</mxc:subfield>
+<mxc:subfield code="c">Pocket</mxc:subfield>
+<mxc:subfield code="d">2004</mxc:subfield>
+<mxc:subfield code="e">18-Saint-Amand-Montrond</mxc:subfield>
+<mxc:subfield code="g">Impr. Bussière</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="215" ind1=" " ind2=" ">
+<mxc:subfield code="a">795 p.</mxc:subfield>
+<mxc:subfield code="c">cartes, couv. ill. en coul.</mxc:subfield>
+<mxc:subfield code="d">18 cm</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="225" ind1="1" ind2="9">
+<mxc:subfield code="a">Avant Dune</mxc:subfield>
+<mxc:subfield code="v">2</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="225" ind1="|" ind2=" ">
+<mxc:subfield code="a">Pocket</mxc:subfield>
+<mxc:subfield code="i">Science-fiction</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="300" ind1=" " ind2=" ">
+<mxc:subfield code="a">D'après le cycle de "Dune" de Frank Herbert</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="308" ind1=" " ind2=" ">
+<mxc:subfield code="a">5787</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="410" ind1=" " ind2="0">
+<mxc:subfield code="0">34231852</mxc:subfield>
+<mxc:subfield code="t">Presses pocket. Science fiction</mxc:subfield>
+<mxc:subfield code="x">0398-3749</mxc:subfield>
+<mxc:subfield code="d">2004</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="410" ind1=" " ind2="0">
+<mxc:subfield code="0">34228117</mxc:subfield>
+<mxc:subfield code="t">Presses pocket (Paris)</mxc:subfield>
+<mxc:subfield code="x">0244-6405</mxc:subfield>
+<mxc:subfield code="v">5787</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="454" ind1=" " ind2="1">
+<mxc:subfield code="t">Dune house Harkonnen</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="461" ind1=" " ind2="0">
+<mxc:subfield code="0">38949630</mxc:subfield>
+<mxc:subfield code="t">Avant Dune</mxc:subfield>
+<mxc:subfield code="v">2</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="686" ind1=" " ind2=" ">
+<mxc:subfield code="a">803</mxc:subfield>
+<mxc:subfield code="2">Cadre de classement de la Bibliographie nationale française</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="700" ind1=" " ind2="|">
+<mxc:subfield code="3">12719725</mxc:subfield>
+<mxc:subfield code="o">ISNI0000000109108972</mxc:subfield>
+<mxc:subfield code="a">Herbert</mxc:subfield>
+<mxc:subfield code="b">Brian</mxc:subfield>
+<mxc:subfield code="f">1947-....</mxc:subfield>
+<mxc:subfield code="4">070</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="701" ind1=" " ind2="|">
+<mxc:subfield code="3">12527373</mxc:subfield>
+<mxc:subfield code="o">ISNI000000044038255X</mxc:subfield>
+<mxc:subfield code="a">Anderson</mxc:subfield>
+<mxc:subfield code="b">Kevin J.</mxc:subfield>
+<mxc:subfield code="f">1962-....</mxc:subfield>
+<mxc:subfield code="4">070</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="702" ind1=" " ind2="|">
+<mxc:subfield code="3">11899546</mxc:subfield>
+<mxc:subfield code="o">ISNI0000000073604252</mxc:subfield>
+<mxc:subfield code="a">Demuth</mxc:subfield>
+<mxc:subfield code="b">Michel</mxc:subfield>
+<mxc:subfield code="f">1939-2006</mxc:subfield>
+<mxc:subfield code="4">730</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="702" ind1=" " ind2="|">
+<mxc:subfield code="3">11907313</mxc:subfield>
+<mxc:subfield code="o">ISNI0000000121347853</mxc:subfield>
+<mxc:subfield code="a">Herbert</mxc:subfield>
+<mxc:subfield code="b">Frank</mxc:subfield>
+<mxc:subfield code="f">1920-1986</mxc:subfield>
+<mxc:subfield code="4">100</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="801" ind1=" " ind2="0">
+<mxc:subfield code="a">FR</mxc:subfield>
+<mxc:subfield code="b">FR-751131015</mxc:subfield>
+<mxc:subfield code="c">20041013</mxc:subfield>
+<mxc:subfield code="g">AFNOR</mxc:subfield>
+<mxc:subfield code="h">FRBNF392548500000007</mxc:subfield>
+<mxc:subfield code="2">intermrc</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="930" ind1=" " ind2=" ">
+<mxc:subfield code="5">FR-751131010:39254850001001</mxc:subfield>
+<mxc:subfield code="a">2004-240539</mxc:subfield>
+<mxc:subfield code="b">759999999</mxc:subfield>
+<mxc:subfield code="c">Tolbiac - Rez de Jardin - Littérature et art - Magasin</mxc:subfield>
+<mxc:subfield code="d">O</mxc:subfield>
+</mxc:datafield>
+</mxc:record>      </srw:recordData>
+<srw:recordIdentifier>ark:/12148/cb39254850q</srw:recordIdentifier>
+<srw:recordPosition>19</srw:recordPosition>
+<srw:extraRecordData>
+<ixm:attr name="CreationDate">20041013</ixm:attr>
+<ixm:attr name="LastModificationDate">20041104</ixm:attr>
+<mn:score>12.1888485</mn:score>
+</srw:extraRecordData>
+</srw:record>
+<srw:record>
+<srw:recordSchema>marcxchange</srw:recordSchema>
+<srw:recordPacking>xml</srw:recordPacking>
+<srw:recordData>
+<mxc:record xmlns:mxc="info:lc/xmlns/marcxchange-v2" format="UNIMARC" id="ark:/12148/cb41259272k" type="Bibliographic">
+<mxc:leader>     cam  22        450 </mxc:leader>
+<mxc:controlfield tag="001">FRBNF412592720000000</mxc:controlfield>
+<mxc:controlfield tag="003">http://catalogue.bnf.fr/ark:/12148/cb41259272k</mxc:controlfield>
+<mxc:datafield tag="010" ind1=" " ind2=" ">
+<mxc:subfield code="a">978-2-266-18378-9</mxc:subfield>
+<mxc:subfield code="b">br.</mxc:subfield>
+<mxc:subfield code="d">11 EUR</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="020" ind1=" " ind2=" ">
+<mxc:subfield code="a">FR</mxc:subfield>
+<mxc:subfield code="b">00831688</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="073" ind1=" " ind2="0">
+<mxc:subfield code="a">9782266183789</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="100" ind1=" " ind2=" ">
+<mxc:subfield code="a">20080520d2008    m  y0frey50      ba</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="101" ind1="1" ind2=" ">
+<mxc:subfield code="a">fre</mxc:subfield>
+<mxc:subfield code="c">eng</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="102" ind1=" " ind2=" ">
+<mxc:subfield code="a">FR</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="105" ind1=" " ind2=" ">
+<mxc:subfield code="a">||||z   00|a|</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="106" ind1=" " ind2=" ">
+<mxc:subfield code="a">r</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="181" ind1=" " ind2="0">
+<mxc:subfield code="6">01</mxc:subfield>
+<mxc:subfield code="a">i </mxc:subfield>
+<mxc:subfield code="b">xxxe  </mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="181" ind1=" " ind2=" ">
+<mxc:subfield code="6">02</mxc:subfield>
+<mxc:subfield code="c">txt</mxc:subfield>
+<mxc:subfield code="2">rdacontent</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="182" ind1=" " ind2="0">
+<mxc:subfield code="6">01</mxc:subfield>
+<mxc:subfield code="a">n</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="182" ind1=" " ind2=" ">
+<mxc:subfield code="6">02</mxc:subfield>
+<mxc:subfield code="c">n</mxc:subfield>
+<mxc:subfield code="2">rdamedia</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="200" ind1="1" ind2=" ">
+<mxc:subfield code="a">Le jihad butlérien</mxc:subfield>
+<mxc:subfield code="b">Texte imprimé</mxc:subfield>
+<mxc:subfield code="f">Brian Herbert et Kevin J. Anderson</mxc:subfield>
+<mxc:subfield code="g">traduit de l'américain par Michel Demuth</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="210" ind1=" " ind2=" ">
+<mxc:subfield code="a">Paris</mxc:subfield>
+<mxc:subfield code="c">Pocket</mxc:subfield>
+<mxc:subfield code="d">DL 2008</mxc:subfield>
+<mxc:subfield code="e">72-La Flèche</mxc:subfield>
+<mxc:subfield code="g">Impr. Brodard &amp; Taupin</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="215" ind1=" " ind2=" ">
+<mxc:subfield code="a">1 vol. (861 p.)</mxc:subfield>
+<mxc:subfield code="c">couv. ill. en coul.</mxc:subfield>
+<mxc:subfield code="d">18 cm</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="225" ind1="1" ind2="9">
+<mxc:subfield code="a">Dune, la genèse</mxc:subfield>
+<mxc:subfield code="v">2</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="225" ind1="|" ind2=" ">
+<mxc:subfield code="a">Pocket</mxc:subfield>
+<mxc:subfield code="i">Science-fiction</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="300" ind1=" " ind2=" ">
+<mxc:subfield code="a">D'après le cycle de "Dune" de Frank Herbert</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="308" ind1=" " ind2=" ">
+<mxc:subfield code="a">5984</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="410" ind1=" " ind2="0">
+<mxc:subfield code="0">34231852</mxc:subfield>
+<mxc:subfield code="t">Presses pocket. Science fiction</mxc:subfield>
+<mxc:subfield code="x">0398-3749</mxc:subfield>
+<mxc:subfield code="d">2008</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="410" ind1=" " ind2="0">
+<mxc:subfield code="0">34228117</mxc:subfield>
+<mxc:subfield code="t">Presses pocket (Paris)</mxc:subfield>
+<mxc:subfield code="x">0244-6405</mxc:subfield>
+<mxc:subfield code="v">5984</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="454" ind1=" " ind2="1">
+<mxc:subfield code="t">Dune, the machine crusade</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="461" ind1=" " ind2="0">
+<mxc:subfield code="0">41076071</mxc:subfield>
+<mxc:subfield code="t">Dune, la genèse</mxc:subfield>
+<mxc:subfield code="v">2</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="686" ind1=" " ind2=" ">
+<mxc:subfield code="a">803</mxc:subfield>
+<mxc:subfield code="2">Cadre de classement de la Bibliographie nationale française</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="700" ind1=" " ind2="|">
+<mxc:subfield code="3">12719725</mxc:subfield>
+<mxc:subfield code="o">ISNI0000000109108972</mxc:subfield>
+<mxc:subfield code="a">Herbert</mxc:subfield>
+<mxc:subfield code="b">Brian</mxc:subfield>
+<mxc:subfield code="f">1947-....</mxc:subfield>
+<mxc:subfield code="4">070</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="701" ind1=" " ind2="|">
+<mxc:subfield code="3">12527373</mxc:subfield>
+<mxc:subfield code="o">ISNI000000044038255X</mxc:subfield>
+<mxc:subfield code="a">Anderson</mxc:subfield>
+<mxc:subfield code="b">Kevin J.</mxc:subfield>
+<mxc:subfield code="f">1962-....</mxc:subfield>
+<mxc:subfield code="4">070</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="702" ind1=" " ind2="|">
+<mxc:subfield code="3">11899546</mxc:subfield>
+<mxc:subfield code="o">ISNI0000000073604252</mxc:subfield>
+<mxc:subfield code="a">Demuth</mxc:subfield>
+<mxc:subfield code="b">Michel</mxc:subfield>
+<mxc:subfield code="f">1939-2006</mxc:subfield>
+<mxc:subfield code="4">730</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="702" ind1=" " ind2="|">
+<mxc:subfield code="3">11907313</mxc:subfield>
+<mxc:subfield code="o">ISNI0000000121347853</mxc:subfield>
+<mxc:subfield code="a">Herbert</mxc:subfield>
+<mxc:subfield code="b">Frank</mxc:subfield>
+<mxc:subfield code="f">1920-1986</mxc:subfield>
+<mxc:subfield code="4">100</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="801" ind1=" " ind2="0">
+<mxc:subfield code="a">FR</mxc:subfield>
+<mxc:subfield code="b">FR-751131015</mxc:subfield>
+<mxc:subfield code="c">20080520</mxc:subfield>
+<mxc:subfield code="g">AFNOR</mxc:subfield>
+<mxc:subfield code="h">FRBNF412592720000000</mxc:subfield>
+<mxc:subfield code="2">intermrc</mxc:subfield>
+</mxc:datafield>
+<mxc:datafield tag="930" ind1=" " ind2=" ">
+<mxc:subfield code="5">FR-751131010:41259272001001</mxc:subfield>
+<mxc:subfield code="a">2008-98620</mxc:subfield>
+<mxc:subfield code="b">759999999</mxc:subfield>
+<mxc:subfield code="c">Tolbiac - Rez de Jardin - Littérature et art - Magasin</mxc:subfield>
+<mxc:subfield code="d">O</mxc:subfield>
+</mxc:datafield>
+</mxc:record>      </srw:recordData>
+<srw:recordIdentifier>ark:/12148/cb41259272k</srw:recordIdentifier>
+<srw:recordPosition>20</srw:recordPosition>
+<srw:extraRecordData>
+<ixm:attr name="CreationDate">20080520</ixm:attr>
+<ixm:attr name="LastModificationDate">20141101</ixm:attr>
+<mn:score>12.1888485</mn:score>
+</srw:extraRecordData>
+</srw:record>
+</srw:records>
+<srw:nextRecordPosition>21</srw:nextRecordPosition>
+</srw:searchRetrieveResponse>
