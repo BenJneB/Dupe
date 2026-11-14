@@ -82,6 +82,24 @@ class _CameraScannerViewState extends State<CameraScannerView> {
             ),
           ),
         ),
+        Positioned(
+          top: 12,
+          right: 12,
+          child: ValueListenableBuilder(
+            valueListenable: _controller,
+            builder: (context, state, _) => switch (state.torchState) {
+              TorchState.unavailable => const SizedBox.shrink(),
+              final torch => IconButton.filledTonal(
+                key: const Key('torchButton'),
+                tooltip: torch == TorchState.on ? l10n.torchOff : l10n.torchOn,
+                icon: Icon(
+                  torch == TorchState.on ? Icons.flash_off : Icons.flash_on,
+                ),
+                onPressed: () => unawaited(_controller.toggleTorch()),
+              ),
+            },
+          ),
+        ),
         Align(
           alignment: const Alignment(0, -0.6),
           child: Container(

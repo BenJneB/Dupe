@@ -882,6 +882,11 @@
     }
   },
   "updateDownload": "Télécharger",
+  "torchOn": "Allumer la lampe",
+  "torchOff": "Éteindre la lampe",
+  "scanSection": "Scan",
+  "storeHaptics": "Vibrer selon le résultat",
+  "storeHapticsHelp": "Mode Magasin : 1 forte = déjà possédé, 2 = en envie, 3 légères = tome manquant d’une série, 1 brève = inconnu",
   "errorOffline": "Pas de connexion internet.",
   "errorSession": "Session expirée : reconnecte-toi.",
   "errorUnavailable": "Serveur de synchronisation indisponible. Si l’appli n’a pas servi depuis une semaine, le projet Supabase gratuit est peut-être en pause : le réactiver depuis son tableau de bord.",

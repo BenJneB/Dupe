@@ -4,11 +4,13 @@ import 'package:dupe/core/database/database_provider.dart';
 import 'package:dupe/features/backup/data/auto_backups.dart';
 import 'package:dupe/features/backup/data/backup_store.dart';
 import 'package:dupe/features/loans/data/loan_reminders.dart';
+import 'package:dupe/features/scan/data/app_shortcuts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 
+import 'fake_app_shortcuts.dart';
 import 'fake_reminders.dart';
 import 'memory_backup_store.dart';
 
@@ -27,6 +29,9 @@ Future<AppDatabase> pumpApp(
   /// Automatic backups (memory; never the app folder).
   BackupStore? backups,
 
+  /// Home-screen shortcuts (never the platform plugin).
+  FakeAppShortcuts? shortcuts,
+
   /// Writes initial data before the app (and its drift streams) starts.
   Future<void> Function(AppDatabase db)? seed,
 }) async {
@@ -43,6 +48,7 @@ Future<AppDatabase> pumpApp(
           reminders ?? FakeLoanReminders(),
         ),
         backupStoreProvider.overrideWithValue(backups ?? MemoryBackupStore()),
+        appShortcutsProvider.overrideWithValue(shortcuts ?? FakeAppShortcuts()),
         ...overrides,
       ],
       child: const DupeApp(),

@@ -8,6 +8,7 @@ import 'package:dupe/features/scan/presentation/camera_scanner_view.dart';
 import 'package:dupe/features/scan/presentation/code_entry_field.dart';
 import 'package:dupe/features/scan/presentation/parse_scanned_code.dart';
 import 'package:dupe/features/scan/presentation/scan_mode.dart';
+import 'package:dupe/features/scan/presentation/store/store_haptics.dart';
 import 'package:dupe/features/scan/presentation/store/store_result_banner.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
 import 'package:flutter/foundation.dart';
@@ -44,7 +45,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
   Future<void> _onCode(String raw) async {
     final isbn = parseScannedCode(context, raw);
     if (isbn == null) return;
-    unawaited(HapticFeedback.mediumImpact());
+    // Store mode vibrates with the verdict (StoreResultBanner).
     if (_mode == ScanMode.store) {
       setState(() => _lastIsbn = isbn);
       return;
@@ -53,6 +54,11 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
     final messenger = ScaffoldMessenger.of(context);
     final queue = ref.read(scanQueueRepositoryProvider);
     final added = await queue.enqueue(isbn, _type);
+    if (await ref.read(storeHapticsProvider).enabled) {
+      unawaited(
+        added ? HapticFeedback.lightImpact() : HapticFeedback.selectionClick(),
+      );
+    }
     unawaited(ref.read(scanQueueWorkerProvider).run());
     final count = await queue.count();
     messenger

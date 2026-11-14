@@ -6,6 +6,7 @@ import 'package:dupe/core/logging/app_log.dart';
 import 'package:dupe/core/sync/sync_controller.dart';
 import 'package:dupe/features/backup/data/auto_backups.dart';
 import 'package:dupe/features/loans/data/loan_actions.dart';
+import 'package:dupe/features/scan/data/app_shortcuts.dart';
 import 'package:dupe/features/settings/data/theme_mode_provider.dart';
 import 'package:dupe/features/updates/data/update_checker.dart';
 import 'package:dupe/features/updates/presentation/update_notice.dart';
@@ -42,6 +43,20 @@ class _DupeAppState extends ConsumerState<DupeApp> {
           ),
     );
     unawaited(_checkForUpdate());
+    // Long press on the icon → store-mode scan (Android).
+    unawaited(
+      ref
+          .read(appShortcutsProvider)
+          .setUp(
+            scanTitle: lookupAppLocalizations(const Locale('fr')).scan,
+            onScan: () =>
+                ref.read(appRouterProvider).go(AppRoutes.scanFor(null)),
+          )
+          .then<void>(
+            (_) {},
+            onError: (Object e) => appLog.warning('shortcuts', e),
+          ),
+    );
   }
 
   /// Release builds only: debug runs are always "older" than the release.

@@ -2296,6 +2296,36 @@ abstract class AppLocalizations {
   /// **'Télécharger'**
   String get updateDownload;
 
+  /// No description provided for @torchOn.
+  ///
+  /// In fr, this message translates to:
+  /// **'Allumer la lampe'**
+  String get torchOn;
+
+  /// No description provided for @torchOff.
+  ///
+  /// In fr, this message translates to:
+  /// **'Éteindre la lampe'**
+  String get torchOff;
+
+  /// No description provided for @scanSection.
+  ///
+  /// In fr, this message translates to:
+  /// **'Scan'**
+  String get scanSection;
+
+  /// No description provided for @storeHaptics.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vibrer selon le résultat'**
+  String get storeHaptics;
+
+  /// No description provided for @storeHapticsHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mode Magasin : 1 forte = déjà possédé, 2 = en envie, 3 légères = tome manquant d’une série, 1 brève = inconnu'**
+  String get storeHapticsHelp;
+
   /// No description provided for @errorOffline.
   ///
   /// In fr, this message translates to:

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dupe/app/router.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
 import 'package:dupe/features/collection/domain/enums.dart';
@@ -6,12 +8,19 @@ import 'package:dupe/features/collection/presentation/item/bought_action.dart';
 import 'package:dupe/features/scan/data/store_checker.dart';
 import 'package:dupe/features/scan/domain/store_check.dart';
 import 'package:dupe/features/scan/presentation/store/store_banner_lines.dart';
+import 'package:dupe/features/scan/presentation/store/store_haptics.dart';
 import 'package:dupe/features/scan/presentation/store/store_style.dart';
 import 'package:dupe/features/search/presentation/online_search/add_from_result.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
+
+StoreVerdict? _finalVerdict(AsyncValue<StoreCheck>? value) => switch (value) {
+  AsyncData(:final value) when !value.searching => value.verdict,
+  AsyncError() => StoreVerdict.unknown,
+  _ => null,
+};
 
 /// Store mode: big coloured verdict for a scanned ISBN (PLAN.md §3).
 class StoreResultBanner extends ConsumerWidget {
@@ -23,6 +32,12 @@ class StoreResultBanner extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
+    // One vibration per final verdict (not while still searching online).
+    ref.listen(storeCheckProvider(isbn13, type), (previous, next) {
+      final verdict = _finalVerdict(next);
+      if (verdict == null || verdict == _finalVerdict(previous)) return;
+      unawaited(ref.read(storeHapticsProvider).play(verdict));
+    });
     final check = switch (ref.watch(storeCheckProvider(isbn13, type))) {
       AsyncData(:final value) => value,
       // Online lookup failure: the local check already answered "unknown".
