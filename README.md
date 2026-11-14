@@ -88,6 +88,31 @@ Fonctionnement : SQLite reste la source de vérité ; synchro au lancement, au r
 modification la plus récente gagne. Les photos de couverture prises dans l'appli vont dans le bucket
 privé `covers`.
 
+## Tests de synchro contre un Supabase local
+Les tests tagués `supabase` (`test/supabase/`) vérifient la synchro contre un vrai PostgREST/Postgres/GoTrue/
+Storage **local** (Docker) : filtre de pagination, égalités d'horodatage, commits tardifs, triggers, suppressions,
+isolation entre comptes (RLS), `keep_alive()`, photos privées, comptes par mot de passe. Jamais contre le projet
+distant (le script refuse une URL qui n'est pas locale). Ils sont exclus de `flutter test` ; la CI les lance sur
+les pull requests et sur `dev` (job `supabase-tests`).
+
+Installation, une fois :
+```sh
+sudo usermod -aG docker "$USER"     # puis se déconnecter / reconnecter (donne des droits root via Docker)
+curl -fLO https://github.com/supabase/cli/releases/download/v2.122.1/supabase_2.122.1_linux_amd64.deb
+sudo dpkg -i supabase_2.122.1_linux_amd64.deb   # Supabase CLI épinglée (même version qu'en CI)
+```
+Sans installer la CLI : `tool/supabase_tests.sh` passe alors par `npx -y supabase@2.122.1` (Node requis).
+Juste après `usermod`, sans se reconnecter : `sg docker -c tool/supabase_tests.sh`.
+`psql` est aussi nécessaire (paquet `postgresql-client`).
+
+Lancer :
+```sh
+tool/supabase_tests.sh       # démarre Supabase local si besoin (supabase/config.toml), applique les migrations
+supabase stop                # quand on a fini
+```
+Le premier `supabase start` télécharge les images Docker (plusieurs minutes). Confirmation d'email désactivée
+en local (`supabase/config.toml`) : les tests créent un compte neuf chacun.
+
 ## Sauvegardes
 - **Manuelles** : Paramètres → *Exporter une sauvegarde* (JSON complet) ; *Restaurer* propose de **fusionner**
   (rien n'est effacé) ou de **revenir exactement** à la sauvegarde (ce qui a été ajouté depuis est supprimé, sur

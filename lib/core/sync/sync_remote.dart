@@ -19,6 +19,10 @@ abstract interface class SyncRemote {
     SyncCursor? after, {
     required int limit,
   });
+
+  /// Current server time (`keep_alive()`), or null when unknown (function
+  /// missing, network…): only used to warn about a wrong device clock.
+  Future<DateTime?> serverTime();
 }
 
 /// Why a sync request failed.

@@ -30,11 +30,11 @@ raccourci Android « Scanner », vibrations, lampe torche, signalement des nouve
 | Risque (`PLAN_V2.md` §6) | Traité en |
 |---|---|
 | 1. Aucun test réel (synchro, connexion, caméra, Windows, workflows) | Phase 14 (base), 17-18 (auto), 21 (recette) |
-| 2. Filtre PostgREST du pull jamais vérifié contre un vrai serveur | Phase 17 (auto), 21 (`S-05`, en réel ; reporté de la phase 14) |
+| 2. Filtre PostgREST du pull jamais vérifié contre un vrai serveur | Phase 17 ✅ (vérifié contre PostgREST local) ; 21 (`S-05` sur le projet réel) |
 | 3. Compte existant sans mot de passe | Sans objet (2026-11-14 : aucun compte n'existait ; création en phase 14, `P-04`) |
 | 4. Clés Comic Vine / Google Books extractibles des binaires publics | Phase 15 ✅ (aucune Release n'a encore été publiée : aucune clé exposée) |
 | 5. Efficacité du `keep-alive` non prouvée ; tâches planifiées désactivées après 60 j | Phase 16 ✅ (vraie requête SQL ; réactivation par API, efficacité non documentée par GitHub) |
-| 6. Horloge d'appareil très en avance qui gagne à tort la synchro | Phase 17 |
+| 6. Horloge d'appareil très en avance qui gagne à tort la synchro | Phase 17 ✅ (avertissement, testé avec le faux serveur) |
 
 ## 2. Décisions déjà prises
 - Pas de service de suivi d'erreurs externe : le journal local suffit.
@@ -48,7 +48,7 @@ raccourci Android « Scanner », vibrations, lampe torche, signalement des nouve
 | 14 | Vérifications de base en réel et correctifs | close (réduite) | message de confirmation | CI, schéma, compte (2026-11-14) |
 | 15 | Clés API saisies dans l'appli | ✅ fait (2026-11-14) | oui | non (phase 21 : `K-*`) |
 | 16 | CI renforcée et veille Supabase fiable | ✅ fait (2026-11-14) | local | non (workflows non relancés) |
-| 17 | Tests de synchro contre Supabase local | à faire | — | — |
+| 17 | Tests de synchro contre Supabase local | ✅ fait (2026-11-14) | 8 tests `supabase` (local) + horloge | Supabase local ; CI `supabase-tests` à voir |
 | 18 | Hooks, commits conventionnels, tests d'intégration | à faire | — | — |
 | 19 | Accès rapide : widget et recherche vocale | à faire | — | — |
 | 20 | Couvertures hors ligne, stats de lecture, partage des envies | à faire | — | — |
@@ -182,6 +182,34 @@ Objectif : vérifier contre un vrai PostgREST/GoTrue ce que `fake_sync_remote.da
 *Critère : `flutter test --tags supabase` passe en local et en CI ; un filtre PostgREST volontairement cassé
 fait échouer un test.*
 
+**Bilan (2026-11-14)**
+- **Réalisé** :
+  - `supabase/config.toml` écrit à la main (confirmation d'email désactivée, services inutiles coupés) — la CLI
+    n'a pas pu être lancée pour le générer, à valider au premier `supabase start` ;
+  - `dart_test.yaml` : tag `supabase` exclu par défaut, *preset* `supabase` ; `tool/supabase_tests.sh` (démarre
+    Supabase local, lit `supabase status -o env`, **refuse toute URL non locale**, lance `flutter test -P supabase`) ;
+  - 8 tests (`test/supabase/`) : synchro dans les deux sens et suppressions, égalités d'horodatage réparties sur
+    plusieurs pages (filtre `or(...)` réel), commit tardif (relecture de la minute), dernière écriture gagnante
+    et propriétaire conservés par le trigger, isolation RLS entre comptes, comptes par mot de passe (inscription,
+    connexion, mauvais mot de passe, email pris, changement de mot de passe), `keep_alive()` en anonyme, photos
+    privées par compte. Horodatages forcés par `psql` avec le trigger désactivé (base locale seulement) ;
+  - job CI `supabase-tests` (PR et `dev`), CLI épinglée en 2.122.1 (`supabase/setup-cli@v3`) ;
+  - **horloge** (risque 6) : `SyncRemote.serverTime()` via `keep_alive()` ; après une synchro, au plus une fois
+    par heure, écart > 2 min → entrée au journal (une fois) et statut « l'heure de cet appareil semble fausse » ;
+    rien si l'heure du serveur est inconnue. Testé avec le faux serveur.
+- **Écarts** : `flutter test -P supabase` au lieu de `--tags supabase` (avec `exclude_tags` dans `dart_test.yaml`,
+  `--tags` ne sélectionne rien : essayé). CLI épinglée en 2.122.1 (dernière 2.x) plutôt que 3.x sortie il y a
+  12 jours. Les égalités d'horodatage ne se produisent pas naturellement contre un vrai serveur
+  (`clock_timestamp()` par ligne) : elles sont forcées en SQL.
+- **Vérifié** (Docker + CLI 2.122.1 via `npx`, accès Docker donné par l'utilisateur) : `supabase start`
+  applique les 3 migrations (dont `keep_alive`) ; **les 8 tests passent du premier coup** contre le Supabase local
+  (dont le vrai filtre `or(...)` de la phase 9 : risque 2 levé côté code) ; `supabase/config.toml` comparé à celui
+  que génère `supabase init` 2.122.1 (aucune clé inconnue ; serveur d'emails de test coupé en plus).
+  **Filtre volontairement cassé** (retour au seul `server_updated_at.gt`) : le test des égalités d'horodatage
+  échoue (2 ouvrages reçus sur 5), puis fichier restauré à l'identique.
+- **Non vérifié** : le job CI `supabase-tests` (n'a pas encore tourné : `Y-14`) ; le comportement sur le projet
+  Supabase réel (phase 21, `S-05`).
+
 ### Phase 18 — Hooks, commits conventionnels, tests d'intégration
 - `lefthook` (version épinglée, installation documentée) : pré-commit = format des fichiers Dart stagés +
   `flutter analyze` ; pré-push = `flutter test` ; commit-msg = vérification du format conventionnel
@@ -257,7 +285,8 @@ accepté.*
 - **Phase 16** : appliquer la migration `20261115090000_keep_alive.sql` ; mettre `dev` à jour avec le travail
   des phases et porter `.github/dependabot.yml` sur `main` (sinon Dependabot ne fait rien) ; activer Dependabot
   si nécessaire ; protéger `main` (pull request obligatoire, CI verte exigée) dans les réglages du dépôt.
-- **Phase 17** : installer Docker et la Supabase CLI sur le poste.
+- **Phase 17** : accès à Docker sans sudo (`sudo usermod -aG docker $USER`, puis se reconnecter), Supabase CLI
+  2.122.1 (`.deb`, README « Tests de synchro contre un Supabase local »), `postgresql-client`.
 - **Phase 18** : `lefthook install` après récupération du dépôt.
 - **Phase 21** : d'abord les tests reportés de la phase 14 (synchro, secrets GitHub, Release de test,
   APK sur le téléphone), puis dérouler `TESTS_MANUELS.md` ; publier deux versions stables successives.

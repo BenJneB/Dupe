@@ -1108,6 +1108,11 @@ class AppLocalizationsFr extends AppLocalizations {
   String get syncIdle => 'Synchronisé';
 
   @override
+  String syncClockSkew(int minutes) {
+    return 'Synchronisé, mais l’heure de cet appareil semble fausse (écart de $minutes min avec le serveur) : corrige-la, sinon tes modifications risquent d’être mal départagées';
+  }
+
+  @override
   String syncIdleAt(String time) {
     return 'Synchronisé à $time';
   }

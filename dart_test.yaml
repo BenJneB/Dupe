@@ -1,2 +1,13 @@
 # A hanging test must fail fast instead of blocking the suite.
 timeout: 30s
+
+# Tests against a local Supabase (PLAN_V3 phase 17) are excluded from
+# `flutter test`; run them with `tool/supabase_tests.sh` (`flutter test -P supabase`).
+# Note: `--tags supabase` would clash with `exclude_tags` below.
+tags:
+  supabase:
+    timeout: 2x
+exclude_tags: supabase
+presets:
+  supabase:
+    include_tags: supabase

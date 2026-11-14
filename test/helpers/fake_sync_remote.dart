@@ -15,6 +15,13 @@ class FakeSyncRemote implements SyncRemote {
   /// Time between two server stamps; zero gives ties (same stamp).
   Duration step = const Duration(milliseconds: 1);
 
+  /// Answer of [serverTime] (null: unknown, like a project without
+  /// `keep_alive()`).
+  DateTime? serverNow;
+
+  @override
+  Future<DateTime?> serverTime() async => serverNow;
+
   /// Stamps the next upsert this much in the past: a transaction that took
   /// its timestamps before committing, after other writes became visible.
   Duration? nextUpsertLag;

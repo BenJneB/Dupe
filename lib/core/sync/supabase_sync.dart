@@ -155,6 +155,16 @@ class SupabaseSyncRemote implements SyncRemote {
         .limit(limit);
   });
 
+  @override
+  Future<DateTime?> serverTime() async {
+    try {
+      final now = await client.rpc<Object?>('keep_alive');
+      return now is String ? DateTime.parse(now) : null;
+    } on Object {
+      return null;
+    }
+  }
+
   Future<T> _guard<T>(Future<T> Function() call) async {
     try {
       return await call();
