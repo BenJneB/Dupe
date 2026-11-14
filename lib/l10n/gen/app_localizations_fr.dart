@@ -724,4 +724,175 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get sourceAnilistHelp =>
       'Mangas : infos de série (nombre de tomes, statut)';
+
+  @override
+  String volumeCopiesTitle(String label, int count) {
+    return 'Tome $label : $count exemplaires';
+  }
+
+  @override
+  String copyNumber(int number) {
+    return 'Exemplaire $number';
+  }
+
+  @override
+  String get filterToRead => 'À lire';
+
+  @override
+  String get markReadTitle => 'Marquer comme lus…';
+
+  @override
+  String get markReadUpTo => 'Lus jusqu’au tome';
+
+  @override
+  String get markReadConfirm => 'Marquer comme lus';
+
+  @override
+  String volumesMarkedRead(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tomes marqués comme lus',
+      one: '1 tome marqué comme lu',
+      zero: 'Aucun tome à marquer',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String volumesToRead(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tomes à lire',
+      one: '1 tome à lire',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get notificationOpen => 'Ouvrir';
+
+  @override
+  String get notificationChannelLoans => 'Rappels de retour des prêts';
+
+  @override
+  String get loanDueTitle => 'Prêt à récupérer';
+
+  @override
+  String loanDueBody(String title, String name) {
+    return '$title : prêté à $name';
+  }
+
+  @override
+  String loansOverdueTitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count prêts en retard',
+      one: '1 prêt en retard',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get lend => 'Prêter';
+
+  @override
+  String lendTitle(String title) {
+    return 'Prêter « $title »';
+  }
+
+  @override
+  String get borrowerLabel => 'Emprunteur';
+
+  @override
+  String get dueDateOptional => 'Date de retour (facultatif)';
+
+  @override
+  String get noDueDate => 'Sans date de retour';
+
+  @override
+  String loanedTo(String name) {
+    return 'Prêté à $name';
+  }
+
+  @override
+  String loanedSince(String date) {
+    return 'depuis le $date';
+  }
+
+  @override
+  String loanDueOn(String date) {
+    return 'retour prévu le $date';
+  }
+
+  @override
+  String get loanOverdue => 'En retard';
+
+  @override
+  String get markReturned => 'Rendu';
+
+  @override
+  String loanReturnedOn(String date) {
+    return 'Rendu le $date';
+  }
+
+  @override
+  String get loansCurrent => 'En cours';
+
+  @override
+  String get loansHistory => 'Historique';
+
+  @override
+  String get loansEmpty => 'Aucun prêt en cours';
+
+  @override
+  String get loansHistoryEmpty => 'Aucun prêt rendu';
+
+  @override
+  String loanReturnedSnack(String title) {
+    return '« $title » marqué comme rendu';
+  }
+
+  @override
+  String get wishlistItems => 'Envies';
+
+  @override
+  String get nextVolumes => 'Prochains tomes à acheter';
+
+  @override
+  String get wishlistEmpty => 'Ta liste d’envies est vide';
+
+  @override
+  String get noNextVolumes => 'Aucun tome manquant dans tes séries suivies';
+
+  @override
+  String priorityShort(int priority) {
+    return 'Priorité $priority';
+  }
+
+  @override
+  String get addMissingToWishlist => 'Ajouter aux envies';
+
+  @override
+  String missingAddedToWishlist(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tomes ajoutés aux envies',
+      one: '1 tome ajouté aux envies',
+      zero: 'Déjà dans tes envies',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get addCopy => 'Ajouter un exemplaire';
+
+  @override
+  String get storeOtherEdition => 'Tu as ce tome dans une autre édition';
+
+  @override
+  String get addThisCopy => 'Ajouter cet exemplaire';
 }

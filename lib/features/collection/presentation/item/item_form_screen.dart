@@ -28,6 +28,7 @@ class ItemFormScreen extends ConsumerStatefulWidget {
     this.seriesId,
     this.volumeNumber,
     this.prefill,
+    this.copyOf,
     this.popOnSave = false,
     super.key,
   });
@@ -43,6 +44,9 @@ class ItemFormScreen extends ConsumerStatefulWidget {
 
   /// For a new item: metadata from an online result.
   final ItemPrefill? prefill;
+
+  /// For a new item: id of a copy of the same volume (another edition).
+  final String? copyOf;
 
   /// Return to the previous screen on save (burst review) instead of
   /// opening the series or the new item.
@@ -75,6 +79,7 @@ class _ItemFormScreenState extends ConsumerState<ItemFormScreen> {
       seriesId: widget.seriesId,
       volumeNumber: widget.volumeNumber,
       prefill: widget.prefill,
+      copyOf: widget.copyOf,
     );
     if (!mounted || draft == null) return;
     setState(() {

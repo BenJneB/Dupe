@@ -80,9 +80,10 @@ abstract final class AppRoutes {
     CollectionType type, {
     String? seriesId,
     String? volume,
+    String? copyOf,
   }) => Uri(
     path: '${base(type)}/nouvel-ouvrage',
-    queryParameters: {'serie': ?seriesId, 'tome': ?volume},
+    queryParameters: {'serie': ?seriesId, 'tome': ?volume, 'copie': ?copyOf},
   ).toString();
 }
 
@@ -201,6 +202,7 @@ StatefulShellBranch _collectionBranch(CollectionType type) =>
                 type: type,
                 seriesId: state.uri.queryParameters['serie'],
                 volumeNumber: state.uri.queryParameters['tome'],
+                copyOf: state.uri.queryParameters['copie'],
                 prefill: state.extra as ItemPrefill?,
               ),
             ),

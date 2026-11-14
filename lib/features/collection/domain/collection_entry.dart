@@ -1,3 +1,4 @@
+import 'package:dupe/features/collection/domain/enums.dart';
 import 'package:dupe/features/collection/domain/item.dart';
 import 'package:dupe/features/collection/domain/series.dart';
 
@@ -14,12 +15,16 @@ class SeriesEntry extends CollectionEntry {
     required this.series,
     required this.ownedCount,
     required this.itemCount,
+    this.unreadCount = 0,
   });
 
   final Series series;
 
-  /// Owned items (any volume number) not deleted.
+  /// Owned volumes (distinct numbers) not deleted.
   final int ownedCount;
+
+  /// Owned volumes not read yet (unread or in progress).
+  final int unreadCount;
 
   /// All items (owned + wished) not deleted.
   final int itemCount;
@@ -38,6 +43,16 @@ class SeriesEntry extends CollectionEntry {
   }
 
   bool get isComplete => progress != null && progress! >= 1;
+}
+
+extension EntryReading on CollectionEntry {
+  /// In "Ma pile à lire": owned and not read yet.
+  bool get isToRead => switch (this) {
+    SeriesEntry(:final unreadCount) => unreadCount > 0,
+    ItemEntry(:final item) =>
+      item.ownership == Ownership.possede &&
+          toReadStatuses.contains(item.readingStatus),
+  };
 }
 
 class ItemEntry extends CollectionEntry {

@@ -434,5 +434,148 @@
   "sourceGoogleBooksHelp": "Couvertures et résumés",
   "sourceOpenLibraryHelp": "Livres, couvertures",
   "sourceComicVineHelp": "Comics US : séries et numéros",
-  "sourceAnilistHelp": "Mangas : infos de série (nombre de tomes, statut)"
+  "sourceAnilistHelp": "Mangas : infos de série (nombre de tomes, statut)",
+  "volumeCopiesTitle": "Tome {label} : {count} exemplaires",
+  "@volumeCopiesTitle": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "copyNumber": "Exemplaire {number}",
+  "@copyNumber": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "filterToRead": "À lire",
+  "markReadTitle": "Marquer comme lus…",
+  "markReadUpTo": "Lus jusqu’au tome",
+  "markReadConfirm": "Marquer comme lus",
+  "volumesMarkedRead": "{count, plural, =0{Aucun tome à marquer} =1{1 tome marqué comme lu} other{{count} tomes marqués comme lus}}",
+  "@volumesMarkedRead": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "volumesToRead": "{count, plural, =1{1 tome à lire} other{{count} tomes à lire}}",
+  "@volumesToRead": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "notificationOpen": "Ouvrir",
+  "notificationChannelLoans": "Rappels de retour des prêts",
+  "loanDueTitle": "Prêt à récupérer",
+  "loanDueBody": "{title} : prêté à {name}",
+  "@loanDueBody": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "loansOverdueTitle": "{count, plural, =1{1 prêt en retard} other{{count} prêts en retard}}",
+  "@loansOverdueTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "lend": "Prêter",
+  "lendTitle": "Prêter « {title} »",
+  "@lendTitle": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "borrowerLabel": "Emprunteur",
+  "dueDateOptional": "Date de retour (facultatif)",
+  "noDueDate": "Sans date de retour",
+  "loanedTo": "Prêté à {name}",
+  "@loanedTo": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "loanedSince": "depuis le {date}",
+  "@loanedSince": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "loanDueOn": "retour prévu le {date}",
+  "@loanDueOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "loanOverdue": "En retard",
+  "markReturned": "Rendu",
+  "loanReturnedOn": "Rendu le {date}",
+  "@loanReturnedOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "loansCurrent": "En cours",
+  "loansHistory": "Historique",
+  "loansEmpty": "Aucun prêt en cours",
+  "loansHistoryEmpty": "Aucun prêt rendu",
+  "loanReturnedSnack": "« {title} » marqué comme rendu",
+  "@loanReturnedSnack": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "wishlistItems": "Envies",
+  "nextVolumes": "Prochains tomes à acheter",
+  "wishlistEmpty": "Ta liste d’envies est vide",
+  "noNextVolumes": "Aucun tome manquant dans tes séries suivies",
+  "priorityShort": "Priorité {priority}",
+  "@priorityShort": {
+    "placeholders": {
+      "priority": {
+        "type": "int"
+      }
+    }
+  },
+  "addMissingToWishlist": "Ajouter aux envies",
+  "missingAddedToWishlist": "{count, plural, =0{Déjà dans tes envies} =1{1 tome ajouté aux envies} other{{count} tomes ajoutés aux envies}}",
+  "@missingAddedToWishlist": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "addCopy": "Ajouter un exemplaire",
+  "storeOtherEdition": "Tu as ce tome dans une autre édition",
+  "addThisCopy": "Ajouter cet exemplaire"
 }

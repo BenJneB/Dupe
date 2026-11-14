@@ -49,4 +49,4 @@ final class LoansRepositoryProvider
   }
 }
 
-String _$loansRepositoryHash() => r'57ef41ce153dcc65f96337135d8ebfe0cd896380';
+String _$loansRepositoryHash() => r'8e8680f220f77e2542538eddd9ec669fbcdec07e';

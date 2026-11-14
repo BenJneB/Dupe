@@ -11,6 +11,9 @@ abstract class ViewSettings with _$ViewSettings {
     @Default(CollectionSort.title) CollectionSort sort,
     @Default(CompletionFilter.all) CompletionFilter filter,
     @Default(false) bool grid,
+
+    /// "Ma pile à lire": only what is owned and not read yet.
+    @Default(false) bool toReadOnly,
   }) = _ViewSettings;
 }
 
@@ -29,6 +32,7 @@ List<CollectionEntry> applyViewSettings(
     CompletionFilter.incomplete =>
       entries.whereType<SeriesEntry>().where((e) => !e.isComplete).toList(),
   };
+  if (settings.toReadOnly) filtered.retainWhere((e) => e.isToRead);
   int byTitle(CollectionEntry a, CollectionEntry b) =>
       foldForSearch(a.title).compareTo(foldForSearch(b.title));
   double progressOf(CollectionEntry e) =>

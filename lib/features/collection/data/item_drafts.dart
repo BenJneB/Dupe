@@ -7,6 +7,21 @@ import 'package:dupe/features/collection/domain/series_matching.dart';
 
 typedef ItemDraft = ({Item item, SeriesAttachment attachment});
 
+const SeriesAttachment _none = SeriesAttachment.none;
+
+/// Another copy of [source] (other edition): same work, volume and series;
+/// edition-specific and personal fields are left empty.
+Item newCopy(CollectionRepository repo, Item source) => repo
+    .newItem(source.type, volumeNumber: source.volumeNumber)
+    .copyWith(
+      seriesId: source.seriesId,
+      title: source.title,
+      authors: source.authors,
+      publisher: source.publisher,
+      language: source.language,
+      description: source.description,
+    );
+
 /// Item to edit, or new item draft: attached to [seriesId] when given, or to
 /// the series matching the online result [prefill] (auto-attach).
 Future<ItemDraft?> loadItemDraft(
@@ -16,12 +31,13 @@ Future<ItemDraft?> loadItemDraft(
   String? seriesId,
   String? volumeNumber,
   ItemPrefill? prefill,
+  String? copyOf,
 }) async {
+  final source = copyOf == null ? null : await repo.getItem(copyOf);
+  if (source != null) return (item: newCopy(repo, source), attachment: _none);
   if (itemId != null) {
     final item = await repo.getItem(itemId);
-    return item == null
-        ? null
-        : (item: item, attachment: SeriesAttachment.none);
+    return item == null ? null : (item: item, attachment: _none);
   }
   var series = seriesId == null ? null : await repo.getSeries(seriesId);
   var attachment = SeriesAttachment.none;

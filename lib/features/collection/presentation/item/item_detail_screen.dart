@@ -6,8 +6,10 @@ import 'package:dupe/features/collection/data/collection_repository.dart';
 import 'package:dupe/features/collection/domain/enums.dart';
 import 'package:dupe/features/collection/domain/item.dart';
 import 'package:dupe/features/collection/presentation/confirm_delete_dialog.dart';
+import 'package:dupe/features/collection/presentation/item/item_reading_bar.dart';
 import 'package:dupe/features/collection/presentation/labels.dart';
 import 'package:dupe/features/collection/presentation/providers/detail_providers.dart';
+import 'package:dupe/features/loans/presentation/item_loan_section.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -105,6 +107,19 @@ class _ItemDetailView extends ConsumerWidget {
         title: Text(title),
         actions: [
           IconButton(
+            key: const Key('addCopy'),
+            tooltip: l10n.addCopy,
+            icon: const Icon(Icons.library_add_outlined),
+            onPressed: () => context.push(
+              AppRoutes.newItem(
+                item.type,
+                seriesId: item.seriesId,
+                volume: item.volumeNumber,
+                copyOf: item.id,
+              ),
+            ),
+          ),
+          IconButton(
             tooltip: l10n.edit,
             icon: const Icon(Icons.edit_outlined),
             onPressed: () =>
@@ -164,6 +179,12 @@ class _ItemDetailView extends ConsumerWidget {
               onTap: () =>
                   context.push(AppRoutes.series(series.type, series.id)),
             ),
+          if (item.ownership == Ownership.possede) ...[
+            const SizedBox(height: 8),
+            ItemReadingBar(item: item),
+            const SizedBox(height: 8),
+            ItemLoanSection(item: item),
+          ],
           const SizedBox(height: 8),
           for (final (label, value) in rows)
             if (value != null && value.isNotEmpty)

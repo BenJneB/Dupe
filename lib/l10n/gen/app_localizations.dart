@@ -1269,6 +1269,240 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Mangas : infos de série (nombre de tomes, statut)'**
   String get sourceAnilistHelp;
+
+  /// No description provided for @volumeCopiesTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tome {label} : {count} exemplaires'**
+  String volumeCopiesTitle(String label, int count);
+
+  /// No description provided for @copyNumber.
+  ///
+  /// In fr, this message translates to:
+  /// **'Exemplaire {number}'**
+  String copyNumber(int number);
+
+  /// No description provided for @filterToRead.
+  ///
+  /// In fr, this message translates to:
+  /// **'À lire'**
+  String get filterToRead;
+
+  /// No description provided for @markReadTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Marquer comme lus…'**
+  String get markReadTitle;
+
+  /// No description provided for @markReadUpTo.
+  ///
+  /// In fr, this message translates to:
+  /// **'Lus jusqu’au tome'**
+  String get markReadUpTo;
+
+  /// No description provided for @markReadConfirm.
+  ///
+  /// In fr, this message translates to:
+  /// **'Marquer comme lus'**
+  String get markReadConfirm;
+
+  /// No description provided for @volumesMarkedRead.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =0{Aucun tome à marquer} =1{1 tome marqué comme lu} other{{count} tomes marqués comme lus}}'**
+  String volumesMarkedRead(int count);
+
+  /// No description provided for @volumesToRead.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{1 tome à lire} other{{count} tomes à lire}}'**
+  String volumesToRead(int count);
+
+  /// No description provided for @notificationOpen.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ouvrir'**
+  String get notificationOpen;
+
+  /// No description provided for @notificationChannelLoans.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rappels de retour des prêts'**
+  String get notificationChannelLoans;
+
+  /// No description provided for @loanDueTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Prêt à récupérer'**
+  String get loanDueTitle;
+
+  /// No description provided for @loanDueBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'{title} : prêté à {name}'**
+  String loanDueBody(String title, String name);
+
+  /// No description provided for @loansOverdueTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{1 prêt en retard} other{{count} prêts en retard}}'**
+  String loansOverdueTitle(int count);
+
+  /// No description provided for @lend.
+  ///
+  /// In fr, this message translates to:
+  /// **'Prêter'**
+  String get lend;
+
+  /// No description provided for @lendTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Prêter « {title} »'**
+  String lendTitle(String title);
+
+  /// No description provided for @borrowerLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Emprunteur'**
+  String get borrowerLabel;
+
+  /// No description provided for @dueDateOptional.
+  ///
+  /// In fr, this message translates to:
+  /// **'Date de retour (facultatif)'**
+  String get dueDateOptional;
+
+  /// No description provided for @noDueDate.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sans date de retour'**
+  String get noDueDate;
+
+  /// No description provided for @loanedTo.
+  ///
+  /// In fr, this message translates to:
+  /// **'Prêté à {name}'**
+  String loanedTo(String name);
+
+  /// No description provided for @loanedSince.
+  ///
+  /// In fr, this message translates to:
+  /// **'depuis le {date}'**
+  String loanedSince(String date);
+
+  /// No description provided for @loanDueOn.
+  ///
+  /// In fr, this message translates to:
+  /// **'retour prévu le {date}'**
+  String loanDueOn(String date);
+
+  /// No description provided for @loanOverdue.
+  ///
+  /// In fr, this message translates to:
+  /// **'En retard'**
+  String get loanOverdue;
+
+  /// No description provided for @markReturned.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rendu'**
+  String get markReturned;
+
+  /// No description provided for @loanReturnedOn.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rendu le {date}'**
+  String loanReturnedOn(String date);
+
+  /// No description provided for @loansCurrent.
+  ///
+  /// In fr, this message translates to:
+  /// **'En cours'**
+  String get loansCurrent;
+
+  /// No description provided for @loansHistory.
+  ///
+  /// In fr, this message translates to:
+  /// **'Historique'**
+  String get loansHistory;
+
+  /// No description provided for @loansEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun prêt en cours'**
+  String get loansEmpty;
+
+  /// No description provided for @loansHistoryEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun prêt rendu'**
+  String get loansHistoryEmpty;
+
+  /// No description provided for @loanReturnedSnack.
+  ///
+  /// In fr, this message translates to:
+  /// **'« {title} » marqué comme rendu'**
+  String loanReturnedSnack(String title);
+
+  /// No description provided for @wishlistItems.
+  ///
+  /// In fr, this message translates to:
+  /// **'Envies'**
+  String get wishlistItems;
+
+  /// No description provided for @nextVolumes.
+  ///
+  /// In fr, this message translates to:
+  /// **'Prochains tomes à acheter'**
+  String get nextVolumes;
+
+  /// No description provided for @wishlistEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ta liste d’envies est vide'**
+  String get wishlistEmpty;
+
+  /// No description provided for @noNextVolumes.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun tome manquant dans tes séries suivies'**
+  String get noNextVolumes;
+
+  /// No description provided for @priorityShort.
+  ///
+  /// In fr, this message translates to:
+  /// **'Priorité {priority}'**
+  String priorityShort(int priority);
+
+  /// No description provided for @addMissingToWishlist.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter aux envies'**
+  String get addMissingToWishlist;
+
+  /// No description provided for @missingAddedToWishlist.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =0{Déjà dans tes envies} =1{1 tome ajouté aux envies} other{{count} tomes ajoutés aux envies}}'**
+  String missingAddedToWishlist(int count);
+
+  /// No description provided for @addCopy.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter un exemplaire'**
+  String get addCopy;
+
+  /// No description provided for @storeOtherEdition.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tu as ce tome dans une autre édition'**
+  String get storeOtherEdition;
+
+  /// No description provided for @addThisCopy.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter cet exemplaire'**
+  String get addThisCopy;
 }
 
 class _AppLocalizationsDelegate

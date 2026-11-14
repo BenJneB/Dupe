@@ -90,23 +90,28 @@ class _Pastille extends StatelessWidget {
       button: true,
       label: semanticLabel,
       excludeSemantics: true,
-      child: Material(
-        key: ValueKey('slot-${slot.label}'),
-        color: colors.background,
-        shape: shape,
-        child: InkWell(
-          customBorder: shape,
-          onTap: onTap,
-          onLongPress: onLongPress,
-          child: Container(
-            constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            alignment: Alignment.center,
-            child: Text(
-              slot.label,
-              style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                color: colors.foreground,
-                fontWeight: FontWeight.w600,
+      child: Badge(
+        // Several copies of this volume (editions).
+        isLabelVisible: slot.copies.length > 1,
+        label: Text('×${slot.copies.length}'),
+        child: Material(
+          key: ValueKey('slot-${slot.label}'),
+          color: colors.background,
+          shape: shape,
+          child: InkWell(
+            customBorder: shape,
+            onTap: onTap,
+            onLongPress: onLongPress,
+            child: Container(
+              constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              alignment: Alignment.center,
+              child: Text(
+                slot.label,
+                style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                  color: colors.foreground,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
           ),
