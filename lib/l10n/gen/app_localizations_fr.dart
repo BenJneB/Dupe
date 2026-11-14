@@ -1362,10 +1362,38 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String get updatesSection => 'Mises à jour';
+
+  @override
+  String get updateCheck => 'Signaler les nouvelles versions';
+
+  @override
+  String get updateCheckHelp =>
+      'Vérifie au plus une fois par jour la dernière version publiée sur GitHub';
+
+  @override
+  String get updateCheckNow => 'Rechercher une mise à jour';
+
+  @override
+  String get updateUpToDate => 'Dupe est à jour';
+
+  @override
+  String updateAvailable(String version) {
+    return 'Version $version disponible';
+  }
+
+  @override
+  String get updateDownload => 'Télécharger';
+
+  @override
   String get errorOffline => 'Pas de connexion internet.';
 
   @override
   String get errorSession => 'Session expirée : reconnecte-toi.';
+
+  @override
+  String get errorUnavailable =>
+      'Serveur de synchronisation indisponible. Si l’appli n’a pas servi depuis une semaine, le projet Supabase gratuit est peut-être en pause : le réactiver depuis son tableau de bord.';
 
   @override
   String get errorServer =>

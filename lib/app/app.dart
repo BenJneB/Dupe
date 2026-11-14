@@ -7,9 +7,15 @@ import 'package:dupe/core/sync/sync_controller.dart';
 import 'package:dupe/features/backup/data/auto_backups.dart';
 import 'package:dupe/features/loans/data/loan_actions.dart';
 import 'package:dupe/features/settings/data/theme_mode_provider.dart';
+import 'package:dupe/features/updates/data/update_checker.dart';
+import 'package:dupe/features/updates/presentation/update_notice.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
+
+/// Messages shown outside a screen (new version at start-up).
+final rootMessengerKey = GlobalKey<ScaffoldMessengerState>();
 
 class DupeApp extends ConsumerStatefulWidget {
   const new({super.key});
@@ -35,11 +41,30 @@ class _DupeAppState extends ConsumerState<DupeApp> {
             onError: (Object e, StackTrace s) => appLog.error('backup', e, s),
           ),
     );
+    unawaited(_checkForUpdate());
+  }
+
+  /// Release builds only: debug runs are always "older" than the release.
+  Future<void> _checkForUpdate() async {
+    if (!kReleaseMode) return;
+    try {
+      final update = await ref.read(updateCheckerProvider).check();
+      final messenger = rootMessengerKey.currentState;
+      if (update == null || messenger == null) return;
+      showUpdateNotice(
+        messenger,
+        lookupAppLocalizations(const Locale('fr')),
+        update,
+      );
+    } on Object catch (e) {
+      appLog.warning('update', e);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
+      scaffoldMessengerKey: rootMessengerKey,
       onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light(),

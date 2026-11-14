@@ -23,6 +23,7 @@ String errorText(AppLocalizations l10n, Object error) => switch (error) {
   ) =>
     l10n.errorOffline,
   SyncException(failure: SyncFailure.session) => l10n.errorSession,
+  SyncException(failure: SyncFailure.unavailable) => l10n.errorUnavailable,
   SyncException() => l10n.errorServer,
   SignInException(failure: SignInFailure.tooManyAttempts) =>
     l10n.errorTooManyAttempts,

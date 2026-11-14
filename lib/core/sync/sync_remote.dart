@@ -29,6 +29,10 @@ enum SyncFailure {
   /// Session expired or revoked: sign in again.
   session,
 
+  /// Server error (5xx): down, or Supabase Free project paused after a week
+  /// without activity.
+  unavailable,
+
   /// The server refused the request.
   rejected,
 }

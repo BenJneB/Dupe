@@ -2254,6 +2254,48 @@ abstract class AppLocalizations {
   /// **'Série « {title} » supprimée'**
   String seriesDeleted(String title);
 
+  /// No description provided for @updatesSection.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mises à jour'**
+  String get updatesSection;
+
+  /// No description provided for @updateCheck.
+  ///
+  /// In fr, this message translates to:
+  /// **'Signaler les nouvelles versions'**
+  String get updateCheck;
+
+  /// No description provided for @updateCheckHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vérifie au plus une fois par jour la dernière version publiée sur GitHub'**
+  String get updateCheckHelp;
+
+  /// No description provided for @updateCheckNow.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rechercher une mise à jour'**
+  String get updateCheckNow;
+
+  /// No description provided for @updateUpToDate.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dupe est à jour'**
+  String get updateUpToDate;
+
+  /// No description provided for @updateAvailable.
+  ///
+  /// In fr, this message translates to:
+  /// **'Version {version} disponible'**
+  String updateAvailable(String version);
+
+  /// No description provided for @updateDownload.
+  ///
+  /// In fr, this message translates to:
+  /// **'Télécharger'**
+  String get updateDownload;
+
   /// No description provided for @errorOffline.
   ///
   /// In fr, this message translates to:
@@ -2265,6 +2307,12 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Session expirée : reconnecte-toi.'**
   String get errorSession;
+
+  /// No description provided for @errorUnavailable.
+  ///
+  /// In fr, this message translates to:
+  /// **'Serveur de synchronisation indisponible. Si l’appli n’a pas servi depuis une semaine, le projet Supabase gratuit est peut-être en pause : le réactiver depuis son tableau de bord.'**
+  String get errorUnavailable;
 
   /// No description provided for @errorServer.
   ///

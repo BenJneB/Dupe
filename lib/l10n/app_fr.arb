@@ -868,8 +868,23 @@
       }
     }
   },
+  "updatesSection": "Mises à jour",
+  "updateCheck": "Signaler les nouvelles versions",
+  "updateCheckHelp": "Vérifie au plus une fois par jour la dernière version publiée sur GitHub",
+  "updateCheckNow": "Rechercher une mise à jour",
+  "updateUpToDate": "Dupe est à jour",
+  "updateAvailable": "Version {version} disponible",
+  "@updateAvailable": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "updateDownload": "Télécharger",
   "errorOffline": "Pas de connexion internet.",
   "errorSession": "Session expirée : reconnecte-toi.",
+  "errorUnavailable": "Serveur de synchronisation indisponible. Si l’appli n’a pas servi depuis une semaine, le projet Supabase gratuit est peut-être en pause : le réactiver depuis son tableau de bord.",
   "errorServer": "Le serveur a refusé la demande (détails dans À propos → Journal).",
   "errorInvalidCredentials": "Email ou mot de passe incorrect.",
   "errorEmailNotConfirmed": "Email pas encore confirmé : ouvre le lien reçu par email, puis reconnecte-toi.",
