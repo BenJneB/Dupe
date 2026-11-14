@@ -97,6 +97,19 @@ jobs:
           choco install innosetup --version 6.7.1 --no-progress -y
           "/c/Program Files (x86)/Inno Setup 6/ISCC.exe" packaging/windows/dupe.iss
 
+  # Key user flows on the real Linux app (PLAN_V3 phase 18), virtual display.
+  integration:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - run: sudo apt-get update && sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev xvfb
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+      - run: xvfb-run -a flutter test integration_test -d linux
+
   # Sync tests against a local Supabase in Docker (PLAN_V3 phase 17): real
   # PostgREST filter, triggers, RLS, auth, storage. Pull requests and `dev`.
   supabase-tests:

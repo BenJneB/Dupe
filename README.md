@@ -113,6 +113,32 @@ supabase stop                # quand on a fini
 Le premier `supabase start` télécharge les images Docker (plusieurs minutes). Confirmation d'email désactivée
 en local (`supabase/config.toml`) : les tests créent un compte neuf chacun.
 
+## Hooks git et messages de commit
+Messages de commit **conventionnels** : `type(portée facultative): description`, types `feat`, `fix`, `chore`,
+`docs`, `test`, `refactor`, `ci` (`!` après le type pour un changement cassant). Les notes de chaque Release
+sont générées depuis ces messages (`tool/ci/release_notes.sh`, groupées par type, depuis le tag stable
+précédent).
+
+Hooks avec [lefthook](https://github.com/evilmartians/lefthook) 2.2.2 (`lefthook.yml`), une fois par clone :
+```sh
+curl -fLO https://github.com/evilmartians/lefthook/releases/download/v2.2.2/lefthook_2.2.2_amd64.deb
+sudo dpkg -i lefthook_2.2.2_amd64.deb
+lefthook install
+```
+- avant un commit : `dart format` des fichiers `.dart` stagés (re-stagés automatiquement) et `flutter analyze` ;
+- avant un push : `flutter test` ;
+- message de commit : `tool/check_commit_msg.sh` (refuse un message non conventionnel).
+
+Exceptionnellement : `LEFTHOOK=0 git commit …`.
+
+## Tests d'intégration
+`integration_test/app_flows_test.dart` : parcours clés sur l'appli réelle (ajout d'un tome, mode Magasin pour
+les quatre verdicts, prêt puis retour, annulation d'une suppression), sources simulées, sans synchro.
+```sh
+flutter test integration_test -d linux                 # ouvre une fenêtre ; en CI : xvfb-run -a …
+flutter test integration_test -d <id-téléphone>        # le parcours Magasin est sauté (caméra)
+```
+
 ## Sauvegardes
 - **Manuelles** : Paramètres → *Exporter une sauvegarde* (JSON complet) ; *Restaurer* propose de **fusionner**
   (rien n'est effacé) ou de **revenir exactement** à la sauvegarde (ce qui a été ajouté depuis est supprimé, sur

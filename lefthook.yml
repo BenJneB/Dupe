@@ -1,0 +1,22 @@
+# Git hooks (PLAN_V3 phase 18), lefthook 2.2.2. Once per clone: `lefthook install`
+# (README, "Hooks git"). Skip exceptionally with LEFTHOOK=0 git commit ...
+glob_matcher: doublestar
+
+pre-commit:
+  jobs:
+    - name: format
+      glob: "**/*.dart"
+      run: dart format {staged_files}
+      stage_fixed: true
+    - name: analyze
+      run: flutter analyze
+
+pre-push:
+  jobs:
+    - name: test
+      run: flutter test
+
+commit-msg:
+  jobs:
+    - name: conventional commit
+      run: tool/check_commit_msg.sh {1}

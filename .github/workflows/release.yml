@@ -154,6 +154,12 @@ jobs:
     permissions:
       contents: write
     steps:
+      # Full history and tags: notes from the commits since the previous tag.
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - name: Release notes (conventional commits)
+        run: tool/ci/release_notes.sh "$GITHUB_REF_NAME" > release-notes.md
       - uses: actions/download-artifact@v8
         with:
           path: dist
@@ -161,5 +167,5 @@ jobs:
       - uses: softprops/action-gh-release@v3
         with:
           files: dist/*
-          generate_release_notes: true
+          body_path: release-notes.md
           prerelease: ${{ contains(github.ref_name, '-') }}
