@@ -1,6 +1,8 @@
 import 'package:dupe/app/router.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
 import 'package:dupe/features/collection/domain/enums.dart';
+import 'package:dupe/features/collection/domain/item.dart';
+import 'package:dupe/features/collection/presentation/item/bought_action.dart';
 import 'package:dupe/features/scan/data/store_checker.dart';
 import 'package:dupe/features/scan/domain/store_check.dart';
 import 'package:dupe/features/scan/presentation/store/store_banner_lines.dart';
@@ -82,7 +84,13 @@ class StoreResultBanner extends ConsumerWidget {
               ),
             ],
             const SizedBox(height: 8),
-            _Actions(check: check, isbn13: isbn13, type: type, color: fg),
+            _Actions(
+              check: check,
+              isbn13: isbn13,
+              type: type,
+              color: fg,
+              background: style.background,
+            ),
           ],
         ),
       ),
@@ -90,12 +98,13 @@ class StoreResultBanner extends ConsumerWidget {
   }
 }
 
-class _Actions extends StatelessWidget {
+class _Actions extends ConsumerWidget {
   const new({
     required this.check,
     required this.isbn13,
     required this.type,
     required this.color,
+    required this.background,
   });
 
   final StoreCheck check;
@@ -103,8 +112,18 @@ class _Actions extends StatelessWidget {
   final CollectionType type;
   final Color color;
 
+  /// Banner colour: text of the filled buttons (readable in both themes).
+  final Color background;
+
+  Future<void> _bought(BuildContext context, WidgetRef ref, Item item) async {
+    if (await confirmBought(context, ref, item)) {
+      // Re-check: the banner turns green.
+      ref.invalidate(storeCheckProvider(isbn13, type));
+    }
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
     final item = check.item;
     final metadata = check.metadata;
@@ -118,6 +137,17 @@ class _Actions extends StatelessWidget {
       runSpacing: 8,
       children: [
         if (item != null) ...[
+          if (item.ownership == Ownership.envie)
+            FilledButton.icon(
+              key: const Key('storeBought'),
+              style: FilledButton.styleFrom(
+                backgroundColor: color,
+                foregroundColor: background,
+              ),
+              icon: const Icon(Icons.shopping_bag_outlined),
+              label: Text(l10n.markOwned),
+              onPressed: () => _bought(context, ref, item),
+            ),
           OutlinedButton(
             key: const Key('storeDetails'),
             style: outlined,
@@ -137,7 +167,7 @@ class _Actions extends StatelessWidget {
             key: const Key('addOwned'),
             style: FilledButton.styleFrom(
               backgroundColor: color,
-              foregroundColor: Theme.of(context).colorScheme.surface,
+              foregroundColor: background,
             ),
             icon: const Icon(Icons.add),
             label: Text(l10n.addToCollection),

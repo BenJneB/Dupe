@@ -6,6 +6,7 @@ import 'package:dupe/features/collection/data/collection_repository.dart';
 import 'package:dupe/features/collection/domain/enums.dart';
 import 'package:dupe/features/collection/domain/item.dart';
 import 'package:dupe/features/collection/presentation/confirm_delete_dialog.dart';
+import 'package:dupe/features/collection/presentation/item/bought_action.dart';
 import 'package:dupe/features/collection/presentation/item/item_reading_bar.dart';
 import 'package:dupe/features/collection/presentation/labels.dart';
 import 'package:dupe/features/collection/presentation/providers/detail_providers.dart';
@@ -157,13 +158,10 @@ class _ItemDetailView extends ConsumerWidget {
                     ),
                     if (item.ownership == Ownership.envie)
                       TextButton.icon(
+                        key: const Key('boughtButton'),
                         icon: const Icon(Icons.shopping_bag_outlined),
                         label: Text(l10n.markOwned),
-                        onPressed: () => ref
-                            .read(collectionRepositoryProvider)
-                            .saveItem(
-                              item.copyWith(ownership: Ownership.possede),
-                            ),
+                        onPressed: () => confirmBought(context, ref, item),
                       ),
                   ],
                 ),

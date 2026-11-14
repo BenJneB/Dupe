@@ -481,7 +481,7 @@ abstract class AppLocalizations {
   /// No description provided for @markOwned.
   ///
   /// In fr, this message translates to:
-  /// **'Je l’ai'**
+  /// **'Je l’ai acheté'**
   String get markOwned;
 
   /// No description provided for @seeSeries.
@@ -1503,6 +1503,144 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Ajouter cet exemplaire'**
   String get addThisCopy;
+
+  /// No description provided for @boughtTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Je l’ai acheté'**
+  String get boughtTitle;
+
+  /// No description provided for @paidPriceOptional.
+  ///
+  /// In fr, this message translates to:
+  /// **'Prix payé (facultatif)'**
+  String get paidPriceOptional;
+
+  /// No description provided for @boughtDone.
+  ///
+  /// In fr, this message translates to:
+  /// **'« {title} » ajouté à ta collection'**
+  String boughtDone(String title);
+
+  /// No description provided for @statsSpent.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dépensé'**
+  String get statsSpent;
+
+  /// No description provided for @statsSpentCaption.
+  ///
+  /// In fr, this message translates to:
+  /// **'prix payé saisi pour {priced} {total, plural, =1{exemplaire sur 1} other{exemplaires sur {total}}}'**
+  String statsSpentCaption(int priced, int total);
+
+  /// No description provided for @statsValue.
+  ///
+  /// In fr, this message translates to:
+  /// **'Valeur'**
+  String get statsValue;
+
+  /// No description provided for @statsValueCaption.
+  ///
+  /// In fr, this message translates to:
+  /// **'valeur estimée, sinon prix éditeur ou prix payé'**
+  String get statsValueCaption;
+
+  /// No description provided for @statsVolumes.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ouvrages'**
+  String get statsVolumes;
+
+  /// No description provided for @statsVolumesCaption.
+  ///
+  /// In fr, this message translates to:
+  /// **'{copies, plural, =1{1 exemplaire} other{{copies} exemplaires}}'**
+  String statsVolumesCaption(int copies);
+
+  /// No description provided for @statsOtherCurrencies.
+  ///
+  /// In fr, this message translates to:
+  /// **'Hors total (autres devises) : {list}'**
+  String statsOtherCurrencies(String list);
+
+  /// No description provided for @statsRead.
+  ///
+  /// In fr, this message translates to:
+  /// **'Lus'**
+  String get statsRead;
+
+  /// No description provided for @statsComplete.
+  ///
+  /// In fr, this message translates to:
+  /// **'Séries complètes'**
+  String get statsComplete;
+
+  /// No description provided for @statsCompleteCaption.
+  ///
+  /// In fr, this message translates to:
+  /// **'parmi les séries dont le nombre de tomes est connu'**
+  String get statsCompleteCaption;
+
+  /// No description provided for @statsSpendingByMonth.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dépenses des 12 derniers mois'**
+  String get statsSpendingByMonth;
+
+  /// No description provided for @statsNoSpending.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun achat daté sur cette période : renseigne la date et le prix d’achat, ou utilise « Je l’ai acheté ».'**
+  String get statsNoSpending;
+
+  /// No description provided for @statsVolumesByType.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ouvrages par type'**
+  String get statsVolumesByType;
+
+  /// No description provided for @statsSpendingByType.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dépenses par type'**
+  String get statsSpendingByType;
+
+  /// No description provided for @statsShowTable.
+  ///
+  /// In fr, this message translates to:
+  /// **'Voir le tableau'**
+  String get statsShowTable;
+
+  /// No description provided for @statsShowChart.
+  ///
+  /// In fr, this message translates to:
+  /// **'Voir le graphique'**
+  String get statsShowChart;
+
+  /// No description provided for @statsMonth.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mois'**
+  String get statsMonth;
+
+  /// No description provided for @statsAmount.
+  ///
+  /// In fr, this message translates to:
+  /// **'Montant'**
+  String get statsAmount;
+
+  /// No description provided for @statsEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajoute des ouvrages pour voir tes statistiques'**
+  String get statsEmpty;
+
+  /// No description provided for @statsRatio.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count} sur {total}'**
+  String statsRatio(int count, int total);
 }
 
 class _AppLocalizationsDelegate
