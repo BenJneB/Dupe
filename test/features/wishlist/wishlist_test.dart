@@ -2,12 +2,11 @@ import 'package:dupe/app/router.dart';
 import 'package:dupe/core/database/app_database.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
 import 'package:dupe/features/collection/domain/enums.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:material_ui/material_ui.dart';
 
 import '../../helpers/app_harness.dart';
 import '../../helpers/scan_helpers.dart';
+import '../../helpers/screen_helpers.dart';
 
 Future<void> seedWishes(AppDatabase db) async {
   final repo = repoOf(db);
@@ -47,10 +46,7 @@ void main() {
     tester,
   ) async {
     await pumpApp(tester, seed: seedWishes);
-    ProviderScope.containerOf(tester.element(find.byType(Scaffold).first))
-        .read(appRouterProvider)
-        .go(AppRoutes.wishlist);
-    await tester.pumpAndSettle();
+    await goTo(tester, AppRoutes.wishlist);
 
     expect(find.text('Envies (2)'), findsOneWidget);
     final dune = tester.getTopLeft(find.text('Dune'));

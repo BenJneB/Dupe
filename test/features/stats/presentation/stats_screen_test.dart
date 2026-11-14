@@ -1,18 +1,15 @@
 import 'package:dupe/app/router.dart';
 import 'package:dupe/core/database/database_provider.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../helpers/app_harness.dart';
 import '../../../helpers/scan_helpers.dart';
+import '../../../helpers/screen_helpers.dart';
 
 Future<void> openStats(WidgetTester tester) async {
-  ProviderScope.containerOf(tester.element(find.byType(Scaffold).first))
-      .read(appRouterProvider)
-      .go(AppRoutes.stats);
-  await tester.pumpAndSettle();
+  await goTo(tester, AppRoutes.stats);
 }
 
 void main() {

@@ -184,12 +184,6 @@ abstract class AppLocalizations {
   /// **'Compte, synchronisation, export/import, sources'**
   String get moreSettingsSubtitle;
 
-  /// No description provided for @comingSoon.
-  ///
-  /// In fr, this message translates to:
-  /// **'Bientôt disponible'**
-  String get comingSoon;
-
   /// No description provided for @scanUnavailableDesktop.
   ///
   /// In fr, this message translates to:
@@ -946,18 +940,6 @@ abstract class AppLocalizations {
   /// **'Tape l’ISBN ou scanne avec une douchette USB, puis Entrée'**
   String get isbnEntryHelper;
 
-  /// No description provided for @scanDesktopTitle.
-  ///
-  /// In fr, this message translates to:
-  /// **'Scanner un code-barres'**
-  String get scanDesktopTitle;
-
-  /// No description provided for @scanHint.
-  ///
-  /// In fr, this message translates to:
-  /// **'Vise le code-barres au dos de l’ouvrage'**
-  String get scanHint;
-
   /// No description provided for @typeIsbn.
   ///
   /// In fr, this message translates to:
@@ -1420,12 +1402,6 @@ abstract class AppLocalizations {
   /// **'Aucun prêt rendu'**
   String get loansHistoryEmpty;
 
-  /// No description provided for @loanReturnedSnack.
-  ///
-  /// In fr, this message translates to:
-  /// **'« {title} » marqué comme rendu'**
-  String loanReturnedSnack(String title);
-
   /// No description provided for @wishlistItems.
   ///
   /// In fr, this message translates to:
@@ -1741,7 +1717,7 @@ abstract class AppLocalizations {
   /// No description provided for @confirmEmailSent.
   ///
   /// In fr, this message translates to:
-  /// **'Compte créé. Ouvre le lien envoyé à {email} pour confirmer ton adresse, puis connecte-toi ici.'**
+  /// **'Compte créé. Ouvre le lien envoyé à {email} pour confirmer ton adresse (la page qui s’ouvre ensuite peut afficher une erreur « localhost » : c’est normal, l’adresse est confirmée), puis reviens ici et touche « Se connecter ».'**
   String confirmEmailSent(String email);
 
   /// No description provided for @forgotPasswordHelp.

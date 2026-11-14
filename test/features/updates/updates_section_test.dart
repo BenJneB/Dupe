@@ -7,19 +7,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../helpers/app_harness.dart';
 import '../../helpers/fake_http.dart';
-import '../backup/backup_screens_test.dart' show openSettings;
-
-/// Scrolls the settings list until the tile is built, then on screen.
-Future<void> showTile(WidgetTester tester, String key) async {
-  final tile = find.byKey(Key(key));
-  await tester.scrollUntilVisible(
-    tile,
-    200,
-    scrollable: find.byType(Scrollable).last,
-  );
-  await tester.ensureVisible(tile);
-  await tester.pumpAndSettle();
-}
+import '../../helpers/screen_helpers.dart';
 
 void main() {
   testWidgets('settings: check now, then turn the notice off', (tester) async {
@@ -47,8 +35,7 @@ void main() {
     );
     await openSettings(tester);
 
-    await showTile(tester, 'checkUpdateNow');
-    await tester.tap(find.byKey(const Key('checkUpdateNow')));
+    await tapTile(tester, 'checkUpdateNow');
     for (var i = 0; i < 5; i++) {
       await tester.runAsync(
         () => Future<void>.delayed(const Duration(milliseconds: 20)),
@@ -59,8 +46,7 @@ void main() {
     expect(find.text('Version 1.9.1 disponible'), findsOneWidget);
     expect(find.text('Télécharger'), findsOneWidget);
 
-    await showTile(tester, 'updateCheckSwitch');
-    await tester.tap(find.byKey(const Key('updateCheckSwitch')));
+    await tapTile(tester, 'updateCheckSwitch');
     await tester.pumpAndSettle();
     final enabled = await tester.runAsync(
       () => settings.get(UpdateChecker.enabledKey),

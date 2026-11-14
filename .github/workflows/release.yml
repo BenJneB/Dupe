@@ -1,5 +1,7 @@
 # Pushing a tag vX.Y.Z builds the signed APKs (one per ABI), the AppImage
 # and the Windows installer, then publishes them as a GitHub release.
+# A tag vX.Y.Z-suffix (e.g. v0.0.1-test) is published as a pre-release:
+# the app's update check (latest release) never offers it.
 # Secrets (Settings -> Secrets and variables -> Actions), see README:
 #   ENV_JSON                  content of env.json (compiled into the apps)
 #   ANDROID_KEYSTORE_BASE64   upload keystore, base64
@@ -8,7 +10,9 @@ name: Release
 
 on:
   push:
-    tags: ['v[0-9]+.[0-9]+.[0-9]+']
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+      - 'v[0-9]+.[0-9]+.[0-9]+-*'
 
 permissions:
   contents: read
@@ -78,13 +82,17 @@ jobs:
           ENV_JSON: ${{ secrets.ENV_JSON }}
         run: |
           [ -n "$ENV_JSON" ] || { echo "Missing secret ENV_JSON" >&2; exit 1; }
-          tool/ci/set_version.sh "$GITHUB_REF_NAME"
+          echo "VERSION=$(tool/ci/set_version.sh "$GITHUB_REF_NAME")" >> "$GITHUB_ENV"
           printf '%s' "$ENV_JSON" > env.json
       - run: packaging/linux/build_appimage.sh env.json
+      - name: Name after the tag
+        run: |
+          mkdir dist
+          mv build/Dupe-*-x86_64.AppImage "dist/Dupe-$VERSION-x86_64.AppImage"
       - uses: actions/upload-artifact@v7
         with:
           name: linux
-          path: build/Dupe-*-x86_64.AppImage
+          path: dist/
 
   windows:
     runs-on: windows-latest
@@ -129,3 +137,4 @@ jobs:
         with:
           files: dist/*
           generate_release_notes: true
+          prerelease: ${{ contains(github.ref_name, '-') }}

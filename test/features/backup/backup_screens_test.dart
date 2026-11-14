@@ -5,34 +5,13 @@ import 'package:dupe/app/router.dart';
 import 'package:dupe/core/database/database_provider.dart';
 import 'package:dupe/features/backup/data/file_io.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../helpers/app_harness.dart';
 import '../../helpers/fake_file_io.dart';
 import '../../helpers/scan_helpers.dart';
-
-Future<void> openSettings(WidgetTester tester) async {
-  ProviderScope.containerOf(tester.element(find.byType(Scaffold).first))
-      .read(appRouterProvider)
-      .go(AppRoutes.settings);
-  await tester.pumpAndSettle();
-}
-
-Future<void> tapTile(WidgetTester tester, String key) async {
-  final tile = find.byKey(Key(key));
-  await tester.scrollUntilVisible(
-    tile,
-    100,
-    scrollable: find.byType(Scrollable).last,
-  );
-  // Built in the list cache but maybe still off screen.
-  await tester.ensureVisible(tile);
-  await tester.pumpAndSettle();
-  await tester.tap(tile);
-  await tester.pumpAndSettle();
-}
+import '../../helpers/screen_helpers.dart';
 
 void main() {
   testWidgets('JSON backup and CSV export are saved as files', (tester) async {
@@ -126,10 +105,7 @@ void main() {
 
   testWidgets('About shows the version and the licenses', (tester) async {
     await pumpApp(tester);
-    ProviderScope.containerOf(tester.element(find.byType(Scaffold).first))
-        .read(appRouterProvider)
-        .go(AppRoutes.about);
-    await tester.pumpAndSettle();
+    await goTo(tester, AppRoutes.about);
 
     expect(find.text('Données comics fournies par Comic Vine'), findsOneWidget);
     expect(find.byKey(const Key('aboutVersion')), findsOneWidget);

@@ -2,26 +2,79 @@
 
 > Document autonome, à jour au **2026-11-14**. Dupe est une appli Flutter personnelle de catalogue de
 > collection (mangas, BD, comics, livres) pour Android, Linux et Windows, avec synchro Supabase optionnelle.
-> Contexte complet et état du projet : `PLAN_V2.md`.
+> Contexte : `PLAN_V2.md` (phases 9-13) et `PLAN_V3.md`. Une petite partie de ces tests est faite **maintenant**
+> (phase 14, vérifications de base) ; tout le reste l'est à la fin (**phase 21, recette finale**), sur la version
+> finale. Les phases 15 à 20 ajoutent leurs tests ici et marquent « automatisé (phase N) » ceux que leurs tests
+> automatiques couvrent désormais.
 
 Ce fichier liste ce que les **168 tests automatiques ne couvrent pas** : matériel (caméra, vibrations,
 notifications, raccourci), services réels (Supabase, API GitHub, sources de métadonnées), plateformes non
 compilées ici (Windows) et workflows GitHub (jamais exécutés).
 
-**Statut au 2026-11-14 : aucun de ces tests n'a encore été fait.**
+**Statut au 2026-11-14 : `Y-01` fait (CI verte) ; phase 14 en cours.**
 
 ## Comment tester et rapporter
 - Lancer : `flutter run -d <id> --dart-define-from-file=env.json` (`flutter devices` pour l'id), ou installer
   l'APK / l'AppImage / l'installateur d'une Release.
+- **Deux « appareils » sur un seul PC Linux** (synchro sans téléphone) : l'appli accepte plusieurs instances
+  et range ses données sous `$XDG_DATA_HOME`. Après `flutter build linux --debug --dart-define-from-file=env.json` :
+  `build/linux/x64/debug/bundle/dupe &` puis
+  `XDG_DATA_HOME=$HOME/.dupe-appareil2 build/linux/x64/debug/bundle/dupe` (second appareil, vide au départ ;
+  le supprimer ensuite avec `rm -rf ~/.dupe-appareil2`).
 - Cocher `[x]` ce qui marche. En cas d'échec, noter à côté : **identifiant**, appareil, ce qui était attendu,
   ce qui s'est passé, et le contenu de **À propos → Journal → Copier** (les erreurs y sont enregistrées).
-- Les identifiants (`S-03`, `Y-02`…) servent à citer un test dans une analyse ou un ticket.
+- Les identifiants (`S-03`, `Y-02`…) servent à citer un test dans une analyse ou un ticket. Ils ne sont
+  jamais renumérotés ; un test ajouté prend le numéro suivant de sa section.
+- **Suivi** (une note par test, à la fin de sa ligne) : `— OK 2026-11-20 (Pixel 7)`,
+  `— ÉCHEC 2026-11-20 (Pixel 7) : …`, ou `— ÉCART ACCEPTÉ : …` (critère de fin des phases 14 et 21 : chacun
+  de leurs tests est OK, automatisé ou a un écart documenté et accepté).
+
+## Phase 14 — vérifications de base (maintenant, environ une heure)
+Seulement ce qui ne peut pas attendre la recette finale, dans cet ordre :
+1. `P-01` puis `P-04` — schéma Supabase en place, création du compte dans l'appli (`P-02` sans objet : aucun
+   compte n'existait).
+2. `S-01` — connexion avec le mot de passe sur le deuxième appareil (un second PC Linux suffit, voir
+   « Deux appareils sur un seul PC » ; le téléphone n'est nécessaire que pour `A-01` et `M-*`).
+3. `S-05`, puis `S-04` — la synchro reçoit et envoie réellement (nouveau filtre de pull).
+4. `J-02` — copier le journal (sert à rapporter tout échec, même plus tard).
+5. `P-03`, `Y-02` — secrets GitHub, tag de test `v0.0.1-test` (*pre-release*), puis `A-01` — installer l'APK
+   de cette Release sur le téléphone. Supprimer ensuite la *pre-release* et le tag.
+6. Facultatif, si l'appli sert en magasin d'ici là : `M-01`, `M-02`.
+
+## Phase 21 — ordre conseillé pour la recette finale
+Tous les tests non faits en phase 14 et non marqués « automatisé ». Le but : lancer tôt ce qui prend du temps
+à lui seul, et tester d'abord ce dont dépendent les autres tests.
+1. **Lancer ce qui tourne seul** : publier une première version **stable** (ex. `v0.1.0`) et l'installer
+   partout ; prêter un tome avec retour demain (`N-01`, vérifié le lendemain) ; `Y-05`.
+2. **Compte** : `S-10`, `S-11`, `S-12` (et `S-01` rapidement sur la version finale).
+3. **Synchro** (bloquante pour `B-01`, `B-04`, `F-01`) : `S-05` et `S-04` revérifiés sur la version finale,
+   puis `S-06` à `S-09`.
+4. **Journal** : `J-01`, `J-03` à `J-05`.
+5. **Téléphone, à la maison avec quelques livres** : `M-01` à `M-14`, puis `R-01` à `R-04`.
+6. **Fichiers et filets de sécurité** : `F-01` à `F-05`, `B-01` à `B-08`, puis seulement `D-01` (import de la
+   vraie collection, protégé par la sauvegarde « Avant import »), `D-02` à `D-05`.
+7. **Plateformes** : `A-03`, `L-01`, `W-01` à `W-03` (PC Windows) ; puis une deuxième version stable (ex.
+   `v0.1.1`) pour `A-02`, `Y-03`, `Y-04`, `Y-07`, `Y-08` (une *pre-release* n'est pas vue par la vérification
+   des mises à jour).
+8. **Le lendemain / plus tard** : `N-01` à `N-04` ; `M-12` chronométré en magasin ; `Y-06` (observation sur
+   plusieurs semaines) ; `J-06` (facultatif, met le projet en pause).
 
 ## 0. Préalables (dans l'ordre)
-- [ ] **P-01** Migrations Supabase appliquées (`supabase/migrations/`, README § Synchronisation).
-- [ ] **P-02** Compte créé avant la v2 (par lien email, sans mot de passe) : **sur un appareil encore
-      connecté**, Paramètres → *Mot de passe* → le définir. À faire avant toute déconnexion.
-- [ ] **P-03** Secrets GitHub créés (README § Publier une version) ; décision prise pour la clé Comic Vine.
+- [x] **P-01** Migrations Supabase appliquées (`supabase/migrations/`, README § Synchronisation).
+      — OK 2026-11-14 (tableau de bord : tables et bucket présents)
+- [x] **P-02** Compte créé avant la v2 (par lien email, sans mot de passe) : installer la nouvelle version
+      **par-dessus, sans se déconnecter** (la session doit survivre à la mise à jour), puis Paramètres →
+      *Mot de passe* → le définir. À faire avant toute déconnexion, sinon le compte reste bloqué.
+      — ÉCART ACCEPTÉ 2026-11-14 : sans objet, l'utilisateur ne s'était jamais connecté (aucun compte, aucune
+      donnée serveur). Remplacé par `P-04`.
+- [x] **P-04** Créer le compte dans l'appli : Paramètres → *Se connecter* → *Créer un compte* (email, mot de
+      passe deux fois). Avec *Confirm email* activé : ouvrir le lien reçu, puis se connecter. Si « Un compte
+      existe déjà » : supprimer l'utilisateur sans données dans Authentication → Users et recommencer.
+      La collection locale est envoyée sur le compte. Le lien de confirmation redirige vers `localhost:3000`
+      (*Site URL* par défaut) : page en erreur, mais l'adresse est confirmée (observé le 2026-11-14 ; message
+      de l'appli précisé en conséquence).
+      — OK 2026-11-14 (Linux) : compte créé, lien confirmé, connexion réussie.
+- [ ] **P-03** *(reporté en fin de phase 14)* Secrets GitHub créés (README § Publier une version) ; décision prise pour la clé Comic Vine.
 
 ## 1. Scan — mode Magasin (téléphone)
 - [ ] **M-01** La caméra s'ouvre ; l'autorisation n'est demandée qu'une fois.
@@ -39,6 +92,8 @@ compilées ici (Windows) et workflows GitHub (jamais exécutés).
 - [ ] **M-12** (phase 13) Raccourci : appui long sur l'icône → « Scanner » → scan en mode Magasin, depuis
       l'appli fermée comme ouverte. Critère de phase : vibration « déjà possédé » en moins de 3 s.
 - [ ] **M-13** Garder le même livre devant la caméra : un seul verdict, une seule vibration.
+- [ ] **M-14** (phase 13) Quitter l'écran de scan lampe allumée : la lampe s'éteint ; le réglage des
+      vibrations est conservé après redémarrage de l'appli.
 
 ## 2. Scan — mode Rafale (téléphone)
 - [ ] **R-01** Plusieurs scans d'affilée : la file se remplit et se traite.
@@ -72,13 +127,25 @@ compilées ici (Windows) et workflows GitHub (jamais exécutés).
 - [ ] **S-07** Modifier sur les deux appareils et synchroniser en même temps (bouton) : identiques à la fin.
 - [ ] **S-08** Suppression propagée.
 - [ ] **S-09** Icône d'état de synchro cohérente (en cours, hors ligne, à jour, erreur).
+- [ ] **S-10** (phase 10) Changer le mot de passe sur un appareil : l'autre reste connecté et synchronise ;
+      une nouvelle connexion n'accepte que le nouveau mot de passe.
+- [ ] **S-11** (phase 10) Inscription avec un mot de passe trop court → « Mot de passe refusé : trop court ou
+      trop simple » ; deux mots de passe différents → message, rien n'est envoyé.
+- [ ] **S-12** (phase 10) Se déconnecter puis se reconnecter au même compte : rien n'est dupliqué, la
+      collection est identique sur les deux appareils.
 
 ## 6. Journal et messages d'erreur (phase 9)
 - [ ] **J-01** Mode avion puis synchro → une seule entrée « sync » même après plusieurs minutes.
 - [ ] **J-02** « Copier » puis coller dans un message : texte lisible (date, niveau, source, message).
+      — EN COURS 2026-11-14 (Linux) : écran vu vide alors que le fichier contenait une entrée « sync »
+      (probablement consulté avant la première synchro) ; à revérifier après redémarrage.
 - [ ] **J-03** « Partager » : feuille de partage sur Android, « Enregistrer sous » sur PC.
 - [ ] **J-04** Le journal est conservé après redémarrage de l'appli.
 - [ ] **J-05** Messages en français à l'écran (hors ligne, fichier invalide, mauvais mot de passe).
+- [ ] **J-06** (phase 12, facultatif) Mettre le projet Supabase en pause depuis son tableau de bord, puis
+      synchroniser → « Serveur de synchronisation indisponible… en pause ». Le réactiver ensuite (quelques
+      minutes). Si le message est différent, copier le journal : le code d'erreur d'un projet en pause n'a
+      jamais été observé.
 
 ## 7. Filets de sécurité (phase 11)
 - [ ] **B-01** Supprimer un ouvrage puis « Annuler » : il revient, aussi sur l'autre appareil après synchro.
@@ -89,6 +156,9 @@ compilées ici (Windows) et workflows GitHub (jamais exécutés).
 - [ ] **B-05** Ajouter un ouvrage sur l'autre appareil **sans synchroniser**, puis restaurer : il n'est pas
       supprimé (comportement attendu : synchroniser avant de restaurer).
 - [ ] **B-06** Exporter une sauvegarde automatique puis la restaurer par fichier.
+- [ ] **B-07** Après une restauration, une sauvegarde « Avant restauration » apparaît dans la liste et
+      permet d'annuler la restauration.
+- [ ] **B-08** Restaurer un fichier avec « Fusionner » : ce qui manquait est ajouté, rien n'est supprimé.
 
 ## 8. Plateformes et packaging
 - [ ] **L-01** Linux : `packaging/linux/build_appimage.sh` → l'AppImage se lance, icône dans la fenêtre.
@@ -101,15 +171,20 @@ compilées ici (Windows) et workflows GitHub (jamais exécutés).
 - [ ] **A-03** Icône adaptative correcte sur l'écran d'accueil.
 
 ## 9. CI, Releases et mises à jour (phase 12)
-- [ ] **Y-01** Après le push : onglet *Actions* → `CI` vert, y compris le job **windows** (premier essai).
-- [ ] **Y-02** `git tag v1.0.0 && git push origin v1.0.0` → Release avec 3 APK, l'AppImage et
-      `Dupe-1.0.0-setup.exe`.
+- [x] **Y-01** Après le push : onglet *Actions* → `CI` vert, y compris le job **windows** (premier essai).
+      — OK 2026-11-14 (GitHub Actions)
+- [ ] **Y-02** *(reporté en fin de phase 14)* Pousser un tag de test (`git tag v0.0.1-test && git push origin v0.0.1-test`) → *pre-release*
+      avec 3 APK, l'AppImage et `Dupe-0.0.1-test-setup.exe`. Supprimer ensuite la Release et le tag
+      (`git push --delete origin v0.0.1-test`). Une *pre-release* n'est jamais proposée comme mise à jour ;
+      l'appli d'une version de test affiche `0.0.1` dans À propos.
 - [ ] **Y-03** Installé en v1.0.0 alors que v1.0.1 existe : « Version 1.0.1 disponible — Télécharger » au
       démarrage ; le bouton ouvre le bon fichier (APK de l'architecture du téléphone, AppImage, installateur).
 - [ ] **Y-04** Paramètres → Mises à jour → « Rechercher une mise à jour » ; désactiver le signalement.
 - [ ] **Y-05** Workflow `Keep Supabase awake` lancé à la main (*Run workflow*) → vert.
 - [ ] **Y-06** Pas d'email d'avertissement de pause de Supabase dans les semaines suivantes (question ouverte :
-      une requête refusée par la RLS compte-t-elle comme activité ?).
+      une requête refusée par la RLS compte-t-elle comme activité ? Traité en phase 16).
+- [ ] **Y-07** À propos : la version affichée est celle du tag de la Release installée.
+- [ ] **Y-08** « Rechercher une mise à jour » sur la dernière version → « Dupe est à jour ».
 
 ## 10. Données réelles
 - [ ] **D-01** Import de la collection (CSV Mangacollec / CLZ / tableur) : correspondance des colonnes devinée.

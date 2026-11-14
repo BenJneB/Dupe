@@ -47,8 +47,10 @@ Sans `SUPABASE_URL`, l'appli fonctionne entièrement en local. Pour synchroniser
    ouvertes : quiconque a l'appli peut créer un compte, mais ne voit que ses propres données (RLS).
    Option *Confirm email* du même fournisseur :
    - **activée** (défaut) : Supabase envoie un lien de confirmation. Sans SMTP personnalisé, il n'envoie
-     qu'aux membres de l'équipe du projet (2 emails/heure). Ouvrir le lien dans le navigateur (la page
-     d'arrivée peut ne pas s'afficher), puis se connecter dans l'appli ;
+     qu'aux membres de l'équipe du projet (2 emails/heure). Ouvrir le lien dans le navigateur : il confirme
+     l'adresse puis redirige vers la *Site URL* du projet (`localhost:3000` par défaut, donc une erreur de
+     page — sans conséquence). Revenir ensuite dans l'appli et se connecter. Si l'appli répond « pas encore
+     confirmé », le lien a expiré ou a déjà été consommé (certaines messageries l'ouvrent d'avance) ;
    - **désactivée** : le compte est utilisable tout de suite.
 
    Longueur minimale du mot de passe : réglée par le projet Supabase (6 caractères par défaut).
@@ -108,12 +110,16 @@ flutter run -d windows --dart-define-from-file=env.json
   Windows sans PC Windows) ;
 - `release.yml` : pousser un tag `vX.Y.Z` construit les APK signés (un par architecture), l'AppImage et
   l'installateur Windows, puis les publie dans une Release GitHub. La version vient du tag
-  (`tool/ci/set_version.sh` : `v1.2.3` → `1.2.3+10203`, mineur et correctif < 100) ;
+  (`tool/ci/set_version.sh` : `v1.2.3` → `1.2.3+10203`, mineur et correctif < 100 ; un suffixe `-xxx` ne
+  change pas le numéro Android et n'apparaît que dans les noms de fichiers) ;
 - `keep-alive.yml` : une requête par jour sur Supabase (voir plus bas).
 
 ```sh
 git tag v1.0.0 && git push origin v1.0.0
 ```
+Un tag avec suffixe (`v0.0.1-test`, `v1.2.0-rc.1`) publie une **pre-release** : mêmes fichiers, mais jamais
+proposée comme mise à jour par l'appli. Pour la supprimer : supprimer la Release sur GitHub, puis
+`git push --delete origin v0.0.1-test && git tag -d v0.0.1-test`.
 L'appli installée signale ensuite la nouvelle version (au plus une fois par jour, désactivable dans
 Paramètres → *Mises à jour*) et ouvre le fichier de la plateforme.
 

@@ -5,7 +5,6 @@ import 'package:dupe/core/sync/sync_engine.dart';
 import 'package:dupe/core/sync/sync_providers.dart';
 import 'package:dupe/features/collection/data/collection_repository.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:uuid/uuid.dart';
@@ -14,43 +13,7 @@ import '../../helpers/app_harness.dart';
 import '../../helpers/fake_sync_auth.dart';
 import '../../helpers/fake_sync_remote.dart';
 import '../../helpers/scan_helpers.dart';
-
-ProviderContainer containerOf(WidgetTester tester) =>
-    ProviderScope.containerOf(tester.element(find.byType(Scaffold).first));
-
-/// Fills the sign-in / sign-up form and submits it.
-Future<void> fillSignIn(
-  WidgetTester tester,
-  String email,
-  String password, {
-  String? confirm,
-}) async {
-  await tester.enterText(find.byKey(const Key('emailField')), email);
-  await tester.enterText(
-    find.descendant(
-      of: find.byKey(const Key('passwordField')),
-      matching: find.byType(TextField),
-    ),
-    password,
-  );
-  if (confirm != null) {
-    await tester.enterText(
-      find.descendant(
-        of: find.byKey(const Key('passwordConfirmField')),
-        matching: find.byType(TextField),
-      ),
-      confirm,
-    );
-  }
-  await tester.pump();
-  await tester.tap(find.byKey(const Key('submitButton')));
-  await tester.pumpAndSettle();
-}
-
-Future<void> openSettings(WidgetTester tester) async {
-  containerOf(tester).read(appRouterProvider).go(AppRoutes.settings);
-  await tester.pumpAndSettle();
-}
+import '../../helpers/screen_helpers.dart';
 
 void main() {
   testWidgets('sign up (email to confirm): the local collection is uploaded', (
@@ -96,10 +59,7 @@ void main() {
     expect(find.textContaining('Synchronisé à'), findsOneWidget);
     expect(remote.tables['items']!.values.single['title'], 'Dune');
     // Discreet status in the search bar of the tabs.
-    containerOf(tester)
-        .read(appRouterProvider)
-        .go(AppRoutes.base(CollectionType.manga));
-    await tester.pumpAndSettle();
+    await goTo(tester, AppRoutes.base(CollectionType.manga));
     expect(find.byKey(const Key('syncStatus')), findsOneWidget);
   });
 
@@ -153,10 +113,7 @@ void main() {
       () async => (await db.select(db.itemsTable).get()).map((i) => i.title),
     );
     expect(titles, containsAll(['Dune', 'Fondation']));
-    containerOf(tester)
-        .read(appRouterProvider)
-        .go(AppRoutes.base(CollectionType.livre));
-    await tester.pumpAndSettle();
+    await goTo(tester, AppRoutes.base(CollectionType.livre));
     expect(find.text('Fondation'), findsOneWidget);
   });
 }

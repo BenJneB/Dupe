@@ -57,9 +57,6 @@ class AppLocalizationsFr extends AppLocalizations {
       'Compte, synchronisation, export/import, sources';
 
   @override
-  String get comingSoon => 'Bientôt disponible';
-
-  @override
   String get scanUnavailableDesktop =>
       'Pas de caméra sur cette plateforme : saisis l’ISBN ou utilise une douchette USB.';
 
@@ -495,12 +492,6 @@ class AppLocalizationsFr extends AppLocalizations {
       'Tape l’ISBN ou scanne avec une douchette USB, puis Entrée';
 
   @override
-  String get scanDesktopTitle => 'Scanner un code-barres';
-
-  @override
-  String get scanHint => 'Vise le code-barres au dos de l’ouvrage';
-
-  @override
   String get typeIsbn => 'Saisir l’ISBN';
 
   @override
@@ -832,11 +823,6 @@ class AppLocalizationsFr extends AppLocalizations {
   String get loansHistoryEmpty => 'Aucun prêt rendu';
 
   @override
-  String loanReturnedSnack(String title) {
-    return '« $title » marqué comme rendu';
-  }
-
-  @override
   String get wishlistItems => 'Envies';
 
   @override
@@ -1034,7 +1020,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String confirmEmailSent(String email) {
-    return 'Compte créé. Ouvre le lien envoyé à $email pour confirmer ton adresse, puis connecte-toi ici.';
+    return 'Compte créé. Ouvre le lien envoyé à $email pour confirmer ton adresse (la page qui s’ouvre ensuite peut afficher une erreur « localhost » : c’est normal, l’adresse est confirmée), puis reviens ici et touche « Se connecter ».';
   }
 
   @override

@@ -4,13 +4,13 @@ import 'package:dupe/core/database/database_provider.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
 import 'package:dupe/features/collection/domain/enums.dart';
 import 'package:dupe/features/collection/domain/item.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../helpers/app_harness.dart';
 import '../../../helpers/fake_sources.dart';
 import '../../../helpers/scan_helpers.dart';
+import '../../../helpers/screen_helpers.dart';
 
 late Item wish;
 
@@ -46,10 +46,7 @@ void main() {
       seed: seedWish,
       overrides: [clockProvider.overrideWithValue(() => today)],
     );
-    ProviderScope.containerOf(tester.element(find.byType(Scaffold).first))
-        .read(appRouterProvider)
-        .go(AppRoutes.wishlist);
-    await tester.pumpAndSettle();
+    await goTo(tester, AppRoutes.wishlist);
 
     await tester.tap(find.byKey(ValueKey('bought-${wish.id}')));
     await tester.pumpAndSettle();
