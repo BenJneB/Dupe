@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Dupe
+Comment=Catalogue de mangas, BD, comics et livres
+Exec=dupe
+Icon=dupe
+Categories=Office;Utility;
+Terminal=false
+StartupWMClass=dupe

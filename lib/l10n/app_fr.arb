@@ -211,16 +211,6 @@
   },
   "searchSeriesSection": "Séries",
   "searchItemsSection": "Ouvrages",
-  "starterCollectionTitle": "Importer ma collection de départ",
-  "starterCollectionSubtitle": "Dreamland, Naheulbeuk, Batman, Les Fourmis, Fabien Olicard (sans doublons, complète les ISBN)",
-  "starterCollectionImported": "{count, plural, =0{Rien à faire : déjà à jour} =1{1 modification} other{{count} modifications}}",
-  "@starterCollectionImported": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "search": "Rechercher",
   "searchOnline": "Chercher en ligne",
   "onlineSearchTitle": "Rechercher en ligne",
@@ -711,5 +701,114 @@
       }
     }
   },
-  "codeHelper": "Dans l’email, copie le lien (appui long ou clic droit → copier l’adresse) sans l’ouvrir, puis colle-le ici. Si l’email contient un code à 6 chiffres, saisis-le."
+  "codeHelper": "Dans l’email, copie le lien (appui long ou clic droit → copier l’adresse) sans l’ouvrir, puis colle-le ici. Si l’email contient un code à 6 chiffres, saisis-le.",
+  "appearanceSection": "Apparence",
+  "themeSystem": "Système",
+  "themeLight": "Clair",
+  "themeDark": "Sombre",
+  "backupSection": "Sauvegarde et import",
+  "exportJson": "Exporter une sauvegarde",
+  "exportJsonHelp": "Fichier JSON complet : séries, ouvrages, prêts",
+  "restoreJson": "Restaurer une sauvegarde",
+  "restoreJsonHelp": "Ajoute ce qui manque, met à jour ce qui est plus récent ; rien n’est effacé",
+  "restoreDone": "{count, plural, =0{Rien à restaurer : déjà à jour} =1{1 élément restauré} other{{count} éléments restaurés}}",
+  "@restoreDone": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "restoreInvalid": "Ce fichier n’est pas une sauvegarde Dupe",
+  "exportCsv": "Exporter en CSV",
+  "exportCsvHelp": "Un tableau par type, lisible dans Excel ou LibreOffice",
+  "exportCsvAll": "Tout",
+  "importCsv": "Importer un CSV",
+  "importCsvHelp": "Reprendre une collection (Mangacollec, CLZ, tableur…)",
+  "exportDone": "Fichier enregistré",
+  "fileError": "Erreur de fichier : {message}",
+  "@fileError": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "csvImportTitle": "Importer un CSV",
+  "csvRows": "{file} : {count, plural, =1{1 ligne} other{{count} lignes}}",
+  "@csvRows": {
+    "placeholders": {
+      "file": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "csvDefaults": "Valeurs par défaut (si la colonne est absente ou vide)",
+  "csvMapping": "Correspondance des colonnes",
+  "csvIgnored": "— ignorée —",
+  "csvPreview": "Aperçu",
+  "csvImportButton": "{count, plural, =1{Importer 1 ligne} other{Importer {count} lignes}}",
+  "@csvImportButton": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "csvTitleRequired": "Associe au moins la colonne Titre ou Série",
+  "csvImportDone": "{created} ajoutés, {series} séries créées, {duplicates} déjà présents",
+  "@csvImportDone": {
+    "placeholders": {
+      "created": {
+        "type": "int"
+      },
+      "series": {
+        "type": "int"
+      },
+      "duplicates": {
+        "type": "int"
+      }
+    }
+  },
+  "csvInvalidLines": "Lignes ignorées (sans titre) : {lines}",
+  "@csvInvalidLines": {
+    "placeholders": {
+      "lines": {
+        "type": "String"
+      }
+    }
+  },
+  "csvEmpty": "Fichier vide ou illisible",
+  "importFieldTitle": "Titre",
+  "importFieldSeries": "Série",
+  "importFieldVolume": "Tome / numéro",
+  "importFieldType": "Type",
+  "importFieldAuthors": "Auteurs",
+  "importFieldPublisher": "Éditeur",
+  "importFieldIsbn": "ISBN / EAN",
+  "importFieldOwnership": "Possédé / envie",
+  "importFieldReading": "Statut de lecture",
+  "importFieldPurchasePrice": "Prix payé",
+  "importFieldPurchaseDate": "Date d’achat",
+  "importFieldCoverPrice": "Prix éditeur",
+  "importFieldLocation": "Emplacement",
+  "importFieldNotes": "Notes",
+  "moreAbout": "À propos",
+  "aboutDescription": "Catalogue personnel de mangas, BD, comics et livres : scanne, vérifie en magasin ce que tu as déjà, suis tes séries.",
+  "aboutVersion": "Version {version}",
+  "@aboutVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "aboutSources": "Sources de données",
+  "aboutSourcesText": "Bibliothèque nationale de France (catalogue SRU), Open Library, Google Books, AniList, Comic Vine. Les données appartiennent à leurs auteurs ; Dupe ne fait que les consulter.",
+  "aboutComicVine": "Données comics fournies par Comic Vine",
+  "aboutLicenses": "Licences des composants",
+  "aboutSourceCode": "Code source"
 }

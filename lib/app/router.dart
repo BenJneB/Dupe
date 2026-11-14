@@ -1,5 +1,7 @@
 import 'package:dupe/app/adaptive_shell.dart';
+import 'package:dupe/features/about/presentation/about_screen.dart';
 import 'package:dupe/features/account/presentation/sign_in_screen.dart';
+import 'package:dupe/features/backup/presentation/csv_import_screen.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
 import 'package:dupe/features/collection/domain/metadata_mapping.dart';
 import 'package:dupe/features/collection/presentation/collection_tab/collection_tab_screen.dart';
@@ -36,6 +38,8 @@ abstract final class AppRoutes {
   static const loans = '/plus/prets';
   static const stats = '/plus/statistiques';
   static const settings = '/plus/parametres';
+  static const csvImport = '/plus/parametres/import-csv';
+  static const about = '/plus/a-propos';
   static const signIn = '/connexion';
   static const scan = '/scan';
   static const scanReview = '/scan/revue';
@@ -122,6 +126,17 @@ GoRouter appRouter(Ref ref) {
                   GoRoute(
                     path: 'parametres',
                     builder: (context, state) => const SettingsScreen(),
+                    routes: [
+                      GoRoute(
+                        path: 'import-csv',
+                        builder: (context, state) =>
+                            CsvImportScreen(file: state.extra! as CsvFile),
+                      ),
+                    ],
+                  ),
+                  GoRoute(
+                    path: 'a-propos',
+                    builder: (context, state) => const AboutScreen(),
                   ),
                 ],
               ),

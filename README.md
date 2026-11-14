@@ -77,11 +77,47 @@ flutter run -d linux --dart-define-from-file=env.json
 flutter run -d windows --dart-define-from-file=env.json
 ```
 
-## Compiler
+## Installer / distribuer
+### Android : APK signé
+Une seule fois, créer la clé de signature (à garder précieusement **hors du dépôt** : sans elle, impossible
+de publier une mise à jour installable par-dessus) :
 ```sh
-flutter build apk --release --dart-define-from-file=env.json      # build/app/outputs/flutter-apk/
-flutter build linux --release --dart-define-from-file=env.json    # build/linux/x64/release/bundle/
-flutter build windows --release --dart-define-from-file=env.json  # sur Windows
+/snap/android-studio/current/jbr/bin/keytool -genkey -v -keystore ~/dupe-release.jks \
+  -keyalg RSA -keysize 2048 -validity 10000 -alias dupe
+```
+puis créer `android/key.properties` (ignoré par git) :
+```properties
+storeFile=/home/<toi>/dupe-release.jks
+storePassword=...
+keyAlias=dupe
+keyPassword=...
+```
+```sh
+flutter build apk --release --dart-define-from-file=env.json
+# -> build/app/outputs/flutter-apk/app-release.apk (signé avec la clé si key.properties existe,
+#    sinon avec la clé de debug)
+```
+
+### Windows : installateur Inno Setup (sur un PC Windows)
+Installer [Inno Setup 6](https://jrsoftware.org/isdl.php), puis :
+```bat
+flutter build windows --release --dart-define-from-file=env.json
+"C:\Program Files (x86)\Inno Setup 6\ISCC.exe" packaging\windows\dupe.iss
+```
+→ `build\installer\Dupe-1.0.0-setup.exe` (installation par utilisateur, sans droits administrateur).
+Penser à aligner `AppVersion` de `packaging/windows/dupe.iss` sur `version:` de `pubspec.yaml`.
+
+### Linux : AppImage
+```sh
+packaging/linux/build_appimage.sh            # utilise env.json
+# -> build/Dupe-1.0.0-x86_64.AppImage (appimagetool téléchargé une fois dans build/tools/)
+```
+
+### Icône
+Dessinée en code (`lib/app/widgets/dupe_logo.dart`). Après modification :
+```sh
+flutter test tool/render_icons_test.dart --update-goldens   # -> assets/icon/*.png
+dart run flutter_launcher_icons                              # Android + Windows
 ```
 
 ## Note Linux (GNOME récent / Ubuntu 26.04)

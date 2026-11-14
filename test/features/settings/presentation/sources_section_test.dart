@@ -19,6 +19,9 @@ void main() {
 
     final bnf = find.byKey(const Key('source_bnf'));
     await tester.scrollUntilVisible(bnf, 100);
+    // Built in the list cache, maybe below the screen: scroll it into view.
+    await tester.ensureVisible(bnf);
+    await tester.pumpAndSettle();
     await tester.tap(bnf);
     await tester.pumpAndSettle();
     expect(await container.read(disabledSourcesProvider.future), {

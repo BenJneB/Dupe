@@ -110,26 +110,13 @@ class SyncEngine {
     final name = table.actualTableName;
     final stored = await _settings.get(_cursorKey(name));
     var cursor = stored == null || stored.isEmpty ? null : stored;
-    final columns = _codec.syncedColumns(table).map((c) => c.name).toList();
-    final upsert =
-        'INSERT INTO $name (${columns.join(', ')}, sync_pending) '
-        'VALUES (${List.filled(columns.length, '?').join(', ')}, 0) '
-        'ON CONFLICT(id) DO UPDATE SET '
-        '${[for (final c in columns.skip(1)) '$c = excluded.$c'].join(', ')}, '
-        'sync_pending = 0';
     var applied = 0;
     while (true) {
       final changes = await _remote.changesSince(name, cursor, limit: pageSize);
       if (changes.isEmpty) break;
       await _db.transaction(() async {
         for (final remote in changes) {
-          if (await _localWins(table, remote)) continue;
-          await _db.customInsert(
-            upsert,
-            variables: _codec.toLocal(table, remote),
-            updates: {table},
-          );
-          applied++;
+          if (await _codec.apply(table, remote, pending: false)) applied++;
         }
       });
       cursor = changes.last['server_updated_at']! as String;
@@ -137,26 +124,5 @@ class SyncEngine {
       if (changes.length < pageSize) break;
     }
     return applied;
-  }
-
-  /// A local row not pushed yet and modified after the remote one wins.
-  Future<bool> _localWins(
-    TableInfo<Table, Object?> table,
-    Map<String, Object?> remote,
-  ) async {
-    final local = await _db
-        .customSelect(
-          'SELECT updated_at FROM ${table.actualTableName} '
-          'WHERE id = ? AND sync_pending = 1',
-          variables: [Variable(remote['id'])],
-          readsFrom: {table},
-        )
-        .getSingleOrNull();
-    if (local == null) return false;
-    final localAt = _db.typeMapping.read(
-      DriftSqlType.dateTime,
-      local.data['updated_at'],
-    )!;
-    return localAt.isAfter(DateTime.parse(remote['updated_at']! as String));
   }
 }

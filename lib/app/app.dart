@@ -4,6 +4,7 @@ import 'package:dupe/app/router.dart';
 import 'package:dupe/app/theme.dart';
 import 'package:dupe/core/sync/sync_controller.dart';
 import 'package:dupe/features/loans/data/loan_actions.dart';
+import 'package:dupe/features/settings/data/theme_mode_provider.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
@@ -32,6 +33,7 @@ class _DupeAppState extends ConsumerState<DupeApp> {
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light(),
       darkTheme: AppTheme.dark(),
+      themeMode: ref.watch(appThemeModeProvider),
       locale: const Locale('fr'),
       // gen-l10n still emits legacy flutter_localizations delegates, which do
       // not provide material_ui's MaterialLocalizations: use material_ui's.
