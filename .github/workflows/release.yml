@@ -3,7 +3,9 @@
 # A tag vX.Y.Z-suffix (e.g. v0.0.1-test) is published as a pre-release:
 # the app's update check (latest release) never offers it.
 # Secrets (Settings -> Secrets and variables -> Actions), see README:
-#   ENV_JSON                  content of env.json (compiled into the apps)
+#   ENV_JSON                  content of env.json (compiled into the apps), WITHOUT
+#                             COMIC_VINE_API_KEY / GOOGLE_BOOKS_API_KEY: releases are
+#                             public, so third-party keys are entered in the app
 #   ANDROID_KEYSTORE_BASE64   upload keystore, base64
 #   ANDROID_KEYSTORE_PASSWORD, ANDROID_KEY_ALIAS, ANDROID_KEY_PASSWORD
 name: Release
@@ -21,7 +23,28 @@ env:
   FLUTTER_VERSION: '3.50.0'
 
 jobs:
+  # Public binaries can be unpacked: refuse to build with third-party keys.
+  # Prints key names only, never values.
+  check-env:
+    runs-on: ubuntu-latest
+    steps:
+      - name: No third-party API key in ENV_JSON
+        env:
+          ENV_JSON: ${{ secrets.ENV_JSON }}
+        run: |
+          [ -n "$ENV_JSON" ] || { echo "Missing secret ENV_JSON" >&2; exit 1; }
+          printf '%s' "$ENV_JSON" | jq -e 'type == "object"' > /dev/null \
+            || { echo "ENV_JSON is not a JSON object" >&2; exit 1; }
+          FOUND=$(printf '%s' "$ENV_JSON" | jq -r '
+            ["COMIC_VINE_API_KEY", "GOOGLE_BOOKS_API_KEY"][] as $k
+            | select((.[$k] // "") != "") | $k')
+          if [ -n "$FOUND" ]; then
+            echo "Remove from ENV_JSON (enter them in the app instead): $FOUND" >&2
+            exit 1
+          fi
+
   android:
+    needs: check-env
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -68,6 +91,7 @@ jobs:
           path: dist/
 
   linux:
+    needs: check-env
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -95,6 +119,7 @@ jobs:
           path: dist/
 
   windows:
+    needs: check-env
     runs-on: windows-latest
     defaults:
       run:

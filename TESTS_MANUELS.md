@@ -11,7 +11,7 @@ Ce fichier liste ce que les **168 tests automatiques ne couvrent pas** : matéri
 notifications, raccourci), services réels (Supabase, API GitHub, sources de métadonnées), plateformes non
 compilées ici (Windows) et workflows GitHub (jamais exécutés).
 
-**Statut au 2026-11-14 : `Y-01` fait (CI verte) ; phase 14 en cours.**
+**Statut au 2026-11-14 : phase 14 close (`Y-01`, `P-01`, `P-04` faits ; le reste reporté en phase 21).**
 
 ## Comment tester et rapporter
 - Lancer : `flutter run -d <id> --dart-define-from-file=env.json` (`flutter devices` pour l'id), ou installer
@@ -29,21 +29,21 @@ compilées ici (Windows) et workflows GitHub (jamais exécutés).
   `— ÉCHEC 2026-11-20 (Pixel 7) : …`, ou `— ÉCART ACCEPTÉ : …` (critère de fin des phases 14 et 21 : chacun
   de leurs tests est OK, automatisé ou a un écart documenté et accepté).
 
-## Phase 14 — vérifications de base (maintenant, environ une heure)
-Seulement ce qui ne peut pas attendre la recette finale, dans cet ordre :
-1. `P-01` puis `P-04` — schéma Supabase en place, création du compte dans l'appli (`P-02` sans objet : aucun
-   compte n'existait).
-2. `S-01` — connexion avec le mot de passe sur le deuxième appareil (un second PC Linux suffit, voir
-   « Deux appareils sur un seul PC » ; le téléphone n'est nécessaire que pour `A-01` et `M-*`).
-3. `S-05`, puis `S-04` — la synchro reçoit et envoie réellement (nouveau filtre de pull).
-4. `J-02` — copier le journal (sert à rapporter tout échec, même plus tard).
-5. `P-03`, `Y-02` — secrets GitHub, tag de test `v0.0.1-test` (*pre-release*), puis `A-01` — installer l'APK
-   de cette Release sur le téléphone. Supprimer ensuite la *pre-release* et le tag.
-6. Facultatif, si l'appli sert en magasin d'ici là : `M-01`, `M-02`.
+## Phase 14 — vérifications de base (close le 2026-11-14)
+Faits : `Y-01` (CI), `P-01` (schéma), `P-04` (compte créé ; `P-02` sans objet). Tout le reste de la phase 14
+est **reporté en tête de la phase 21** (décision de l'utilisateur, 2026-11-14), voir ci-dessous.
 
 ## Phase 21 — ordre conseillé pour la recette finale
 Tous les tests non faits en phase 14 et non marqués « automatisé ». Le but : lancer tôt ce qui prend du temps
 à lui seul, et tester d'abord ce dont dépendent les autres tests.
+
+**0. D'abord, les tests reportés de la phase 14 (à ne pas oublier)**, dans cet ordre :
+   - `J-02` — journal : relancer l'appli, ouvrir À propos → Journal, « Copier » (écran vu vide le 2026-11-14
+     alors que le fichier contenait une entrée).
+   - `S-01`, `S-05`, `S-04` — connexion sur un deuxième appareil, puis synchro réelle dans les deux sens
+     (deux instances Linux suffisent, voir « Comment tester »).
+   - `P-03` — secrets GitHub ; `Y-02` — Release de test `v0.0.1-test`, puis la supprimer avec son tag.
+   - `A-01` — installer l'APK de cette Release sur le téléphone ; `M-01`, `M-02` — caméra et livre possédé.
 1. **Lancer ce qui tourne seul** : publier une première version **stable** (ex. `v0.1.0`) et l'installer
    partout ; prêter un tome avec retour demain (`N-01`, vérifié le lendemain) ; `Y-05`.
 2. **Compte** : `S-10`, `S-11`, `S-12` (et `S-01` rapidement sur la version finale).
@@ -56,6 +56,7 @@ Tous les tests non faits en phase 14 et non marqués « automatisé ». Le but :
 7. **Plateformes** : `A-03`, `L-01`, `W-01` à `W-03` (PC Windows) ; puis une deuxième version stable (ex.
    `v0.1.1`) pour `A-02`, `Y-03`, `Y-04`, `Y-07`, `Y-08` (une *pre-release* n'est pas vue par la vérification
    des mises à jour).
+7b. **Clés des sources** (sur une version publiée) : `K-01` à `K-05`.
 8. **Le lendemain / plus tard** : `N-01` à `N-04` ; `M-12` chronométré en magasin ; `Y-06` (observation sur
    plusieurs semaines) ; `J-06` (facultatif, met le projet en pause).
 
@@ -74,11 +75,11 @@ Tous les tests non faits en phase 14 et non marqués « automatisé ». Le but :
       (*Site URL* par défaut) : page en erreur, mais l'adresse est confirmée (observé le 2026-11-14 ; message
       de l'appli précisé en conséquence).
       — OK 2026-11-14 (Linux) : compte créé, lien confirmé, connexion réussie.
-- [ ] **P-03** *(reporté en fin de phase 14)* Secrets GitHub créés (README § Publier une version) ; décision prise pour la clé Comic Vine.
+- [ ] **P-03** *(reporté en phase 21)* Secrets GitHub créés (README § Publier une version) ; décision prise pour la clé Comic Vine.
 
 ## 1. Scan — mode Magasin (téléphone)
-- [ ] **M-01** La caméra s'ouvre ; l'autorisation n'est demandée qu'une fois.
-- [ ] **M-02** Tome possédé → bandeau **vert** (badge « ×2 » s'il y a deux éditions).
+- [ ] **M-01** *(reporté de la phase 14)* La caméra s'ouvre ; l'autorisation n'est demandée qu'une fois.
+- [ ] **M-02** *(reporté de la phase 14)* Tome possédé → bandeau **vert** (badge « ×2 » s'il y a deux éditions).
 - [ ] **M-03** Tome en envie → bandeau **jaune** ; « Je l'ai acheté » le fait passer au vert.
 - [ ] **M-04** Tome manquant d'une série suivie → bandeau **bleu** (reconnu par série + numéro).
 - [ ] **M-05** Ouvrage inconnu → bandeau **gris**, ajout possible.
@@ -115,13 +116,13 @@ Tous les tests non faits en phase 14 et non marqués « automatisé ». Le but :
 - [ ] **F-05** PC : export/import via les fenêtres « Enregistrer sous » / « Ouvrir ».
 
 ## 5. Compte et synchro Supabase (téléphone + PC)
-- [ ] **S-01** Connexion email + mot de passe sur chaque appareil ; mauvais mot de passe → « Email ou mot de
+- [ ] **S-01** *(reporté de la phase 14)* Connexion email + mot de passe sur chaque appareil ; mauvais mot de passe → « Email ou mot de
       passe incorrect ».
 - [ ] **S-02** Créer un compte avec un autre email (si Supabase peut lui écrire) : lien de confirmation ouvert
       dans le navigateur, puis connexion OK ; avant confirmation → « pas encore confirmé ».
 - [ ] **S-03** Le gestionnaire de mots de passe propose d'enregistrer le mot de passe.
-- [ ] **S-04** Ajout sur le téléphone → visible sur le PC (≤ 30 s ou bouton synchro), et inversement.
-- [ ] **S-05** **(critique, phase 9)** Après la mise à jour, la synchro reçoit toujours les changements de
+- [ ] **S-04** *(reporté de la phase 14)* Ajout sur le téléphone → visible sur le PC (≤ 30 s ou bouton synchro), et inversement.
+- [ ] **S-05** *(reporté de la phase 14)* **(critique, phase 9)** Après la mise à jour, la synchro reçoit toujours les changements de
       l'autre appareil : le filtre du pull a changé et n'a été testé que contre un faux serveur.
 - [ ] **S-06** Même tome modifié des deux côtés hors ligne → la modification la plus récente gagne.
 - [ ] **S-07** Modifier sur les deux appareils et synchroniser en même temps (bouton) : identiques à la fin.
@@ -137,8 +138,8 @@ Tous les tests non faits en phase 14 et non marqués « automatisé ». Le but :
 ## 6. Journal et messages d'erreur (phase 9)
 - [ ] **J-01** Mode avion puis synchro → une seule entrée « sync » même après plusieurs minutes.
 - [ ] **J-02** « Copier » puis coller dans un message : texte lisible (date, niveau, source, message).
-      — EN COURS 2026-11-14 (Linux) : écran vu vide alors que le fichier contenait une entrée « sync »
-      (probablement consulté avant la première synchro) ; à revérifier après redémarrage.
+      — REPORTÉ en phase 21 (2026-11-14, Linux) : écran vu vide alors que le fichier contenait une entrée
+      « sync » (probablement consulté avant la première synchro) ; à revérifier après redémarrage.
 - [ ] **J-03** « Partager » : feuille de partage sur Android, « Enregistrer sous » sur PC.
 - [ ] **J-04** Le journal est conservé après redémarrage de l'appli.
 - [ ] **J-05** Messages en français à l'écran (hors ligne, fichier invalide, mauvais mot de passe).
@@ -166,14 +167,14 @@ Tous les tests non faits en phase 14 et non marqués « automatisé ». Le but :
       (sinon : job `windows` de la CI).
 - [ ] **W-02** Windows : installateur ; installation sans droits administrateur ; mise à jour par-dessus.
 - [ ] **W-03** Windows : icône, notifications de retard, dialogues de fichiers, synchro.
-- [ ] **A-01** APK signé (clé `keytool` + `android/key.properties`, README) : installation OK.
+- [ ] **A-01** *(reporté de la phase 14)* APK signé (clé `keytool` + `android/key.properties`, README) : installation OK.
 - [ ] **A-02** Une version plus récente s'installe par-dessus sans perte de données.
 - [ ] **A-03** Icône adaptative correcte sur l'écran d'accueil.
 
 ## 9. CI, Releases et mises à jour (phase 12)
 - [x] **Y-01** Après le push : onglet *Actions* → `CI` vert, y compris le job **windows** (premier essai).
       — OK 2026-11-14 (GitHub Actions)
-- [ ] **Y-02** *(reporté en fin de phase 14)* Pousser un tag de test (`git tag v0.0.1-test && git push origin v0.0.1-test`) → *pre-release*
+- [ ] **Y-02** *(reporté en phase 21)* Pousser un tag de test (`git tag v0.0.1-test && git push origin v0.0.1-test`) → *pre-release*
       avec 3 APK, l'AppImage et `Dupe-0.0.1-test-setup.exe`. Supprimer ensuite la Release et le tag
       (`git push --delete origin v0.0.1-test`). Une *pre-release* n'est jamais proposée comme mise à jour ;
       l'appli d'une version de test affiche `0.0.1` dans À propos.
@@ -192,3 +193,17 @@ Tous les tests non faits en phase 14 et non marqués « automatisé ». Le but :
 - [ ] **D-03** Sauvegarde JSON → restauration sur un autre appareil vide.
 - [ ] **D-04** Statistiques plausibles (dépenses, valeur, tomes lus, séries complètes).
 - [ ] **D-05** Mode sombre lisible partout (bandeaux du scan, graphique).
+
+## 11. Clés des sources (phase 15)
+Automatisé (phase 15) : la clé n'est ni dans une sauvegarde JSON, ni dans le journal, ni envoyée à Supabase ;
+une clé saisie active la source sans redémarrage ; « Tester la clé » sur des réponses réelles enregistrées.
+- [ ] **K-01** Version **publiée** (sans clé compilée) : Paramètres → Sources → Comic Vine → *Clé API* →
+      saisir la clé → *Tester la clé* → « Clé valide » → *Enregistrer* ; la recherche « Batman 3 » (type
+      Comics) trouve des résultats.
+- [ ] **K-02** Idem pour Google Books (clé restreinte à Books API) : une recherche par ISBN affiche couverture
+      et résumé.
+- [ ] **K-03** Clé volontairement fausse → « Clé refusée » ; mode avion → « Pas de connexion ».
+- [ ] **K-04** Sur le deuxième appareil, la clé n'apparaît pas (elle n'est pas synchronisée) : la saisir aussi.
+- [ ] **K-05** `ENV_JSON` contenant `COMIC_VINE_API_KEY` : le workflow Release échoue au job `check-env` avec
+      le nom de la clé, jamais sa valeur (à vérifier en même temps que `Y-02`, puis retirer la clé du secret).
+

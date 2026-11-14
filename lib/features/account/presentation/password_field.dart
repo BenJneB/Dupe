@@ -1,7 +1,7 @@
 import 'package:dupe/l10n/gen/app_localizations.dart';
 import 'package:material_ui/material_ui.dart';
 
-/// Password input with a show / hide button.
+/// Password (or other secret) input with a show / hide button.
 class PasswordField extends StatefulWidget {
   const new({
     required this.controller,
@@ -9,6 +9,7 @@ class PasswordField extends StatefulWidget {
     this.isNew = false,
     this.autofocus = false,
     this.onSubmitted,
+    this.autofill = true,
     super.key,
   });
 
@@ -19,6 +20,9 @@ class PasswordField extends StatefulWidget {
   final bool isNew;
   final bool autofocus;
   final ValueChanged<String>? onSubmitted;
+
+  /// Offer to password managers (false for API keys).
+  final bool autofill;
 
   @override
   State<PasswordField> createState() => _PasswordFieldState();
@@ -36,9 +40,14 @@ class _PasswordFieldState extends State<PasswordField> {
       obscureText: !_visible,
       enableSuggestions: false,
       autocorrect: false,
-      autofillHints: [
-        if (widget.isNew) AutofillHints.newPassword else AutofillHints.password,
-      ],
+      autofillHints: !widget.autofill
+          ? null
+          : [
+              if (widget.isNew)
+                AutofillHints.newPassword
+              else
+                AutofillHints.password,
+            ],
       decoration: InputDecoration(
         labelText: widget.label,
         border: const OutlineInputBorder(),

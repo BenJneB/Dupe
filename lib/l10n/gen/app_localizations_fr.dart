@@ -678,7 +678,65 @@ class AppLocalizationsFr extends AppLocalizations {
   String get settingsSources => 'Sources de données';
 
   @override
-  String get sourceNeedsKey => 'Clé API absente de env.json';
+  String get sourceNeedsKey => 'Clé requise : saisis-la ci-dessous';
+
+  @override
+  String get apiKeyTile => 'Clé API';
+
+  @override
+  String get apiKeySaved => 'Clé saisie dans l’appli';
+
+  @override
+  String get apiKeyBuiltIn => 'Clé intégrée à cette version (env.json)';
+
+  @override
+  String get apiKeyMissing => 'Aucune clé : touche pour en saisir une';
+
+  @override
+  String apiKeyTitle(String source) {
+    return 'Clé $source';
+  }
+
+  @override
+  String get apiKeyHelpGoogleBooks =>
+      'Crée une clé dans la console Google Cloud (console.cloud.google.com → API et services → Identifiants), avec la « Books API » activée, et restreins-la à cette API.';
+
+  @override
+  String get apiKeyHelpComicVine =>
+      'Crée un compte Comic Vine, puis copie ta clé depuis comicvine.gamespot.com/api (usage non commercial).';
+
+  @override
+  String get apiKeyPrivacy =>
+      'La clé reste sur cet appareil : elle n’est ni synchronisée, ni sauvegardée, ni écrite dans le journal.';
+
+  @override
+  String get apiKeyTest => 'Tester la clé';
+
+  @override
+  String get apiKeyValid => 'Clé valide';
+
+  @override
+  String get apiKeyInvalid =>
+      'Clé refusée : vérifie-la (pour Google : Books API activée et autorisée pour cette clé)';
+
+  @override
+  String get apiKeyQuota => 'Clé valide, mais quota dépassé pour l’instant';
+
+  @override
+  String get apiKeyOffline => 'Pas de connexion : impossible de tester la clé';
+
+  @override
+  String get apiKeyFailed =>
+      'Réponse inattendue du service (réessaie plus tard)';
+
+  @override
+  String get apiKeyRemove => 'Effacer';
+
+  @override
+  String get apiKeyStored => 'Clé enregistrée';
+
+  @override
+  String get apiKeyRemoved => 'Clé effacée';
 
   @override
   String get sourceBnfHelp =>

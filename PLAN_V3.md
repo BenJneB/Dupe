@@ -30,9 +30,9 @@ raccourci Android « Scanner », vibrations, lampe torche, signalement des nouve
 | Risque (`PLAN_V2.md` §6) | Traité en |
 |---|---|
 | 1. Aucun test réel (synchro, connexion, caméra, Windows, workflows) | Phase 14 (base), 17-18 (auto), 21 (recette) |
-| 2. Filtre PostgREST du pull jamais vérifié contre un vrai serveur | Phase 14 (`S-05`, en réel), 17 (auto) |
+| 2. Filtre PostgREST du pull jamais vérifié contre un vrai serveur | Phase 17 (auto), 21 (`S-05`, en réel ; reporté de la phase 14) |
 | 3. Compte existant sans mot de passe | Sans objet (2026-11-14 : aucun compte n'existait ; création en phase 14, `P-04`) |
-| 4. Clés Comic Vine / Google Books extractibles des binaires publics | Phase 15 |
+| 4. Clés Comic Vine / Google Books extractibles des binaires publics | Phase 15 ✅ (aucune Release n'a encore été publiée : aucune clé exposée) |
 | 5. Efficacité du `keep-alive` non prouvée ; tâches planifiées désactivées après 60 j | Phase 16 |
 | 6. Horloge d'appareil très en avance qui gagne à tort la synchro | Phase 17 |
 
@@ -45,8 +45,8 @@ raccourci Android « Scanner », vibrations, lampe torche, signalement des nouve
 
 | Phase | Sujet | État | Tests auto | Vérifié en réel |
 |---|---|---|---|---|
-| 14 | Vérifications de base en réel et correctifs | en cours | — | CI verte (2026-11-14) |
-| 15 | Clés API saisies dans l'appli | à faire | — | — |
+| 14 | Vérifications de base en réel et correctifs | close (réduite) | message de confirmation | CI, schéma, compte (2026-11-14) |
+| 15 | Clés API saisies dans l'appli | ✅ fait (2026-11-14) | oui | non (phase 21 : `K-*`) |
 | 16 | CI renforcée et veille Supabase fiable | à faire | — | — |
 | 17 | Tests de synchro contre Supabase local | à faire | — | — |
 | 18 | Hooks, commits conventionnels, tests d'intégration | à faire | — | — |
@@ -76,6 +76,19 @@ seulement ce qui ne peut pas attendre la recette finale (phase 21).
 *Critère : les tests listés ci-dessus passent ou ont un écart documenté et accepté ; les workflows CI et
 release ont tourné au moins une fois avec succès.*
 
+**Bilan (2026-11-14)**
+- **Réalisé** : CI verte au premier passage, Windows compris (`Y-01`) ; schéma Supabase vérifié (`P-01`) ;
+  compte créé dans l'appli et connexion réussie sous Linux (`P-04`). Correctifs : tags `vX.Y.Z-suffixe`
+  acceptés et publiés en *pre-release* (le tag de test prévu ne déclenchait rien) ; message après inscription
+  et README précisés (le lien de confirmation redirige vers `localhost:3000`, page en erreur mais adresse
+  confirmée) ; méthode « deux instances Linux » documentée pour tester la synchro sans téléphone.
+- **Écarts** : `P-02` sans objet (aucun compte n'existait). Par décision de l'utilisateur, **reportés en tête
+  de la phase 21** : `J-02` (journal vu vide, à revérifier), `S-01`, `S-05`, `S-04` (synchro réelle),
+  `P-03`, `Y-02` (secrets et Release de test : le workflow release n'a donc pas encore tourné), `A-01`,
+  `M-01`, `M-02` (Android).
+- **Non vérifié** : tout ce qui est reporté ci-dessus ; en particulier le filtre de pull (risque 2) n'a
+  toujours pas été confronté à un vrai serveur avant la phase 17.
+
 ### Phase 15 — Clés API saisies dans l'appli
 Les Releases sont publiques : toute clé présente dans `ENV_JSON` est extractible des binaires.
 
@@ -91,6 +104,23 @@ Les Releases sont publiques : toute clé présente dans `ENV_JSON` est extractib
 
 *Critère : une Release construite sans ces clés fonctionne avec Comic Vine après saisie de la clé dans
 l'appli ; la clé n'apparaît ni dans une sauvegarde JSON, ni dans le journal, ni sur Supabase.*
+
+**Bilan (2026-11-14)**
+- **Réalisé** : Paramètres → Sources → *Clé API* sous Google Books et Comic Vine (champ masqué avec bouton
+  afficher, *Tester la clé*, *Effacer*) ; clé saisie > `env.json` ; source activée sans redémarrage (les
+  sources se reconstruisent quand une clé change). Stockage dans `app_settings` (local). Journal : toute clé
+  connue (saisie ou compilée) est remplacée par `***`, ainsi que tout paramètre d'URL `key=` / `api_key=` /
+  `token=`. `release.yml` : job `check-env` avant les builds, qui refuse un `ENV_JSON` contenant l'une des deux
+  clés (n'affiche que leur nom ; simulé en local avec de fausses valeurs). README : « Clés des sources ».
+- **Tests** : résolution des clés, persistance, activation sans redémarrage, absence de la clé dans la
+  sauvegarde JSON, sur le faux serveur de synchro et dans le journal ; « Tester la clé » sur des réponses réelles
+  (dont deux enregistrées avec une clé inventée) ; parcours complet dans Paramètres.
+- **Écarts** : « Tester la clé » interroge un ISBN fixe (Google) ou une recherche « batman » (Comic Vine) plutôt
+  que l'appel de l'appli. Aucune régénération de clé nécessaire : aucune Release n'a été publiée.
+- **Non vérifié** : avec les vrais services et une version publiée (`K-01` à `K-05`, phase 21) ;
+  `release.yml` n'a toujours jamais tourné.
+- **Point découvert** : `OPEN_LIBRARY_CONTACT` (l'email de l'utilisateur) serait lui aussi lisible dans une
+  Release publique ; documenté (« le laisser vide dans `ENV_JSON` »), non bloqué par `check-env`.
 
 ### Phase 16 — CI renforcée et veille Supabase fiable
 - `ci.yml` : ajouter `dart format --output=none --set-exit-if-changed .` et une **vérification du code
@@ -183,6 +213,8 @@ message en image ; les stats de lecture correspondent à un jeu de test calculé
 ### Phase 21 — Recette finale
 Phase pilotée par l'utilisateur, sur la version issue de la phase 20 installée depuis une Release.
 
+- **En premier : les tests reportés de la phase 14** (liste en tête de la section « Phase 21 » de
+  `TESTS_MANUELS.md`) : `J-02`, `S-01`, `S-05`, `S-04`, `P-03`, `Y-02`, `A-01`, `M-01`, `M-02`.
 - **Préparée au fil des phases** : chaque phase 15-20 ajoute à `TESTS_MANUELS.md` les tests de ce qu'elle
   livre, et marque « automatisé (phase N) » ceux que ses tests couvrent désormais (phases 17 et 18
   surtout) ; ces derniers ne sont plus déroulés à la main.
@@ -196,16 +228,16 @@ Phase pilotée par l'utilisateur, sur la version issue de la phase 20 installée
 accepté.*
 
 ## 5. Actions manuelles de l'utilisateur
-- **Phase 14** : créer le compte dans l'appli, vérifier la synchro, créer le tag de test
-  `v0.0.1-test` (puis supprimer la *pre-release* et le tag), installer l'APK sur le téléphone.
-- **Phase 15** : retirer `COMIC_VINE_API_KEY` et `GOOGLE_BOOKS_API_KEY` du secret `ENV_JSON` ; restreindre la
-  clé Google Books à la Books API dans la console Google ; envisager de régénérer la clé Comic Vine si une
-  Release publique l'a déjà contenue.
+- **Phase 14** : créer le compte dans l'appli (fait). Le reste est reporté en phase 21.
+- **Phase 15** : créer le secret `ENV_JSON` **sans** `COMIC_VINE_API_KEY` ni `GOOGLE_BOOKS_API_KEY` (et sans
+  `OPEN_LIBRARY_CONTACT` pour ne pas publier son email) ; restreindre la clé Google Books à la Books API ;
+  saisir les clés dans l'appli sur chaque appareil. Pas de régénération : aucune Release n'a été publiée.
 - **Phase 16** : activer Dependabot si nécessaire ; protéger `main` (pull request obligatoire, CI verte
   exigée) dans les réglages du dépôt.
 - **Phase 17** : installer Docker et la Supabase CLI sur le poste.
 - **Phase 18** : `lefthook install` après récupération du dépôt.
-- **Phase 21** : dérouler `TESTS_MANUELS.md` ; publier deux versions stables successives.
+- **Phase 21** : d'abord les tests reportés de la phase 14 (synchro, secrets GitHub, Release de test,
+  APK sur le téléphone), puis dérouler `TESTS_MANUELS.md` ; publier deux versions stables successives.
 
 ## 6. Hors périmètre (inchangé)
 iOS/macOS, partage de collection, alertes de sortie des nouveaux tomes, scraping, cote automatique,

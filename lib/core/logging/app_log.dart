@@ -56,6 +56,7 @@ class AppLog {
   final int capacity;
   final DateTime Function() _now;
   final _entries = <LogEntry>[];
+  final _secrets = <String>{};
   final _changes = StreamController<void>.broadcast();
   File? _file;
   var _fileLines = 0;
@@ -64,6 +65,27 @@ class AppLog {
   /// Oldest first.
   List<LogEntry> get entries => List.unmodifiable(_entries);
   Stream<void> get changes => _changes.stream;
+
+  /// Never write [secret] (an API key…) in the journal: it is replaced by
+  /// `***` in every later entry. Too short values are ignored (they would
+  /// mask ordinary words).
+  void hideSecret(String secret) {
+    if (secret.length >= 8) _secrets.add(secret);
+  }
+
+  /// URL parameters that carry keys, whatever their value.
+  static final _keyParameter = RegExp(
+    r'((?:api_key|apikey|key|token|access_token)=)[^&\s"]+',
+    caseSensitive: false,
+  );
+
+  String _redact(String message) {
+    var text = message;
+    for (final secret in _secrets) {
+      text = text.replaceAll(secret, '***');
+    }
+    return text.replaceAllMapped(_keyParameter, (m) => '${m[1]}***');
+  }
 
   void info(String source, String message) =>
       _add(LogLevel.info, source, message);
@@ -79,7 +101,7 @@ class AppLog {
   }
 
   void _add(LogLevel level, String source, String message) {
-    final entry = LogEntry(_now(), level, source, message);
+    final entry = LogEntry(_now(), level, source, _redact(message));
     if (_echo) debugPrint('$entry');
     _entries.add(entry);
     if (_entries.length > capacity) _entries.removeAt(0);

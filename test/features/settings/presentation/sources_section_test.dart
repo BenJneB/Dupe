@@ -32,6 +32,6 @@ void main() {
     final comicVine = find.byKey(const Key('source_comicVine'));
     await tester.scrollUntilVisible(comicVine, 100);
     expect(tester.widget<SwitchListTile>(comicVine).onChanged, isNull);
-    expect(find.text('Clé API absente de env.json'), findsWidgets);
+    expect(find.text('Clé requise : saisis-la ci-dessous'), findsWidgets);
   });
 }

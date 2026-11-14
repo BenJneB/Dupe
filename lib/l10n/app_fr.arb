@@ -416,7 +416,31 @@
   "reviewRemoved": "Retiré de la file",
   "reviewEditHint": "Appuie sur un ouvrage pour le corriger avant de l’ajouter",
   "settingsSources": "Sources de données",
-  "sourceNeedsKey": "Clé API absente de env.json",
+  "sourceNeedsKey": "Clé requise : saisis-la ci-dessous",
+  "apiKeyTile": "Clé API",
+  "apiKeySaved": "Clé saisie dans l’appli",
+  "apiKeyBuiltIn": "Clé intégrée à cette version (env.json)",
+  "apiKeyMissing": "Aucune clé : touche pour en saisir une",
+  "apiKeyTitle": "Clé {source}",
+  "@apiKeyTitle": {
+    "placeholders": {
+      "source": {
+        "type": "String"
+      }
+    }
+  },
+  "apiKeyHelpGoogleBooks": "Crée une clé dans la console Google Cloud (console.cloud.google.com → API et services → Identifiants), avec la « Books API » activée, et restreins-la à cette API.",
+  "apiKeyHelpComicVine": "Crée un compte Comic Vine, puis copie ta clé depuis comicvine.gamespot.com/api (usage non commercial).",
+  "apiKeyPrivacy": "La clé reste sur cet appareil : elle n’est ni synchronisée, ni sauvegardée, ni écrite dans le journal.",
+  "apiKeyTest": "Tester la clé",
+  "apiKeyValid": "Clé valide",
+  "apiKeyInvalid": "Clé refusée : vérifie-la (pour Google : Books API activée et autorisée pour cette clé)",
+  "apiKeyQuota": "Clé valide, mais quota dépassé pour l’instant",
+  "apiKeyOffline": "Pas de connexion : impossible de tester la clé",
+  "apiKeyFailed": "Réponse inattendue du service (réessaie plus tard)",
+  "apiKeyRemove": "Effacer",
+  "apiKeyStored": "Clé enregistrée",
+  "apiKeyRemoved": "Clé effacée",
   "sourceBnfHelp": "Catalogue de la BnF : éditions françaises, prix, séries",
   "sourceGoogleBooksHelp": "Couvertures et résumés",
   "sourceOpenLibraryHelp": "Livres, couvertures",

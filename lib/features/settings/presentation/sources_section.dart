@@ -1,10 +1,12 @@
-import 'package:dupe/core/metadata/metadata_providers.dart';
+import 'package:dupe/core/metadata/api_keys.dart';
 import 'package:dupe/core/metadata/source_settings.dart';
+import 'package:dupe/features/settings/presentation/api_key_dialog.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
-/// Switches to turn each metadata source on or off.
+/// Switches to turn each metadata source on or off, and the API keys of the
+/// sources that need one.
 class SourcesSection extends ConsumerWidget {
   const new({super.key});
 
@@ -12,6 +14,9 @@ class SourcesSection extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
     final disabled = ref.watch(disabledSourcesProvider).value ?? const {};
+    final keys = ref.watch(apiKeysProvider);
+    final saved = ref.watch(savedApiKeysProvider).value ?? const {};
+    bool hasKey(SourceId id) => sourceHasKey(id, keys);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -22,22 +27,46 @@ class SourcesSection extends ConsumerWidget {
             style: Theme.of(context).textTheme.titleSmall,
           ),
         ),
-        for (final id in SourceId.values)
+        for (final id in SourceId.values) ...[
           SwitchListTile(
             key: Key('source_${id.name}'),
             title: Text(_name(id)),
-            subtitle: Text(
-              sourceHasKey(id) ? _help(id, l10n) : l10n.sourceNeedsKey,
-            ),
-            value: sourceHasKey(id) && !disabled.contains(id),
-            onChanged: sourceHasKey(id)
+            subtitle: Text(hasKey(id) ? _help(id, l10n) : l10n.sourceNeedsKey),
+            value: hasKey(id) && !disabled.contains(id),
+            onChanged: hasKey(id)
                 ? (on) => ref
                       .read(disabledSourcesProvider.notifier)
                       .setEnabled(id, enabled: on)
                 : null,
           ),
+          if (keyedSources.contains(id))
+            ListTile(
+              key: Key('apiKey_${id.name}'),
+              contentPadding: const EdgeInsets.only(left: 32, right: 16),
+              leading: const Icon(Icons.key),
+              title: Text(l10n.apiKeyTile),
+              subtitle: Text(
+                (saved[id] ?? '').isNotEmpty
+                    ? l10n.apiKeySaved
+                    : hasKey(id)
+                    ? l10n.apiKeyBuiltIn
+                    : l10n.apiKeyMissing,
+              ),
+              onTap: () => _editKey(context, id),
+            ),
+        ],
       ],
     );
+  }
+
+  Future<void> _editKey(BuildContext context, SourceId id) async {
+    final messenger = ScaffoldMessenger.of(context);
+    final message = await showApiKeyDialog(context, id, _name(id));
+    if (message != null) {
+      messenger
+        ..hideCurrentSnackBar()
+        ..showSnackBar(SnackBar(content: Text(message)));
+    }
   }
 
   /// Proper nouns, not translated.
