@@ -14,11 +14,15 @@ Future<AppDatabase> pumpApp(
   WidgetTester tester, {
   Size size = phoneSize,
   List<Override> overrides = const [],
+
+  /// Writes initial data before the app (and its drift streams) starts.
+  Future<void> Function(AppDatabase db)? seed,
 }) async {
   tester.view.physicalSize = size;
   tester.view.devicePixelRatio = 1;
   addTearDown(tester.view.reset);
   final db = AppDatabase.memory();
+  await seed?.call(db);
   await tester.pumpWidget(
     ProviderScope(
       overrides: [appDatabaseProvider.overrideWithValue(db), ...overrides],

@@ -1,6 +1,7 @@
 import 'package:dupe/core/metadata/metadata_provider.dart';
 import 'package:dupe/core/metadata/metadata_result.dart';
 import 'package:dupe/core/metadata/providers/bnf/bnf_provider.dart';
+import 'package:dupe/core/metadata/providers/bnf/unimarc_parser.dart';
 import 'package:dupe/core/network/rate_limiter.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -53,7 +54,8 @@ void main() {
     // 702 without relator code is kept as author.
     expect(t112.authors, ['Eiichirō Oda']);
     expect(t112.publisher, 'Glénat');
-    expect(t112.seriesTitle, 'Shonen One Piece');
+    // 225 without \$v is a publisher collection, not a series.
+    expect(t112.seriesTitle, isNull);
   });
 
   test('text search sends an anywhere + doctype query', () async {
@@ -67,6 +69,15 @@ void main() {
     );
     expect(results, hasLength(20));
     expect(results.every((r) => r.title.isNotEmpty), isTrue);
+  });
+
+  test('volume labels are cleaned', () {
+    expect(cleanVolumeNumber('Tome 2'), '2');
+    expect(cleanVolumeNumber('T. 12'), '12');
+    expect(cleanVolumeNumber('vol. 3'), '3');
+    expect(cleanVolumeNumber('Saison 1'), 'Saison 1');
+    expect(cleanVolumeNumber('HS 2'), 'HS 2');
+    expect(cleanVolumeNumber('  '), isNull);
   });
 
   test('unknown ISBN returns null', () async {

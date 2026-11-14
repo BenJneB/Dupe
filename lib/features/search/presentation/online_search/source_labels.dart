@@ -6,5 +6,6 @@ extension MetadataSourceLabel on MetadataSource {
     MetadataSource.bnf => 'BnF',
     MetadataSource.googleBooks => 'Google Books',
     MetadataSource.openLibrary => 'Open Library',
+    MetadataSource.comicVine => 'Comic Vine',
   };
 }

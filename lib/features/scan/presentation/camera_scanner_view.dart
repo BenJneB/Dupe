@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dupe/features/collection/domain/collection_type.dart';
 import 'package:dupe/features/scan/presentation/code_entry_field.dart';
 import 'package:dupe/features/scan/presentation/handle_scanned_code.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
@@ -8,7 +9,9 @@ import 'package:mobile_scanner/mobile_scanner.dart';
 
 /// Camera barcode scanner (Android), with manual entry as a fallback.
 class CameraScannerView extends StatefulWidget {
-  const new({super.key});
+  const new({this.type, super.key});
+
+  final CollectionType? type;
 
   @override
   State<CameraScannerView> createState() => _CameraScannerViewState();
@@ -36,7 +39,7 @@ class _CameraScannerViewState extends State<CameraScannerView> {
     if (_handled) return;
     final raw = capture.barcodes.map((b) => b.rawValue).nonNulls.firstOrNull;
     if (raw == null) return;
-    _handled = handleScannedCode(context, raw);
+    _handled = handleScannedCode(context, raw, type: widget.type);
   }
 
   Future<void> _manualEntry() => showModalBottomSheet<void>(
@@ -52,7 +55,7 @@ class _CameraScannerViewState extends State<CameraScannerView> {
       child: CodeEntryField(
         onSubmitted: (code) {
           Navigator.pop(sheetContext);
-          handleScannedCode(context, code);
+          handleScannedCode(context, code, type: widget.type);
         },
       ),
     ),

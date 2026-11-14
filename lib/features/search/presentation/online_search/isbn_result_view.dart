@@ -6,6 +6,7 @@ import 'package:dupe/core/utils/formatters.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
 import 'package:dupe/features/collection/domain/enums.dart';
 import 'package:dupe/features/search/presentation/online_search/add_from_result.dart';
+import 'package:dupe/features/search/presentation/online_search/external_links_bar.dart';
 import 'package:dupe/features/search/presentation/online_search/online_search_providers.dart';
 import 'package:dupe/features/search/presentation/online_search/result_summary.dart';
 import 'package:dupe/features/search/presentation/online_search/source_labels.dart';
@@ -84,10 +85,15 @@ class _LookupBody extends StatelessWidget {
         : l10n.sourcesUnavailable(lookup.failed.map((s) => s.label).join(', '));
 
     if (merged == null) {
-      return PlaceholderBody(
-        icon: Icons.search_off,
-        title: l10n.isbnNotFound(isbn13),
-        message: [l10n.isbnNotFoundHint, ?failedNote].join('\n'),
+      return Column(
+        children: [
+          PlaceholderBody(
+            icon: Icons.search_off,
+            title: l10n.isbnNotFound(isbn13),
+            message: [l10n.isbnNotFoundHint, ?failedNote].join('\n'),
+          ),
+          ExternalLinksBar(type: type, isbn13: isbn13),
+        ],
       );
     }
     final price = merged.coverPrice;

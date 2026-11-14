@@ -3,7 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'metadata_result.freezed.dart';
 
 /// External metadata sources.
-enum MetadataSource { bnf, googleBooks, openLibrary }
+enum MetadataSource { bnf, googleBooks, openLibrary, comicVine }
 
 /// Normalized metadata returned by any source.
 @freezed

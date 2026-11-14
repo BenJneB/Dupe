@@ -226,7 +226,7 @@
   "onlineSearchTitle": "Rechercher en ligne",
   "onlineSearchHint": "ISBN, titre ou auteur",
   "onlineSearchPrompt": "Saisis un ISBN ou un titre, puis lance la recherche.",
-  "upcNotSupported": "Code UPC (comics US) : la recherche par titre et numéro arrive avec les comics.",
+  "upcNotSupported": "Code UPC (comics US) : cherche plutôt par titre et numéro, par exemple « Batman 3 », dans le type Comics.",
   "invalidCode": "Code « {code} » non reconnu comme ISBN",
   "alreadyOwned": "Déjà dans ta collection",
   "alreadyWished": "Déjà dans ta liste d’envies",
@@ -276,5 +276,40 @@
         "type": "String"
       }
     }
-  }
+  },
+  "attachedToSeries": "Série : {title}",
+  "@attachedToSeries": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "attachedToSeriesHelper": "Rangé automatiquement dans cette série",
+  "createSeriesNamed": "Créer la série « {title} »",
+  "@createSeriesNamed": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "createSeriesHelper": "Aucune série correspondante dans ta collection",
+  "openOn": "Ouvrir sur {site}",
+  "@openOn": {
+    "placeholders": {
+      "site": {
+        "type": "String"
+      }
+    }
+  },
+  "completeFrom": "Compléter depuis {source}",
+  "@completeFrom": {
+    "placeholders": {
+      "source": {
+        "type": "String"
+      }
+    }
+  },
+  "seriesLookupHint": "Titre de la série"
 }

@@ -36,6 +36,14 @@ abstract final class AppRoutes {
   static const settings = '/plus/parametres';
   static const scan = '/scan';
 
+  /// Scan screen; found codes are looked up as [type].
+  static String scanFor(CollectionType? type) =>
+      Uri(path: scan, queryParameters: {'type': ?type?.dbValue}).toString();
+
+  static CollectionType? typeParam(GoRouterState state) => CollectionType.values
+      .where((t) => t.dbValue == state.uri.queryParameters['type'])
+      .firstOrNull;
+
   /// Root of the tab of [type].
   static String base(CollectionType type) => switch (type) {
     CollectionType.manga => '/mangas',
@@ -119,15 +127,14 @@ GoRouter appRouter(Ref ref) {
         parentNavigatorKey: rootNavigatorKey,
         builder: (context, state) => OnlineSearchScreen(
           initialQuery: state.uri.queryParameters['q'],
-          initialType: CollectionType.values
-              .where((t) => t.dbValue == state.uri.queryParameters['type'])
-              .firstOrNull,
+          initialType: AppRoutes.typeParam(state),
         ),
       ),
       GoRoute(
         path: AppRoutes.scan,
         parentNavigatorKey: rootNavigatorKey,
-        builder: (context, state) => const ScanScreen(),
+        builder: (context, state) =>
+            ScanScreen(type: AppRoutes.typeParam(state)),
       ),
     ],
   );

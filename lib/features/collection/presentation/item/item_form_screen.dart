@@ -8,8 +8,12 @@ import 'package:dupe/features/collection/domain/collection_type.dart';
 import 'package:dupe/features/collection/domain/enums.dart';
 import 'package:dupe/features/collection/domain/item.dart';
 import 'package:dupe/features/collection/domain/metadata_mapping.dart';
+import 'package:dupe/features/collection/domain/series_attachment.dart';
+import 'package:dupe/features/collection/presentation/item/item_draft_loader.dart';
 import 'package:dupe/features/collection/presentation/item/item_form_controllers.dart';
+import 'package:dupe/features/collection/presentation/item/item_reading_fields.dart';
 import 'package:dupe/features/collection/presentation/item/item_text_input.dart';
+import 'package:dupe/features/collection/presentation/item/series_attachment_tile.dart';
 import 'package:dupe/features/collection/presentation/labels.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -47,6 +51,7 @@ class _ItemFormScreenState extends ConsumerState<ItemFormScreen> {
   final _formKey = GlobalKey<FormState>();
   final _c = ItemFormControllers();
   Item? _original;
+  SeriesAttachment _attachment = SeriesAttachment.none;
   var _saving = false;
 
   bool get _isNew => widget.itemId == null;
@@ -58,24 +63,19 @@ class _ItemFormScreenState extends ConsumerState<ItemFormScreen> {
   }
 
   Future<void> _load() async {
-    final repo = ref.read(collectionRepositoryProvider);
-    final itemId = widget.itemId;
-    final seriesId = widget.seriesId;
-    final Item? item;
-    if (itemId != null) {
-      item = await repo.getItem(itemId);
-    } else {
-      final series = seriesId == null ? null : await repo.getSeries(seriesId);
-      final draft = repo.newItem(
-        widget.type,
-        series: series,
-        volumeNumber: widget.volumeNumber,
-      );
-      final prefill = widget.prefill;
-      item = prefill == null ? draft : applyMetadata(draft, prefill);
-    }
-    if (!mounted || item == null) return;
-    setState(() => _fill(item!));
+    final draft = await loadItemDraft(
+      ref.read(collectionRepositoryProvider),
+      type: widget.type,
+      itemId: widget.itemId,
+      seriesId: widget.seriesId,
+      volumeNumber: widget.volumeNumber,
+      prefill: widget.prefill,
+    );
+    if (!mounted || draft == null) return;
+    setState(() {
+      _attachment = draft.attachment;
+      _fill(draft.item);
+    });
   }
 
   void _fill(Item i) {
@@ -93,10 +93,15 @@ class _ItemFormScreenState extends ConsumerState<ItemFormScreen> {
     final original = _original;
     if (original == null || !_formKey.currentState!.validate()) return;
     setState(() => _saving = true);
-    final item = _c.applyTo(original);
-    await ref.read(collectionRepositoryProvider).saveItem(item);
+    final repo = ref.read(collectionRepositoryProvider);
+    final item = await applyAttachment(repo, _c.applyTo(original), _attachment);
+    await repo.saveItem(item);
     if (!mounted) return;
-    if (_isNew && item.seriesId == null) {
+    final seriesId = item.seriesId;
+    if (widget.prefill != null && seriesId != null) {
+      // Scanned volume: show it in its series grid.
+      context.pushReplacement(AppRoutes.series(item.type, seriesId));
+    } else if (_isNew && seriesId == null) {
       context.pushReplacement(AppRoutes.item(item.type, item.id));
     } else {
       context.pop();
@@ -136,33 +141,12 @@ class _ItemFormScreenState extends ConsumerState<ItemFormScreen> {
                         setState(() => _c.ownership = s.first),
                   ),
                   FormSection(l10n.sectionGeneral),
+                  SeriesAttachmentTile(
+                    attachment: _attachment,
+                    onChanged: (a) => setState(() => _attachment = a),
+                  ),
                   ItemGeneralFields(_c),
-                  FormSection(l10n.sectionReading),
-                  FormDropdown<ReadingStatus>(
-                    label: l10n.fieldReadingStatus,
-                    value: _c.readingStatus,
-                    items: {
-                      for (final s in ReadingStatus.values) s: s.label(l10n),
-                    },
-                    onChanged: (s) => setState(() => _c.readingStatus = s),
-                  ),
-                  formGap,
-                  FormDate(
-                    label: l10n.fieldReadDate,
-                    value: _c.readDate,
-                    format: (d) => Formatters.date(d, locale),
-                    onChanged: (d) => setState(() => _c.readDate = d),
-                  ),
-                  formGap,
-                  FormDropdown<int?>(
-                    label: l10n.fieldRating,
-                    value: _c.rating,
-                    items: {
-                      null: l10n.none,
-                      for (var r = 0; r <= 5; r++) r: '$r/5',
-                    },
-                    onChanged: (r) => setState(() => _c.rating = r),
-                  ),
+                  ItemReadingFields(_c, onChanged: () => setState(() {})),
                   FormSection(l10n.sectionCopy),
                   SwitchListTile(
                     contentPadding: EdgeInsets.zero,

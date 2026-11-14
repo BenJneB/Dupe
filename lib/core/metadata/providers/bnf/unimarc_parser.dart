@@ -37,6 +37,18 @@ MetadataResult? parseUnimarcRecord(UnimarcRecord r) {
 
   final isbn = r.first('010', 'a') ?? r.first('073', 'a');
   final price = _parsePrice(r.first('010', 'd'));
+  // 225 is a series only when numbered ($v); otherwise it is a publisher's
+  // collection ("Imaginaire", "Shonen One Piece").
+  final numberedCollection = r
+      .fields('225')
+      .map(
+        (f) => (
+          title: UnimarcRecord.subfields(f, 'a').firstOrNull,
+          number: UnimarcRecord.subfields(f, 'v').firstOrNull,
+        ),
+      )
+      .where((c) => c.title != null && c.number != null)
+      .firstOrNull;
 
   return MetadataResult(
     source: MetadataSource.bnf,
@@ -50,9 +62,11 @@ MetadataResult? parseUnimarcRecord(UnimarcRecord r) {
     language: _languages[r.first('101', 'a')],
     isbn13: isbn == null ? null : Isbn.toIsbn13(isbn),
     description: r.first('330', 'a'),
-    seriesTitle: r.first('461', 't') ?? r.first('225', 'a'),
+    seriesTitle: r.first('461', 't') ?? numberedCollection?.title,
     volumeNumber:
-        r.first('200', 'h') ?? r.first('461', 'v') ?? r.first('225', 'v'),
+        r.first('200', 'h') ??
+        r.first('461', 'v') ??
+        numberedCollection?.number,
     coverPrice: price?.amount,
     currency: price?.currency,
   );
@@ -73,6 +87,18 @@ List<String> _authors(UnimarcRecord r) {
     }
   }
   return names;
+}
+
+final _volumePrefix = RegExp(
+  r'^(tome|t\.|vol\.?|volume|n°|no\.?|numéro)\s*',
+  caseSensitive: false,
+);
+
+/// "Tome 2" / "T. 2" / "Vol. 2" -> "2"; other labels ("Saison 1", "HS 2")
+/// are kept as is.
+String? cleanVolumeNumber(String? raw) {
+  final value = raw?.trim().replaceFirst(_volumePrefix, '').trim();
+  return value == null || value.isEmpty ? null : value;
 }
 
 String? _year(String? raw) =>

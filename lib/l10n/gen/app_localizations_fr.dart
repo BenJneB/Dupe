@@ -468,7 +468,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get upcNotSupported =>
-      'Code UPC (comics US) : la recherche par titre et numéro arrive avec les comics.';
+      'Code UPC (comics US) : cherche plutôt par titre et numéro, par exemple « Batman 3 », dans le type Comics.';
 
   @override
   String invalidCode(String code) {
@@ -526,4 +526,34 @@ class AppLocalizationsFr extends AppLocalizations {
   String cameraUnavailable(String error) {
     return 'Caméra indisponible ($error). Vérifie l’autorisation caméra ou saisis l’ISBN.';
   }
+
+  @override
+  String attachedToSeries(String title) {
+    return 'Série : $title';
+  }
+
+  @override
+  String get attachedToSeriesHelper => 'Rangé automatiquement dans cette série';
+
+  @override
+  String createSeriesNamed(String title) {
+    return 'Créer la série « $title »';
+  }
+
+  @override
+  String get createSeriesHelper =>
+      'Aucune série correspondante dans ta collection';
+
+  @override
+  String openOn(String site) {
+    return 'Ouvrir sur $site';
+  }
+
+  @override
+  String completeFrom(String source) {
+    return 'Compléter depuis $source';
+  }
+
+  @override
+  String get seriesLookupHint => 'Titre de la série';
 }

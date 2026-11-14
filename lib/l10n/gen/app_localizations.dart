@@ -895,7 +895,7 @@ abstract class AppLocalizations {
   /// No description provided for @upcNotSupported.
   ///
   /// In fr, this message translates to:
-  /// **'Code UPC (comics US) : la recherche par titre et numéro arrive avec les comics.'**
+  /// **'Code UPC (comics US) : cherche plutôt par titre et numéro, par exemple « Batman 3 », dans le type Comics.'**
   String get upcNotSupported;
 
   /// No description provided for @invalidCode.
@@ -987,6 +987,48 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Caméra indisponible ({error}). Vérifie l’autorisation caméra ou saisis l’ISBN.'**
   String cameraUnavailable(String error);
+
+  /// No description provided for @attachedToSeries.
+  ///
+  /// In fr, this message translates to:
+  /// **'Série : {title}'**
+  String attachedToSeries(String title);
+
+  /// No description provided for @attachedToSeriesHelper.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rangé automatiquement dans cette série'**
+  String get attachedToSeriesHelper;
+
+  /// No description provided for @createSeriesNamed.
+  ///
+  /// In fr, this message translates to:
+  /// **'Créer la série « {title} »'**
+  String createSeriesNamed(String title);
+
+  /// No description provided for @createSeriesHelper.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune série correspondante dans ta collection'**
+  String get createSeriesHelper;
+
+  /// No description provided for @openOn.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ouvrir sur {site}'**
+  String openOn(String site);
+
+  /// No description provided for @completeFrom.
+  ///
+  /// In fr, this message translates to:
+  /// **'Compléter depuis {source}'**
+  String completeFrom(String source);
+
+  /// No description provided for @seriesLookupHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Titre de la série'**
+  String get seriesLookupHint;
 }
 
 class _AppLocalizationsDelegate

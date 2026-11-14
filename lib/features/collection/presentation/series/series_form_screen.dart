@@ -2,12 +2,15 @@ import 'dart:async';
 
 import 'package:dupe/app/router.dart';
 import 'package:dupe/app/widgets/form_helpers.dart';
-import 'package:dupe/core/utils/formatters.dart';
+import 'package:dupe/core/metadata/metadata_providers.dart';
 import 'package:dupe/features/collection/data/collection_repository.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
 import 'package:dupe/features/collection/domain/enums.dart';
 import 'package:dupe/features/collection/domain/series.dart';
 import 'package:dupe/features/collection/presentation/labels.dart';
+import 'package:dupe/features/collection/presentation/providers/series_lookup_provider.dart';
+import 'package:dupe/features/collection/presentation/series/series_form_controllers.dart';
+import 'package:dupe/features/collection/presentation/series/series_lookup_sheet.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -28,18 +31,7 @@ class SeriesFormScreen extends ConsumerStatefulWidget {
 
 class _SeriesFormScreenState extends ConsumerState<SeriesFormScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _title = TextEditingController();
-  final _originalTitle = TextEditingController();
-  final _authors = TextEditingController();
-  final _publisher = TextEditingController();
-  final _collection = TextEditingController();
-  final _total = TextEditingController();
-  final _ownedUpTo = TextEditingController();
-  final _coverUrl = TextEditingController();
-  final _description = TextEditingController();
-  final _notes = TextEditingController();
-  PublicationStatus _status = PublicationStatus.inconnue;
-  var _followed = true;
+  final _c = SeriesFormControllers();
   Series? _original;
   var _saving = false;
 
@@ -65,36 +57,22 @@ class _SeriesFormScreenState extends ConsumerState<SeriesFormScreen> {
 
   void _fill(Series s) {
     _original = s;
-    _title.text = s.title;
-    _originalTitle.text = s.originalTitle ?? '';
-    _authors.text = s.authors.join(', ');
-    _publisher.text = s.publisher ?? '';
-    _collection.text = s.collection ?? '';
-    _total.text = s.totalVolumes?.toString() ?? '';
-    _coverUrl.text = s.coverUrl ?? '';
-    _description.text = s.description ?? '';
-    _notes.text = s.notes ?? '';
-    _status = s.statusPublication;
-    _followed = s.followed;
+    _c.fill(s);
   }
 
   @override
   void dispose() {
-    for (final c in [
-      _title,
-      _originalTitle,
-      _authors,
-      _publisher,
-      _collection,
-      _total,
-      _ownedUpTo,
-      _coverUrl,
-      _description,
-      _notes,
-    ]) {
-      c.dispose();
-    }
+    _c.dispose();
     super.dispose();
+  }
+
+  Future<void> _completeFromOnline() async {
+    final m = await showSeriesLookup(
+      context,
+      type: widget.type,
+      initialQuery: _c.title.text,
+    );
+    if (m != null && mounted) setState(() => _c.complete(m));
   }
 
   Future<void> _save() async {
@@ -102,21 +80,9 @@ class _SeriesFormScreenState extends ConsumerState<SeriesFormScreen> {
     if (original == null || !_formKey.currentState!.validate()) return;
     setState(() => _saving = true);
     final repo = ref.read(collectionRepositoryProvider);
-    final series = original.copyWith(
-      title: _title.text.trim(),
-      originalTitle: textOrNull(_originalTitle),
-      authors: Formatters.splitList(_authors.text),
-      publisher: textOrNull(_publisher),
-      collection: textOrNull(_collection),
-      statusPublication: _status,
-      totalVolumes: int.tryParse(_total.text),
-      followed: _followed,
-      coverUrl: textOrNull(_coverUrl),
-      description: textOrNull(_description),
-      notes: textOrNull(_notes),
-    );
+    final series = _c.applyTo(original);
     await repo.saveSeries(series);
-    final ownedUpTo = int.tryParse(_ownedUpTo.text);
+    final ownedUpTo = int.tryParse(_c.ownedUpTo.text);
     if (_isNew && ownedUpTo != null && ownedUpTo > 0) {
       await repo.addVolumeRange(series, from: 1, to: ownedUpTo);
     }
@@ -132,6 +98,10 @@ class _SeriesFormScreenState extends ConsumerState<SeriesFormScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final loaded = _original != null;
+    final lookupSource = ref
+        .watch(seriesLookupProvider)
+        .providerFor(widget.type)
+        ?.seriesSource;
     String? positive(String? v) {
       if (v == null || v.isEmpty) return null;
       final n = int.tryParse(v);
@@ -158,9 +128,19 @@ class _SeriesFormScreenState extends ConsumerState<SeriesFormScreen> {
               child: ListView(
                 padding: const EdgeInsets.all(16),
                 children: [
+                  if (lookupSource != null)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      child: OutlinedButton.icon(
+                        key: const Key('completeFromOnline'),
+                        icon: const Icon(Icons.travel_explore),
+                        label: Text(l10n.completeFrom(lookupSource.label)),
+                        onPressed: _completeFromOnline,
+                      ),
+                    ),
                   FormText(
                     fieldKey: const Key('titleField'),
-                    controller: _title,
+                    controller: _c.title,
                     label: l10n.fieldTitle,
                     validator: (v) => (v == null || v.trim().isEmpty)
                         ? l10n.requiredField
@@ -168,26 +148,29 @@ class _SeriesFormScreenState extends ConsumerState<SeriesFormScreen> {
                   ),
                   formGap,
                   FormText(
-                    controller: _originalTitle,
+                    controller: _c.originalTitle,
                     label: l10n.fieldOriginalTitle,
                   ),
                   formGap,
                   FormText(
-                    controller: _authors,
+                    controller: _c.authors,
                     label: l10n.fieldAuthors,
                     helper: l10n.commaSeparated,
                   ),
                   formGap,
-                  FormText(controller: _publisher, label: l10n.fieldPublisher),
+                  FormText(
+                    controller: _c.publisher,
+                    label: l10n.fieldPublisher,
+                  ),
                   formGap,
                   FormText(
-                    controller: _collection,
+                    controller: _c.collection,
                     label: l10n.fieldCollection,
                   ),
                   formGap,
                   DropdownButtonFormField<PublicationStatus>(
                     isExpanded: true,
-                    initialValue: _status,
+                    initialValue: _c.status,
                     decoration: InputDecoration(
                       labelText: l10n.fieldPublicationStatus,
                       border: const OutlineInputBorder(),
@@ -196,12 +179,13 @@ class _SeriesFormScreenState extends ConsumerState<SeriesFormScreen> {
                       for (final s in PublicationStatus.values)
                         DropdownMenuItem(value: s, child: Text(s.label(l10n))),
                     ],
-                    onChanged: (s) => setState(() => _status = s ?? _status),
+                    onChanged: (s) =>
+                        setState(() => _c.status = s ?? _c.status),
                   ),
                   formGap,
                   FormText(
                     fieldKey: const Key('totalField'),
-                    controller: _total,
+                    controller: _c.total,
                     label: l10n.fieldTotalVolumes,
                     digitsOnly: true,
                     validator: positive,
@@ -210,7 +194,7 @@ class _SeriesFormScreenState extends ConsumerState<SeriesFormScreen> {
                     formGap,
                     FormText(
                       fieldKey: const Key('ownedUpToField'),
-                      controller: _ownedUpTo,
+                      controller: _c.ownedUpTo,
                       label: l10n.fieldOwnedUpTo,
                       helper: l10n.fieldOwnedUpToHelper,
                       digitsOnly: true,
@@ -221,23 +205,23 @@ class _SeriesFormScreenState extends ConsumerState<SeriesFormScreen> {
                     contentPadding: EdgeInsets.zero,
                     title: Text(l10n.fieldFollowed),
                     subtitle: Text(l10n.fieldFollowedHelper),
-                    value: _followed,
-                    onChanged: (v) => setState(() => _followed = v),
+                    value: _c.followed,
+                    onChanged: (v) => setState(() => _c.followed = v),
                   ),
                   FormText(
-                    controller: _coverUrl,
+                    controller: _c.coverUrl,
                     label: l10n.fieldCoverUrl,
                     keyboardType: TextInputType.url,
                   ),
                   formGap,
                   FormText(
-                    controller: _description,
+                    controller: _c.description,
                     label: l10n.fieldDescription,
                     maxLines: 5,
                   ),
                   formGap,
                   FormText(
-                    controller: _notes,
+                    controller: _c.notes,
                     label: l10n.fieldNotes,
                     maxLines: 3,
                   ),

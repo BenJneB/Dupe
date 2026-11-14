@@ -137,6 +137,17 @@ class CollectionRepository {
     _db.seriesTable,
   )..where((t) => t.id.equals(id) & t.deletedAt.isNull())).getSingleOrNull();
 
+  /// All non-deleted series (optionally of one [type]).
+  Future<List<Series>> listSeries({CollectionType? type}) =>
+      (_db.select(_db.seriesTable)..where(
+            (t) =>
+                t.deletedAt.isNull() &
+                (type == null
+                    ? const Constant(true)
+                    : t.type.equalsValue(type)),
+          ))
+          .get();
+
   /// Non-deleted series of [type] with exactly this [title].
   Future<Series?> findSeries(CollectionType type, String title) =>
       (_db.select(_db.seriesTable)

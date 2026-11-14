@@ -1,4 +1,5 @@
 import 'package:dupe/app/router.dart';
+import 'package:dupe/features/collection/domain/collection_type.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
@@ -18,6 +19,13 @@ class AdaptiveShell extends StatelessWidget {
   const new({required this.navigationShell, super.key});
 
   final StatefulNavigationShell navigationShell;
+
+  /// Scanning from a collection tab looks codes up as that type.
+  String get _scanRoute => AppRoutes.scanFor(
+    navigationShell.currentIndex < CollectionType.values.length
+        ? CollectionType.values[navigationShell.currentIndex]
+        : null,
+  );
 
   void _onDestinationSelected(int index) => navigationShell.goBranch(
     index,
@@ -55,7 +63,7 @@ class AdaptiveShell extends StatelessWidget {
         floatingActionButton: FloatingActionButton(
           key: const Key('scanFab'),
           tooltip: l10n.scan,
-          onPressed: () => context.push(AppRoutes.scan),
+          onPressed: () => context.push(_scanRoute),
           child: const Icon(Icons.qr_code_scanner),
         ),
         bottomNavigationBar: NavigationBar(
@@ -89,14 +97,14 @@ class AdaptiveShell extends StatelessWidget {
               child: extended
                   ? FloatingActionButton.extended(
                       key: const Key('scanFab'),
-                      onPressed: () => context.push(AppRoutes.scan),
+                      onPressed: () => context.push(_scanRoute),
                       icon: const Icon(Icons.qr_code_scanner),
                       label: Text(l10n.scan),
                     )
                   : FloatingActionButton(
                       key: const Key('scanFab'),
                       tooltip: l10n.scan,
-                      onPressed: () => context.push(AppRoutes.scan),
+                      onPressed: () => context.push(_scanRoute),
                       child: const Icon(Icons.qr_code_scanner),
                     ),
             ),
