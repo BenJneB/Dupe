@@ -33,7 +33,7 @@ raccourci Android « Scanner », vibrations, lampe torche, signalement des nouve
 | 2. Filtre PostgREST du pull jamais vérifié contre un vrai serveur | Phase 17 (auto), 21 (`S-05`, en réel ; reporté de la phase 14) |
 | 3. Compte existant sans mot de passe | Sans objet (2026-11-14 : aucun compte n'existait ; création en phase 14, `P-04`) |
 | 4. Clés Comic Vine / Google Books extractibles des binaires publics | Phase 15 ✅ (aucune Release n'a encore été publiée : aucune clé exposée) |
-| 5. Efficacité du `keep-alive` non prouvée ; tâches planifiées désactivées après 60 j | Phase 16 |
+| 5. Efficacité du `keep-alive` non prouvée ; tâches planifiées désactivées après 60 j | Phase 16 ✅ (vraie requête SQL ; réactivation par API, efficacité non documentée par GitHub) |
 | 6. Horloge d'appareil très en avance qui gagne à tort la synchro | Phase 17 |
 
 ## 2. Décisions déjà prises
@@ -47,7 +47,7 @@ raccourci Android « Scanner », vibrations, lampe torche, signalement des nouve
 |---|---|---|---|---|
 | 14 | Vérifications de base en réel et correctifs | close (réduite) | message de confirmation | CI, schéma, compte (2026-11-14) |
 | 15 | Clés API saisies dans l'appli | ✅ fait (2026-11-14) | oui | non (phase 21 : `K-*`) |
-| 16 | CI renforcée et veille Supabase fiable | à faire | — | — |
+| 16 | CI renforcée et veille Supabase fiable | ✅ fait (2026-11-14) | local | non (workflows non relancés) |
 | 17 | Tests de synchro contre Supabase local | à faire | — | — |
 | 18 | Hooks, commits conventionnels, tests d'intégration | à faire | — | — |
 | 19 | Accès rapide : widget et recherche vocale | à faire | — | — |
@@ -129,7 +129,7 @@ l'appli ; la clé n'apparaît ni dans une sauvegarde JSON, ni dans le journal, n
 - Dependabot (`.github/dependabot.yml`) : écosystèmes `pub` et `github-actions`, hebdomadaire, cible `dev`,
   mises à jour mineures/patch groupées. La vérification du code généré attrape les mises à jour de
   freezed/drift/riverpod qui exigent une régénération.
-- Badge de statut CI dans le README.
+- Badge de statut CI dans le README.Phase 16
 - Veille Supabase : remplacer la requête refusée par la RLS par une vraie activité base, via une fonction
   SQL `keep_alive()` (`security definer`, renvoie `now()`, n'expose aucune donnée, exécutable par `anon`),
   nouvelle migration. Le workflow l'appelle par RPC.
@@ -139,6 +139,28 @@ l'appli ; la clé n'apparaît ni dans une sauvegarde JSON, ni dans le journal, n
 
 *Critère : un fichier mal formaté ou un `.g.dart` périmé fait échouer la CI ; Dependabot ouvre ses
 premières pull requests ; le keep-alive appelle `keep_alive()` avec succès.*
+
+**Bilan (2026-11-14)**
+- **Réalisé** : `ci.yml` (job `test`) : `dart format --set-exit-if-changed .`, contrôle du code généré
+  (build_runner + `flutter gen-l10n` puis `git status --porcelain` vide), `flutter test --coverage`, pourcentage
+  hors code généré dans le récapitulatif (`tool/ci/coverage_summary.sh`), `lcov.info` en artefact.
+  `.github/dependabot.yml` : `pub` et `github-actions`, hebdomadaire, vers `dev`, mineures et correctifs groupés
+  (syntaxe vérifiée dans la doc officielle : `pub` pris en charge, `groups.update-types: [minor, patch]`).
+  Badge CI dans le README. Migration `20261115090000_keep_alive.sql` : `keep_alive()` (`security definer`,
+  `search_path` vide, renvoie `now()`, exécutable par `anon`/`authenticated`, retirée à `public`).
+  `keep-alive.yml` l'appelle par RPC (en-tête `apikey` seul) et échoue si la réponse n'est pas 200.
+  60 jours : le workflow se réactive lui-même à chaque passage (`PUT …/workflows/keep-alive.yml/enable`,
+  `actions: write`), sans commit ; README documente la réactivation manuelle.
+- **Vérifié en local** : le code actuel passe le formatage et ne change pas à la régénération ; couverture
+  85,1 % (5144 / 6045 lignes écrites à la main) ; migration validée sur le PostgreSQL local (rôles substituts,
+  transaction annulée) : appel anonyme OK, `public` sans droit d'exécution, aucune table lisible ; YAML valides.
+- **Écarts** : `security definer` gardé comme demandé, bien qu'inutile pour `now()` (sans risque :
+  `search_path` vide, aucune donnée lue). GitHub ne documente pas si réactiver un workflow actif remet le
+  compteur des 60 jours à zéro : seule solution sans commit trouvée, à observer (`Y-13`).
+- **Non vérifié** : aucun des workflows modifiés n'a tourné ; `keep_alive()` jamais appelé sur le vrai projet
+  (migration à appliquer, `P-05`). **Dependabot ne peut pas fonctionner tel quel** : sa configuration n'est lue
+  que sur `main` (aujourd'hui « Initial commit ») et `dev` ne contient que `PLAN.MD` (pas de `pubspec.yaml`) —
+  voir `P-06`.
 
 ### Phase 17 — Tests de synchro contre Supabase local
 Objectif : vérifier contre un vrai PostgREST/GoTrue ce que `fake_sync_remote.dart` simule.
@@ -232,8 +254,9 @@ accepté.*
 - **Phase 15** : créer le secret `ENV_JSON` **sans** `COMIC_VINE_API_KEY` ni `GOOGLE_BOOKS_API_KEY` (et sans
   `OPEN_LIBRARY_CONTACT` pour ne pas publier son email) ; restreindre la clé Google Books à la Books API ;
   saisir les clés dans l'appli sur chaque appareil. Pas de régénération : aucune Release n'a été publiée.
-- **Phase 16** : activer Dependabot si nécessaire ; protéger `main` (pull request obligatoire, CI verte
-  exigée) dans les réglages du dépôt.
+- **Phase 16** : appliquer la migration `20261115090000_keep_alive.sql` ; mettre `dev` à jour avec le travail
+  des phases et porter `.github/dependabot.yml` sur `main` (sinon Dependabot ne fait rien) ; activer Dependabot
+  si nécessaire ; protéger `main` (pull request obligatoire, CI verte exigée) dans les réglages du dépôt.
 - **Phase 17** : installer Docker et la Supabase CLI sur le poste.
 - **Phase 18** : `lefthook install` après récupération du dépôt.
 - **Phase 21** : d'abord les tests reportés de la phase 14 (synchro, secrets GitHub, Release de test,

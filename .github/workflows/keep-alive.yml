@@ -1,11 +1,15 @@
 # Supabase pauses Free projects after a week of low database activity
-# (https://supabase.com/docs/guides/platform/free-project-pausing): one
-# small request a day should keep the sync project awake. The schema grants
-# nothing to the anonymous role, so the answer is an empty list or a
-# refusal (both reach the database). A 5xx or no answer means the project
-# is down or already paused: the run fails and GitHub emails the owner.
-# GitHub disables scheduled workflows after 60 days without commits: the
-# Actions tab then offers to re-enable it.
+# (https://supabase.com/docs/guides/platform/free-project-pausing). Once a day,
+# call keep_alive() (migration 20261115090000_keep_alive.sql): a real query on
+# the database that exposes no data. Fails (GitHub emails the owner) when the
+# function is missing or the project does not answer (down or already paused).
+#
+# GitHub disables scheduled workflows of a public repository after 60 days
+# without repository activity, without notification. Without any automatic
+# commit, this workflow re-enables itself through the REST API at each run
+# (PUT .../actions/workflows/keep-alive.yml/enable). GitHub does not document
+# whether this resets the 60-day counter: if the workflow is disabled anyway,
+# re-enable it in the Actions tab (README, "Supabase gratuit").
 name: Keep Supabase awake
 
 on:
@@ -15,12 +19,13 @@ on:
 
 permissions:
   contents: read
+  actions: write
 
 jobs:
   ping:
     runs-on: ubuntu-latest
     steps:
-      - name: Query the database
+      - name: Call keep_alive()
         env:
           ENV_JSON: ${{ secrets.ENV_JSON }}
         run: |
@@ -32,8 +37,16 @@ jobs:
           fi
           echo "::add-mask::$URL"
           echo "::add-mask::$KEY"
-          STATUS=$(curl -s -o /dev/null -w '%{http_code}' \
-            -H "apikey: $KEY" -H "Authorization: Bearer $KEY" \
-            "$URL/rest/v1/items?select=id&limit=1")
+          STATUS=$(curl -s -o /dev/null -w '%{http_code}' -X POST \
+            -H "apikey: $KEY" -H "Content-Type: application/json" -d '{}' \
+            "$URL/rest/v1/rpc/keep_alive")
           echo "HTTP $STATUS"
-          [ "$STATUS" -ge 200 ] && [ "$STATUS" -lt 500 ]
+          if [ "$STATUS" != "200" ]; then
+            echo "keep_alive() failed: migration applied? project paused?" >&2
+            exit 1
+          fi
+      - name: Keep this scheduled workflow enabled
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api -X PUT "repos/${{ github.repository }}/actions/workflows/keep-alive.yml/enable"

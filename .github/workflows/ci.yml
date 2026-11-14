@@ -1,5 +1,6 @@
-# Checks every push and pull request: analysis, tests, and debug builds of
-# the three targets (Windows is only ever compiled here).
+# Checks every push and pull request: formatting, generated code, analysis,
+# tests with coverage, and builds of the three targets (Windows is only ever
+# compiled here).
 name: CI
 
 on:
@@ -29,8 +30,27 @@ jobs:
           channel: stable
           cache: true
       - run: flutter pub get
+      - name: Formatting
+        run: dart format --output=none --set-exit-if-changed .
+      # Catches a stale .g.dart / l10n file, e.g. after a Dependabot update of
+      # freezed, drift or riverpod that needs a regeneration.
+      - name: Generated code is up to date
+        run: |
+          dart run build_runner build -d
+          flutter gen-l10n
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "Stale generated files: run 'dart run build_runner build -d' and 'flutter gen-l10n'" >&2
+            git status --porcelain >&2
+            exit 1
+          fi
       - run: flutter analyze
-      - run: flutter test
+      - run: flutter test --coverage
+      - name: Coverage summary
+        run: tool/ci/coverage_summary.sh >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v7
+        with:
+          name: coverage
+          path: coverage/lcov.info
 
   linux:
     runs-on: ubuntu-latest

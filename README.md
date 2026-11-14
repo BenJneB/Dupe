@@ -1,5 +1,7 @@
 # Dupe
 
+[![CI](https://github.com/BenJneB/Dupe/actions/workflows/ci.yml/badge.svg)](https://github.com/BenJneB/Dupe/actions/workflows/ci.yml)
+
 Application personnelle pour cataloguer une collection de mangas, BD, comics et livres
 (Android, Windows, Linux). Spécification : [PLAN.md](PLAN.md).
 
@@ -54,7 +56,8 @@ de valeur par défaut (une clé saisie dans l'appli passe devant).
 ## Synchronisation (Supabase, facultatif)
 Sans `SUPABASE_URL`, l'appli fonctionne entièrement en local. Pour synchroniser téléphone et PC :
 1. **Schéma** : dans le tableau de bord Supabase → *SQL Editor*, exécuter dans l'ordre
-   `supabase/migrations/20261114120000_collection_sync.sql` puis `20261114120100_cover_photos.sql`
+   `supabase/migrations/20261114120000_collection_sync.sql`, `20261114120100_cover_photos.sql`, puis
+   `20261115090000_keep_alive.sql` (fonction de veille, voir « Supabase gratuit »)
    (ou `supabase link` puis `supabase db push` avec la CLI).
 2. **Comptes (email + mot de passe)** : fournisseur *Email* activé (*Authentication → Sign In / Providers*).
    Le compte se crée dans l'appli (Paramètres → *Se connecter* → *Créer un compte*). Les inscriptions restent
@@ -126,7 +129,15 @@ flutter run -d windows --dart-define-from-file=env.json
   l'installateur Windows, puis les publie dans une Release GitHub. La version vient du tag
   (`tool/ci/set_version.sh` : `v1.2.3` → `1.2.3+10203`, mineur et correctif < 100 ; un suffixe `-xxx` ne
   change pas le numéro Android et n'apparaît que dans les noms de fichiers) ;
-- `keep-alive.yml` : une requête par jour sur Supabase (voir plus bas).
+- `keep-alive.yml` : un appel par jour à la fonction `keep_alive()` de Supabase (voir plus bas) ;
+- `.github/dependabot.yml` : mises à jour hebdomadaires des dépendances `pub` et des actions GitHub, en pull
+  requests vers `dev` (mineures et correctifs regroupés). Dependabot ne lit ce fichier que sur la **branche par
+  défaut** (`main`). Si une mise à jour exige de régénérer du code (freezed, drift, riverpod), l'étape *Generated
+  code is up to date* de la CI échoue : lancer `dart run build_runner build -d` sur la branche de la PR.
+
+Contrôles de `ci.yml` : formatage (`dart format --set-exit-if-changed`), code généré à jour (build_runner +
+`flutter gen-l10n` ne doivent rien changer), analyse, tests avec couverture (pourcentage hors code généré dans
+le récapitulatif du job, `lcov.info` en artefact), builds.
 
 ```sh
 git tag v1.0.0 && git push origin v1.0.0
@@ -155,10 +166,18 @@ aussi lisible : le laisser vide dans `ENV_JSON` pour ne pas publier son adresse.
 
 **Supabase gratuit** : un projet est mis en pause après 7 jours de faible activité
 ([doc](https://supabase.com/docs/guides/platform/free-project-pausing)), restaurable depuis le tableau de bord
-pendant un an. `keep-alive.yml` fait une requête par jour (lit `SUPABASE_URL` / `SUPABASE_ANON_KEY` dans
-`ENV_JSON`) et échoue — email de GitHub — si le projet ne répond plus. GitHub désactive les tâches planifiées
-d'un dépôt sans commit depuis 60 jours : les réactiver dans l'onglet *Actions*. Dans l'appli, un projet en
-pause donne « Serveur de synchronisation indisponible… ».
+pendant un an. `keep-alive.yml` appelle chaque jour la fonction SQL `keep_alive()` (vraie requête sur la base,
+qui ne renvoie que l'heure du serveur ; migration `20261115090000_keep_alive.sql`, à appliquer). Il lit
+`SUPABASE_URL` / `SUPABASE_ANON_KEY` dans `ENV_JSON` et échoue — email de GitHub — si la fonction manque ou si
+le projet ne répond plus. Dans l'appli, un projet en pause donne « Serveur de synchronisation indisponible… ».
+
+**Tâches planifiées et 60 jours** : GitHub désactive, **sans prévenir**, les workflows planifiés d'un dépôt
+public resté 60 jours sans activité ([doc](https://docs.github.com/en/actions/how-tos/manage-workflow-runs/disable-and-enable-workflows)).
+Sans commit automatique, `keep-alive.yml` se réactive lui-même à chaque passage par l'API REST
+(`PUT …/actions/workflows/keep-alive.yml/enable`, jeton du workflow avec `actions: write`). GitHub ne documente
+pas si cet appel remet le compteur à zéro : si le workflow apparaît désactivé dans l'onglet *Actions*, le
+réactiver (bouton *Enable workflow*, ou `gh workflow enable keep-alive.yml`). Tout push sur le dépôt remet aussi
+le compteur à zéro.
 
 ### Android : APK signé
 Une seule fois, créer la clé de signature (à garder précieusement **hors du dépôt** : sans elle, impossible

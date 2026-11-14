@@ -57,6 +57,7 @@ Tous les tests non faits en phase 14 et non marqués « automatisé ». Le but :
    `v0.1.1`) pour `A-02`, `Y-03`, `Y-04`, `Y-07`, `Y-08` (une *pre-release* n'est pas vue par la vérification
    des mises à jour).
 7b. **Clés des sources** (sur une version publiée) : `K-01` à `K-05`.
+7c. **CI et Dependabot** : `P-05`, `P-06`, puis `Y-05`, `Y-09` à `Y-12`.
 8. **Le lendemain / plus tard** : `N-01` à `N-04` ; `M-12` chronométré en magasin ; `Y-06` (observation sur
    plusieurs semaines) ; `J-06` (facultatif, met le projet en pause).
 
@@ -75,6 +76,9 @@ Tous les tests non faits en phase 14 et non marqués « automatisé ». Le but :
       (*Site URL* par défaut) : page en erreur, mais l'adresse est confirmée (observé le 2026-11-14 ; message
       de l'appli précisé en conséquence).
       — OK 2026-11-14 (Linux) : compte créé, lien confirmé, connexion réussie.
+- [ ] **P-05** (phase 16) Migration `20261115090000_keep_alive.sql` appliquée (fonction `keep_alive()`).
+- [ ] **P-06** (phase 16) `dev` à jour avec le travail des phases, et `.github/dependabot.yml` présent sur `main`
+      (Dependabot ne lit sa configuration que sur la branche par défaut).
 - [ ] **P-03** *(reporté en phase 21)* Secrets GitHub créés (README § Publier une version) ; décision prise pour la clé Comic Vine.
 
 ## 1. Scan — mode Magasin (téléphone)
@@ -181,11 +185,21 @@ Tous les tests non faits en phase 14 et non marqués « automatisé ». Le but :
 - [ ] **Y-03** Installé en v1.0.0 alors que v1.0.1 existe : « Version 1.0.1 disponible — Télécharger » au
       démarrage ; le bouton ouvre le bon fichier (APK de l'architecture du téléphone, AppImage, installateur).
 - [ ] **Y-04** Paramètres → Mises à jour → « Rechercher une mise à jour » ; désactiver le signalement.
-- [ ] **Y-05** Workflow `Keep Supabase awake` lancé à la main (*Run workflow*) → vert.
-- [ ] **Y-06** Pas d'email d'avertissement de pause de Supabase dans les semaines suivantes (question ouverte :
-      une requête refusée par la RLS compte-t-elle comme activité ? Traité en phase 16).
+- [ ] **Y-05** Workflow `Keep Supabase awake` lancé à la main (*Run workflow*) → vert : l'étape *Call
+      keep_alive()* affiche `HTTP 200` et l'étape *Keep this scheduled workflow enabled* réussit.
+- [ ] **Y-06** Pas d'email d'avertissement de pause de Supabase dans les semaines suivantes (depuis la phase 16,
+      la veille appelle une vraie fonction SQL plutôt qu'une requête refusée par la RLS).
 - [ ] **Y-07** À propos : la version affichée est celle du tag de la Release installée.
 - [ ] **Y-08** « Rechercher une mise à jour » sur la dernière version → « Dupe est à jour ».
+- [ ] **Y-09** (phase 16) Sur une branche de test : un fichier `.dart` mal formaté fait échouer l'étape
+      *Formatting* de la CI ; un `.g.dart` modifié à la main fait échouer *Generated code is up to date*.
+- [ ] **Y-10** (phase 16) Le récapitulatif du job `test` affiche « Couverture des tests » et l'artefact
+      `coverage` contient `lcov.info`.
+- [ ] **Y-11** (phase 16) Dependabot ouvre ses premières pull requests vers `dev` (une groupée par écosystème
+      pour les mises à jour mineures et correctifs) ; leur CI passe ou signale une régénération.
+- [ ] **Y-12** (phase 16) Le badge CI du README affiche l'état réel.
+- [ ] **Y-13** (au bout de 60 jours sans push, si l'occasion se présente) `Keep Supabase awake` est toujours
+      actif dans l'onglet *Actions* (efficacité non documentée de la réactivation par l'API).
 
 ## 10. Données réelles
 - [ ] **D-01** Import de la collection (CSV Mangacollec / CLZ / tableur) : correspondance des colonnes devinée.
