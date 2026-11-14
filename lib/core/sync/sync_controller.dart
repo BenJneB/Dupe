@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:drift/drift.dart' show TableUpdateQuery;
 import 'package:dupe/core/database/database_provider.dart';
+import 'package:dupe/core/logging/app_log.dart';
 import 'package:dupe/core/sync/sync_providers.dart';
 import 'package:dupe/core/sync/sync_remote.dart';
 import 'package:dupe/features/covers/data/cover_providers.dart';
@@ -15,19 +16,21 @@ enum SyncPhase { localOnly, signedOut, idle, syncing, offline, failed }
 
 @immutable
 class SyncState {
-  const new(this.phase, {this.email, this.lastSync, this.message});
+  const new(this.phase, {this.email, this.lastSync, this.error});
 
   final SyncPhase phase;
   final String? email;
   final DateTime? lastSync;
-  final String? message;
 
-  SyncState to(SyncPhase phase, {DateTime? lastSync, String? message}) =>
+  /// Cause of [SyncPhase.failed] (shown with `errorText`).
+  final Object? error;
+
+  SyncState to(SyncPhase phase, {DateTime? lastSync, Object? error}) =>
       SyncState(
         phase,
         email: email,
         lastSync: lastSync ?? this.lastSync,
-        message: message,
+        error: error,
       );
 }
 
@@ -45,6 +48,7 @@ class SyncController extends _$SyncController {
   Timer? _debounce;
   AppLifecycleListener? _lifecycle;
   Future<void>? _running;
+  ({SyncPhase? phase, String? text}) _lastFailure = (phase: null, text: null);
 
   @override
   SyncState build() {
@@ -129,7 +133,10 @@ class SyncController extends _$SyncController {
     state = state.to(SyncPhase.syncing);
     try {
       await engine.adoptUser(userId);
-      await engine.sync(userId);
+      final report = await engine.sync(userId);
+      if (report.pushed + report.pulled > 0) {
+        appLog.info('sync', 'sent ${report.pushed}, received ${report.pulled}');
+      }
       if (ref.read(coverStoreProvider) case final store?) {
         await uploadPendingCovers(
           ref.read(appDatabaseProvider),
@@ -139,14 +146,23 @@ class SyncController extends _$SyncController {
         );
       }
       state = state.to(SyncPhase.idle, lastSync: ref.read(clockProvider)());
-    } on SyncException catch (e) {
-      state = state.to(
-        e.offline ? SyncPhase.offline : SyncPhase.failed,
-        message: e.message,
-      );
-    } on Object catch (e) {
-      state = state.to(SyncPhase.failed, message: '$e');
+    } on Object catch (e, stack) {
+      final phase = e is SyncException && e.offline
+          ? SyncPhase.offline
+          : SyncPhase.failed;
+      // Retried every 30 s: log a failure once, not at every attempt.
+      if (phase != _lastFailure.phase || '$e' != _lastFailure.text) {
+        if (phase == SyncPhase.offline) {
+          appLog.warning('sync', e);
+        } else {
+          appLog.error('sync', e, stack);
+        }
+      }
+      _lastFailure = (phase: phase, text: '$e');
+      state = state.to(phase, error: e);
+      return;
     }
+    _lastFailure = (phase: null, text: null);
   }
 
   Future<void> signOut() async {

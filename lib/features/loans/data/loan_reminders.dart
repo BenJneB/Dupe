@@ -1,3 +1,4 @@
+import 'package:dupe/core/logging/app_log.dart';
 import 'package:dupe/features/loans/data/loans_repository.dart';
 import 'package:dupe/features/loans/domain/loan.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
@@ -61,7 +62,7 @@ class LocalLoanReminders implements LoanReminders {
     } on Object catch (e) {
       // No notification server (e.g. headless Linux): reminders are
       // optional, the loans screen still shows overdue loans.
-      debugPrint('Notifications unavailable: $e');
+      appLog.warning('notifications', 'Notifications unavailable: $e');
       return false;
     }
   }();

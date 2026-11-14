@@ -1,3 +1,4 @@
+import 'package:dupe/app/error_text.dart';
 import 'package:dupe/core/sync/email_sign_in.dart';
 import 'package:dupe/core/sync/sync_providers.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
@@ -34,9 +35,11 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
     });
     try {
       await action();
-    } on Object catch (e) {
+    } on Object catch (e, stack) {
       if (mounted) {
-        setState(() => _error = AppLocalizations.of(context).signInError('$e'));
+        final l10n = AppLocalizations.of(context);
+        final text = reportError(l10n, 'auth', e, stack);
+        setState(() => _error = l10n.signInError(text));
       }
     } finally {
       if (mounted) setState(() => _busy = false);

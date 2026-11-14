@@ -53,7 +53,7 @@ class SyncCodec {
     final name = table.actualTableName;
     final local = await _db
         .customSelect(
-          'SELECT updated_at, sync_pending FROM $name WHERE id = ?',
+          'SELECT updated_at, sync_pending, user_id FROM $name WHERE id = ?',
           variables: [Variable(row['id'])],
           readsFrom: {table},
         )
@@ -67,6 +67,11 @@ class SyncCodec {
       // Sync: only a pending local change can be newer. Restore: any.
       final localMayWin = pending || local.data['sync_pending'] == 1;
       if (localMayWin && !rowAt.isAfter(localAt)) return false;
+      // Same write received again (pull overlap): nothing to change.
+      if (rowAt.isAtSameMomentAs(localAt) &&
+          local.data['user_id'] == row['user_id']) {
+        return false;
+      }
     }
     final columns = syncedColumns(table).map((c) => c.name).toList();
     final flag = pending ? 1 : 0;

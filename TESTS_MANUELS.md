@@ -49,6 +49,17 @@ Lancer : `flutter run -d <id> --dart-define-from-file=env.json` (`flutter device
 - [ ] Même tome modifié des deux côtés hors ligne → la modification la plus récente gagne.
 - [ ] Suppression propagée.
 - [ ] Icône d'état de synchro cohérente (en cours, erreur hors ligne, à jour).
+- [ ] (Phase 9) Après mise à jour de l'appli, la synchro tire toujours les changements de l'autre appareil :
+      le filtre du pull a changé (horodatage + id), il n'est vérifiable que sur le vrai Supabase.
+- [ ] (Phase 9) Modifier des ouvrages sur les deux appareils et synchroniser en même temps (bouton) :
+      les deux finissent identiques.
+
+## Journal d'erreurs (phase 9)
+- [ ] À propos → Journal : mode avion puis synchro → une seule entrée « sync » même après plusieurs minutes.
+- [ ] « Copier » puis coller dans un message : texte lisible (date, niveau, source, message).
+- [ ] « Partager » : feuille de partage sur Android, « Enregistrer sous » sur PC.
+- [ ] Le journal est conservé après redémarrage de l'appli.
+- [ ] Les messages d'erreur à l'écran sont en français (hors ligne, fichier invalide, code de connexion faux).
 
 ## PC Linux
 - [ ] `packaging/linux/build_appimage.sh` → l'AppImage se lance, icône dans la fenêtre.

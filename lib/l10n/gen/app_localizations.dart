@@ -2097,6 +2097,108 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Code source'**
   String get aboutSourceCode;
+
+  /// No description provided for @errorOffline.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pas de connexion internet.'**
+  String get errorOffline;
+
+  /// No description provided for @errorSession.
+  ///
+  /// In fr, this message translates to:
+  /// **'Session expirée : reconnecte-toi.'**
+  String get errorSession;
+
+  /// No description provided for @errorServer.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le serveur a refusé la demande (détails dans À propos → Journal).'**
+  String get errorServer;
+
+  /// No description provided for @errorTooManyAttempts.
+  ///
+  /// In fr, this message translates to:
+  /// **'Trop de tentatives : réessaie dans quelques minutes.'**
+  String get errorTooManyAttempts;
+
+  /// No description provided for @errorInvalidCode.
+  ///
+  /// In fr, this message translates to:
+  /// **'Code ou lien invalide ou expiré.'**
+  String get errorInvalidCode;
+
+  /// No description provided for @errorSignInRefused.
+  ///
+  /// In fr, this message translates to:
+  /// **'Connexion refusée (détails dans À propos → Journal).'**
+  String get errorSignInRefused;
+
+  /// No description provided for @errorNotBackup.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce fichier n\'est pas une sauvegarde Dupe.'**
+  String get errorNotBackup;
+
+  /// No description provided for @errorFileAccess.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fichier inaccessible (droits ou emplacement).'**
+  String get errorFileAccess;
+
+  /// No description provided for @errorBadFile.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fichier illisible ou mal formé.'**
+  String get errorBadFile;
+
+  /// No description provided for @errorUnknown.
+  ///
+  /// In fr, this message translates to:
+  /// **'Une erreur est survenue (détails dans À propos → Journal).'**
+  String get errorUnknown;
+
+  /// No description provided for @journalTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Journal'**
+  String get journalTitle;
+
+  /// No description provided for @journalSubtitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Erreurs et événements récents, à copier pour signaler un problème'**
+  String get journalSubtitle;
+
+  /// No description provided for @journalEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rien à signaler'**
+  String get journalEmpty;
+
+  /// No description provided for @journalCopy.
+  ///
+  /// In fr, this message translates to:
+  /// **'Copier'**
+  String get journalCopy;
+
+  /// No description provided for @journalCopied.
+  ///
+  /// In fr, this message translates to:
+  /// **'Journal copié'**
+  String get journalCopied;
+
+  /// No description provided for @journalShare.
+  ///
+  /// In fr, this message translates to:
+  /// **'Partager'**
+  String get journalShare;
+
+  /// No description provided for @journalClear.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vider le journal'**
+  String get journalClear;
 }
 
 class _AppLocalizationsDelegate

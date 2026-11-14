@@ -3,10 +3,10 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dupe/core/database/local_stores.dart';
+import 'package:dupe/core/logging/app_log.dart';
 import 'package:dupe/core/sync/email_sign_in.dart';
 import 'package:dupe/core/sync/sync_auth.dart';
 import 'package:dupe/core/sync/sync_remote.dart';
-import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' show ClientException;
 import 'package:supabase/supabase.dart';
 
@@ -54,17 +54,42 @@ class SupabaseSyncAuth implements SyncAuth {
         await client.auth.refreshSession();
       }
     } on Object catch (e) {
-      debugPrint('Session not restored now: $e');
+      appLog.warning('auth', 'Session not restored now: $e');
     }
     _changes.add(null);
   }
 
   @override
-  Future<void> sendCode(String email) =>
-      client.auth.signInWithOtp(email: email.trim(), shouldCreateUser: true);
+  Future<void> sendCode(String email) => _signInGuard(
+    () =>
+        client.auth.signInWithOtp(email: email.trim(), shouldCreateUser: true),
+  );
 
   @override
   Future<void> verify(String email, EmailCredential credential) =>
+      _signInGuard(() => _verify(email, credential));
+
+  /// Supabase errors become [SignInException] / offline [SyncException].
+  Future<void> _signInGuard(Future<void> Function() call) async {
+    try {
+      await call();
+    } on AuthRetryableFetchException catch (e) {
+      throw SyncException.network(e.message);
+    } on SocketException catch (e) {
+      throw SyncException.network(e.message);
+    } on ClientException catch (e) {
+      throw SyncException.network(e.message);
+    } on AuthException catch (e) {
+      throw SignInException(switch ((e.statusCode, e.code)) {
+        ('429', _) ||
+        (_, 'over_email_send_rate_limit') => SignInFailure.tooManyAttempts,
+        (_, 'otp_expired') || ('403', _) => SignInFailure.invalidCode,
+        _ => SignInFailure.refused,
+      }, e.message);
+    }
+  }
+
+  Future<void> _verify(String email, EmailCredential credential) =>
       switch (credential) {
         EmailCode(:final code) => client.auth.verifyOTP(
           email: email.trim(),
@@ -104,29 +129,43 @@ class SupabaseSyncRemote implements SyncRemote {
   @override
   Future<List<Map<String, Object?>>> changesSince(
     String table,
-    String? cursor, {
+    SyncCursor? after, {
     required int limit,
   }) => _guard(() {
     final query = client.from(table).select();
-    final filtered = cursor == null
-        ? query
-        : query.gt('server_updated_at', cursor);
-    return filtered.order('server_updated_at', ascending: true).limit(limit);
+    final filtered = switch (after) {
+      null => query,
+      (:final at, id: null) => query.gte('server_updated_at', at),
+      // Keyset on (server_updated_at, id); values quoted for PostgREST.
+      (:final at, :final id?) => query.or(
+        'server_updated_at.gt."$at",'
+        'and(server_updated_at.eq."$at",id.gt.$id)',
+      ),
+    };
+    return filtered
+        .order('server_updated_at', ascending: true)
+        .order('id', ascending: true)
+        .limit(limit);
   });
 
   Future<T> _guard<T>(Future<T> Function() call) async {
     try {
       return await call();
     } on SocketException catch (e) {
-      throw SyncException(e.message, offline: true);
+      throw SyncException.network(e.message);
     } on ClientException catch (e) {
-      throw SyncException(e.message, offline: true);
+      throw SyncException.network(e.message);
     } on TimeoutException {
-      throw const SyncException('timeout', offline: true);
+      throw const SyncException.network('timeout');
     } on PostgrestException catch (e) {
-      throw SyncException(e.message);
+      // PGRST301/303: JWT invalid or expired.
+      final expired = e.code == 'PGRST301' || e.code == 'PGRST303';
+      throw SyncException(
+        e.message,
+        failure: expired ? SyncFailure.session : SyncFailure.rejected,
+      );
     } on AuthException catch (e) {
-      throw SyncException(e.message);
+      throw SyncException(e.message, failure: SyncFailure.session);
     }
   }
 }

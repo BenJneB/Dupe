@@ -24,6 +24,13 @@ class SyncEngine {
   final SyncCodec _codec;
   final int pageSize;
 
+  /// The server stamps a row when it is written, but other clients only see
+  /// it once its transaction commits: a row can become visible with a stamp
+  /// older than rows already pulled (two devices syncing at the same time).
+  /// Each pull therefore re-reads this window before the cursor; applying a
+  /// row twice changes nothing.
+  static const overlap = Duration(minutes: 1);
+
   static String _cursorKey(String table) => 'sync_cursor_$table';
 
   Future<SyncReport> sync(String userId) async {
@@ -109,20 +116,33 @@ class SyncEngine {
   Future<int> _pull(TableInfo<Table, Object?> table) async {
     final name = table.actualTableName;
     final stored = await _settings.get(_cursorKey(name));
-    var cursor = stored == null || stored.isEmpty ? null : stored;
+    var newest = stored == null || stored.isEmpty
+        ? null
+        : DateTime.parse(stored);
+    // Re-read the last [overlap]: see [overlap].
+    SyncCursor? after = newest == null
+        ? null
+        : (at: _utc(newest.subtract(overlap)), id: null);
     var applied = 0;
     while (true) {
-      final changes = await _remote.changesSince(name, cursor, limit: pageSize);
+      final changes = await _remote.changesSince(name, after, limit: pageSize);
       if (changes.isEmpty) break;
       await _db.transaction(() async {
         for (final remote in changes) {
           if (await _codec.apply(table, remote, pending: false)) applied++;
         }
       });
-      cursor = changes.last['server_updated_at']! as String;
-      await _settings.set(_cursorKey(name), cursor);
+      final last = changes.last;
+      final lastAt = DateTime.parse(last['server_updated_at']! as String);
+      after = (at: _utc(lastAt), id: last['id']! as String);
+      if (newest == null || lastAt.isAfter(newest)) {
+        newest = lastAt;
+        await _settings.set(_cursorKey(name), _utc(lastAt));
+      }
       if (changes.length < pageSize) break;
     }
     return applied;
   }
+
+  static String _utc(DateTime d) => d.toUtc().toIso8601String();
 }

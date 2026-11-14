@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:dupe/core/logging/app_log.dart';
 import 'package:dupe/core/metadata/metadata_merge.dart';
 import 'package:dupe/core/metadata/metadata_provider.dart';
 import 'package:dupe/core/metadata/metadata_result.dart';
@@ -171,9 +172,17 @@ class MetadataAggregator {
     }
     try {
       final value = await fetch().timeout(timeout);
-      unawaited(store.write(key, encode(value)).catchError((Object _) {}));
+      unawaited(
+        store.write(key, encode(value)).catchError((Object e) {
+          appLog.warning('cache', '$key: $e');
+        }),
+      );
       return value;
-    } on Object {
+    } on Object catch (e) {
+      appLog.warning(
+        'metadata',
+        hasStale ? '$key (cache used): $e' : '$key: $e',
+      );
       if (hasStale) return stale as T;
       rethrow;
     }

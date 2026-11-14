@@ -1,3 +1,4 @@
+import 'package:dupe/app/error_text.dart';
 import 'package:dupe/core/sync/sync_controller.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
 import 'package:intl/intl.dart';
@@ -11,7 +12,9 @@ extension SyncStateLabel on SyncState {
       SyncPhase.signedOut => l10n.syncSignedOut,
       SyncPhase.syncing => l10n.syncRunning,
       SyncPhase.offline => l10n.syncOffline,
-      SyncPhase.failed => l10n.syncFailed(message ?? ''),
+      SyncPhase.failed => l10n.syncFailed(
+        error == null ? '' : errorText(l10n, error!),
+      ),
       SyncPhase.idle when at != null => l10n.syncIdleAt(
         DateFormat.Hm(l10n.localeName).format(at),
       ),
