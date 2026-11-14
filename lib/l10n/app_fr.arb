@@ -9,12 +9,216 @@
   "scan": "Scanner",
   "searchHint": "Rechercher dans ma collection",
   "emptyCollectionTitle": "Aucun ouvrage pour l’instant",
-  "emptyCollectionBody": "Scanne un code-barres ou ajoute un ouvrage pour commencer.",
+  "emptyCollectionBody": "Scanne un code-barres ou ajoute un ouvrage avec le bouton +.",
   "moreWishlist": "Liste d’envies",
   "moreLoans": "Prêts",
   "moreStats": "Statistiques",
   "moreSettings": "Paramètres",
   "moreSettingsSubtitle": "Compte, synchronisation, export/import, sources",
   "comingSoon": "Bientôt disponible",
-  "scanUnavailableDesktop": "Pas de caméra sur cette plateforme : saisis l’ISBN ou utilise une douchette USB."
+  "scanUnavailableDesktop": "Pas de caméra sur cette plateforme : saisis l’ISBN ou utilise une douchette USB.",
+  "add": "Ajouter",
+  "cancel": "Annuler",
+  "clear": "Effacer",
+  "delete": "Supprimer",
+  "edit": "Modifier",
+  "save": "Enregistrer",
+  "yes": "Oui",
+  "none": "—",
+  "deleteConfirmTitle": "Supprimer ?",
+  "deleteSeriesMessage": "La série « {title} » et tous ses tomes seront supprimés.",
+  "@deleteSeriesMessage": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "deleteItemMessage": "« {title} » sera supprimé de ta collection.",
+  "@deleteItemMessage": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "loadError": "Erreur de chargement : {error}",
+  "@loadError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "notFound": "Introuvable (peut-être supprimé)",
+  "newSeries": "Nouvelle série",
+  "newCycle": "Nouveau cycle",
+  "newBook": "Nouveau livre",
+  "newOneShot": "Ouvrage isolé (one-shot)",
+  "newItemTitle": "Nouvel ouvrage",
+  "editItem": "Modifier l’ouvrage",
+  "editSeries": "Modifier la série",
+  "sortBy": "Trier par",
+  "sortTitle": "Titre",
+  "sortRecent": "Ajout récent",
+  "sortProgress": "Progression",
+  "filterAll": "Tout",
+  "filterComplete": "Complètes",
+  "filterIncomplete": "Incomplètes",
+  "noFilterResults": "Aucun résultat pour ce filtre",
+  "viewGrid": "Afficher en grille",
+  "viewList": "Afficher en liste",
+  "volumesOwned": "{count, plural, =0{Aucun tome} =1{1 tome} other{{count} tomes}}",
+  "@volumesOwned": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "volumesOwnedOfTotal": "{owned}/{total} {total, plural, =1{tome} other{tomes}}",
+  "@volumesOwnedOfTotal": {
+    "placeholders": {
+      "owned": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "missingVolumes": "il manque {list}",
+  "@missingVolumes": {
+    "placeholders": {
+      "list": {
+        "type": "String"
+      }
+    }
+  },
+  "rangeWord": "à",
+  "seriesComplete": "série complète",
+  "noVolumesYet": "Aucun tome. Indique le nombre de tomes de la série ou ajoute-en avec le bouton ⊕.",
+  "addVolumes": "Ajouter des tomes",
+  "rangeFrom": "Du tome",
+  "rangeTo": "Au tome",
+  "volumesAdded": "{count, plural, =0{Aucun tome ajouté (déjà présents)} =1{1 tome ajouté} other{{count} tomes ajoutés}}",
+  "@volumesAdded": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "volumeMarkedOwned": "Tome {label} marqué comme possédé",
+  "@volumeMarkedOwned": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "volumeTitle": "{title} – tome {volume}",
+  "@volumeTitle": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "volume": {
+        "type": "String"
+      }
+    }
+  },
+  "slotOwned": "Possédé",
+  "slotLoaned": "Prêté",
+  "slotWished": "Envie",
+  "slotMissing": "Manquant",
+  "slotSemantics": "Tome {label}, {status}",
+  "@slotSemantics": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "markOwned": "Je l’ai",
+  "seeSeries": "Voir la série",
+  "ownershipOwned": "Possédé",
+  "ownershipWished": "Envie",
+  "publicationOngoing": "En cours de parution",
+  "publicationFinished": "Parution terminée",
+  "publicationUnknown": "Statut de parution inconnu",
+  "readingUnread": "Non lu",
+  "readingInProgress": "En cours",
+  "readingRead": "Lu",
+  "readingAbandoned": "Abandonné",
+  "sectionGeneral": "Informations",
+  "sectionReading": "Lecture",
+  "sectionCopy": "Exemplaire",
+  "sectionPrice": "Prix",
+  "sectionWishlist": "Liste d’envies",
+  "fieldTitle": "Titre",
+  "fieldOriginalTitle": "Titre original",
+  "fieldAuthors": "Auteurs",
+  "fieldPublisher": "Éditeur",
+  "fieldCollection": "Collection",
+  "fieldPublicationStatus": "Statut de parution",
+  "fieldTotalVolumes": "Nombre total de tomes",
+  "fieldOwnedUpTo": "Je possède les tomes 1 à…",
+  "fieldOwnedUpToHelper": "Crée directement les tomes possédés",
+  "fieldFollowed": "Série suivie",
+  "fieldFollowedHelper": "Les tomes non possédés comptent comme manquants",
+  "fieldCoverUrl": "URL de la couverture",
+  "fieldDescription": "Description",
+  "fieldNotes": "Notes",
+  "fieldVolumeNumber": "Numéro de tome",
+  "fieldVolumeNumberHelper": "Ex. 12, 1.5, HS 2, Annual 1",
+  "fieldEdition": "Édition",
+  "fieldFormat": "Format",
+  "fieldPublishDate": "Date de parution",
+  "fieldPageCount": "Nombre de pages",
+  "fieldLanguage": "Langue",
+  "fieldIsbn": "ISBN",
+  "fieldUpc": "UPC",
+  "fieldReadingStatus": "Statut de lecture",
+  "fieldReadDate": "Date de lecture",
+  "fieldRating": "Note",
+  "fieldFirstEdition": "Édition originale (EO)",
+  "fieldVariant": "Variante",
+  "fieldCondition": "État",
+  "fieldLocation": "Emplacement",
+  "fieldLocationHelper": "Étagère, carton…",
+  "fieldPurchasePrice": "Prix payé",
+  "fieldPurchaseDate": "Date d’achat",
+  "fieldCoverPrice": "Prix éditeur",
+  "fieldEstimatedValue": "Valeur estimée",
+  "fieldCurrency": "Devise",
+  "fieldWishlistPriority": "Priorité (1 = haute)",
+  "fieldWishlistMaxPrice": "Prix max",
+  "commaSeparated": "Séparés par des virgules",
+  "requiredField": "Champ obligatoire",
+  "invalidNumber": "Nombre invalide",
+  "searchPrompt": "Titre, auteur, éditeur ou ISBN",
+  "searchNoResults": "Rien trouvé pour « {query} »",
+  "@searchNoResults": {
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "searchSeriesSection": "Séries",
+  "searchItemsSection": "Ouvrages",
+  "starterCollectionTitle": "Importer ma collection de départ",
+  "starterCollectionSubtitle": "One Piece, Dreamland, Naheulbeuk, Batman, Les Fourmis, Fabien Olicard (sans doublons)",
+  "starterCollectionImported": "{count, plural, =0{Rien à importer : déjà présent} =1{1 élément importé} other{{count} éléments importés}}",
+  "@starterCollectionImported": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

@@ -1,9 +1,14 @@
 import 'package:dupe/app/adaptive_shell.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
-import 'package:dupe/features/collection/presentation/collection_tab_screen.dart';
+import 'package:dupe/features/collection/presentation/collection_tab/collection_tab_screen.dart';
+import 'package:dupe/features/collection/presentation/item/item_detail_screen.dart';
+import 'package:dupe/features/collection/presentation/item/item_form_screen.dart';
+import 'package:dupe/features/collection/presentation/series/series_detail_screen.dart';
+import 'package:dupe/features/collection/presentation/series/series_form_screen.dart';
 import 'package:dupe/features/loans/presentation/loans_screen.dart';
 import 'package:dupe/features/more/presentation/more_screen.dart';
 import 'package:dupe/features/scan/presentation/scan_screen.dart';
+import 'package:dupe/features/search/presentation/search_screen.dart';
 import 'package:dupe/features/settings/presentation/settings_screen.dart';
 import 'package:dupe/features/stats/presentation/stats_screen.dart';
 import 'package:dupe/features/wishlist/presentation/wishlist_screen.dart';
@@ -15,16 +20,45 @@ part 'router.g.dart';
 
 /// Route paths, kept in one place to avoid typos.
 abstract final class AppRoutes {
-  static const mangas = '/mangas';
-  static const bd = '/bd';
-  static const comics = '/comics';
-  static const books = '/livres';
+  static const search = '/recherche';
   static const more = '/plus';
   static const wishlist = '/plus/envies';
   static const loans = '/plus/prets';
   static const stats = '/plus/statistiques';
   static const settings = '/plus/parametres';
   static const scan = '/scan';
+
+  /// Root of the tab of [type].
+  static String base(CollectionType type) => switch (type) {
+    CollectionType.manga => '/mangas',
+    CollectionType.bd => '/bd',
+    CollectionType.comic => '/comics',
+    CollectionType.livre => '/livres',
+  };
+
+  static String newSeries(CollectionType type) =>
+      '${base(type)}/nouvelle-serie';
+
+  static String series(CollectionType type, String id) =>
+      '${base(type)}/serie/$id';
+
+  static String seriesEdit(CollectionType type, String id) =>
+      '${series(type, id)}/modifier';
+
+  static String item(CollectionType type, String id) =>
+      '${base(type)}/ouvrage/$id';
+
+  static String itemEdit(CollectionType type, String id) =>
+      '${item(type, id)}/modifier';
+
+  static String newItem(
+    CollectionType type, {
+    String? seriesId,
+    String? volume,
+  }) => Uri(
+    path: '${base(type)}/nouvel-ouvrage',
+    queryParameters: {'serie': ?seriesId, 'tome': ?volume},
+  ).toString();
 }
 
 @Riverpod(keepAlive: true)
@@ -32,16 +66,13 @@ GoRouter appRouter(Ref ref) {
   final rootNavigatorKey = GlobalKey<NavigatorState>();
   final router = GoRouter(
     navigatorKey: rootNavigatorKey,
-    initialLocation: AppRoutes.mangas,
+    initialLocation: AppRoutes.base(CollectionType.manga),
     routes: [
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) =>
             AdaptiveShell(navigationShell: navigationShell),
         branches: [
-          _collectionBranch(AppRoutes.mangas, CollectionType.manga),
-          _collectionBranch(AppRoutes.bd, CollectionType.bd),
-          _collectionBranch(AppRoutes.comics, CollectionType.comic),
-          _collectionBranch(AppRoutes.books, CollectionType.livre),
+          for (final type in CollectionType.values) _collectionBranch(type),
           StatefulShellBranch(
             routes: [
               GoRoute(
@@ -71,6 +102,11 @@ GoRouter appRouter(Ref ref) {
         ],
       ),
       GoRoute(
+        path: AppRoutes.search,
+        parentNavigatorKey: rootNavigatorKey,
+        builder: (context, state) => const SearchScreen(),
+      ),
+      GoRoute(
         path: AppRoutes.scan,
         parentNavigatorKey: rootNavigatorKey,
         builder: (context, state) => const ScanScreen(),
@@ -81,12 +117,55 @@ GoRouter appRouter(Ref ref) {
   return router;
 }
 
-StatefulShellBranch _collectionBranch(String path, CollectionType type) =>
+StatefulShellBranch _collectionBranch(CollectionType type) =>
     StatefulShellBranch(
       routes: [
         GoRoute(
-          path: path,
+          path: AppRoutes.base(type),
           builder: (context, state) => CollectionTabScreen(type: type),
+          routes: [
+            GoRoute(
+              path: 'nouvelle-serie',
+              builder: (context, state) => SeriesFormScreen(type: type),
+            ),
+            GoRoute(
+              path: 'serie/:seriesId',
+              builder: (context, state) => SeriesDetailScreen(
+                seriesId: state.pathParameters['seriesId']!,
+              ),
+              routes: [
+                GoRoute(
+                  path: 'modifier',
+                  builder: (context, state) => SeriesFormScreen(
+                    type: type,
+                    seriesId: state.pathParameters['seriesId'],
+                  ),
+                ),
+              ],
+            ),
+            GoRoute(
+              path: 'nouvel-ouvrage',
+              builder: (context, state) => ItemFormScreen(
+                type: type,
+                seriesId: state.uri.queryParameters['serie'],
+                volumeNumber: state.uri.queryParameters['tome'],
+              ),
+            ),
+            GoRoute(
+              path: 'ouvrage/:itemId',
+              builder: (context, state) =>
+                  ItemDetailScreen(itemId: state.pathParameters['itemId']!),
+              routes: [
+                GoRoute(
+                  path: 'modifier',
+                  builder: (context, state) => ItemFormScreen(
+                    type: type,
+                    itemId: state.pathParameters['itemId'],
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       ],
     );

@@ -151,7 +151,7 @@ abstract class AppLocalizations {
   /// No description provided for @emptyCollectionBody.
   ///
   /// In fr, this message translates to:
-  /// **'Scanne un code-barres ou ajoute un ouvrage pour commencer.'**
+  /// **'Scanne un code-barres ou ajoute un ouvrage avec le bouton +.'**
   String get emptyCollectionBody;
 
   /// No description provided for @moreWishlist.
@@ -195,6 +195,672 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Pas de caméra sur cette plateforme : saisis l’ISBN ou utilise une douchette USB.'**
   String get scanUnavailableDesktop;
+
+  /// No description provided for @add.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter'**
+  String get add;
+
+  /// No description provided for @cancel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Annuler'**
+  String get cancel;
+
+  /// No description provided for @clear.
+  ///
+  /// In fr, this message translates to:
+  /// **'Effacer'**
+  String get clear;
+
+  /// No description provided for @delete.
+  ///
+  /// In fr, this message translates to:
+  /// **'Supprimer'**
+  String get delete;
+
+  /// No description provided for @edit.
+  ///
+  /// In fr, this message translates to:
+  /// **'Modifier'**
+  String get edit;
+
+  /// No description provided for @save.
+  ///
+  /// In fr, this message translates to:
+  /// **'Enregistrer'**
+  String get save;
+
+  /// No description provided for @yes.
+  ///
+  /// In fr, this message translates to:
+  /// **'Oui'**
+  String get yes;
+
+  /// No description provided for @none.
+  ///
+  /// In fr, this message translates to:
+  /// **'—'**
+  String get none;
+
+  /// No description provided for @deleteConfirmTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Supprimer ?'**
+  String get deleteConfirmTitle;
+
+  /// No description provided for @deleteSeriesMessage.
+  ///
+  /// In fr, this message translates to:
+  /// **'La série « {title} » et tous ses tomes seront supprimés.'**
+  String deleteSeriesMessage(String title);
+
+  /// No description provided for @deleteItemMessage.
+  ///
+  /// In fr, this message translates to:
+  /// **'« {title} » sera supprimé de ta collection.'**
+  String deleteItemMessage(String title);
+
+  /// No description provided for @loadError.
+  ///
+  /// In fr, this message translates to:
+  /// **'Erreur de chargement : {error}'**
+  String loadError(String error);
+
+  /// No description provided for @notFound.
+  ///
+  /// In fr, this message translates to:
+  /// **'Introuvable (peut-être supprimé)'**
+  String get notFound;
+
+  /// No description provided for @newSeries.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouvelle série'**
+  String get newSeries;
+
+  /// No description provided for @newCycle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouveau cycle'**
+  String get newCycle;
+
+  /// No description provided for @newBook.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouveau livre'**
+  String get newBook;
+
+  /// No description provided for @newOneShot.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ouvrage isolé (one-shot)'**
+  String get newOneShot;
+
+  /// No description provided for @newItemTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouvel ouvrage'**
+  String get newItemTitle;
+
+  /// No description provided for @editItem.
+  ///
+  /// In fr, this message translates to:
+  /// **'Modifier l’ouvrage'**
+  String get editItem;
+
+  /// No description provided for @editSeries.
+  ///
+  /// In fr, this message translates to:
+  /// **'Modifier la série'**
+  String get editSeries;
+
+  /// No description provided for @sortBy.
+  ///
+  /// In fr, this message translates to:
+  /// **'Trier par'**
+  String get sortBy;
+
+  /// No description provided for @sortTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Titre'**
+  String get sortTitle;
+
+  /// No description provided for @sortRecent.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajout récent'**
+  String get sortRecent;
+
+  /// No description provided for @sortProgress.
+  ///
+  /// In fr, this message translates to:
+  /// **'Progression'**
+  String get sortProgress;
+
+  /// No description provided for @filterAll.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tout'**
+  String get filterAll;
+
+  /// No description provided for @filterComplete.
+  ///
+  /// In fr, this message translates to:
+  /// **'Complètes'**
+  String get filterComplete;
+
+  /// No description provided for @filterIncomplete.
+  ///
+  /// In fr, this message translates to:
+  /// **'Incomplètes'**
+  String get filterIncomplete;
+
+  /// No description provided for @noFilterResults.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun résultat pour ce filtre'**
+  String get noFilterResults;
+
+  /// No description provided for @viewGrid.
+  ///
+  /// In fr, this message translates to:
+  /// **'Afficher en grille'**
+  String get viewGrid;
+
+  /// No description provided for @viewList.
+  ///
+  /// In fr, this message translates to:
+  /// **'Afficher en liste'**
+  String get viewList;
+
+  /// No description provided for @volumesOwned.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =0{Aucun tome} =1{1 tome} other{{count} tomes}}'**
+  String volumesOwned(int count);
+
+  /// No description provided for @volumesOwnedOfTotal.
+  ///
+  /// In fr, this message translates to:
+  /// **'{owned}/{total} {total, plural, =1{tome} other{tomes}}'**
+  String volumesOwnedOfTotal(int owned, int total);
+
+  /// No description provided for @missingVolumes.
+  ///
+  /// In fr, this message translates to:
+  /// **'il manque {list}'**
+  String missingVolumes(String list);
+
+  /// No description provided for @rangeWord.
+  ///
+  /// In fr, this message translates to:
+  /// **'à'**
+  String get rangeWord;
+
+  /// No description provided for @seriesComplete.
+  ///
+  /// In fr, this message translates to:
+  /// **'série complète'**
+  String get seriesComplete;
+
+  /// No description provided for @noVolumesYet.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun tome. Indique le nombre de tomes de la série ou ajoute-en avec le bouton ⊕.'**
+  String get noVolumesYet;
+
+  /// No description provided for @addVolumes.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter des tomes'**
+  String get addVolumes;
+
+  /// No description provided for @rangeFrom.
+  ///
+  /// In fr, this message translates to:
+  /// **'Du tome'**
+  String get rangeFrom;
+
+  /// No description provided for @rangeTo.
+  ///
+  /// In fr, this message translates to:
+  /// **'Au tome'**
+  String get rangeTo;
+
+  /// No description provided for @volumesAdded.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =0{Aucun tome ajouté (déjà présents)} =1{1 tome ajouté} other{{count} tomes ajoutés}}'**
+  String volumesAdded(int count);
+
+  /// No description provided for @volumeMarkedOwned.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tome {label} marqué comme possédé'**
+  String volumeMarkedOwned(String label);
+
+  /// No description provided for @volumeTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'{title} – tome {volume}'**
+  String volumeTitle(String title, String volume);
+
+  /// No description provided for @slotOwned.
+  ///
+  /// In fr, this message translates to:
+  /// **'Possédé'**
+  String get slotOwned;
+
+  /// No description provided for @slotLoaned.
+  ///
+  /// In fr, this message translates to:
+  /// **'Prêté'**
+  String get slotLoaned;
+
+  /// No description provided for @slotWished.
+  ///
+  /// In fr, this message translates to:
+  /// **'Envie'**
+  String get slotWished;
+
+  /// No description provided for @slotMissing.
+  ///
+  /// In fr, this message translates to:
+  /// **'Manquant'**
+  String get slotMissing;
+
+  /// No description provided for @slotSemantics.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tome {label}, {status}'**
+  String slotSemantics(String label, String status);
+
+  /// No description provided for @markOwned.
+  ///
+  /// In fr, this message translates to:
+  /// **'Je l’ai'**
+  String get markOwned;
+
+  /// No description provided for @seeSeries.
+  ///
+  /// In fr, this message translates to:
+  /// **'Voir la série'**
+  String get seeSeries;
+
+  /// No description provided for @ownershipOwned.
+  ///
+  /// In fr, this message translates to:
+  /// **'Possédé'**
+  String get ownershipOwned;
+
+  /// No description provided for @ownershipWished.
+  ///
+  /// In fr, this message translates to:
+  /// **'Envie'**
+  String get ownershipWished;
+
+  /// No description provided for @publicationOngoing.
+  ///
+  /// In fr, this message translates to:
+  /// **'En cours de parution'**
+  String get publicationOngoing;
+
+  /// No description provided for @publicationFinished.
+  ///
+  /// In fr, this message translates to:
+  /// **'Parution terminée'**
+  String get publicationFinished;
+
+  /// No description provided for @publicationUnknown.
+  ///
+  /// In fr, this message translates to:
+  /// **'Statut de parution inconnu'**
+  String get publicationUnknown;
+
+  /// No description provided for @readingUnread.
+  ///
+  /// In fr, this message translates to:
+  /// **'Non lu'**
+  String get readingUnread;
+
+  /// No description provided for @readingInProgress.
+  ///
+  /// In fr, this message translates to:
+  /// **'En cours'**
+  String get readingInProgress;
+
+  /// No description provided for @readingRead.
+  ///
+  /// In fr, this message translates to:
+  /// **'Lu'**
+  String get readingRead;
+
+  /// No description provided for @readingAbandoned.
+  ///
+  /// In fr, this message translates to:
+  /// **'Abandonné'**
+  String get readingAbandoned;
+
+  /// No description provided for @sectionGeneral.
+  ///
+  /// In fr, this message translates to:
+  /// **'Informations'**
+  String get sectionGeneral;
+
+  /// No description provided for @sectionReading.
+  ///
+  /// In fr, this message translates to:
+  /// **'Lecture'**
+  String get sectionReading;
+
+  /// No description provided for @sectionCopy.
+  ///
+  /// In fr, this message translates to:
+  /// **'Exemplaire'**
+  String get sectionCopy;
+
+  /// No description provided for @sectionPrice.
+  ///
+  /// In fr, this message translates to:
+  /// **'Prix'**
+  String get sectionPrice;
+
+  /// No description provided for @sectionWishlist.
+  ///
+  /// In fr, this message translates to:
+  /// **'Liste d’envies'**
+  String get sectionWishlist;
+
+  /// No description provided for @fieldTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Titre'**
+  String get fieldTitle;
+
+  /// No description provided for @fieldOriginalTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Titre original'**
+  String get fieldOriginalTitle;
+
+  /// No description provided for @fieldAuthors.
+  ///
+  /// In fr, this message translates to:
+  /// **'Auteurs'**
+  String get fieldAuthors;
+
+  /// No description provided for @fieldPublisher.
+  ///
+  /// In fr, this message translates to:
+  /// **'Éditeur'**
+  String get fieldPublisher;
+
+  /// No description provided for @fieldCollection.
+  ///
+  /// In fr, this message translates to:
+  /// **'Collection'**
+  String get fieldCollection;
+
+  /// No description provided for @fieldPublicationStatus.
+  ///
+  /// In fr, this message translates to:
+  /// **'Statut de parution'**
+  String get fieldPublicationStatus;
+
+  /// No description provided for @fieldTotalVolumes.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nombre total de tomes'**
+  String get fieldTotalVolumes;
+
+  /// No description provided for @fieldOwnedUpTo.
+  ///
+  /// In fr, this message translates to:
+  /// **'Je possède les tomes 1 à…'**
+  String get fieldOwnedUpTo;
+
+  /// No description provided for @fieldOwnedUpToHelper.
+  ///
+  /// In fr, this message translates to:
+  /// **'Crée directement les tomes possédés'**
+  String get fieldOwnedUpToHelper;
+
+  /// No description provided for @fieldFollowed.
+  ///
+  /// In fr, this message translates to:
+  /// **'Série suivie'**
+  String get fieldFollowed;
+
+  /// No description provided for @fieldFollowedHelper.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les tomes non possédés comptent comme manquants'**
+  String get fieldFollowedHelper;
+
+  /// No description provided for @fieldCoverUrl.
+  ///
+  /// In fr, this message translates to:
+  /// **'URL de la couverture'**
+  String get fieldCoverUrl;
+
+  /// No description provided for @fieldDescription.
+  ///
+  /// In fr, this message translates to:
+  /// **'Description'**
+  String get fieldDescription;
+
+  /// No description provided for @fieldNotes.
+  ///
+  /// In fr, this message translates to:
+  /// **'Notes'**
+  String get fieldNotes;
+
+  /// No description provided for @fieldVolumeNumber.
+  ///
+  /// In fr, this message translates to:
+  /// **'Numéro de tome'**
+  String get fieldVolumeNumber;
+
+  /// No description provided for @fieldVolumeNumberHelper.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ex. 12, 1.5, HS 2, Annual 1'**
+  String get fieldVolumeNumberHelper;
+
+  /// No description provided for @fieldEdition.
+  ///
+  /// In fr, this message translates to:
+  /// **'Édition'**
+  String get fieldEdition;
+
+  /// No description provided for @fieldFormat.
+  ///
+  /// In fr, this message translates to:
+  /// **'Format'**
+  String get fieldFormat;
+
+  /// No description provided for @fieldPublishDate.
+  ///
+  /// In fr, this message translates to:
+  /// **'Date de parution'**
+  String get fieldPublishDate;
+
+  /// No description provided for @fieldPageCount.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nombre de pages'**
+  String get fieldPageCount;
+
+  /// No description provided for @fieldLanguage.
+  ///
+  /// In fr, this message translates to:
+  /// **'Langue'**
+  String get fieldLanguage;
+
+  /// No description provided for @fieldIsbn.
+  ///
+  /// In fr, this message translates to:
+  /// **'ISBN'**
+  String get fieldIsbn;
+
+  /// No description provided for @fieldUpc.
+  ///
+  /// In fr, this message translates to:
+  /// **'UPC'**
+  String get fieldUpc;
+
+  /// No description provided for @fieldReadingStatus.
+  ///
+  /// In fr, this message translates to:
+  /// **'Statut de lecture'**
+  String get fieldReadingStatus;
+
+  /// No description provided for @fieldReadDate.
+  ///
+  /// In fr, this message translates to:
+  /// **'Date de lecture'**
+  String get fieldReadDate;
+
+  /// No description provided for @fieldRating.
+  ///
+  /// In fr, this message translates to:
+  /// **'Note'**
+  String get fieldRating;
+
+  /// No description provided for @fieldFirstEdition.
+  ///
+  /// In fr, this message translates to:
+  /// **'Édition originale (EO)'**
+  String get fieldFirstEdition;
+
+  /// No description provided for @fieldVariant.
+  ///
+  /// In fr, this message translates to:
+  /// **'Variante'**
+  String get fieldVariant;
+
+  /// No description provided for @fieldCondition.
+  ///
+  /// In fr, this message translates to:
+  /// **'État'**
+  String get fieldCondition;
+
+  /// No description provided for @fieldLocation.
+  ///
+  /// In fr, this message translates to:
+  /// **'Emplacement'**
+  String get fieldLocation;
+
+  /// No description provided for @fieldLocationHelper.
+  ///
+  /// In fr, this message translates to:
+  /// **'Étagère, carton…'**
+  String get fieldLocationHelper;
+
+  /// No description provided for @fieldPurchasePrice.
+  ///
+  /// In fr, this message translates to:
+  /// **'Prix payé'**
+  String get fieldPurchasePrice;
+
+  /// No description provided for @fieldPurchaseDate.
+  ///
+  /// In fr, this message translates to:
+  /// **'Date d’achat'**
+  String get fieldPurchaseDate;
+
+  /// No description provided for @fieldCoverPrice.
+  ///
+  /// In fr, this message translates to:
+  /// **'Prix éditeur'**
+  String get fieldCoverPrice;
+
+  /// No description provided for @fieldEstimatedValue.
+  ///
+  /// In fr, this message translates to:
+  /// **'Valeur estimée'**
+  String get fieldEstimatedValue;
+
+  /// No description provided for @fieldCurrency.
+  ///
+  /// In fr, this message translates to:
+  /// **'Devise'**
+  String get fieldCurrency;
+
+  /// No description provided for @fieldWishlistPriority.
+  ///
+  /// In fr, this message translates to:
+  /// **'Priorité (1 = haute)'**
+  String get fieldWishlistPriority;
+
+  /// No description provided for @fieldWishlistMaxPrice.
+  ///
+  /// In fr, this message translates to:
+  /// **'Prix max'**
+  String get fieldWishlistMaxPrice;
+
+  /// No description provided for @commaSeparated.
+  ///
+  /// In fr, this message translates to:
+  /// **'Séparés par des virgules'**
+  String get commaSeparated;
+
+  /// No description provided for @requiredField.
+  ///
+  /// In fr, this message translates to:
+  /// **'Champ obligatoire'**
+  String get requiredField;
+
+  /// No description provided for @invalidNumber.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nombre invalide'**
+  String get invalidNumber;
+
+  /// No description provided for @searchPrompt.
+  ///
+  /// In fr, this message translates to:
+  /// **'Titre, auteur, éditeur ou ISBN'**
+  String get searchPrompt;
+
+  /// No description provided for @searchNoResults.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rien trouvé pour « {query} »'**
+  String searchNoResults(String query);
+
+  /// No description provided for @searchSeriesSection.
+  ///
+  /// In fr, this message translates to:
+  /// **'Séries'**
+  String get searchSeriesSection;
+
+  /// No description provided for @searchItemsSection.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ouvrages'**
+  String get searchItemsSection;
+
+  /// No description provided for @starterCollectionTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Importer ma collection de départ'**
+  String get starterCollectionTitle;
+
+  /// No description provided for @starterCollectionSubtitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'One Piece, Dreamland, Naheulbeuk, Batman, Les Fourmis, Fabien Olicard (sans doublons)'**
+  String get starterCollectionSubtitle;
+
+  /// No description provided for @starterCollectionImported.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =0{Rien à importer : déjà présent} =1{1 élément importé} other{{count} éléments importés}}'**
+  String starterCollectionImported(int count);
 }
 
 class _AppLocalizationsDelegate
