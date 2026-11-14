@@ -65,6 +65,16 @@ Fonctionnement : SQLite reste la source de vérité ; synchro au lancement, au r
 modification la plus récente gagne. Les photos de couverture prises dans l'appli vont dans le bucket
 privé `covers`.
 
+## Sauvegardes
+- **Manuelles** : Paramètres → *Exporter une sauvegarde* (JSON complet) ; *Restaurer* propose de **fusionner**
+  (rien n'est effacé) ou de **revenir exactement** à la sauvegarde (ce qui a été ajouté depuis est supprimé, sur
+  tous les appareils après synchro).
+- **Automatiques** : chaque semaine au lancement, et avant chaque import CSV ou restauration ; les 8 dernières
+  de chaque sorte sont gardées dans le dossier de données de l'appli (`backups/`, par exemple
+  `~/.local/share/dev.dupe.dupe/backups` sous Linux). Paramètres → *Sauvegardes automatiques* pour les
+  restaurer ou les exporter. Elles restent sur l'appareil : sur Android, les exporter pour les garder ailleurs.
+- Supprimer un ouvrage ou une série affiche « Annuler » pendant quelques secondes.
+
 ## Développement
 ```sh
 flutter pub get

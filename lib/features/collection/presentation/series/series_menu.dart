@@ -8,6 +8,7 @@ import 'package:dupe/features/collection/domain/series.dart';
 import 'package:dupe/features/collection/domain/volume_grid.dart';
 import 'package:dupe/features/collection/presentation/confirm_delete_dialog.dart';
 import 'package:dupe/features/collection/presentation/series/mark_read_dialog.dart';
+import 'package:dupe/features/collection/presentation/undo_delete.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -59,7 +60,15 @@ class SeriesMenu extends ConsumerWidget {
           l10n.deleteSeriesMessage(series.title),
         );
         if (!ok || !context.mounted) return;
-        await ref.read(collectionRepositoryProvider).deleteSeries(series.id);
+        final messenger = ScaffoldMessenger.of(context);
+        final repo = ref.read(collectionRepositoryProvider);
+        await repo.deleteSeries(series.id);
+        showUndoDelete(
+          messenger,
+          l10n,
+          l10n.seriesDeleted(series.title),
+          () => repo.restoreSeries(series.id),
+        );
         if (context.mounted) context.pop();
     }
   }

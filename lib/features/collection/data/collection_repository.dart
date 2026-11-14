@@ -122,14 +122,49 @@ class CollectionRepository {
 
   Future<void> deleteItem(String id) {
     final now = _now();
-    return (_db.update(_db.itemsTable)..where((t) => t.id.equals(id))).write(
-      ItemsTableCompanion(
-        deletedAt: Value(now),
+    return _markItem(id, deletedAt: now, now: now);
+  }
+
+  /// Undoes [deleteSeries]: the series and the items deleted with it.
+  Future<void> restoreSeries(String id) => _db.transaction(() async {
+    final series = await (_db.select(
+      _db.seriesTable,
+    )..where((t) => t.id.equals(id))).getSingleOrNull();
+    final deletedAt = series?.deletedAt;
+    if (deletedAt == null) return;
+    final now = _now();
+    await (_db.update(_db.seriesTable)..where((t) => t.id.equals(id))).write(
+      SeriesTableCompanion(
+        deletedAt: const Value(null),
         updatedAt: Value(now),
         syncPending: const Value(true),
       ),
     );
-  }
+    final items = await (_db.select(
+      _db.itemsTable,
+    )..where((t) => t.seriesId.equals(id) & t.deletedAt.isNotNull())).get();
+    for (final i in items.where(
+      (i) => i.deletedAt!.isAtSameMomentAs(deletedAt),
+    )) {
+      await _markItem(i.id, deletedAt: null, now: now);
+    }
+  });
+
+  /// Undoes [deleteItem].
+  Future<void> restoreItem(String id) =>
+      _markItem(id, deletedAt: null, now: _now());
+
+  Future<void> _markItem(
+    String id, {
+    required DateTime? deletedAt,
+    required DateTime now,
+  }) => (_db.update(_db.itemsTable)..where((t) => t.id.equals(id))).write(
+    ItemsTableCompanion(
+      deletedAt: Value(deletedAt),
+      updatedAt: Value(now),
+      syncPending: const Value(true),
+    ),
+  );
 
   // ---- Reads --------------------------------------------------------------
 

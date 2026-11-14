@@ -11,6 +11,7 @@ import 'package:dupe/features/collection/presentation/item/bought_action.dart';
 import 'package:dupe/features/collection/presentation/item/item_reading_bar.dart';
 import 'package:dupe/features/collection/presentation/labels.dart';
 import 'package:dupe/features/collection/presentation/providers/detail_providers.dart';
+import 'package:dupe/features/collection/presentation/undo_delete.dart';
 import 'package:dupe/features/loans/presentation/item_loan_section.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -53,7 +54,15 @@ class _ItemDetailView extends ConsumerWidget {
     final l10n = AppLocalizations.of(context);
     final ok = await confirmDelete(context, l10n.deleteItemMessage(item.title));
     if (!ok || !context.mounted) return;
-    await ref.read(collectionRepositoryProvider).deleteItem(item.id);
+    final messenger = ScaffoldMessenger.of(context);
+    final repo = ref.read(collectionRepositoryProvider);
+    await repo.deleteItem(item.id);
+    showUndoDelete(
+      messenger,
+      l10n,
+      l10n.itemDeleted(item.title),
+      () => repo.restoreItem(item.id),
+    );
     if (context.mounted) context.pop();
   }
 

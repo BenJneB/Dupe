@@ -711,7 +711,46 @@
   "exportJson": "Exporter une sauvegarde",
   "exportJsonHelp": "Fichier JSON complet : séries, ouvrages, prêts",
   "restoreJson": "Restaurer une sauvegarde",
-  "restoreJsonHelp": "Ajoute ce qui manque, met à jour ce qui est plus récent ; rien n’est effacé",
+  "restoreJsonHelp": "Fusionner avec la collection, ou revenir exactement à son contenu",
+  "restoreTitle": "Restaurer la sauvegarde",
+  "restoreMerge": "Fusionner",
+  "restoreMergeHelp": "Ajoute ce qui manque, garde ce qui est plus récent. Rien n’est effacé.",
+  "restoreReplace": "Revenir à cette sauvegarde",
+  "restoreReplaceHelp": "La collection redevient exactement celle de la sauvegarde, sur tous tes appareils après synchro : ce qui a été ajouté depuis est supprimé. Une sauvegarde automatique est prise juste avant.",
+  "replaceDone": "Collection restaurée : {restored} ouvrages, {removed} retirés",
+  "@replaceDone": {
+    "placeholders": {
+      "restored": {
+        "type": "int"
+      },
+      "removed": {
+        "type": "int"
+      }
+    }
+  },
+  "autoBackups": "Sauvegardes automatiques",
+  "autoBackupsHelp": "Chaque semaine, et avant chaque import ou restauration",
+  "autoBackupsEmpty": "Aucune sauvegarde automatique pour l’instant (collection vide ou première semaine).",
+  "autoBackupWeekly": "Hebdomadaire",
+  "autoBackupBeforeImport": "Avant import CSV",
+  "autoBackupBeforeRestore": "Avant restauration",
+  "autoBackupItems": "{count, plural, =1{1 ouvrage} other{{count} ouvrages}}",
+  "@autoBackupItems": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "autoBackupExport": "Exporter ce fichier",
+  "autoBackupFailed": "Sauvegarde automatique impossible : import annulé ({message})",
+  "@autoBackupFailed": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
   "restoreDone": "{count, plural, =0{Rien à restaurer : déjà à jour} =1{1 élément restauré} other{{count} éléments restaurés}}",
   "@restoreDone": {
     "placeholders": {
@@ -812,6 +851,23 @@
   "aboutComicVine": "Données comics fournies par Comic Vine",
   "aboutLicenses": "Licences des composants",
   "aboutSourceCode": "Code source",
+  "undo": "Annuler",
+  "itemDeleted": "« {title} » supprimé",
+  "@itemDeleted": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "seriesDeleted": "Série « {title} » supprimée",
+  "@seriesDeleted": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
   "errorOffline": "Pas de connexion internet.",
   "errorSession": "Session expirée : reconnecte-toi.",
   "errorServer": "Le serveur a refusé la demande (détails dans À propos → Journal).",

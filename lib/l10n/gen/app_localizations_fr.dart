@@ -1121,7 +1121,68 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get restoreJsonHelp =>
-      'Ajoute ce qui manque, met à jour ce qui est plus récent ; rien n’est effacé';
+      'Fusionner avec la collection, ou revenir exactement à son contenu';
+
+  @override
+  String get restoreTitle => 'Restaurer la sauvegarde';
+
+  @override
+  String get restoreMerge => 'Fusionner';
+
+  @override
+  String get restoreMergeHelp =>
+      'Ajoute ce qui manque, garde ce qui est plus récent. Rien n’est effacé.';
+
+  @override
+  String get restoreReplace => 'Revenir à cette sauvegarde';
+
+  @override
+  String get restoreReplaceHelp =>
+      'La collection redevient exactement celle de la sauvegarde, sur tous tes appareils après synchro : ce qui a été ajouté depuis est supprimé. Une sauvegarde automatique est prise juste avant.';
+
+  @override
+  String replaceDone(int restored, int removed) {
+    return 'Collection restaurée : $restored ouvrages, $removed retirés';
+  }
+
+  @override
+  String get autoBackups => 'Sauvegardes automatiques';
+
+  @override
+  String get autoBackupsHelp =>
+      'Chaque semaine, et avant chaque import ou restauration';
+
+  @override
+  String get autoBackupsEmpty =>
+      'Aucune sauvegarde automatique pour l’instant (collection vide ou première semaine).';
+
+  @override
+  String get autoBackupWeekly => 'Hebdomadaire';
+
+  @override
+  String get autoBackupBeforeImport => 'Avant import CSV';
+
+  @override
+  String get autoBackupBeforeRestore => 'Avant restauration';
+
+  @override
+  String autoBackupItems(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count ouvrages',
+      one: '1 ouvrage',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get autoBackupExport => 'Exporter ce fichier';
+
+  @override
+  String autoBackupFailed(String message) {
+    return 'Sauvegarde automatique impossible : import annulé ($message)';
+  }
 
   @override
   String restoreDone(int count) {
@@ -1286,6 +1347,19 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get aboutSourceCode => 'Code source';
+
+  @override
+  String get undo => 'Annuler';
+
+  @override
+  String itemDeleted(String title) {
+    return '« $title » supprimé';
+  }
+
+  @override
+  String seriesDeleted(String title) {
+    return 'Série « $title » supprimée';
+  }
 
   @override
   String get errorOffline => 'Pas de connexion internet.';

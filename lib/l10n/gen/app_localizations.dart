@@ -1891,8 +1891,98 @@ abstract class AppLocalizations {
   /// No description provided for @restoreJsonHelp.
   ///
   /// In fr, this message translates to:
-  /// **'Ajoute ce qui manque, met à jour ce qui est plus récent ; rien n’est effacé'**
+  /// **'Fusionner avec la collection, ou revenir exactement à son contenu'**
   String get restoreJsonHelp;
+
+  /// No description provided for @restoreTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Restaurer la sauvegarde'**
+  String get restoreTitle;
+
+  /// No description provided for @restoreMerge.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fusionner'**
+  String get restoreMerge;
+
+  /// No description provided for @restoreMergeHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajoute ce qui manque, garde ce qui est plus récent. Rien n’est effacé.'**
+  String get restoreMergeHelp;
+
+  /// No description provided for @restoreReplace.
+  ///
+  /// In fr, this message translates to:
+  /// **'Revenir à cette sauvegarde'**
+  String get restoreReplace;
+
+  /// No description provided for @restoreReplaceHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'La collection redevient exactement celle de la sauvegarde, sur tous tes appareils après synchro : ce qui a été ajouté depuis est supprimé. Une sauvegarde automatique est prise juste avant.'**
+  String get restoreReplaceHelp;
+
+  /// No description provided for @replaceDone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Collection restaurée : {restored} ouvrages, {removed} retirés'**
+  String replaceDone(int restored, int removed);
+
+  /// No description provided for @autoBackups.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sauvegardes automatiques'**
+  String get autoBackups;
+
+  /// No description provided for @autoBackupsHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Chaque semaine, et avant chaque import ou restauration'**
+  String get autoBackupsHelp;
+
+  /// No description provided for @autoBackupsEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune sauvegarde automatique pour l’instant (collection vide ou première semaine).'**
+  String get autoBackupsEmpty;
+
+  /// No description provided for @autoBackupWeekly.
+  ///
+  /// In fr, this message translates to:
+  /// **'Hebdomadaire'**
+  String get autoBackupWeekly;
+
+  /// No description provided for @autoBackupBeforeImport.
+  ///
+  /// In fr, this message translates to:
+  /// **'Avant import CSV'**
+  String get autoBackupBeforeImport;
+
+  /// No description provided for @autoBackupBeforeRestore.
+  ///
+  /// In fr, this message translates to:
+  /// **'Avant restauration'**
+  String get autoBackupBeforeRestore;
+
+  /// No description provided for @autoBackupItems.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{1 ouvrage} other{{count} ouvrages}}'**
+  String autoBackupItems(int count);
+
+  /// No description provided for @autoBackupExport.
+  ///
+  /// In fr, this message translates to:
+  /// **'Exporter ce fichier'**
+  String get autoBackupExport;
+
+  /// No description provided for @autoBackupFailed.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sauvegarde automatique impossible : import annulé ({message})'**
+  String autoBackupFailed(String message);
 
   /// No description provided for @restoreDone.
   ///
@@ -2145,6 +2235,24 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Code source'**
   String get aboutSourceCode;
+
+  /// No description provided for @undo.
+  ///
+  /// In fr, this message translates to:
+  /// **'Annuler'**
+  String get undo;
+
+  /// No description provided for @itemDeleted.
+  ///
+  /// In fr, this message translates to:
+  /// **'« {title} » supprimé'**
+  String itemDeleted(String title);
+
+  /// No description provided for @seriesDeleted.
+  ///
+  /// In fr, this message translates to:
+  /// **'Série « {title} » supprimée'**
+  String seriesDeleted(String title);
 
   /// No description provided for @errorOffline.
   ///

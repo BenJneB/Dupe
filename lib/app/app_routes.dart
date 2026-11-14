@@ -16,6 +16,7 @@ abstract final class AppRoutes {
   static const stats = '/plus/statistiques';
   static const settings = '/plus/parametres';
   static const csvImport = '/plus/parametres/import-csv';
+  static const autoBackups = '/plus/parametres/sauvegardes';
   static const about = '/plus/a-propos';
   static const journal = '/plus/a-propos/journal';
   static const signIn = '/connexion';
