@@ -1672,53 +1672,113 @@ abstract class AppLocalizations {
   /// **'Adresse email'**
   String get emailLabel;
 
-  /// No description provided for @sendCode.
-  ///
-  /// In fr, this message translates to:
-  /// **'Recevoir un code'**
-  String get sendCode;
-
-  /// No description provided for @codeSent.
-  ///
-  /// In fr, this message translates to:
-  /// **'Email envoyé à {email}.'**
-  String codeSent(String email);
-
-  /// No description provided for @codeLabel.
-  ///
-  /// In fr, this message translates to:
-  /// **'Code ou lien reçu par email'**
-  String get codeLabel;
-
-  /// No description provided for @verifyCode.
-  ///
-  /// In fr, this message translates to:
-  /// **'Se connecter'**
-  String get verifyCode;
-
-  /// No description provided for @changeEmail.
-  ///
-  /// In fr, this message translates to:
-  /// **'Changer d’adresse'**
-  String get changeEmail;
-
   /// No description provided for @signedInAs.
   ///
   /// In fr, this message translates to:
   /// **'Connecté : {email}'**
   String signedInAs(String email);
 
+  /// No description provided for @signUp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Créer un compte'**
+  String get signUp;
+
+  /// No description provided for @signUpTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Créer un compte'**
+  String get signUpTitle;
+
+  /// No description provided for @passwordLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mot de passe'**
+  String get passwordLabel;
+
+  /// No description provided for @passwordConfirmLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Confirme le mot de passe'**
+  String get passwordConfirmLabel;
+
+  /// No description provided for @passwordsDontMatch.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les deux mots de passe sont différents'**
+  String get passwordsDontMatch;
+
+  /// No description provided for @passwordEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'Saisis un mot de passe'**
+  String get passwordEmpty;
+
+  /// No description provided for @showPassword.
+  ///
+  /// In fr, this message translates to:
+  /// **'Afficher le mot de passe'**
+  String get showPassword;
+
+  /// No description provided for @hidePassword.
+  ///
+  /// In fr, this message translates to:
+  /// **'Masquer le mot de passe'**
+  String get hidePassword;
+
+  /// No description provided for @noAccountYet.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pas encore de compte ? Créer un compte'**
+  String get noAccountYet;
+
+  /// No description provided for @alreadyHaveAccount.
+  ///
+  /// In fr, this message translates to:
+  /// **'Déjà un compte ? Se connecter'**
+  String get alreadyHaveAccount;
+
+  /// No description provided for @confirmEmailSent.
+  ///
+  /// In fr, this message translates to:
+  /// **'Compte créé. Ouvre le lien envoyé à {email} pour confirmer ton adresse, puis connecte-toi ici.'**
+  String confirmEmailSent(String email);
+
+  /// No description provided for @forgotPasswordHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mot de passe oublié : change-le depuis un appareil encore connecté (Paramètres → Mot de passe).'**
+  String get forgotPasswordHelp;
+
+  /// No description provided for @setPassword.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mot de passe'**
+  String get setPassword;
+
+  /// No description provided for @setPasswordHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Définir ou changer le mot de passe du compte'**
+  String get setPasswordHelp;
+
+  /// No description provided for @setPasswordTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouveau mot de passe'**
+  String get setPasswordTitle;
+
+  /// No description provided for @setPasswordDone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mot de passe enregistré'**
+  String get setPasswordDone;
+
   /// No description provided for @signInDone.
   ///
   /// In fr, this message translates to:
   /// **'Connecté. Ta collection locale est envoyée sur ton compte.'**
   String get signInDone;
-
-  /// No description provided for @signInError.
-  ///
-  /// In fr, this message translates to:
-  /// **'Échec : {message}'**
-  String signInError(String message);
 
   /// No description provided for @syncNow.
   ///
@@ -1768,12 +1828,6 @@ abstract class AppLocalizations {
   /// **'Adresse email invalide'**
   String get invalidEmail;
 
-  /// No description provided for @invalidOtp.
-  ///
-  /// In fr, this message translates to:
-  /// **'Colle le lien de l’email ou saisis le code à 6 chiffres'**
-  String get invalidOtp;
-
   /// No description provided for @coverPhoto.
   ///
   /// In fr, this message translates to:
@@ -1785,12 +1839,6 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Photo impossible : {message}'**
   String coverPhotoError(String message);
-
-  /// No description provided for @codeHelper.
-  ///
-  /// In fr, this message translates to:
-  /// **'Dans l’email, copie le lien (appui long ou clic droit → copier l’adresse) sans l’ouvrir, puis colle-le ici. Si l’email contient un code à 6 chiffres, saisis-le.'**
-  String get codeHelper;
 
   /// No description provided for @appearanceSection.
   ///
@@ -2116,17 +2164,35 @@ abstract class AppLocalizations {
   /// **'Le serveur a refusé la demande (détails dans À propos → Journal).'**
   String get errorServer;
 
+  /// No description provided for @errorInvalidCredentials.
+  ///
+  /// In fr, this message translates to:
+  /// **'Email ou mot de passe incorrect.'**
+  String get errorInvalidCredentials;
+
+  /// No description provided for @errorEmailNotConfirmed.
+  ///
+  /// In fr, this message translates to:
+  /// **'Email pas encore confirmé : ouvre le lien reçu par email, puis reconnecte-toi.'**
+  String get errorEmailNotConfirmed;
+
+  /// No description provided for @errorEmailTaken.
+  ///
+  /// In fr, this message translates to:
+  /// **'Un compte existe déjà avec cet email : connecte-toi.'**
+  String get errorEmailTaken;
+
+  /// No description provided for @errorWeakPassword.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mot de passe refusé : trop court ou trop simple.'**
+  String get errorWeakPassword;
+
   /// No description provided for @errorTooManyAttempts.
   ///
   /// In fr, this message translates to:
   /// **'Trop de tentatives : réessaie dans quelques minutes.'**
   String get errorTooManyAttempts;
-
-  /// No description provided for @errorInvalidCode.
-  ///
-  /// In fr, this message translates to:
-  /// **'Code ou lien invalide ou expiré.'**
-  String get errorInvalidCode;
 
   /// No description provided for @errorSignInRefused.
   ///

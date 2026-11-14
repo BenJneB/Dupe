@@ -1,15 +1,19 @@
 import 'dart:async';
 
-import 'package:dupe/core/sync/email_sign_in.dart';
 import 'package:dupe/core/sync/sync_auth.dart';
 
-/// Account accepting the code [validCode] for any email.
+/// Supabase-like accounts in memory: passwords of at least 6 characters,
+/// optional email confirmation ([confirmEmail]).
 class FakeSyncAuth implements SyncAuth {
-  new({this.validCode = '123456', String? signedInAs}) : _email = signedInAs;
+  new({String? signedInAs, this.confirmEmail = false}) : _email = signedInAs {
+    if (signedInAs != null) passwords[signedInAs] = 'secret1';
+  }
 
-  final String validCode;
+  /// Supabase "Confirm email" option.
+  bool confirmEmail;
+  final passwords = <String, String>{};
+  final unconfirmed = <String>{};
   final _changes = StreamController<void>.broadcast();
-  final sentTo = <String>[];
   String? _email;
 
   static const id = '00000000-0000-0000-0000-00000000000a';
@@ -27,20 +31,48 @@ class FakeSyncAuth implements SyncAuth {
   Future<void> restore() async => _changes.add(null);
 
   @override
-  Future<void> sendCode(String email) async => sentTo.add(email);
-
-  /// Accepts [validCode], or a link whose token is [validLinkToken].
-  static const validLinkToken = 'pkce-free-hash';
-
-  @override
-  Future<void> verify(String email, EmailCredential credential) async {
-    final ok = switch (credential) {
-      EmailCode(:final code) => code == validCode,
-      EmailLink(:final tokenHash) => tokenHash == validLinkToken,
-    };
-    if (!ok) throw Exception('Token has expired or is invalid');
+  Future<void> signIn(String email, String password) async {
+    if (passwords[email] != password) {
+      throw const SignInException(SignInFailure.invalidCredentials, 'x');
+    }
+    if (unconfirmed.contains(email)) {
+      throw const SignInException(SignInFailure.emailNotConfirmed, 'x');
+    }
     _email = email;
     _changes.add(null);
+  }
+
+  @override
+  Future<bool> signUp(String email, String password) async {
+    if (passwords.containsKey(email)) {
+      throw const SignInException(SignInFailure.emailTaken, 'x');
+    }
+    _checkStrength(password);
+    passwords[email] = password;
+    if (confirmEmail) {
+      unconfirmed.add(email);
+      return false;
+    }
+    _email = email;
+    _changes.add(null);
+    return true;
+  }
+
+  /// The user opened the confirmation link.
+  void confirm(String email) => unconfirmed.remove(email);
+
+  @override
+  Future<void> setPassword(String password) async {
+    final email = _email;
+    if (email == null) throw StateError('signed out');
+    _checkStrength(password);
+    passwords[email] = password;
+  }
+
+  static void _checkStrength(String password) {
+    if (password.length < 6) {
+      throw const SignInException(SignInFailure.weakPassword, 'x');
+    }
   }
 
   @override

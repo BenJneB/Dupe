@@ -44,7 +44,12 @@ Lancer : `flutter run -d <id> --dart-define-from-file=env.json` (`flutter device
 
 ## Synchro Supabase (téléphone + PC)
 - [ ] Migrations appliquées sur le projet (`supabase/migrations/`).
-- [ ] Connexion par code à 6 chiffres ou lien de l'email collé, sur chaque appareil.
+- [ ] **Avant tout** (compte créé par lien, sans mot de passe) : sur un appareil encore connecté,
+      Paramètres → Mot de passe → définir le mot de passe.
+- [ ] Connexion email + mot de passe sur chaque appareil ; mauvais mot de passe → « Email ou mot de passe incorrect ».
+- [ ] Créer un compte avec un autre email (si l'adresse peut recevoir l'email de Supabase) : lien de
+      confirmation ouvert dans le navigateur, puis connexion OK ; avant confirmation → « pas encore confirmé ».
+- [ ] Le gestionnaire de mots de passe (Android / navigateur) propose d'enregistrer le mot de passe.
 - [ ] Ajout sur le téléphone → visible sur le PC (≤ 30 s ou bouton synchro), et inversement.
 - [ ] Même tome modifié des deux côtés hors ligne → la modification la plus récente gagne.
 - [ ] Suppression propagée.

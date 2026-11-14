@@ -26,7 +26,13 @@ String errorText(AppLocalizations l10n, Object error) => switch (error) {
   SyncException() => l10n.errorServer,
   SignInException(failure: SignInFailure.tooManyAttempts) =>
     l10n.errorTooManyAttempts,
-  SignInException(failure: SignInFailure.invalidCode) => l10n.errorInvalidCode,
+  SignInException(failure: SignInFailure.invalidCredentials) =>
+    l10n.errorInvalidCredentials,
+  SignInException(failure: SignInFailure.emailNotConfirmed) =>
+    l10n.errorEmailNotConfirmed,
+  SignInException(failure: SignInFailure.emailTaken) => l10n.errorEmailTaken,
+  SignInException(failure: SignInFailure.weakPassword) =>
+    l10n.errorWeakPassword,
   SignInException() => l10n.errorSignInRefused,
   BackupFormatException() => l10n.errorNotBackup,
   FileSystemException() => l10n.errorFileAccess,

@@ -45,7 +45,7 @@ d'annulation, restauration qui fusionne) ou ne pas être vérifiable (Windows ja
 Critère : deux appareils qui synchronisent en même temps finissent avec les mêmes données ; une erreur de
 synchro sur le téléphone se retrouve, copiable, dans À propos → Journal.
 
-### Phase 10 — Inscription et connexion par mot de passe
+### Phase 10 — Inscription et connexion par mot de passe ✅ (2026-11-14)
 - **Écran d'inscription** dans l'appli (email, mot de passe, confirmation) : `signUp`. Règles de mot de
   passe = celles du projet Supabase (longueur minimale à lire dans le tableau de bord, ne pas l'inventer).
 - **Connexion** email + mot de passe (`signInWithPassword`) ; lien « Créer un compte » depuis l'écran de
@@ -126,8 +126,9 @@ automatique). Les alertes de sortie restent exclues : aucune source fiable ne co
 
 ## Décisions (utilisateur, 2026-11-14)
 
-- Phase 10 : **écran d'inscription dans l'appli** (inscriptions ouvertes côté Supabase). Reste à trancher au
-  début de la phase : confirmation d'email gardée (lien) ou désactivée.
+- Phase 10 : **écran d'inscription dans l'appli** (inscriptions ouvertes côté Supabase). Confirmation d'email :
+  l'appli gère les deux réglages ; le choix se fait dans le tableau de bord Supabase. Ajout non prévu : « Mot de
+  passe » dans Paramètres, indispensable pour le compte existant créé par lien (sans mot de passe).
 - Phase 11 : sauvegarde automatique **hebdomadaire, 8 gardées** (plus celles prises avant import/restauration).
 - Phase 12 : dépôt **public** → Releases GitHub publiques, vérification des nouvelles versions par l'API
   GitHub. **Signaler les nouvelles versions : oui.** Reste à trancher avant la première Release : clé Comic

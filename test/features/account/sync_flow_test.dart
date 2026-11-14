@@ -18,17 +18,46 @@ import '../../helpers/scan_helpers.dart';
 ProviderContainer containerOf(WidgetTester tester) =>
     ProviderScope.containerOf(tester.element(find.byType(Scaffold).first));
 
+/// Fills the sign-in / sign-up form and submits it.
+Future<void> fillSignIn(
+  WidgetTester tester,
+  String email,
+  String password, {
+  String? confirm,
+}) async {
+  await tester.enterText(find.byKey(const Key('emailField')), email);
+  await tester.enterText(
+    find.descendant(
+      of: find.byKey(const Key('passwordField')),
+      matching: find.byType(TextField),
+    ),
+    password,
+  );
+  if (confirm != null) {
+    await tester.enterText(
+      find.descendant(
+        of: find.byKey(const Key('passwordConfirmField')),
+        matching: find.byType(TextField),
+      ),
+      confirm,
+    );
+  }
+  await tester.pump();
+  await tester.tap(find.byKey(const Key('submitButton')));
+  await tester.pumpAndSettle();
+}
+
 Future<void> openSettings(WidgetTester tester) async {
   containerOf(tester).read(appRouterProvider).go(AppRoutes.settings);
   await tester.pumpAndSettle();
 }
 
 void main() {
-  testWidgets('sign in with a code: the local collection is uploaded', (
+  testWidgets('sign up (email to confirm): the local collection is uploaded', (
     tester,
   ) async {
     final remote = FakeSyncRemote();
-    final auth = FakeSyncAuth();
+    final auth = FakeSyncAuth(confirmEmail: true);
     await pumpApp(
       tester,
       overrides: [
@@ -46,26 +75,21 @@ void main() {
 
     await tester.tap(find.byKey(const Key('signInTile')));
     await tester.pumpAndSettle();
-    await tester.enterText(
-      find.byKey(const Key('emailField')),
-      'moi@exemple.be',
-    );
-    await tester.tap(find.byKey(const Key('sendCodeButton')));
+    await tester.tap(find.byKey(const Key('toggleModeButton')));
     await tester.pumpAndSettle();
-    expect(auth.sentTo, ['moi@exemple.be']);
+    await fillSignIn(tester, 'moi@exemple.be', 'secret1', confirm: 'secret2');
+    expect(find.text('Les deux mots de passe sont différents'), findsOneWidget);
 
-    await tester.enterText(find.byKey(const Key('codeField')), '000000');
-    await tester.tap(find.byKey(const Key('verifyCodeButton')));
+    await fillSignIn(tester, 'moi@exemple.be', 'secret1', confirm: 'secret1');
+    expect(find.byKey(const Key('signInInfo')), findsOneWidget);
+    // Back in sign-in mode, fields kept: signing in before confirming fails.
+    expect(find.byKey(const Key('passwordConfirmField')), findsNothing);
+    await tester.tap(find.byKey(const Key('submitButton')));
     await tester.pumpAndSettle();
-    expect(find.byKey(const Key('signInError')), findsOneWidget);
+    expect(find.textContaining('pas encore confirmé'), findsOneWidget);
 
-    // The default Supabase email only has a link: it is pasted.
-    await tester.enterText(
-      find.byKey(const Key('codeField')),
-      'https://x.supabase.co/auth/v1/verify'
-      '?token=${FakeSyncAuth.validLinkToken}&type=signup&redirect_to=x',
-    );
-    await tester.tap(find.byKey(const Key('verifyCodeButton')));
+    auth.confirm('moi@exemple.be');
+    await tester.tap(find.byKey(const Key('submitButton')));
     await tester.pumpAndSettle();
 
     expect(find.text('Connecté : moi@exemple.be'), findsOneWidget);
