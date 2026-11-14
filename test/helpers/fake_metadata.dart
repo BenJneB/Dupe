@@ -7,6 +7,7 @@ class FakeProvider implements MetadataProvider {
   new(
     this.source, {
     this.isbnResult,
+    this.byIsbn = const {},
     this.textResults = const [],
     this.error,
     this.delay,
@@ -15,6 +16,9 @@ class FakeProvider implements MetadataProvider {
   @override
   final MetadataSource source;
   final MetadataResult? isbnResult;
+
+  /// Per-ISBN answers; other ISBNs get [isbnResult].
+  final Map<String, MetadataResult> byIsbn;
   final List<MetadataResult> textResults;
   final Exception? error;
   final Duration? delay;
@@ -31,7 +35,8 @@ class FakeProvider implements MetadataProvider {
   }
 
   @override
-  Future<MetadataResult?> searchByIsbn(String isbn13) => _answer(isbnResult);
+  Future<MetadataResult?> searchByIsbn(String isbn13) =>
+      _answer(byIsbn[isbn13] ?? isbnResult);
 
   @override
   Future<List<MetadataResult>> searchByText(String query) =>

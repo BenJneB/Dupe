@@ -1,4 +1,6 @@
 import 'package:dupe/core/database/app_database.dart';
+import 'package:dupe/core/database/local_stores.dart';
+import 'package:dupe/core/metadata/response_store.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
 
@@ -19,3 +21,12 @@ DateTime Function() clock(Ref ref) => DateTime.now;
 /// Client-side id generator (UUID v7: time-ordered, index friendly).
 @Riverpod(keepAlive: true)
 String Function() idGenerator(Ref ref) => const Uuid().v7;
+
+@Riverpod(keepAlive: true)
+AppSettingsStore appSettingsStore(Ref ref) =>
+    AppSettingsStore(ref.watch(appDatabaseProvider));
+
+/// On-disk cache of metadata source answers.
+@Riverpod(keepAlive: true)
+ResponseStore responseStore(Ref ref) =>
+    DriftResponseStore(ref.watch(appDatabaseProvider));

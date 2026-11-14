@@ -853,13 +853,13 @@ abstract class AppLocalizations {
   /// No description provided for @starterCollectionSubtitle.
   ///
   /// In fr, this message translates to:
-  /// **'One Piece, Dreamland, Naheulbeuk, Batman, Les Fourmis, Fabien Olicard (sans doublons)'**
+  /// **'Dreamland, Naheulbeuk, Batman, Les Fourmis, Fabien Olicard (sans doublons, complète les ISBN)'**
   String get starterCollectionSubtitle;
 
   /// No description provided for @starterCollectionImported.
   ///
   /// In fr, this message translates to:
-  /// **'{count, plural, =0{Rien à importer : déjà présent} =1{1 élément importé} other{{count} éléments importés}}'**
+  /// **'{count, plural, =0{Rien à faire : déjà à jour} =1{1 modification} other{{count} modifications}}'**
   String starterCollectionImported(int count);
 
   /// No description provided for @search.
@@ -1029,6 +1029,246 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Titre de la série'**
   String get seriesLookupHint;
+
+  /// No description provided for @storeOwned.
+  ///
+  /// In fr, this message translates to:
+  /// **'Déjà possédé'**
+  String get storeOwned;
+
+  /// No description provided for @storeWished.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dans ta liste d’envies'**
+  String get storeWished;
+
+  /// No description provided for @storeSeriesNotOwned.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pas encore possédé'**
+  String get storeSeriesNotOwned;
+
+  /// No description provided for @storeUnknown.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pas dans ta collection'**
+  String get storeUnknown;
+
+  /// No description provided for @storeVolumeOf.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tome {volume} de {series}'**
+  String storeVolumeOf(String volume, String series);
+
+  /// No description provided for @storeYouHave.
+  ///
+  /// In fr, this message translates to:
+  /// **'tu as {list}'**
+  String storeYouHave(String list);
+
+  /// No description provided for @storeYouHaveNone.
+  ///
+  /// In fr, this message translates to:
+  /// **'tu n’en as aucun'**
+  String get storeYouHaveNone;
+
+  /// No description provided for @storePurchasedOn.
+  ///
+  /// In fr, this message translates to:
+  /// **'Acheté le {date}'**
+  String storePurchasedOn(String date);
+
+  /// No description provided for @storeLocation.
+  ///
+  /// In fr, this message translates to:
+  /// **'Emplacement : {location}'**
+  String storeLocation(String location);
+
+  /// No description provided for @storeMaxPrice.
+  ///
+  /// In fr, this message translates to:
+  /// **'Prix max : {price}'**
+  String storeMaxPrice(String price);
+
+  /// No description provided for @storeSearching.
+  ///
+  /// In fr, this message translates to:
+  /// **'Recherche en ligne…'**
+  String get storeSearching;
+
+  /// No description provided for @storeOffline.
+  ///
+  /// In fr, this message translates to:
+  /// **'Hors ligne : seule ta collection a été vérifiée'**
+  String get storeOffline;
+
+  /// No description provided for @storeIsbnRemembered.
+  ///
+  /// In fr, this message translates to:
+  /// **'ISBN mémorisé sur ce tome pour les prochains scans'**
+  String get storeIsbnRemembered;
+
+  /// No description provided for @storeDetails.
+  ///
+  /// In fr, this message translates to:
+  /// **'Détails'**
+  String get storeDetails;
+
+  /// No description provided for @scanModeStore.
+  ///
+  /// In fr, this message translates to:
+  /// **'Magasin'**
+  String get scanModeStore;
+
+  /// No description provided for @scanModeBurst.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rafale'**
+  String get scanModeBurst;
+
+  /// No description provided for @burstQueued.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouté à la file ({count})'**
+  String burstQueued(int count);
+
+  /// No description provided for @burstAlreadyQueued.
+  ///
+  /// In fr, this message translates to:
+  /// **'Déjà dans la file'**
+  String get burstAlreadyQueued;
+
+  /// No description provided for @burstHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Scanne les ouvrages à la suite : les infos sont cherchées en arrière-plan, tu valides ensuite.'**
+  String get burstHint;
+
+  /// No description provided for @burstReview.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =0{File vide} other{Revoir ({count})}}'**
+  String burstReview(int count);
+
+  /// No description provided for @burstProgress.
+  ///
+  /// In fr, this message translates to:
+  /// **'{done}/{total} recherchés'**
+  String burstProgress(int done, int total);
+
+  /// No description provided for @scanReviewTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Revue de la rafale'**
+  String get scanReviewTitle;
+
+  /// No description provided for @reviewPending.
+  ///
+  /// In fr, this message translates to:
+  /// **'Recherche…'**
+  String get reviewPending;
+
+  /// No description provided for @reviewNotFound.
+  ///
+  /// In fr, this message translates to:
+  /// **'Introuvable : appuie pour chercher'**
+  String get reviewNotFound;
+
+  /// No description provided for @reviewFailed.
+  ///
+  /// In fr, this message translates to:
+  /// **'Échec (hors ligne ?) : appuie pour chercher'**
+  String get reviewFailed;
+
+  /// No description provided for @reviewInCollection.
+  ///
+  /// In fr, this message translates to:
+  /// **'Déjà dans ta collection'**
+  String get reviewInCollection;
+
+  /// No description provided for @reviewNewSeries.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouvelle série « {title} »'**
+  String reviewNewSeries(String title);
+
+  /// No description provided for @reviewAddAll.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =0{Rien à ajouter} =1{Ajouter 1 ouvrage} other{Ajouter {count} ouvrages}}'**
+  String reviewAddAll(int count);
+
+  /// No description provided for @reviewAdded.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =0{Aucun ouvrage ajouté} =1{1 ouvrage ajouté} other{{count} ouvrages ajoutés}}'**
+  String reviewAdded(int count);
+
+  /// No description provided for @reviewRetry.
+  ///
+  /// In fr, this message translates to:
+  /// **'Relancer les échecs'**
+  String get reviewRetry;
+
+  /// No description provided for @reviewEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'La file est vide. Passe en mode Rafale sur l’écran Scanner pour la remplir.'**
+  String get reviewEmpty;
+
+  /// No description provided for @reviewRemoved.
+  ///
+  /// In fr, this message translates to:
+  /// **'Retiré de la file'**
+  String get reviewRemoved;
+
+  /// No description provided for @reviewEditHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Appuie sur un ouvrage pour le corriger avant de l’ajouter'**
+  String get reviewEditHint;
+
+  /// No description provided for @settingsSources.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sources de données'**
+  String get settingsSources;
+
+  /// No description provided for @sourceNeedsKey.
+  ///
+  /// In fr, this message translates to:
+  /// **'Clé API absente de env.json'**
+  String get sourceNeedsKey;
+
+  /// No description provided for @sourceBnfHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Catalogue de la BnF : éditions françaises, prix, séries'**
+  String get sourceBnfHelp;
+
+  /// No description provided for @sourceGoogleBooksHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Couvertures et résumés'**
+  String get sourceGoogleBooksHelp;
+
+  /// No description provided for @sourceOpenLibraryHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Livres, couvertures'**
+  String get sourceOpenLibraryHelp;
+
+  /// No description provided for @sourceComicVineHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Comics US : séries et numéros'**
+  String get sourceComicVineHelp;
+
+  /// No description provided for @sourceAnilistHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mangas : infos de série (nombre de tomes, statut)'**
+  String get sourceAnilistHelp;
 }
 
 class _AppLocalizationsDelegate

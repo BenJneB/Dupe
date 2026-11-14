@@ -1,5 +1,3 @@
-import 'package:dupe/core/database/app_database.dart';
-import 'package:dupe/features/collection/data/collection_repository.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
 import 'package:dupe/features/collection/domain/series.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -7,20 +5,12 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../../helpers/app_harness.dart';
 import '../../../helpers/fake_sources.dart';
-
-final linux = TargetPlatformVariant.only(TargetPlatform.linux);
-
-var _id = 0;
-CollectionRepository repoOf(AppDatabase db) =>
-    CollectionRepository(db, now: DateTime.now, newId: () => 'seed-${_id++}');
+import '../../../helpers/scan_helpers.dart';
 
 /// Scan [isbn] from the Mangas tab and add the result to the collection.
 Future<void> scanAndAdd(WidgetTester tester, String isbn) async {
-  await tester.tap(find.byKey(const Key('scanFab')));
-  await tester.pumpAndSettle();
-  await tester.enterText(find.byKey(const Key('codeEntryField')), isbn);
-  await tester.testTextInput.receiveAction(TextInputAction.search);
-  await tester.pumpAndSettle();
+  await openScan(tester);
+  await typeCode(tester, isbn);
   await tester.tap(find.byKey(const Key('addOwned')));
   await tester.pumpAndSettle();
 }

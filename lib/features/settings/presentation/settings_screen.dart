@@ -1,5 +1,7 @@
+import 'package:dupe/core/database/database_provider.dart';
 import 'package:dupe/features/collection/data/collection_repository.dart';
 import 'package:dupe/features/settings/data/starter_collection.dart';
+import 'package:dupe/features/settings/presentation/sources_section.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
@@ -13,6 +15,7 @@ class SettingsScreen extends ConsumerWidget {
     final messenger = ScaffoldMessenger.of(context);
     final created = await seedStarterCollection(
       ref.read(collectionRepositoryProvider),
+      ref.read(appSettingsStoreProvider),
     );
     messenger.showSnackBar(
       SnackBar(content: Text(l10n.starterCollectionImported(created))),
@@ -33,6 +36,8 @@ class SettingsScreen extends ConsumerWidget {
             subtitle: Text(l10n.starterCollectionSubtitle),
             onTap: () => _seed(context, ref),
           ),
+          const Divider(),
+          const SourcesSection(),
         ],
       ),
     );

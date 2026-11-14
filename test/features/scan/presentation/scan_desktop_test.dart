@@ -3,29 +3,23 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../../helpers/app_harness.dart';
 import '../../../helpers/fake_sources.dart';
-
-/// flutter_test defaults to Android, which shows the camera instead.
-final linux = TargetPlatformVariant.only(TargetPlatform.linux);
+import '../../../helpers/scan_helpers.dart';
 
 void main() {
-  testWidgets('desktop: typed or USB-scanned ISBN opens the lookup', (
-    tester,
-  ) async {
+  testWidgets('desktop: a typed or USB-scanned unknown ISBN shows the online '
+      'result with add buttons', (tester) async {
     await pumpApp(
       tester,
       size: desktopSize,
       overrides: [fakeMetadataSources()],
     );
 
-    await tester.tap(find.byKey(const Key('scanFab')));
-    await tester.pumpAndSettle();
-    // A USB reader types the digits then Enter.
-    await tester.enterText(find.byKey(const Key('codeEntryField')), duneIsbn);
-    await tester.testTextInput.receiveAction(TextInputAction.search);
-    await tester.pumpAndSettle();
+    await openScan(tester);
+    await typeCode(tester, duneIsbn);
 
-    expect(find.byKey(const Key('isbnResultTitle')), findsOneWidget);
+    expect(find.byKey(const Key('store_unknown')), findsOneWidget);
     expect(find.text('Dune'), findsOneWidget);
+    expect(find.byKey(const Key('addOwned')), findsOneWidget);
   }, variant: linux);
 
   testWidgets('a non-ISBN code shows an error and stays on the scan screen', (
@@ -33,11 +27,8 @@ void main() {
   ) async {
     await pumpApp(tester, size: desktopSize);
 
-    await tester.tap(find.byKey(const Key('scanFab')));
-    await tester.pumpAndSettle();
-    await tester.enterText(find.byKey(const Key('codeEntryField')), '1234');
-    await tester.testTextInput.receiveAction(TextInputAction.search);
-    await tester.pumpAndSettle();
+    await openScan(tester);
+    await typeCode(tester, '1234');
 
     expect(find.text('Code « 1234 » non reconnu comme ISBN'), findsOneWidget);
     expect(find.byKey(const Key('codeEntryField')), findsOneWidget);

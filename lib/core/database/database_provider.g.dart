@@ -157,3 +157,95 @@ final class IdGeneratorProvider
 }
 
 String _$idGeneratorHash() => r'd6d383eff8fa4cdc20f04ac3b720942b8f184642';
+
+@ProviderFor(appSettingsStore)
+final appSettingsStoreProvider = AppSettingsStoreProvider._();
+
+final class AppSettingsStoreProvider
+    extends
+        $FunctionalProvider<
+          AppSettingsStore,
+          AppSettingsStore,
+          AppSettingsStore
+        >
+    with $Provider<AppSettingsStore> {
+  AppSettingsStoreProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'appSettingsStoreProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$appSettingsStoreHash();
+
+  @$internal
+  @override
+  $ProviderElement<AppSettingsStore> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  AppSettingsStore create(Ref ref) {
+    return appSettingsStore(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(AppSettingsStore value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<AppSettingsStore>(value),
+    );
+  }
+}
+
+String _$appSettingsStoreHash() => r'280d649999e65d0d6d4a942c57021d5daf0c7b29';
+
+/// On-disk cache of metadata source answers.
+
+@ProviderFor(responseStore)
+final responseStoreProvider = ResponseStoreProvider._();
+
+/// On-disk cache of metadata source answers.
+
+final class ResponseStoreProvider
+    extends $FunctionalProvider<ResponseStore, ResponseStore, ResponseStore>
+    with $Provider<ResponseStore> {
+  /// On-disk cache of metadata source answers.
+  ResponseStoreProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'responseStoreProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$responseStoreHash();
+
+  @$internal
+  @override
+  $ProviderElement<ResponseStore> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  ResponseStore create(Ref ref) {
+    return responseStore(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(ResponseStore value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<ResponseStore>(value),
+    );
+  }
+}
+
+String _$responseStoreHash() => r'33a90ebcac0beb80706c397098d713a9567a0f9d';

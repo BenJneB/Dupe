@@ -49,14 +49,12 @@ final class HttpClientProvider extends $FunctionalProvider<Dio, Dio, Dio>
 
 String _$httpClientHash() => r'4e10180a0be3b42289df3288b73be60ec95dc7c5';
 
-/// All metadata sources. Google Books is only used with an API key
-/// (GOOGLE_BOOKS_API_KEY in env.json): without one it answers HTTP 429.
+/// Enabled metadata sources, with the on-disk response cache.
 
 @ProviderFor(metadataAggregator)
 final metadataAggregatorProvider = MetadataAggregatorProvider._();
 
-/// All metadata sources. Google Books is only used with an API key
-/// (GOOGLE_BOOKS_API_KEY in env.json): without one it answers HTTP 429.
+/// Enabled metadata sources, with the on-disk response cache.
 
 final class MetadataAggregatorProvider
     extends
@@ -66,8 +64,7 @@ final class MetadataAggregatorProvider
           MetadataAggregator
         >
     with $Provider<MetadataAggregator> {
-  /// All metadata sources. Google Books is only used with an API key
-  /// (GOOGLE_BOOKS_API_KEY in env.json): without one it answers HTTP 429.
+  /// Enabled metadata sources, with the on-disk response cache.
   MetadataAggregatorProvider._()
     : super(
         from: null,
@@ -103,19 +100,19 @@ final class MetadataAggregatorProvider
 }
 
 String _$metadataAggregatorHash() =>
-    r'584248f4914c59d2582c0077afe5d58473741291';
+    r'0d53afe50685db6a8ce8beab44a2fc52fb24db61';
 
-/// Series-level sources (AniList, Comic Vine when a key is set).
+/// Enabled series-level sources (AniList, Comic Vine).
 
 @ProviderFor(seriesLookup)
 final seriesLookupProvider = SeriesLookupProvider._();
 
-/// Series-level sources (AniList, Comic Vine when a key is set).
+/// Enabled series-level sources (AniList, Comic Vine).
 
 final class SeriesLookupProvider
     extends $FunctionalProvider<SeriesLookup, SeriesLookup, SeriesLookup>
     with $Provider<SeriesLookup> {
-  /// Series-level sources (AniList, Comic Vine when a key is set).
+  /// Enabled series-level sources (AniList, Comic Vine).
   SeriesLookupProvider._()
     : super(
         from: null,
@@ -149,4 +146,4 @@ final class SeriesLookupProvider
   }
 }
 
-String _$seriesLookupHash() => r'21ccfd1627d6e1f3826f9ae37103586863091672';
+String _$seriesLookupHash() => r'76b3df2d441db7c89fcadd058d7ad9ec912c750d';

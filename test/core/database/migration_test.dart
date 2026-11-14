@@ -1,0 +1,28 @@
+import 'package:drift_dev/api/migrations_native.dart';
+import 'package:dupe/core/database/app_database.dart';
+import 'package:flutter_test/flutter_test.dart';
+
+import 'generated/schema.dart';
+
+void main() {
+  late SchemaVerifier verifier;
+
+  setUpAll(() => verifier = SchemaVerifier(GeneratedHelper()));
+
+  test('v1 -> v2 creates the local tables and keeps the collection', () async {
+    final schema = await verifier.schemaAt(1);
+    schema.rawDatabase.execute(
+      'INSERT INTO series (id, created_at, updated_at, type, title) '
+      "VALUES ('s1', '2026-01-01T00:00:00.000Z', '2026-01-01T00:00:00.000Z', "
+      "'manga', 'One Piece')",
+    );
+    final db = AppDatabase(schema.newConnection());
+
+    await verifier.migrateAndValidate(db, 2);
+
+    final series = await db.select(db.seriesTable).getSingle();
+    expect(series.title, 'One Piece');
+    expect(await db.select(db.scanQueueTable).get(), isEmpty);
+    await db.close();
+  });
+}

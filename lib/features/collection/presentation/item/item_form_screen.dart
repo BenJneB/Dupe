@@ -4,12 +4,12 @@ import 'package:dupe/app/router.dart';
 import 'package:dupe/app/widgets/form_helpers.dart';
 import 'package:dupe/core/utils/formatters.dart';
 import 'package:dupe/features/collection/data/collection_repository.dart';
+import 'package:dupe/features/collection/data/item_drafts.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
 import 'package:dupe/features/collection/domain/enums.dart';
 import 'package:dupe/features/collection/domain/item.dart';
 import 'package:dupe/features/collection/domain/metadata_mapping.dart';
 import 'package:dupe/features/collection/domain/series_attachment.dart';
-import 'package:dupe/features/collection/presentation/item/item_draft_loader.dart';
 import 'package:dupe/features/collection/presentation/item/item_form_controllers.dart';
 import 'package:dupe/features/collection/presentation/item/item_reading_fields.dart';
 import 'package:dupe/features/collection/presentation/item/item_text_input.dart';
@@ -28,6 +28,7 @@ class ItemFormScreen extends ConsumerStatefulWidget {
     this.seriesId,
     this.volumeNumber,
     this.prefill,
+    this.popOnSave = false,
     super.key,
   });
 
@@ -42,6 +43,10 @@ class ItemFormScreen extends ConsumerStatefulWidget {
 
   /// For a new item: metadata from an online result.
   final ItemPrefill? prefill;
+
+  /// Return to the previous screen on save (burst review) instead of
+  /// opening the series or the new item.
+  final bool popOnSave;
 
   @override
   ConsumerState<ItemFormScreen> createState() => _ItemFormScreenState();
@@ -98,7 +103,9 @@ class _ItemFormScreenState extends ConsumerState<ItemFormScreen> {
     await repo.saveItem(item);
     if (!mounted) return;
     final seriesId = item.seriesId;
-    if (widget.prefill != null && seriesId != null) {
+    if (widget.popOnSave) {
+      context.pop();
+    } else if (widget.prefill != null && seriesId != null) {
       // Scanned volume: show it in its series grid.
       context.pushReplacement(AppRoutes.series(item.type, seriesId));
     } else if (_isNew && seriesId == null) {

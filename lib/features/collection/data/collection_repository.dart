@@ -192,6 +192,9 @@ class CollectionRepository {
     _db.itemsTable,
   )..where((t) => t.id.equals(id) & t.deletedAt.isNull())).watchSingleOrNull();
 
+  Future<List<Item>> listSeriesItems(String seriesId) =>
+      _activeItemsOfSeries(seriesId).get();
+
   Stream<List<Item>> watchSeriesItems(String seriesId) =>
       _activeItemsOfSeries(seriesId).watch().map(
         (items) => items
@@ -211,7 +214,9 @@ class CollectionRepository {
     final s = _db.seriesTable;
     final i = _db.itemsTable;
     final activeItem = i.deletedAt.isNull();
-    final ownedCount = i.id.count(
+    // Distinct volumes: several copies (editions) of a volume count once.
+    final ownedCount = coalesce([i.volumeNumber, i.id]).count(
+      distinct: true,
       filter: activeItem & i.ownership.equalsValue(Ownership.possede),
     );
     final itemCount = i.id.count(filter: activeItem);
