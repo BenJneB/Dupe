@@ -1,4 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dupe/features/covers/data/cover_photos.dart';
+import 'package:dupe/features/covers/presentation/user_cover_image.dart';
 import 'package:material_ui/material_ui.dart';
 
 /// Cover thumbnail with a placeholder when missing or failing to load.
@@ -31,6 +33,11 @@ class CoverImage extends StatelessWidget {
         height: height,
         child: value == null || value.isEmpty
             ? placeholder
+            : CoverPhotos.isUserCover(value)
+            ? UserCoverImage(
+                name: CoverPhotos.nameOf(value)!,
+                placeholder: placeholder,
+              )
             : CachedNetworkImage(
                 imageUrl: value,
                 fit: BoxFit.cover,

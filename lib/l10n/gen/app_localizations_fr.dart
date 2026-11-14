@@ -989,4 +989,107 @@ class AppLocalizationsFr extends AppLocalizations {
   String statsRatio(int count, int total) {
     return '$count sur $total';
   }
+
+  @override
+  String get accountSection => 'Compte et synchronisation';
+
+  @override
+  String get syncLocalOnly => 'Synchronisation non configurée';
+
+  @override
+  String get syncLocalOnlyHelp =>
+      'Renseigne SUPABASE_URL et SUPABASE_ANON_KEY dans env.json. L’appli fonctionne entièrement sans compte.';
+
+  @override
+  String get signIn => 'Se connecter';
+
+  @override
+  String get signInHelp =>
+      'Synchronise ta collection entre ton téléphone et ton PC';
+
+  @override
+  String get signOut => 'Se déconnecter';
+
+  @override
+  String get signInTitle => 'Connexion';
+
+  @override
+  String get emailLabel => 'Adresse email';
+
+  @override
+  String get sendCode => 'Recevoir un code';
+
+  @override
+  String codeSent(String email) {
+    return 'Email envoyé à $email.';
+  }
+
+  @override
+  String get codeLabel => 'Code ou lien reçu par email';
+
+  @override
+  String get verifyCode => 'Se connecter';
+
+  @override
+  String get changeEmail => 'Changer d’adresse';
+
+  @override
+  String signedInAs(String email) {
+    return 'Connecté : $email';
+  }
+
+  @override
+  String get signInDone =>
+      'Connecté. Ta collection locale est envoyée sur ton compte.';
+
+  @override
+  String signInError(String message) {
+    return 'Échec : $message';
+  }
+
+  @override
+  String get syncNow => 'Synchroniser maintenant';
+
+  @override
+  String get syncIdle => 'Synchronisé';
+
+  @override
+  String syncIdleAt(String time) {
+    return 'Synchronisé à $time';
+  }
+
+  @override
+  String get syncRunning => 'Synchronisation…';
+
+  @override
+  String get syncOffline =>
+      'Hors ligne : les modifications seront envoyées au retour du réseau';
+
+  @override
+  String syncFailed(String message) {
+    return 'Erreur de synchronisation : $message';
+  }
+
+  @override
+  String get syncSignedOut =>
+      'Non connecté : données sur cet appareil seulement';
+
+  @override
+  String get invalidEmail => 'Adresse email invalide';
+
+  @override
+  String get invalidOtp =>
+      'Colle le lien de l’email ou saisis le code à 6 chiffres';
+
+  @override
+  String get coverPhoto => 'Photographier la couverture';
+
+  @override
+  String coverPhotoError(String message) {
+    return 'Photo impossible : $message';
+  }
+
+  @override
+  String get codeHelper =>
+      'Dans l’email, copie le lien (appui long ou clic droit → copier l’adresse) sans l’ouvrir, puis colle-le ici. Si l’email contient un code à 6 chiffres, saisis-le.';
 }

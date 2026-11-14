@@ -641,5 +641,75 @@
         "type": "int"
       }
     }
-  }
+  },
+  "accountSection": "Compte et synchronisation",
+  "syncLocalOnly": "Synchronisation non configurée",
+  "syncLocalOnlyHelp": "Renseigne SUPABASE_URL et SUPABASE_ANON_KEY dans env.json. L’appli fonctionne entièrement sans compte.",
+  "signIn": "Se connecter",
+  "signInHelp": "Synchronise ta collection entre ton téléphone et ton PC",
+  "signOut": "Se déconnecter",
+  "signInTitle": "Connexion",
+  "emailLabel": "Adresse email",
+  "sendCode": "Recevoir un code",
+  "codeSent": "Email envoyé à {email}.",
+  "@codeSent": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "codeLabel": "Code ou lien reçu par email",
+  "verifyCode": "Se connecter",
+  "changeEmail": "Changer d’adresse",
+  "signedInAs": "Connecté : {email}",
+  "@signedInAs": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "signInDone": "Connecté. Ta collection locale est envoyée sur ton compte.",
+  "signInError": "Échec : {message}",
+  "@signInError": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "syncNow": "Synchroniser maintenant",
+  "syncIdle": "Synchronisé",
+  "syncIdleAt": "Synchronisé à {time}",
+  "@syncIdleAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "syncRunning": "Synchronisation…",
+  "syncOffline": "Hors ligne : les modifications seront envoyées au retour du réseau",
+  "syncFailed": "Erreur de synchronisation : {message}",
+  "@syncFailed": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "syncSignedOut": "Non connecté : données sur cet appareil seulement",
+  "invalidEmail": "Adresse email invalide",
+  "invalidOtp": "Colle le lien de l’email ou saisis le code à 6 chiffres",
+  "coverPhoto": "Photographier la couverture",
+  "coverPhotoError": "Photo impossible : {message}",
+  "@coverPhotoError": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "codeHelper": "Dans l’email, copie le lien (appui long ou clic droit → copier l’adresse) sans l’ouvrir, puis colle-le ici. Si l’email contient un code à 6 chiffres, saisis-le."
 }

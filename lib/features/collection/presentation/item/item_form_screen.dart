@@ -157,7 +157,7 @@ class _ItemFormScreenState extends ConsumerState<ItemFormScreen> {
                     attachment: _attachment,
                     onChanged: (a) => setState(() => _attachment = a),
                   ),
-                  ItemGeneralFields(_c),
+                  ItemGeneralFields(_c, itemId: _original!.id),
                   ItemReadingFields(_c, onChanged: () => setState(() {})),
                   FormSection(l10n.sectionCopy),
                   SwitchListTile(

@@ -50,4 +50,4 @@ final class CollectionStatsProvider
   }
 }
 
-String _$collectionStatsHash() => r'76c3a020ed48ece31b62fbd0b92ea910820a0c76';
+String _$collectionStatsHash() => r'953c61753da373e2bc3e1ee773316bf1e0f9e48b';

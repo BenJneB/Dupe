@@ -1,4 +1,5 @@
 import 'package:dupe/app/router.dart';
+import 'package:dupe/features/account/presentation/sync_status_icon.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
@@ -34,6 +35,7 @@ class GlobalSearchBar extends StatelessWidget {
                     ),
                   ),
                 ),
+                const SyncStatusIcon(),
               ],
             ),
           ),
