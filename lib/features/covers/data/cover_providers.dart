@@ -30,10 +30,22 @@ CoverStore? coverStore(Ref ref) {
 /// Local file of a user photo, downloaded on first display on another
 /// device; null when unavailable (offline, not signed in).
 @riverpod
-Future<File?> userCoverFile(Ref ref, String name) async {
-  final file = await ref.watch(coverPhotosProvider).fileOf(name);
+Future<File?> userCoverFile(Ref ref, String name) => ensureUserCover(
+  ref.watch(coverPhotosProvider),
+  ref.watch(coverStoreProvider),
+  name,
+);
+
+/// Local file of the user photo [name], downloaded from [store] when
+/// missing; null when unavailable.
+Future<File?> ensureUserCover(
+  CoverPhotos photos,
+  CoverStore? store,
+  String name,
+) async {
+  final file = await photos.fileOf(name);
   if (file.existsSync()) return file;
-  final bytes = await ref.watch(coverStoreProvider)?.download(name);
+  final bytes = await store?.download(name);
   if (bytes == null) return null;
   await file.parent.create(recursive: true);
   return await file.writeAsBytes(bytes, flush: true);

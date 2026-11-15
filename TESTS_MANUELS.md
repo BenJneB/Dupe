@@ -1,13 +1,13 @@
 # Dupe — Tests manuels
 
-> Document autonome, à jour au **2026-11-14**. Dupe est une appli Flutter personnelle de catalogue de
+> Document autonome, à jour au **2026-11-15**. Dupe est une appli Flutter personnelle de catalogue de
 > collection (mangas, BD, comics, livres) pour Android, Linux et Windows, avec synchro Supabase optionnelle.
 > Contexte : `PLAN_V2.md` (phases 9-13) et `PLAN_V3.md`. Une petite partie de ces tests est faite **maintenant**
 > (phase 14, vérifications de base) ; tout le reste l'est à la fin (**phase 21, recette finale**), sur la version
 > finale. Les phases 15 à 20 ajoutent leurs tests ici et marquent « automatisé (phase N) » ceux que leurs tests
 > automatiques couvrent désormais.
 
-Ce fichier liste ce que les **168 tests automatiques ne couvrent pas** : matériel (caméra, vibrations,
+Ce fichier liste ce que les **203 tests automatiques (et 4 parcours d'intégration) ne couvrent pas** : matériel (caméra, vibrations,
 notifications, raccourci), services réels (Supabase, API GitHub, sources de métadonnées), plateformes non
 compilées ici (Windows) et workflows GitHub (jamais exécutés).
 
@@ -61,6 +61,8 @@ Tous les tests non faits en phase 14 et non marqués « automatisé ». Le but :
 7d. **Horloge** (phase 17) : `S-13`.
 7e. **Hooks et intégration** (phase 18) : `H-01` à `H-04`, `Y-15`.
 7f. **Widget et dictée** (phase 19, téléphone) : `G-01` à `G-04`, `V-01` à `V-04`.
+7g. **Couvertures, stats, envies** (phase 20) : `O-01` à `O-04` (`O-02` en mode avion), `T-01`, `T-02`,
+   `E-01` à `E-03`.
 8. **Le lendemain / plus tard** : `N-01` à `N-04` ; `M-12` chronométré en magasin ; `Y-06` (observation sur
    plusieurs semaines) ; `J-06` (facultatif, met le projet en pause).
 
@@ -266,3 +268,29 @@ une seule fois. Simulés : le plugin du widget et le micro.
       arrête l'écoute.
 - [ ] **V-04** Windows : la dictée fonctionne (reconnaissance vocale de Windows) ; Linux : pas de bouton micro.
 
+
+## 14. Couvertures hors ligne, stats de lecture, partage des envies (phase 20)
+Automatisé (phase 20) : préchargement (chaque couverture une fois, photos `dupe-cover:` comprises, lignes
+supprimées ignorées, échecs comptés et retentés au passage suivant), Wi-Fi seulement par défaut, arrêt dès la
+perte de connexion puis reprise, désactivation, section Paramètres (état, taille, « Vider ») ; statistiques de
+lecture sur un jeu calculé à la main ; date de lecture remplie en choisissant « Lu » dans le formulaire ;
+filtres et texte partagés, image PNG produite. Simulés : la connexion (`connectivity_plus`) et le cache disque.
+- [ ] **O-01** Téléphone en Wi-Fi : Paramètres → Couvertures hors ligne passe à « Téléchargement : n / N » puis
+      « N couvertures disponibles hors ligne », avec la place utilisée.
+- [ ] **O-02** **Critère de la phase** : mode avion, appli relancée : la collection (onglets, séries, fiches) et
+      les envies s'affichent **avec leurs couvertures**. Pareil sur Linux sans réseau, **après un redémarrage
+      du PC** (les couvertures ne sont plus dans `/tmp`).
+- [ ] **O-03** Sur données mobiles (Wi-Fi coupé) : « En attente du Wi-Fi », rien n'est téléchargé ; couper le
+      Wi-Fi pendant un téléchargement l'interrompt ; « Wi-Fi seulement » décoché : le téléchargement reprend.
+- [ ] **O-04** « Vider » : la place retombe à ~0 Mo, les photos prises soi-même restent visibles ; toucher la
+      ligne d'état relance le téléchargement.
+- [ ] **T-01** Statistiques → « Tomes lus par mois » : marquer un tome « Lu » (puce de la fiche, menu « lus
+      jusqu'au tome N », ou formulaire) l'ajoute au mois courant ; la vue tableau donne les mêmes chiffres.
+- [ ] **T-02** Pile à lire, plus ancien tome, délai achat → lecture et séries abandonnées correspondent à ce
+      qu'on sait de sa collection (les tomes lus avant la v3, sans date, sont seulement signalés).
+- [ ] **E-01** Envies → Partager : filtres par type et priorité, aperçu avec couvertures (vignette grise pour une
+      couverture introuvable), « Afficher le prix max ».
+- [ ] **E-02** **Critère de la phase** : Android, « Partager l'image » → l'envoyer par message (WhatsApp,
+      SMS…) : l'image est nette et lisible sur le téléphone du destinataire ; « Partager le texte » idem.
+- [ ] **E-03** Linux / Windows : « Partager l'image » ouvre « Enregistrer sous » (fichier PNG correct) ;
+      « Partager le texte » copie la liste dans le presse-papiers.

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:dupe/app/router.dart';
 import 'package:dupe/app/widgets/form_helpers.dart';
+import 'package:dupe/core/database/database_provider.dart';
 import 'package:dupe/core/utils/formatters.dart';
 import 'package:dupe/features/collection/data/collection_repository.dart';
 import 'package:dupe/features/collection/data/item_drafts.dart';
@@ -158,7 +159,11 @@ class _ItemFormScreenState extends ConsumerState<ItemFormScreen> {
                     onChanged: (a) => setState(() => _attachment = a),
                   ),
                   ItemGeneralFields(_c, itemId: _original!.id),
-                  ItemReadingFields(_c, onChanged: () => setState(() {})),
+                  ItemReadingFields(
+                    _c,
+                    onChanged: () => setState(() {}),
+                    today: ref.read(clockProvider),
+                  ),
                   FormSection(l10n.sectionCopy),
                   SwitchListTile(
                     contentPadding: EdgeInsets.zero,

@@ -51,7 +51,7 @@ raccourci Android « Scanner », vibrations, lampe torche, signalement des nouve
 | 17 | Tests de synchro contre Supabase local | ✅ fait (2026-11-14) | 8 tests `supabase` (local) + horloge | Supabase local ; CI `supabase-tests` à voir |
 | 18 | Hooks, commits conventionnels, tests d'intégration | ✅ fait (2026-11-14) | scripts + 4 parcours (Linux) | hooks non installés ; CI à voir |
 | 19 | Accès rapide : widget et recherche vocale | ✅ fait (2026-11-14) | oui (plugins simulés) | non (téléphone) |
-| 20 | Couvertures hors ligne, stats de lecture, partage des envies | à faire | — | — |
+| 20 | Couvertures hors ligne, stats de lecture, partage des envies | ✅ fait (2026-11-15) | oui (connexion et cache simulés) | non (`O-*`, `T-*`, `E-*`) |
 | 21 | Recette finale (reste de `TESTS_MANUELS.md`) | à faire | — | — |
 
 ## 4. Phases
@@ -303,6 +303,38 @@ affiche directement ce tome ou son absence.*
 
 *Critère : en mode avion, toute la collection s'affiche avec ses couvertures ; la liste d'envies part par
 message en image ; les stats de lecture correspondent à un jeu de test calculé à la main.*
+
+**Bilan (2026-11-15)**
+- **Réalisé** :
+  - **couvertures hors ligne** : cache dédié `coverCacheManager` (`features/covers/data/cover_cache.dart`) dans le
+    dossier support (`<support>/cover_cache`), utilisé par `CoverImage`. Le cache par défaut ne gardait que
+    **200 fichiers 30 jours dans le dossier temporaire** (`/tmp` sous Linux, vidable par Android) : une grande
+    collection n'aurait jamais été entièrement hors ligne. Préchargement `CoverPrefetch` (`cover_prefetch.dart`) :
+    toutes les couvertures d'ouvrages et de séries non supprimés (envies comprises, photos `dupe-cover:`
+    récupérées via `ensureUserCover`), une à une, au démarrage, au retour dans l'appli et à chaque changement
+    de connexion ; Wi-Fi/câble seulement par défaut (`connectivity_plus` 7.3.2, `core/network/network_status.dart`),
+    arrêt dès que la connexion n'est plus permise. Paramètres → *Couvertures hors ligne* : activer, Wi-Fi
+    seulement, état/progression, place utilisée, « Vider » (photos de l'utilisateur jamais touchées) ;
+  - **statistiques de lecture** (`stats/domain/reading_stats.dart`, section `reading_stats_section.dart`) : tomes lus
+    par mois sur 12 mois (graphique + tableau, `MonthlyChart` généralisé), part lue par type, délai moyen achat →
+    lecture (les deux dates requises, lectures avant achat exclues), pile à lire et son plus ancien tome (date
+    d'achat, sinon d'ajout), séries avec un tome abandonné ; tomes comptés une fois même en plusieurs exemplaires ;
+  - **date de lecture** : la puce « Lu » et « lus jusqu'au tome N » la remplissaient déjà ; **le formulaire ne le
+    faisait pas** → corrigé (date du jour si vide). Rien d'inventé pour l'existant : les tomes lus sans date sont
+    seulement comptés à part (« N tomes lus sans date… ») ;
+  - **partage des envies** (`wishlist/presentation/share/`, route `/plus/envies/partager`) : filtres par type et
+    priorité maximale, prix max en option, aperçu = l'image elle-même (`RepaintBoundary`, capture à 3× au plus,
+    8000 px de haut maximum), couvertures préchargées avant la capture (vignette grise sinon), PNG via
+    `FileIo.save` (feuille de partage Android, « Enregistrer sous » sur PC), version texte via
+    `FileIo.shareText` (feuille de partage Android, presse-papiers sur PC).
+- **Tests** : 13 nouveaux (préchargement ×4, connexion, stats de lecture ×2 dont le jeu calculé à la main, écran
+  Statistiques, Paramètres ×2, partage ×2, date de lecture du formulaire — vérifié en échec sans le correctif).
+  Suite : 203 tests ; intégration : 4 parcours.
+- **Écarts** : l'aperçu est l'image capturée (pas un rendu totalement hors écran) ; pas de limite de taille du
+  cache réglable, seulement la place affichée et « Vider » ; les couvertures téléchargées avant cette phase
+  (ancien cache temporaire) sont retéléchargées une fois.
+- **Non vérifié** : appareil réel (mode avion, Wi-Fi/données mobiles, feuille de partage, presse-papiers,
+  Windows) — `O-01` à `O-04`, `T-01`, `T-02`, `E-01` à `E-03`.
 
 ### Phase 21 — Recette finale
 Phase pilotée par l'utilisateur, sur la version issue de la phase 20 installée depuis une Release.

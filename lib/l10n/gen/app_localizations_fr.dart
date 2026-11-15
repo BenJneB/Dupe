@@ -1572,4 +1572,215 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get journalClear => 'Vider le journal';
+
+  @override
+  String get offlineCoversSection => 'Couvertures hors ligne';
+
+  @override
+  String get offlineCovers => 'Télécharger toutes les couvertures';
+
+  @override
+  String get offlineCoversHelp =>
+      'Collection et envies, pour les voir sans connexion (en magasin)';
+
+  @override
+  String get offlineCoversWifiOnly => 'Wi-Fi seulement';
+
+  @override
+  String get offlineCoversWifiOnlyHelp => 'Jamais sur les données mobiles';
+
+  @override
+  String offlineCoversSize(String size) {
+    return '$size Mo utilisés';
+  }
+
+  @override
+  String get offlineCoversRefresh => 'toucher pour vérifier';
+
+  @override
+  String get offlineCoversClear => 'Vider';
+
+  @override
+  String get offlineCoversCleared =>
+      'Couvertures téléchargées supprimées (vos photos sont gardées)';
+
+  @override
+  String get offlineCoversDisabled => 'Désactivé';
+
+  @override
+  String get offlineCoversOffline => 'En attente d’une connexion';
+
+  @override
+  String get offlineCoversMetered => 'En attente du Wi-Fi';
+
+  @override
+  String offlineCoversProgress(int done, int total) {
+    return 'Téléchargement : $done / $total';
+  }
+
+  @override
+  String get offlineCoversNone => 'Aucune couverture à télécharger';
+
+  @override
+  String offlineCoversDone(int total) {
+    String _temp0 = intl.Intl.pluralLogic(
+      total,
+      locale: localeName,
+      other: '$total couvertures disponibles hors ligne',
+      one: '1 couverture disponible hors ligne',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String offlineCoversDoneWithFailures(int total, int failed) {
+    return '$total couvertures, dont $failed introuvables';
+  }
+
+  @override
+  String get statsReadByMonth => 'Tomes lus par mois';
+
+  @override
+  String get statsNoReadDates =>
+      'Aucune date de lecture sur les 12 derniers mois.';
+
+  @override
+  String get statsReadCount => 'Lus';
+
+  @override
+  String statsReadWithoutDate(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count tomes lus sans date de lecture ne sont pas comptés par mois.',
+      one: '1 tome lu sans date de lecture n’est pas compté par mois.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get statsReadByType => 'Lu par type';
+
+  @override
+  String get statsPile => 'Pile à lire et habitudes';
+
+  @override
+  String statsPileCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tomes à lire',
+      one: '1 tome à lire',
+      zero: 'Pile à lire vide',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String statsPileOldest(String title, String date) {
+    return 'Le plus ancien : $title, depuis le $date';
+  }
+
+  @override
+  String statsDelay(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: 'Lu $days jours après l’achat, en moyenne',
+      one: 'Lu 1 jour après l’achat, en moyenne',
+      zero: 'Lu le jour de l’achat, en moyenne',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get statsDelayUnknown => 'Délai entre achat et lecture inconnu';
+
+  @override
+  String get statsDelayHelp =>
+      'Il faut une date d’achat et une date de lecture.';
+
+  @override
+  String statsDelaySamples(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Sur $count tomes ayant les deux dates',
+      one: 'Sur 1 tome ayant les deux dates',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String statsAbandoned(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count séries abandonnées',
+      one: '1 série abandonnée',
+      zero: 'Aucune série abandonnée',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get shareWishlist => 'Partager mes envies';
+
+  @override
+  String shareWishlistHeading(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Ma liste d’envies ($count)',
+      one: 'Ma liste d’envies (1)',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String shareWishlistCaption(int count, String date) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count envies',
+      one: '1 envie',
+    );
+    return '$_temp0 · $date';
+  }
+
+  @override
+  String get sharePriorityAll => 'Toutes priorités';
+
+  @override
+  String sharePriorityUpTo(int max) {
+    String _temp0 = intl.Intl.pluralLogic(
+      max,
+      locale: localeName,
+      other: 'Priorités 1 à $max',
+      one: 'Priorité 1',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get shareShowPrice => 'Afficher le prix max';
+
+  @override
+  String get shareAsImage => 'Partager l’image';
+
+  @override
+  String get shareAsText => 'Partager le texte';
+
+  @override
+  String get shareNoWish => 'Aucune envie ne correspond aux filtres.';
+
+  @override
+  String get shareFileName => 'envies.png';
+
+  @override
+  String get shareImageSaved => 'Image enregistrée';
+
+  @override
+  String get shareTextCopied => 'Liste copiée dans le presse-papiers';
 }

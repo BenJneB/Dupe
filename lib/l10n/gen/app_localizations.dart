@@ -2595,6 +2595,252 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Vider le journal'**
   String get journalClear;
+
+  /// No description provided for @offlineCoversSection.
+  ///
+  /// In fr, this message translates to:
+  /// **'Couvertures hors ligne'**
+  String get offlineCoversSection;
+
+  /// No description provided for @offlineCovers.
+  ///
+  /// In fr, this message translates to:
+  /// **'Télécharger toutes les couvertures'**
+  String get offlineCovers;
+
+  /// No description provided for @offlineCoversHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Collection et envies, pour les voir sans connexion (en magasin)'**
+  String get offlineCoversHelp;
+
+  /// No description provided for @offlineCoversWifiOnly.
+  ///
+  /// In fr, this message translates to:
+  /// **'Wi-Fi seulement'**
+  String get offlineCoversWifiOnly;
+
+  /// No description provided for @offlineCoversWifiOnlyHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Jamais sur les données mobiles'**
+  String get offlineCoversWifiOnlyHelp;
+
+  /// No description provided for @offlineCoversSize.
+  ///
+  /// In fr, this message translates to:
+  /// **'{size} Mo utilisés'**
+  String offlineCoversSize(String size);
+
+  /// No description provided for @offlineCoversRefresh.
+  ///
+  /// In fr, this message translates to:
+  /// **'toucher pour vérifier'**
+  String get offlineCoversRefresh;
+
+  /// No description provided for @offlineCoversClear.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vider'**
+  String get offlineCoversClear;
+
+  /// No description provided for @offlineCoversCleared.
+  ///
+  /// In fr, this message translates to:
+  /// **'Couvertures téléchargées supprimées (vos photos sont gardées)'**
+  String get offlineCoversCleared;
+
+  /// No description provided for @offlineCoversDisabled.
+  ///
+  /// In fr, this message translates to:
+  /// **'Désactivé'**
+  String get offlineCoversDisabled;
+
+  /// No description provided for @offlineCoversOffline.
+  ///
+  /// In fr, this message translates to:
+  /// **'En attente d’une connexion'**
+  String get offlineCoversOffline;
+
+  /// No description provided for @offlineCoversMetered.
+  ///
+  /// In fr, this message translates to:
+  /// **'En attente du Wi-Fi'**
+  String get offlineCoversMetered;
+
+  /// No description provided for @offlineCoversProgress.
+  ///
+  /// In fr, this message translates to:
+  /// **'Téléchargement : {done} / {total}'**
+  String offlineCoversProgress(int done, int total);
+
+  /// No description provided for @offlineCoversNone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune couverture à télécharger'**
+  String get offlineCoversNone;
+
+  /// No description provided for @offlineCoversDone.
+  ///
+  /// In fr, this message translates to:
+  /// **'{total, plural, =1{1 couverture disponible hors ligne} other{{total} couvertures disponibles hors ligne}}'**
+  String offlineCoversDone(int total);
+
+  /// No description provided for @offlineCoversDoneWithFailures.
+  ///
+  /// In fr, this message translates to:
+  /// **'{total} couvertures, dont {failed} introuvables'**
+  String offlineCoversDoneWithFailures(int total, int failed);
+
+  /// No description provided for @statsReadByMonth.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tomes lus par mois'**
+  String get statsReadByMonth;
+
+  /// No description provided for @statsNoReadDates.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune date de lecture sur les 12 derniers mois.'**
+  String get statsNoReadDates;
+
+  /// No description provided for @statsReadCount.
+  ///
+  /// In fr, this message translates to:
+  /// **'Lus'**
+  String get statsReadCount;
+
+  /// No description provided for @statsReadWithoutDate.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{1 tome lu sans date de lecture n’est pas compté par mois.} other{{count} tomes lus sans date de lecture ne sont pas comptés par mois.}}'**
+  String statsReadWithoutDate(int count);
+
+  /// No description provided for @statsReadByType.
+  ///
+  /// In fr, this message translates to:
+  /// **'Lu par type'**
+  String get statsReadByType;
+
+  /// No description provided for @statsPile.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pile à lire et habitudes'**
+  String get statsPile;
+
+  /// No description provided for @statsPileCount.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =0{Pile à lire vide} =1{1 tome à lire} other{{count} tomes à lire}}'**
+  String statsPileCount(int count);
+
+  /// No description provided for @statsPileOldest.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le plus ancien : {title}, depuis le {date}'**
+  String statsPileOldest(String title, String date);
+
+  /// No description provided for @statsDelay.
+  ///
+  /// In fr, this message translates to:
+  /// **'{days, plural, =0{Lu le jour de l’achat, en moyenne} =1{Lu 1 jour après l’achat, en moyenne} other{Lu {days} jours après l’achat, en moyenne}}'**
+  String statsDelay(int days);
+
+  /// No description provided for @statsDelayUnknown.
+  ///
+  /// In fr, this message translates to:
+  /// **'Délai entre achat et lecture inconnu'**
+  String get statsDelayUnknown;
+
+  /// No description provided for @statsDelayHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Il faut une date d’achat et une date de lecture.'**
+  String get statsDelayHelp;
+
+  /// No description provided for @statsDelaySamples.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{Sur 1 tome ayant les deux dates} other{Sur {count} tomes ayant les deux dates}}'**
+  String statsDelaySamples(int count);
+
+  /// No description provided for @statsAbandoned.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =0{Aucune série abandonnée} =1{1 série abandonnée} other{{count} séries abandonnées}}'**
+  String statsAbandoned(int count);
+
+  /// No description provided for @shareWishlist.
+  ///
+  /// In fr, this message translates to:
+  /// **'Partager mes envies'**
+  String get shareWishlist;
+
+  /// No description provided for @shareWishlistHeading.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{Ma liste d’envies (1)} other{Ma liste d’envies ({count})}}'**
+  String shareWishlistHeading(int count);
+
+  /// No description provided for @shareWishlistCaption.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{1 envie} other{{count} envies}} · {date}'**
+  String shareWishlistCaption(int count, String date);
+
+  /// No description provided for @sharePriorityAll.
+  ///
+  /// In fr, this message translates to:
+  /// **'Toutes priorités'**
+  String get sharePriorityAll;
+
+  /// No description provided for @sharePriorityUpTo.
+  ///
+  /// In fr, this message translates to:
+  /// **'{max, plural, =1{Priorité 1} other{Priorités 1 à {max}}}'**
+  String sharePriorityUpTo(int max);
+
+  /// No description provided for @shareShowPrice.
+  ///
+  /// In fr, this message translates to:
+  /// **'Afficher le prix max'**
+  String get shareShowPrice;
+
+  /// No description provided for @shareAsImage.
+  ///
+  /// In fr, this message translates to:
+  /// **'Partager l’image'**
+  String get shareAsImage;
+
+  /// No description provided for @shareAsText.
+  ///
+  /// In fr, this message translates to:
+  /// **'Partager le texte'**
+  String get shareAsText;
+
+  /// No description provided for @shareNoWish.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune envie ne correspond aux filtres.'**
+  String get shareNoWish;
+
+  /// No description provided for @shareFileName.
+  ///
+  /// In fr, this message translates to:
+  /// **'envies.png'**
+  String get shareFileName;
+
+  /// No description provided for @shareImageSaved.
+  ///
+  /// In fr, this message translates to:
+  /// **'Image enregistrée'**
+  String get shareImageSaved;
+
+  /// No description provided for @shareTextCopied.
+  ///
+  /// In fr, this message translates to:
+  /// **'Liste copiée dans le presse-papiers'**
+  String get shareTextCopied;
 }
 
 class _AppLocalizationsDelegate

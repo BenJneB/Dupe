@@ -8,6 +8,9 @@ class FakeFileIo implements FileIo {
   final saved = <String, Uint8List>{};
   OpenedFile? toOpen;
 
+  /// Texts given to [shareText].
+  final sharedTexts = <String>[];
+
   String text(String name) => utf8.decode(saved[name]!);
 
   @override
@@ -26,4 +29,10 @@ class FakeFileIo implements FileIo {
     required List<String> extensions,
     required List<String> mimeTypes,
   }) async => toOpen;
+
+  @override
+  Future<TextShare> shareText(String text, {required String subject}) async {
+    sharedTexts.add(text);
+    return TextShare.shared;
+  }
 }

@@ -3,7 +3,8 @@ import 'package:dupe/core/utils/formatters.dart';
 import 'package:dupe/features/collection/presentation/labels.dart';
 import 'package:dupe/features/stats/data/stats_providers.dart';
 import 'package:dupe/features/stats/domain/collection_stats.dart';
-import 'package:dupe/features/stats/presentation/monthly_spending_chart.dart';
+import 'package:dupe/features/stats/presentation/monthly_chart.dart';
+import 'package:dupe/features/stats/presentation/reading_stats_section.dart';
 import 'package:dupe/features/stats/presentation/stat_widgets.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -56,6 +57,9 @@ class _StatsBodyState extends State<_StatsBody> {
     String money(double v) => Formatters.price(v, s.currency, locale);
     String percent(double v) => '${(v * 100).round()} %';
     final hasSpending = s.spentByMonth.any((m) => m.amount > 0);
+    final spending = [
+      for (final m in s.spentByMonth) (month: m.month, value: m.amount),
+    ];
     final byCount = s.volumesByType.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
     final bySpent = s.spentByType.entries.toList()
@@ -156,9 +160,13 @@ class _StatsBodyState extends State<_StatsBody> {
         if (!hasSpending)
           Text(l10n.statsNoSpending)
         else if (_table)
-          MonthlySpendingTable(months: s.spentByMonth, currency: s.currency)
+          MonthlyTable(
+            months: spending,
+            format: money,
+            header: l10n.statsAmount,
+          )
         else
-          MonthlySpendingChart(months: s.spentByMonth, currency: s.currency),
+          MonthlyChart(months: spending, format: money),
         StatSection(l10n.statsVolumesByType),
         for (final MapEntry(:key, :value) in byCount)
           BarRow(
@@ -175,6 +183,7 @@ class _StatsBodyState extends State<_StatsBody> {
               fraction: value / maxSpent,
             ),
         ],
+        const ReadingStatsSection(),
       ],
     );
   }

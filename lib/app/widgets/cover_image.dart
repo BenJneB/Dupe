@@ -1,10 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dupe/features/covers/data/cover_cache.dart';
 import 'package:dupe/features/covers/data/cover_photos.dart';
 import 'package:dupe/features/covers/presentation/user_cover_image.dart';
 import 'package:material_ui/material_ui.dart';
 
 /// Cover thumbnail with a placeholder when missing or failing to load.
-/// Downloaded covers are kept on disk (shown offline, in shops).
+/// Downloaded covers are kept on disk ([coverCacheManager]: shown offline,
+/// in shops).
 class CoverImage extends StatelessWidget {
   const new({required this.url, this.width = 48, this.height = 72, super.key});
 
@@ -40,6 +42,7 @@ class CoverImage extends StatelessWidget {
               )
             : CachedNetworkImage(
                 imageUrl: value,
+                cacheManager: coverCacheManager,
                 fit: BoxFit.cover,
                 placeholder: (_, _) => placeholder,
                 errorWidget: (_, _, _) => placeholder,
