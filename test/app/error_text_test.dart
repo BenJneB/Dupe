@@ -21,6 +21,8 @@ void main() {
       const SyncException('jwt', failure: SyncFailure.session):
           l10n.errorSession,
       const SyncException('rls'): l10n.errorServer,
+      const SyncException('<html>', failure: SyncFailure.unavailable):
+          l10n.errorUnavailable,
       const SignInException(SignInFailure.tooManyAttempts, 'x'):
           l10n.errorTooManyAttempts,
       const SignInException(SignInFailure.invalidCredentials, 'x'):

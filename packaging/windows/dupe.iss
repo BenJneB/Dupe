@@ -1,11 +1,13 @@
 ; Inno Setup installer for Dupe (Windows).
 ; On Windows, from the project root:
 ;   flutter build windows --release --dart-define-from-file=env.json
-;   "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" packaging\windows\dupe.iss
-; Output: build\installer\Dupe-<version>-setup.exe
+;   "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" /DAppVersion=1.2.3 packaging\windows\dupe.iss
+; Output: build\installer\Dupe-<version>-setup.exe (the CI passes the tag version)
 
 #define AppName "Dupe"
-#define AppVersion "1.0.0"
+#ifndef AppVersion
+  #define AppVersion "1.0.0"
+#endif
 #define AppExe "dupe.exe"
 #define BuildDir "..\..\build\windows\x64\runner\Release"
 

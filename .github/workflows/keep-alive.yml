@@ -1,0 +1,39 @@
+# Supabase pauses Free projects after a week of low database activity
+# (https://supabase.com/docs/guides/platform/free-project-pausing): one
+# small request a day should keep the sync project awake. The schema grants
+# nothing to the anonymous role, so the answer is an empty list or a
+# refusal (both reach the database). A 5xx or no answer means the project
+# is down or already paused: the run fails and GitHub emails the owner.
+# GitHub disables scheduled workflows after 60 days without commits: the
+# Actions tab then offers to re-enable it.
+name: Keep Supabase awake
+
+on:
+  schedule:
+    - cron: '17 6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Query the database
+        env:
+          ENV_JSON: ${{ secrets.ENV_JSON }}
+        run: |
+          URL=$(printf '%s' "$ENV_JSON" | jq -r '.SUPABASE_URL // empty')
+          KEY=$(printf '%s' "$ENV_JSON" | jq -r '.SUPABASE_ANON_KEY // empty')
+          if [ -z "$URL" ] || [ -z "$KEY" ]; then
+            echo "No Supabase in ENV_JSON: nothing to keep awake."
+            exit 0
+          fi
+          echo "::add-mask::$URL"
+          echo "::add-mask::$KEY"
+          STATUS=$(curl -s -o /dev/null -w '%{http_code}' \
+            -H "apikey: $KEY" -H "Authorization: Bearer $KEY" \
+            "$URL/rest/v1/items?select=id&limit=1")
+          echo "HTTP $STATUS"
+          [ "$STATUS" -ge 200 ] && [ "$STATUS" -lt 500 ]

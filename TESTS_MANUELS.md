@@ -86,6 +86,17 @@ Lancer : `flutter run -d <id> --dart-define-from-file=env.json` (`flutter device
       restauration ne connaît que ce que l'appareil a vu). Synchroniser avant de restaurer.
 - [ ] Exporter une sauvegarde automatique (partage / Enregistrer sous) puis la restaurer par fichier.
 
+## CI et Releases (phase 12)
+- [ ] Après le push : onglet *Actions* → `CI` vert, y compris le job **windows** (première compilation Windows).
+- [ ] Secrets créés (README), puis `git tag v1.0.0 && git push origin v1.0.0` → Release avec 3 APK, l'AppImage
+      et `Dupe-1.0.0-setup.exe`.
+- [ ] L'APK de la Release s'installe sur le téléphone ; une `v1.0.1` s'installe ensuite par-dessus sans perte.
+- [ ] Installé en v1.0.0 alors que v1.0.1 existe : « Version 1.0.1 disponible — Télécharger » au démarrage, le
+      bouton ouvre le bon fichier (APK de l'architecture du téléphone, AppImage, installateur).
+- [ ] Paramètres → Mises à jour → « Rechercher une mise à jour » ; désactiver le signalement.
+- [ ] `Keep Supabase awake` : lancer à la main (*Run workflow*) → vert ; plus d'email d'avertissement de
+      Supabase dans les semaines suivantes (à confirmer : une requête refusée compte-t-elle comme activité ?).
+
 ## Données réelles
 - [ ] Import de ma collection (CSV Mangacollec / CLZ / tableur) : correspondance des colonnes devinée correctement.
 - [ ] Réimporter le même fichier n'ajoute rien.

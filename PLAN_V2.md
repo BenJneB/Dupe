@@ -79,7 +79,7 @@ et le PC avec email + mot de passe.
 Critère : après un import CSV raté, je reviens à l'état d'avant en deux appuis, et l'autre appareil suit
 après synchro.
 
-### Phase 12 — CI, versions et distribution
+### Phase 12 — CI, versions et distribution ✅ (2026-11-14, workflows non exécutés)
 - **GitHub Actions — vérification** (à chaque push) : `flutter analyze`, `flutter test`, compilation
   Linux et Android ; **compilation Windows** sur runner Windows (seule vérification possible sans PC Windows).
 - **GitHub Actions — release** (sur tag `vX.Y.Z`) : version tirée du tag (`--build-name`, `--build-number`

@@ -1,0 +1,131 @@
+# Pushing a tag vX.Y.Z builds the signed APKs (one per ABI), the AppImage
+# and the Windows installer, then publishes them as a GitHub release.
+# Secrets (Settings -> Secrets and variables -> Actions), see README:
+#   ENV_JSON                  content of env.json (compiled into the apps)
+#   ANDROID_KEYSTORE_BASE64   upload keystore, base64
+#   ANDROID_KEYSTORE_PASSWORD, ANDROID_KEY_ALIAS, ANDROID_KEY_PASSWORD
+name: Release
+
+on:
+  push:
+    tags: ['v[0-9]+.[0-9]+.[0-9]+']
+
+permissions:
+  contents: read
+
+env:
+  FLUTTER_VERSION: '3.50.0'
+
+jobs:
+  android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+      - name: Version, env.json and signing key
+        env:
+          ENV_JSON: ${{ secrets.ENV_JSON }}
+          KEYSTORE: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          STORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          # Never publish a debug-signed APK: it could not be updated later.
+          for v in ENV_JSON KEYSTORE STORE_PASSWORD KEY_ALIAS KEY_PASSWORD; do
+            [ -n "${!v}" ] || { echo "Missing secret for $v" >&2; exit 1; }
+          done
+          echo "VERSION=$(tool/ci/set_version.sh "$GITHUB_REF_NAME")" >> "$GITHUB_ENV"
+          printf '%s' "$ENV_JSON" > env.json
+          printf '%s' "$KEYSTORE" | base64 -d > android/app/upload-keystore.jks
+          {
+            echo "storeFile=upload-keystore.jks"
+            echo "storePassword=$STORE_PASSWORD"
+            echo "keyAlias=$KEY_ALIAS"
+            echo "keyPassword=$KEY_PASSWORD"
+          } > android/key.properties
+      - run: flutter build apk --release --split-per-abi --dart-define-from-file=env.json
+      - name: Rename
+        run: |
+          mkdir dist
+          for abi in arm64-v8a armeabi-v7a x86_64; do
+            cp "build/app/outputs/flutter-apk/app-$abi-release.apk" "dist/dupe-$VERSION-$abi.apk"
+          done
+      - uses: actions/upload-artifact@v7
+        with:
+          name: android
+          path: dist/
+
+  linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - run: sudo apt-get update && sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+      - name: Version and env.json
+        env:
+          ENV_JSON: ${{ secrets.ENV_JSON }}
+        run: |
+          [ -n "$ENV_JSON" ] || { echo "Missing secret ENV_JSON" >&2; exit 1; }
+          tool/ci/set_version.sh "$GITHUB_REF_NAME"
+          printf '%s' "$ENV_JSON" > env.json
+      - run: packaging/linux/build_appimage.sh env.json
+      - uses: actions/upload-artifact@v7
+        with:
+          name: linux
+          path: build/Dupe-*-x86_64.AppImage
+
+  windows:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v7
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+      - name: Version and env.json
+        env:
+          ENV_JSON: ${{ secrets.ENV_JSON }}
+        run: |
+          [ -n "$ENV_JSON" ] || { echo "Missing secret ENV_JSON" >&2; exit 1; }
+          echo "VERSION=$(tool/ci/set_version.sh "$GITHUB_REF_NAME")" >> "$GITHUB_ENV"
+          printf '%s' "$ENV_JSON" > env.json
+      - run: flutter build windows --release --dart-define-from-file=env.json
+      - name: Installer (Inno Setup)
+        run: |
+          choco install innosetup --version 6.7.1 --no-progress -y
+          "/c/Program Files (x86)/Inno Setup 6/ISCC.exe" "//DAppVersion=$VERSION" packaging/windows/dupe.iss
+      - uses: actions/upload-artifact@v7
+        with:
+          name: windows
+          path: build/installer/Dupe-*-setup.exe
+
+  publish:
+    needs: [android, linux, windows]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          path: dist
+          merge-multiple: true
+      - uses: softprops/action-gh-release@v3
+        with:
+          files: dist/*
+          generate_release_notes: true

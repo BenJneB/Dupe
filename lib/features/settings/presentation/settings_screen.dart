@@ -2,6 +2,7 @@ import 'package:dupe/features/account/presentation/account_section.dart';
 import 'package:dupe/features/backup/presentation/backup_section.dart';
 import 'package:dupe/features/settings/presentation/appearance_section.dart';
 import 'package:dupe/features/settings/presentation/sources_section.dart';
+import 'package:dupe/features/updates/presentation/updates_section.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
@@ -24,6 +25,8 @@ class SettingsScreen extends ConsumerWidget {
           BackupSection(),
           Divider(),
           SourcesSection(),
+          Divider(),
+          UpdatesSection(),
         ],
       ),
     );

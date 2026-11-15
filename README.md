@@ -98,6 +98,43 @@ flutter run -d windows --dart-define-from-file=env.json
 ```
 
 ## Installer / distribuer
+### Publier une version (GitHub Actions)
+`.github/workflows/` :
+- `ci.yml` : à chaque push, analyse, tests et compilation Linux, Android et **Windows** (seule vérification
+  Windows sans PC Windows) ;
+- `release.yml` : pousser un tag `vX.Y.Z` construit les APK signés (un par architecture), l'AppImage et
+  l'installateur Windows, puis les publie dans une Release GitHub. La version vient du tag
+  (`tool/ci/set_version.sh` : `v1.2.3` → `1.2.3+10203`, mineur et correctif < 100) ;
+- `keep-alive.yml` : une requête par jour sur Supabase (voir plus bas).
+
+```sh
+git tag v1.0.0 && git push origin v1.0.0
+```
+L'appli installée signale ensuite la nouvelle version (au plus une fois par jour, désactivable dans
+Paramètres → *Mises à jour*) et ouvre le fichier de la plateforme.
+
+**Secrets à créer une fois** (GitHub → *Settings → Secrets and variables → Actions → New repository secret*) :
+
+| Secret | Valeur |
+|---|---|
+| `ENV_JSON` | le contenu de `env.json` |
+| `ANDROID_KEYSTORE_BASE64` | `base64 -w0 ~/dupe-release.jks` (la clé créée ci-dessous) |
+| `ANDROID_KEYSTORE_PASSWORD` | `storePassword` |
+| `ANDROID_KEY_ALIAS` | `dupe` |
+| `ANDROID_KEY_PASSWORD` | `keyPassword` |
+
+Le dépôt étant **public**, les Releases aussi : tout ce que contient `ENV_JSON` est compilé dans les binaires
+et extractible. La clé Supabase *publishable* est faite pour ça (RLS). Restreindre la clé Google Books dans la
+console Google (API Books seulement) ; pour Comic Vine (clé non restreignable), mettre dans `ENV_JSON` une
+version sans `COMIC_VINE_API_KEY` si on ne veut pas l'exposer.
+
+**Supabase gratuit** : un projet est mis en pause après 7 jours de faible activité
+([doc](https://supabase.com/docs/guides/platform/free-project-pausing)), restaurable depuis le tableau de bord
+pendant un an. `keep-alive.yml` fait une requête par jour (lit `SUPABASE_URL` / `SUPABASE_ANON_KEY` dans
+`ENV_JSON`) et échoue — email de GitHub — si le projet ne répond plus. GitHub désactive les tâches planifiées
+d'un dépôt sans commit depuis 60 jours : les réactiver dans l'onglet *Actions*. Dans l'appli, un projet en
+pause donne « Serveur de synchronisation indisponible… ».
+
 ### Android : APK signé
 Une seule fois, créer la clé de signature (à garder précieusement **hors du dépôt** : sans elle, impossible
 de publier une mise à jour installable par-dessus) :
@@ -125,7 +162,7 @@ flutter build windows --release --dart-define-from-file=env.json
 "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" packaging\windows\dupe.iss
 ```
 → `build\installer\Dupe-1.0.0-setup.exe` (installation par utilisateur, sans droits administrateur).
-Penser à aligner `AppVersion` de `packaging/windows/dupe.iss` sur `version:` de `pubspec.yaml`.
+Version : `ISCC.exe /DAppVersion=1.2.3 …` (la CI passe celle du tag), sinon 1.0.0.
 
 ### Linux : AppImage
 ```sh

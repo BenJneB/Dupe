@@ -167,9 +167,15 @@ class SupabaseSyncRemote implements SyncRemote {
     } on PostgrestException catch (e) {
       // PGRST301/303: JWT invalid or expired.
       final expired = e.code == 'PGRST301' || e.code == 'PGRST303';
+      // Non-JSON error pages (gateway, paused project) carry the HTTP status.
+      final status = int.tryParse(e.code ?? '') ?? 0;
       throw SyncException(
-        e.message,
-        failure: expired ? SyncFailure.session : SyncFailure.rejected,
+        e.message.length > 300 ? e.message.substring(0, 300) : e.message,
+        failure: expired
+            ? SyncFailure.session
+            : status >= 500
+            ? SyncFailure.unavailable
+            : SyncFailure.rejected,
       );
     } on AuthException catch (e) {
       throw SyncException(e.message, failure: SyncFailure.session);
