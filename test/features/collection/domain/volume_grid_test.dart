@@ -23,6 +23,27 @@ void main() {
       );
     });
 
+    test(
+      '"Ajouter des tomes" proposes to fill gaps, not an unknown volume',
+      () {
+        VolumeGrid grid(List<String?> volumes, {int? total}) =>
+            VolumeGrid.compute(
+              items: [
+                for (final (i, v) in volumes.indexed)
+                  testItem('i$i', volume: v),
+              ],
+              totalVolumes: total,
+              followed: true,
+            );
+
+        // Jumeaux Fowl 1 and 3 (plus an unnumbered copy): up to 3, not 4.
+        expect(grid(['1', '3', null]).suggestedRangeEnd, 3);
+        expect(grid(['1', '2']).suggestedRangeEnd, 3);
+        expect(grid(['1', '3'], total: 12).suggestedRangeEnd, 12);
+        expect(grid([]).suggestedRangeEnd, 1);
+      },
+    );
+
     test('a volume without number is shown last as "?"', () {
       // Jumeaux Fowl 1 in Folio: the BnF record has no volume number.
       final grid = VolumeGrid.compute(

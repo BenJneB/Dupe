@@ -3,6 +3,7 @@ import 'package:dupe/app/router.dart';
 import 'package:dupe/app/widgets/cover_image.dart';
 import 'package:dupe/app/widgets/placeholder_body.dart';
 import 'package:dupe/core/utils/formatters.dart';
+import 'package:dupe/features/authors/presentation/author_links.dart';
 import 'package:dupe/features/collection/data/collection_repository.dart';
 import 'package:dupe/features/collection/domain/enums.dart';
 import 'package:dupe/features/collection/domain/item.dart';
@@ -84,10 +85,6 @@ class _ItemDetailView extends ConsumerWidget {
         : l10n.volumeTitle(item.title, item.volumeNumber!);
 
     final rows = <(String, String?)>[
-      (
-        l10n.fieldAuthors,
-        item.authors.isEmpty ? null : item.authors.join(', '),
-      ),
       (l10n.fieldPublisher, item.publisher),
       (l10n.fieldEdition, item.edition),
       (l10n.fieldFormat, item.format),
@@ -156,6 +153,7 @@ class _ItemDetailView extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(title, style: theme.textTheme.titleLarge),
+                    AuthorLinks(type: item.type, authors: item.authors),
                     const SizedBox(height: 8),
                     Chip(
                       avatar: Icon(

@@ -5,6 +5,7 @@ import 'package:dupe/app/router.dart';
 import 'package:dupe/app/widgets/cover_image.dart';
 import 'package:dupe/app/widgets/placeholder_body.dart';
 import 'package:dupe/core/utils/formatters.dart';
+import 'package:dupe/features/authors/presentation/author_links.dart';
 import 'package:dupe/features/collection/data/collection_repository.dart';
 import 'package:dupe/features/collection/domain/enums.dart';
 import 'package:dupe/features/collection/domain/series.dart';
@@ -62,7 +63,7 @@ class _SeriesDetailView extends ConsumerWidget {
     final l10n = AppLocalizations.of(context);
     final range = await askVolumeRange(
       context,
-      suggestedTo: series.totalVolumes ?? (grid.slots.length + 1),
+      suggestedTo: grid.suggestedRangeEnd,
     );
     if (range == null) return;
     final created = await ref
@@ -127,11 +128,14 @@ class _SeriesDetailView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
-    final subtitleParts = [
-      if (series.authors.isNotEmpty) series.authors.join(', '),
-      ?series.publisher,
-      ?series.collection,
-    ];
+    // A series created by a scan may list no author: those of its volumes.
+    final authors = series.authors.isNotEmpty
+        ? series.authors
+        : {
+            for (final slot in grid.slots)
+              for (final copy in slot.copies) ...copy.authors,
+          }.toList();
+    final subtitleParts = [?series.publisher, ?series.collection];
 
     return Scaffold(
       appBar: AppBar(
@@ -165,6 +169,7 @@ class _SeriesDetailView extends ConsumerWidget {
                     Text(series.title, style: theme.textTheme.titleLarge),
                     if (series.originalTitle case final original?)
                       Text(original, style: theme.textTheme.bodyMedium),
+                    AuthorLinks(type: series.type, authors: authors),
                     const SizedBox(height: 4),
                     if (subtitleParts.isNotEmpty)
                       Text(subtitleParts.join(' · ')),

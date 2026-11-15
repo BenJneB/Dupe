@@ -170,6 +170,22 @@ class VolumeGrid {
       totalVolumes != null && totalVolumes! > 0 && ownedCount >= totalVolumes!;
 }
 
+extension VolumeGridRange on VolumeGrid {
+  /// Last volume proposed by "Ajouter des tomes": the total when known;
+  /// otherwise the highest volume present when there are gaps to fill
+  /// (1 and 3 -> 3, never an unknown 4), else the next volume.
+  int get suggestedRangeEnd {
+    if (totalVolumes case final total? when total > 0) return total;
+    final present = {
+      for (final s in slots)
+        if (s.number != null && s.item != null) s.number!,
+    };
+    if (present.isEmpty) return 1;
+    final highest = present.reduce((a, b) => a > b ? a : b);
+    return present.length < highest ? highest : highest + 1;
+  }
+}
+
 extension VolumeGridCover on VolumeGrid {
   /// Cover of the first volume that has one: stands for a series without
   /// its own cover (series created while scanning).

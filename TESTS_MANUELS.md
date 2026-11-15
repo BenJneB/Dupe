@@ -7,7 +7,7 @@
 > finale. Les phases 15 à 20 ajoutent leurs tests ici et marquent « automatisé (phase N) » ceux que leurs tests
 > automatiques couvrent désormais.
 
-Ce fichier liste ce que les **216 tests automatiques (et 4 parcours d'intégration) ne couvrent pas** : matériel (caméra, vibrations,
+Ce fichier liste ce que les **222 tests automatiques (et 4 parcours d'intégration) ne couvrent pas** : matériel (caméra, vibrations,
 notifications, raccourci), services réels (Supabase, API GitHub, sources de métadonnées), plateformes non
 compilées ici (Windows) et workflows GitHub (jamais exécutés).
 
@@ -63,6 +63,7 @@ Tous les tests non faits en phase 14 et non marqués « automatisé ». Le but :
 7f. **Widget et dictée** (phase 19, téléphone) : `G-01` à `G-04`, `V-01` à `V-04`.
 7g. **Couvertures, stats, envies** (phase 20) : `O-01` à `O-04` (`O-02` en mode avion), `T-01`, `T-02`,
    `E-01` à `E-03`.
+7h. **Retours de recette Android** (2026-11-15, téléphone + vraie collection) : `Q-01` à `Q-06`.
 8. **Le lendemain / plus tard** : `N-01` à `N-04` ; `M-12` chronométré en magasin ; `Y-06` (observation sur
    plusieurs semaines) ; `J-06` (facultatif, met le projet en pause).
 
@@ -294,3 +295,25 @@ filtres et texte partagés, image PNG produite. Simulés : la connexion (`connec
       SMS…) : l'image est nette et lisible sur le téléphone du destinataire ; « Partager le texte » idem.
 - [ ] **E-03** Linux / Windows : « Partager l'image » ouvre « Enregistrer sous » (fichier PNG correct) ;
       « Partager le texte » copie la liste dans le presse-papiers.
+
+## 15. Retours de recette Android (2026-11-15)
+Automatisé (recette) : tome lu dans le titre (« Free Quest Tome 1 », « T01 »), collection d'éditeur numérotée
+ignorée (« Folio junior » n° 1987), absence de Release GitHub silencieuse, « Voir la série » puis retour vers
+l'onglet, onglet toujours ouvert sur sa liste, couverture d'une série = celle du premier tome, double retour pour
+quitter, type du scan choisi et mémorisé, pastille « ? » pour un tome sans numéro, indicateur « lu »,
+proposition d'ajouter les tomes précédents, « Compléter les couvertures manquantes » (adresses cassées
+remplacées, photos gardées), vue et page par auteur. Simulés : les sources et le cache des couvertures.
+- [ ] **Q-01** Android : sur la liste d'un onglet, retour → « Appuie de nouveau sur retour pour quitter » ;
+      un second appui dans les 2 s ferme l'appli, après 2 s il ne fait que réafficher le message.
+- [ ] **Q-02** Scanner en magasin un tome d'une série nouvelle (Free Quest 1, Jumeaux Fowl 3) : le formulaire
+      propose de créer la bonne série (pas « Folio junior ») avec le bon numéro.
+- [ ] **Q-03** Ajouter le tome 9 possédé d'une série qui n'a que le 1 : « Il te manque 7 tomes avant le 9 » →
+      Ajouter → les tomes 2 à 8 apparaissent en vert.
+- [ ] **Q-04** Paramètres → « Compléter les couvertures manquantes » sur la vraie collection : progression,
+      couvertures ajoutées visibles dans les listes ; le journal liste les livres restés sans couverture et les
+      sources qui ont répondu ; « Télécharger maintenant » liste les adresses en échec avec leur cause.
+- [ ] **Q-05** Scan ouvert depuis Plus / le journal : choisir « BD » dans le menu de type ; au scan suivant
+      ouvert hors d'un onglet, « BD » est déjà choisi.
+- [ ] **Q-06** Livres → « Par auteur » sur la vraie collection : un auteur écrit de deux façons selon la source
+      n'apparaît qu'une fois ; sa page liste toutes ses séries et livres ; toucher un nom d'auteur sur une fiche
+      ouvre la même page.

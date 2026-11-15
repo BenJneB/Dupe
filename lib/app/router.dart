@@ -3,6 +3,7 @@ import 'package:dupe/app/app_routes.dart';
 import 'package:dupe/features/about/presentation/about_screen.dart';
 import 'package:dupe/features/about/presentation/journal_screen.dart';
 import 'package:dupe/features/account/presentation/sign_in_screen.dart';
+import 'package:dupe/features/authors/presentation/author_screen.dart';
 import 'package:dupe/features/backup/presentation/auto_backups_screen.dart';
 import 'package:dupe/features/backup/presentation/csv_import_screen.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
@@ -154,6 +155,13 @@ StatefulShellBranch _collectionBranch(CollectionType type) =>
           path: AppRoutes.base(type),
           builder: (context, state) => CollectionTabScreen(type: type),
           routes: [
+            GoRoute(
+              path: 'auteur',
+              builder: (context, state) => AuthorScreen(
+                type: type,
+                name: state.uri.queryParameters['nom'] ?? '',
+              ),
+            ),
             GoRoute(
               path: 'nouvelle-serie',
               builder: (context, state) => SeriesFormScreen(type: type),

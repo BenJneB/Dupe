@@ -59,6 +59,12 @@ abstract final class AppRoutes {
   static String seriesEdit(CollectionType type, String id) =>
       '${series(type, id)}/modifier';
 
+  /// Page of one author in the tab of [type].
+  static String author(CollectionType type, String name) => Uri(
+    path: '${base(type)}/auteur',
+    queryParameters: {'nom': name},
+  ).toString();
+
   static String item(CollectionType type, String id) =>
       '${base(type)}/ouvrage/$id';
 

@@ -13,33 +13,43 @@ class EntriesList extends StatelessWidget {
   final List<CollectionEntry> entries;
 
   @override
+  Widget build(BuildContext context) => ListView.builder(
+    itemCount: entries.length,
+    itemBuilder: (context, index) =>
+        EntryTile(type: type, entry: entries[index]),
+  );
+}
+
+/// One series or standalone book of a list (tab, author page).
+class EntryTile extends StatelessWidget {
+  const new({required this.type, required this.entry, super.key});
+
+  final CollectionType type;
+  final CollectionEntry entry;
+
+  @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    return ListView.builder(
-      itemCount: entries.length,
-      itemBuilder: (context, index) {
-        final entry = entries[index];
-        final progress = entry is SeriesEntry ? entry.progress : null;
-        return ListTile(
-          leading: CoverImage(url: entryCover(entry), width: 40, height: 60),
-          title: Text(entry.title),
-          subtitle: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(entrySubtitle(l10n, entry)),
-              if (progress != null)
-                Padding(
-                  padding: const EdgeInsets.only(top: 4),
-                  child: LinearProgressIndicator(value: progress),
-                ),
-            ],
-          ),
-          trailing: entry is SeriesEntry && entry.isComplete
-              ? Icon(Icons.check_circle, color: Colors.green.shade600)
-              : null,
-          onTap: () => context.push(entryRoute(type, entry)),
-        );
-      },
+    final entry = this.entry;
+    final progress = entry is SeriesEntry ? entry.progress : null;
+    return ListTile(
+      leading: CoverImage(url: entryCover(entry), width: 40, height: 60),
+      title: Text(entry.title),
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(entrySubtitle(l10n, entry)),
+          if (progress != null)
+            Padding(
+              padding: const EdgeInsets.only(top: 4),
+              child: LinearProgressIndicator(value: progress),
+            ),
+        ],
+      ),
+      trailing: entry is SeriesEntry && entry.isComplete
+          ? Icon(Icons.check_circle, color: Colors.green.shade600)
+          : null,
+      onTap: () => context.push(entryRoute(type, entry)),
     );
   }
 }

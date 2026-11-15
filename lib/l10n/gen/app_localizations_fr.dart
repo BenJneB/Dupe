@@ -273,6 +273,47 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String get byAuthor => 'Par auteur';
+
+  @override
+  String get unknownAuthor => 'Auteur inconnu';
+
+  @override
+  String authorSummary(int series, int books, int volumes) {
+    String _temp0 = intl.Intl.pluralLogic(
+      series,
+      locale: localeName,
+      other: '$series séries · ',
+      one: '1 série · ',
+      zero: '',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      books,
+      locale: localeName,
+      other: '$books livres · ',
+      one: '1 livre · ',
+      zero: '',
+    );
+    String _temp2 = intl.Intl.pluralLogic(
+      volumes,
+      locale: localeName,
+      other: '$volumes possédés',
+      one: '1 possédé',
+      zero: 'aucun possédé',
+    );
+    return '$_temp0$_temp1$_temp2';
+  }
+
+  @override
+  String get authorSeries => 'Séries';
+
+  @override
+  String get authorBooks => 'Livres hors série';
+
+  @override
+  String get authorNotFound => 'Plus rien de cet auteur dans cet onglet';
+
+  @override
   String get seeSeries => 'Voir la série';
 
   @override

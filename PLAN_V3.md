@@ -388,6 +388,15 @@ accepté.*
 - Journal des couvertures : adresses en échec avec leur cause (HTTP 404…) ; « Compléter » liste les livres restés
   sans couverture et les sources qui ont répondu (diagnostic Kaamelott tome 1 : Open Library n'a rien, seul
   Google Books peut fournir l'image).
+- **Vue par auteur** (demande de l'utilisateur, 2026-11-15) : puce « Par auteur » dans chaque onglet (auteurs triés
+  par nom de famille, séries / livres / possédés, suit les filtres), page d'un auteur (`/…/auteur?nom=`), noms
+  d'auteur cliquables sur les fiches livre et série (`features/authors/`). Noms regroupés sans ordre (« Colfer, Eoin »),
+  accents ni casse ; une série sans auteur prend ceux de ses tomes. Les noms d'auteur ouvrent la page par `context.go`
+  (pile onglet > auteur : le retour ne rejoue pas les allers-retours auteur ↔ série). Tests `author_groups_test.dart`,
+  `author_screen_test.dart`.
+- « Ajouter des tomes » proposait jusqu'au tome (nombre de pastilles + 1) : Jumeaux Fowl 1 et 3 → tome 4 inexistant
+  créé. Proposition = total connu, sinon le plus haut tome présent s'il y a des trous, sinon le suivant
+  (`VolumeGrid.suggestedRangeEnd`, `volume_grid_test.dart`).
 - Écarts acceptés : manga scanné depuis l'onglet Comics rangé en Comics (l'onglet décide quand aucune
   série existante ne correspond) ; couvertures absentes quand aucune source n'a d'image (la BnF n'en
   fournit pas, Open Library rarement pour les éditions françaises).
