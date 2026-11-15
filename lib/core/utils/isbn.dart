@@ -33,19 +33,6 @@ abstract final class Isbn {
     return '$body${_eanCheckDigit(body)}';
   }
 
-  /// ISBN-10 from a 978 ISBN-13 (979 ones have no ISBN-10); null otherwise.
-  static String? toIsbn10(String raw) {
-    final s = normalize(raw);
-    if (!isValidIsbn13(s) || !s.startsWith('978')) return null;
-    final body = s.substring(3, 12);
-    var sum = 0;
-    for (var i = 0; i < 9; i++) {
-      sum += int.parse(body[i]) * (10 - i);
-    }
-    final check = (11 - sum % 11) % 11;
-    return '$body${check == 10 ? 'X' : check}';
-  }
-
   /// Classifies a scanned/typed code. UPC-A (12 digits) and UPC-A + 5-digit
   /// add-on (17 digits, US comics single issues) are [CodeKind.upc].
   static CodeKind classify(String raw) {

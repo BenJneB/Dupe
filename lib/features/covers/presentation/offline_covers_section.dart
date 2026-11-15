@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:dupe/features/covers/data/cover_cache.dart';
 import 'package:dupe/features/covers/data/cover_prefetch.dart';
+import 'package:dupe/features/covers/data/missing_covers.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
@@ -34,6 +35,7 @@ class OfflineCoversSection extends ConsumerWidget {
         (enabled: true, wifiOnly: true);
     final progress = ref.watch(coverPrefetchProvider);
     final size = ref.watch(coverCacheSizeProvider).value;
+    final fill = ref.watch(missingCoversFillProvider);
 
     Future<void> change(Future<void> Function(PrefetchSettings) write) async {
       await write(ref.read(prefetchSettingsProvider));
@@ -94,6 +96,33 @@ class OfflineCoversSection extends ConsumerWidget {
             onPressed: () => _clear(context, ref),
             child: Text(l10n.offlineCoversClear),
           ),
+        ),
+        ListTile(
+          key: const Key('fillMissingCovers'),
+          leading: fill.running
+              ? const SizedBox.square(
+                  dimension: 24,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                )
+              : const Icon(Icons.image_search_outlined),
+          title: Text(l10n.missingCovers),
+          subtitle: Text(switch (fill) {
+            CoverFillState(running: true) => l10n.missingCoversProgress(
+              fill.done,
+              fill.total,
+              fill.found,
+            ),
+            CoverFillState(finished: true) => l10n.missingCoversDone(
+              fill.found,
+              fill.total,
+            ),
+            _ => l10n.missingCoversHelp,
+          }),
+          onTap: fill.running
+              ? null
+              : () => unawaited(
+                  ref.read(missingCoversFillProvider.notifier).run(),
+                ),
         ),
       ],
     );

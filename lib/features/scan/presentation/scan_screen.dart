@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:dupe/core/database/database_provider.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
+import 'package:dupe/features/collection/presentation/labels.dart';
 import 'package:dupe/features/scan/data/scan_queue_repository.dart';
 import 'package:dupe/features/scan/data/scan_queue_worker.dart';
 import 'package:dupe/features/scan/presentation/burst/burst_panel.dart';
@@ -22,8 +24,12 @@ class ScanScreen extends ConsumerStatefulWidget {
   const new({this.type, super.key});
 
   /// Tab the scan was opened from: sources and series are looked up as this
-  /// type (books when opened elsewhere: the widest set of sources).
+  /// type. Opened elsewhere (journal, shortcut, widget): the type last chosen
+  /// in the scan screen, books at first. Changeable from the app bar.
   final CollectionType? type;
+
+  /// Setting: type last chosen in the scan screen.
+  static const lastTypeKey = 'scan_last_type';
 
   @override
   ConsumerState<ScanScreen> createState() => _ScanScreenState();
@@ -33,13 +39,33 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
   ScanMode _mode = ScanMode.store;
   String? _lastIsbn;
 
-  CollectionType get _type => widget.type ?? CollectionType.livre;
+  late CollectionType _type = widget.type ?? CollectionType.livre;
 
   @override
   void initState() {
     super.initState();
+    if (widget.type == null) unawaited(_restoreType());
     // Resume lookups left pending (app closed during a burst).
     unawaited(ref.read(scanQueueWorkerProvider).run());
+  }
+
+  Future<void> _restoreType() async {
+    final saved = await ref
+        .read(appSettingsStoreProvider)
+        .get(ScanScreen.lastTypeKey);
+    final type = CollectionType.values
+        .where((t) => t.dbValue == saved)
+        .firstOrNull;
+    if (type != null && mounted) setState(() => _type = type);
+  }
+
+  void _setType(CollectionType type) {
+    setState(() => _type = type);
+    unawaited(
+      ref
+          .read(appSettingsStoreProvider)
+          .set(ScanScreen.lastTypeKey, type.dbValue),
+    );
   }
 
   Future<void> _onCode(String raw) async {
@@ -80,7 +106,8 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
     final isbn = _lastIsbn;
     final panel = switch (_mode) {
       ScanMode.store when isbn != null => StoreResultBanner(
-        key: ValueKey(isbn),
+        // Checked again when the type changes.
+        key: ValueKey('$isbn-${_type.name}'),
         isbn13: isbn,
         type: _type,
       ),
@@ -90,6 +117,32 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(l10n.scan),
+        actions: [
+          PopupMenuButton<CollectionType>(
+            key: const Key('scanTypeMenu'),
+            tooltip: l10n.scanType,
+            initialValue: _type,
+            onSelected: _setType,
+            itemBuilder: (context) => [
+              for (final t in CollectionType.values)
+                PopupMenuItem(
+                  key: Key('scanType_${t.name}'),
+                  value: t,
+                  child: Text(t.label(l10n)),
+                ),
+            ],
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(_type.label(l10n)),
+                  const Icon(Icons.arrow_drop_down),
+                ],
+              ),
+            ),
+          ),
+        ],
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(56),
           child: Padding(

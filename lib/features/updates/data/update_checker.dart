@@ -47,17 +47,26 @@ class UpdateChecker {
       _settings.set(enabledKey, enabled ? '1' : '0');
 
   /// Null when up to date, disabled, or already checked today (unless
-  /// [force]). Network errors are thrown.
+  /// [force]), or when the repository has no release yet. Network errors
+  /// are thrown.
   Future<AvailableUpdate?> check({bool force = false}) async {
     final today = _now().toIso8601String().substring(0, 10);
     if (!force) {
       if (!await enabled) return null;
       if (await _settings.get(checkedOnKey) == today) return null;
     }
-    final response = await _dio.getUri<Map<String, dynamic>>(
-      latestRelease,
-      options: Options(headers: {'Accept': 'application/vnd.github+json'}),
-    );
+    final Response<Map<String, dynamic>> response;
+    try {
+      response = await _dio.getUri<Map<String, dynamic>>(
+        latestRelease,
+        options: Options(headers: {'Accept': 'application/vnd.github+json'}),
+      );
+    } on DioException catch (e) {
+      // 404: no published release yet (or only pre-releases): nothing new.
+      if (e.response?.statusCode != 404) rethrow;
+      await _settings.set(checkedOnKey, today);
+      return null;
+    }
     await _settings.set(checkedOnKey, today);
     final release = response.data!;
     final version = (release['tag_name'] as String).replaceFirst('v', '');

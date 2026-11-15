@@ -478,6 +478,36 @@ abstract class AppLocalizations {
   /// **'Je l’ai acheté'**
   String get markOwned;
 
+  /// No description provided for @pressBackAgainToExit.
+  ///
+  /// In fr, this message translates to:
+  /// **'Appuie de nouveau sur retour pour quitter'**
+  String get pressBackAgainToExit;
+
+  /// No description provided for @allRead.
+  ///
+  /// In fr, this message translates to:
+  /// **'tout lu'**
+  String get allRead;
+
+  /// No description provided for @scanType.
+  ///
+  /// In fr, this message translates to:
+  /// **'Type des livres scannés'**
+  String get scanType;
+
+  /// No description provided for @storeInSeries.
+  ///
+  /// In fr, this message translates to:
+  /// **'{title} — série {series}'**
+  String storeInSeries(String title, String series);
+
+  /// No description provided for @previousVolumesOffer.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{Il te manque 1 tome avant le {volume} : l’ajouter comme possédé ?} other{Il te manque {count} tomes avant le {volume} : les ajouter comme possédés ?}}'**
+  String previousVolumesOffer(int count, int volume);
+
   /// No description provided for @seeSeries.
   ///
   /// In fr, this message translates to:
@@ -2637,6 +2667,30 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'toucher pour vérifier'**
   String get offlineCoversRefresh;
+
+  /// No description provided for @missingCovers.
+  ///
+  /// In fr, this message translates to:
+  /// **'Compléter les couvertures manquantes'**
+  String get missingCovers;
+
+  /// No description provided for @missingCoversHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cherche par ISBN une couverture pour chaque livre qui n’en a pas ou dont la couverture ne se charge pas (sans rien changer d’autre ; tes photos sont gardées)'**
+  String get missingCoversHelp;
+
+  /// No description provided for @missingCoversProgress.
+  ///
+  /// In fr, this message translates to:
+  /// **'{done} / {total} livres vérifiés · {found} trouvée(s)'**
+  String missingCoversProgress(int done, int total, int found);
+
+  /// No description provided for @missingCoversDone.
+  ///
+  /// In fr, this message translates to:
+  /// **'{found} couverture(s) ajoutée(s) ou remplacée(s) · {total} livres vérifiés'**
+  String missingCoversDone(int found, int total);
 
   /// No description provided for @offlineCoversClear.
   ///

@@ -78,3 +78,9 @@ class NetworkCoverCache implements CoverCache {
 
 @Riverpod(keepAlive: true)
 CoverCache coverCache(Ref ref) => const NetworkCoverCache();
+
+/// Short cause for the journal: "HTTP 404", or the error type.
+String coverError(Object e) => switch (e) {
+  HttpExceptionWithStatus(:final statusCode) => 'HTTP $statusCode',
+  _ => e.runtimeType.toString(),
+};

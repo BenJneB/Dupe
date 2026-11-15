@@ -1,4 +1,5 @@
 import 'package:dupe/core/metadata/metadata_aggregator.dart';
+import 'package:dupe/core/metadata/metadata_merge.dart';
 import 'package:dupe/core/metadata/metadata_result.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -94,6 +95,84 @@ void main() {
       lookup.merged!.coverUrl,
       'https://covers.openlibrary.org/b/isbn/$isbn-L.jpg?default=false',
     );
+  });
+
+  test('a volume in the title is split out (Free Quest Tome 1)', () async {
+    final agg = MetadataAggregator(
+      providers: [
+        FakeProvider(
+          MetadataSource.googleBooks,
+          isbnResult: r(MetadataSource.googleBooks, title: 'Free Quest Tome 1'),
+        ),
+      ],
+    );
+    final merged = (await agg.lookupIsbn(isbn, CollectionType.manga)).merged!;
+    expect(merged.title, 'Free Quest');
+    expect(merged.volumeNumber, '1');
+  });
+
+  test('a volume in another source title fills the BnF gap', () async {
+    // BnF 9782075173827 (Folio): series without volume number.
+    final agg = MetadataAggregator(
+      providers: [
+        FakeProvider(
+          MetadataSource.bnf,
+          isbnResult: r(
+            MetadataSource.bnf,
+            title: 'Le génie du crime reste dans la famille',
+          ).copyWith(seriesTitle: 'Les jumeaux Fowl'),
+        ),
+        FakeProvider(
+          MetadataSource.googleBooks,
+          isbnResult: r(
+            MetadataSource.googleBooks,
+            title: 'Les jumeaux Fowl - Tome 1',
+          ),
+        ),
+      ],
+    );
+    final merged = (await agg.lookupIsbn(isbn, CollectionType.livre)).merged!;
+    expect(merged.title, 'Le génie du crime reste dans la famille');
+    expect(merged.seriesTitle, 'Les jumeaux Fowl');
+    expect(merged.volumeNumber, '1');
+  });
+
+  test('volume markers found in titles', () {
+    ({String title, String? volume, String? subtitle}) split(
+      String title, {
+      String? volume,
+    }) {
+      final m = withVolumeFromTitle(
+        MetadataResult(
+          source: MetadataSource.googleBooks,
+          sourceId: 'g',
+          title: title,
+          volumeNumber: volume,
+        ),
+      );
+      return (title: m.title, volume: m.volumeNumber, subtitle: m.subtitle);
+    }
+
+    expect(split('Free Quest Tome 1'), (
+      title: 'Free Quest',
+      volume: '1',
+      subtitle: null,
+    ));
+    expect(split('Free Quest - T01').volume, '1');
+    expect(split('Kaamelott, tome 2').title, 'Kaamelott');
+    expect(split('One Piece, Vol. 3 : Romance Dawn'), (
+      title: 'One Piece',
+      volume: '3',
+      subtitle: 'Romance Dawn',
+    ));
+    expect(split('Les Jumeaux Fowl Livre 2').volume, '2');
+    // No marker: unchanged.
+    expect(split('Dune').title, 'Dune');
+    expect(split('1984').volume, isNull);
+    expect(split('Attack on Titan 34').volume, isNull);
+    // A different known volume wins; the title is left alone.
+    expect(split('Naruto Tome 2', volume: '3').title, 'Naruto Tome 2');
+    expect(split('Naruto Tome 02', volume: '2').title, 'Naruto');
   });
 
   test('unknown everywhere gives no merged result', () async {

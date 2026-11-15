@@ -353,6 +353,55 @@ Phase pilotée par l'utilisateur, sur la version issue de la phase 20 installée
 *Critère : tous les tests de `TESTS_MANUELS.md` passent, sont automatisés, ou ont un écart documenté et
 accepté.*
 
+**Retours déjà traités (2026-11-15, APK release sur Android)** :
+- Free Quest tome 1 scanné en magasin : aucune série proposée. La BnF n'a pas ce tome ; l'autre source
+  donne « Free Quest Tome 1 » sans numéro → `withVolumeFromTitle` (`metadata_merge.dart`) sépare le
+  numéro du titre (« Tome 1 », « T01 », « Vol. 3 : sous-titre », « Livre 2 »). Test dans
+  `metadata_aggregator_test.dart`.
+- Journal : `[update] 404` à chaque démarrage tant qu'aucune Release n'est publiée → 404 = « à jour »
+  (fixture réelle `github/latest_release_none.json`).
+- « Voir la série » depuis un tome empilait une nouvelle page : le retour rejouait tout le parcours →
+  `context.go` (pile onglet > série). Séries créées au scan sans couverture propre (listes, écran de série)
+  → couverture du premier tome qui en a une. Test `series_navigation_test.dart`.
+- Jumeaux Fowl tome 3 : série « Folio junior » proposée. La BnF met la collection d'éditeur numérotée en 225
+  (« Folio junior » n° 1987) → `_seriesCollection` (`unimarc_parser.dart`) : 225 ignoré si le titre porte son
+  propre tome (200 $h) sans 461, si un 461 désigne une autre série, ou si le numéro ≥ 1000. Fixture réelle
+  `bnf/search_jumeaux_fowl.xml`.
+- Confirmation avant de quitter (Android) : retour sur la racine d'un onglet → « Appuie de nouveau sur retour
+  pour quitter » (2 s, `app/exit_guard.dart`). Test `exit_guard_test.dart`.
+- Aucun indicateur « lu » : coche sur les pastilles des tomes lus (+ légende), « tout lu » sur la ligne d'une
+  série, « Lu » sur un livre isolé (`reading_test.dart`).
+- Couvertures de la collection importée : Paramètres → « Compléter les couvertures manquantes »
+  (`covers/data/missing_covers.dart` : items avec ISBN sans couverture, recherche par ISBN, URL gardée seulement
+  si elle se télécharge — mise en cache au passage) ; remplace aussi une adresse qui ne se télécharge pas (devinette
+  Open Library enregistrée au scan), jamais une photo. Test `missing_covers_test.dart`.
+- Ajout d'un tome N possédé dans une série : « Il te manque k tomes avant le N : les ajouter comme possédés ? »
+  [Ajouter] (`item/previous_volumes_offer.dart`, `addVolumeRange`). Test dans `series_navigation_test.dart`.
+- Jumeaux Fowl tome 1 Folio (9782075173827) : la fiche BnF a la série mais pas de numéro → bandeau « Tome ? de… ».
+  Bandeau : « <titre> — série <série> » sans numéro ; le numéro est aussi lu dans le titre de **chaque** source avant
+  la fusion (« Les jumeaux Fowl - Tome 1 » de Google comble le manque de la BnF).
+- Scan ouvert hors d'un onglet de collection (journal, Plus, raccourci) : rangé en Livres. Menu de type dans la barre du
+  scan, dernier choix mémorisé (`scan_last_type`).
+- Un onglet rouvrait la dernière série/fiche consultée : il s'ouvre toujours sur sa liste (`goBranch(initialLocation: true)`).
+- Tome sans numéro dans une série (Fowl 1 Folio) : compté dans la liste mais invisible dans la grille (« il manque
+  le tome 1 ») → pastille « ? » en fin de grille, qui ouvre la fiche pour le numéroter (`volume_grid_test.dart`).
+- Journal des couvertures : adresses en échec avec leur cause (HTTP 404…) ; « Compléter » liste les livres restés
+  sans couverture et les sources qui ont répondu (diagnostic Kaamelott tome 1 : Open Library n'a rien, seul
+  Google Books peut fournir l'image).
+- Écarts acceptés : manga scanné depuis l'onglet Comics rangé en Comics (l'onglet décide quand aucune
+  série existante ne correspond) ; couvertures absentes quand aucune source n'a d'image (la BnF n'en
+  fournit pas, Open Library rarement pour les éditions françaises).
+
+### Après la v3 — idées notées
+- **Compléter une série à la création** (en partie fait : proposition des tomes *précédents*) : à l'ajout du tome 1 (ou du premier tome d'une nouvelle série),
+  proposer d'ajouter les tomes suivants jusqu'au tome N (non possédés), N pré-rempli par AniList / Comic Vine
+  quand c'est possible, saisi sinon (BD, livres). Demande de l'utilisateur (Kaamelott tome 1, 2026-11-15).
+  Existe déjà à la main : bouton « Ajouter des tomes » de l'écran de série (`addVolumes`).
+- **Mot de passe oublié sans être connecté** : lien « Mot de passe oublié ? » sur l'écran de connexion
+  (email de réinitialisation Supabase), au lieu de passer par Paramètres → Mot de passe une fois connecté.
+- **Lien de confirmation d'inscription** : il ouvre `localhost` (404). *Site URL* / *Redirect URLs* du projet
+  Supabase à régler, et page d'arrivée (ou lien profond `dupe://`) qui confirme puis renvoie dans l'appli.
+
 ## 5. Actions manuelles de l'utilisateur
 - **Phase 14** : créer le compte dans l'appli (fait). Le reste est reporté en phase 21.
 - **Phase 15** : créer le secret `ENV_JSON` **sans** `COMIC_VINE_API_KEY` ni `GOOGLE_BOOKS_API_KEY` (et sans

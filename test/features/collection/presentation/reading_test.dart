@@ -40,6 +40,10 @@ void main() {
 
     expect(find.text('Naruto'), findsOneWidget);
     expect(find.text('Akira'), findsNothing);
+    await tester.tap(find.byKey(const Key('toReadFilter')));
+    await tester.pumpAndSettle();
+    // Every owned volume of Akira is read.
+    expect(find.textContaining('tout lu'), findsOneWidget);
   });
 
   testWidgets('mark volumes 1 to N as read from the series sheet', (
@@ -60,6 +64,9 @@ void main() {
 
     expect(find.text('3 tomes marqués comme lus'), findsOneWidget);
     expect(find.text('2 tomes à lire'), findsOneWidget);
+    // Read volumes carry a check mark in the grid.
+    expect(find.byKey(const ValueKey('read-3')), findsOneWidget);
+    expect(find.byKey(const ValueKey('read-4')), findsNothing);
     final read = await tester.runAsync(
       () => (db.select(
         db.itemsTable,

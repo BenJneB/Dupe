@@ -26,6 +26,12 @@ class VolumeSlot {
 
   /// Every copy of this volume (editions, variants), best status first.
   final List<Item> copies;
+
+  /// An owned copy of this volume has been read.
+  bool get isRead => copies.any(
+    (i) =>
+        i.ownership == Ownership.possede && i.readingStatus == ReadingStatus.lu,
+  );
 }
 
 /// Mangacollec-like view of a series: one slot per volume number.
@@ -60,9 +66,13 @@ class VolumeGrid {
     }
 
     final copies = <String, List<Item>>{};
+    final unnumbered = <Item>[];
     for (final item in items) {
       final label = item.volumeNumber?.trim() ?? '';
-      if (label.isEmpty) continue;
+      if (label.isEmpty) {
+        unnumbered.add(item);
+        continue;
+      }
       final key = VolumeNumber.asInt(label)?.toString() ?? label;
       (copies[key] ??= []).add(item);
     }
@@ -101,6 +111,18 @@ class VolumeGrid {
           item: byLabel[key],
           copies: copies[key]!,
           status: statusOf(byLabel[key]!),
+        ),
+      );
+    }
+    // Volumes without number (source without one): shown last as "?", so
+    // that they can be opened and numbered.
+    for (final item in unnumbered) {
+      slots.add(
+        VolumeSlot(
+          label: '?',
+          item: item,
+          copies: [item],
+          status: statusOf(item),
         ),
       );
     }
@@ -146,4 +168,18 @@ class VolumeGrid {
 
   bool get isComplete =>
       totalVolumes != null && totalVolumes! > 0 && ownedCount >= totalVolumes!;
+}
+
+extension VolumeGridCover on VolumeGrid {
+  /// Cover of the first volume that has one: stands for a series without
+  /// its own cover (series created while scanning).
+  String? get firstCover {
+    for (final slot in slots) {
+      for (final copy in slot.copies) {
+        final url = copy.coverUrl;
+        if (url != null && url.isNotEmpty) return url;
+      }
+    }
+    return null;
+  }
 }

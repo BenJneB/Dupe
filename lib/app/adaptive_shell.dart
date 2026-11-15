@@ -1,3 +1,4 @@
+import 'package:dupe/app/exit_guard.dart';
 import 'package:dupe/app/router.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
@@ -27,14 +28,15 @@ class AdaptiveShell extends StatelessWidget {
         : null,
   );
 
-  void _onDestinationSelected(int index) => navigationShell.goBranch(
-    index,
-    // Tapping the current tab again goes back to its root.
-    initialLocation: index == navigationShell.currentIndex,
-  );
+  /// A tab always opens on its root (list), not on the last series or
+  /// volume seen in it (user's choice, 2026-11-15).
+  void _onDestinationSelected(int index) =>
+      navigationShell.goBranch(index, initialLocation: true);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) => ExitGuard(child: _build(context));
+
+  Widget _build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final destinations = <({IconData icon, IconData selected, String label})>[
       (

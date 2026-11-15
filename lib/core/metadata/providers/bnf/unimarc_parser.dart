@@ -37,18 +37,13 @@ MetadataResult? parseUnimarcRecord(UnimarcRecord r) {
 
   final isbn = r.first('010', 'a') ?? r.first('073', 'a');
   final price = _parsePrice(r.first('010', 'd'));
-  // 225 is a series only when numbered ($v); otherwise it is a publisher's
-  // collection ("Imaginaire", "Shonen One Piece").
-  final numberedCollection = r
-      .fields('225')
-      .map(
-        (f) => (
-          title: UnimarcRecord.subfields(f, 'a').firstOrNull,
-          number: UnimarcRecord.subfields(f, 'v').firstOrNull,
-        ),
-      )
-      .where((c) => c.title != null && c.number != null)
-      .firstOrNull;
+  final linkedSeries = r.first('461', 't');
+  final ownVolume = r.first('200', 'h');
+  final numberedCollection = _seriesCollection(
+    r,
+    linkedSeries: linkedSeries,
+    hasOwnVolume: ownVolume != null,
+  );
 
   return MetadataResult(
     source: MetadataSource.bnf,
@@ -62,15 +57,41 @@ MetadataResult? parseUnimarcRecord(UnimarcRecord r) {
     language: _languages[r.first('101', 'a')],
     isbn13: isbn == null ? null : Isbn.toIsbn13(isbn),
     description: r.first('330', 'a'),
-    seriesTitle: r.first('461', 't') ?? numberedCollection?.title,
-    volumeNumber:
-        r.first('200', 'h') ??
-        r.first('461', 'v') ??
-        numberedCollection?.number,
+    seriesTitle: linkedSeries ?? numberedCollection?.title,
+    volumeNumber: cleanVolumeNumber(
+      ownVolume ?? r.first('461', 'v') ?? numberedCollection?.number,
+    ),
     coverPrice: price?.amount,
     currency: price?.currency,
   );
 }
+
+/// The 225 field that names the series, if any. 225 is often a publisher's
+/// collection instead ("Folio junior" n° 1987, "J'ai lu" n° 13320):
+/// - without a number ($v) it is always a collection;
+/// - with a linked series (461), only the 225 of that series counts;
+/// - when the record has its own volume (200 $h), the title is the series;
+/// - collection numbers are large: from 1000, not a volume.
+({String title, String number})? _seriesCollection(
+  UnimarcRecord r, {
+  required String? linkedSeries,
+  required bool hasOwnVolume,
+}) {
+  if (hasOwnVolume && linkedSeries == null) return null;
+  for (final f in r.fields('225')) {
+    final title = UnimarcRecord.subfields(f, 'a').firstOrNull;
+    final number = UnimarcRecord.subfields(f, 'v').firstOrNull;
+    if (title == null || number == null) continue;
+    if (linkedSeries != null && _fold(title) != _fold(linkedSeries)) {
+      continue;
+    }
+    if ((int.tryParse(number.trim()) ?? 0) >= 1000) continue;
+    return (title: title, number: number);
+  }
+  return null;
+}
+
+String _fold(String s) => s.toLowerCase().replaceAll(RegExp(r'\W+'), '');
 
 List<String> _authors(UnimarcRecord r) {
   final names = <String>[];
@@ -90,14 +111,22 @@ List<String> _authors(UnimarcRecord r) {
 }
 
 final _volumePrefix = RegExp(
-  r'^(tome|t\.|vol\.?|volume|n°|no\.?|numéro)\s*',
+  r'^(tome|t\.|vol\.?|volume|livre|n°|no\.?|numéro)\s*',
   caseSensitive: false,
 );
 
-/// "Tome 2" / "T. 2" / "Vol. 2" -> "2"; other labels ("Saison 1", "HS 2")
-/// are kept as is.
+/// Square brackets: information added by the cataloguer ("[Livre 1]").
+final _brackets = RegExp(r'^\[(.*)\]$');
+
+/// "Tome 2" / "T. 2" / "Vol. 2" / "[Livre 2]" -> "2"; other labels
+/// ("Saison 1", "HS 2") are kept as is.
 String? cleanVolumeNumber(String? raw) {
-  final value = raw?.trim().replaceFirst(_volumePrefix, '').trim();
+  final trimmed = raw?.trim();
+  final value = trimmed
+      ?.replaceFirstMapped(_brackets, (m) => m[1]!)
+      .trim()
+      .replaceFirst(_volumePrefix, '')
+      .trim();
   return value == null || value.isEmpty ? null : value;
 }
 

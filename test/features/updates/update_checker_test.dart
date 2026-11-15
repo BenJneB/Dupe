@@ -103,4 +103,20 @@ void main() {
         .check(force: true);
     expect(update!.download, isNull);
   });
+
+  test(
+    'no release yet (GitHub 404): up to date, checked for the day',
+    () async {
+      // Real answer for this repository before its first release.
+      http = FakeHttpAdapter()
+        ..on(
+          (u) => true,
+          fixture('github/latest_release_none.json'),
+          status: 404,
+        );
+      expect(await checker().check(), isNull);
+      expect(await checker().check(), isNull);
+      expect(http.requests, hasLength(1));
+    },
+  );
 }

@@ -36,3 +36,29 @@ MetadataResult? mergeResults(List<MetadataResult> ordered, String isbn13) {
     currency: priced?.currency,
   );
 }
+
+/// "Free Quest Tome 1", "Free Quest - T01", "One Piece, Vol. 3 : Romance
+/// Dawn": the volume marker, its number and an optional subtitle.
+final _volumeInTitle = RegExp(
+  r'^(.+?)[\s,.\-–—]+(?:tome|t\.?|vol\.?|volume|livre)\s*0*(\d+)'
+  r'(?:\s*[:\-–—]\s*(.+))?\s*$',
+  caseSensitive: false,
+);
+
+/// Sources without a volume field (Google Books, Open Library) put it in the
+/// title: split it so the volume can be filed in its series.
+MetadataResult withVolumeFromTitle(MetadataResult r) {
+  final match = _volumeInTitle.firstMatch(r.title.trim());
+  if (match == null) return r;
+  final number = match[2]!;
+  final current = r.volumeNumber;
+  if (current != null && current.replaceFirst(RegExp('^0+'), '') != number) {
+    return r;
+  }
+  final subtitle = r.subtitle;
+  return r.copyWith(
+    title: match[1]!.trim(),
+    volumeNumber: number,
+    subtitle: subtitle == null || subtitle.trim().isEmpty ? match[3] : subtitle,
+  );
+}

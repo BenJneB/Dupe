@@ -1,4 +1,3 @@
-import 'package:dupe/features/collection/domain/enums.dart';
 import 'package:dupe/features/collection/domain/item.dart';
 import 'package:dupe/features/collection/domain/series.dart';
 import 'package:dupe/features/collection/domain/volume_grid.dart';
@@ -48,5 +47,3 @@ int compareWishes(Item a, Item b) {
 }
 
 int _volume(Item i) => int.tryParse(i.volumeNumber ?? '') ?? 0;
-
-bool isWished(Item i) => i.ownership == Ownership.envie;

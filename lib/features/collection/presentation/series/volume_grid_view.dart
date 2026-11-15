@@ -1,3 +1,4 @@
+import 'package:dupe/features/collection/domain/enums.dart';
 import 'package:dupe/features/collection/domain/volume_grid.dart';
 import 'package:dupe/features/collection/presentation/labels.dart';
 import 'package:dupe/features/collection/presentation/series/volume_slot_colors.dart';
@@ -33,7 +34,10 @@ class VolumeGridView extends StatelessWidget {
                 slot: slot,
                 semanticLabel: l10n.slotSemantics(
                   slot.label,
-                  slot.status.label(l10n),
+                  [
+                    slot.status.label(l10n),
+                    if (slot.isRead) ReadingStatus.lu.label(l10n),
+                  ].join(', '),
                 ),
                 onTap: () => onTap(slot),
                 onLongPress: () => onLongPress(slot),
@@ -57,6 +61,17 @@ class VolumeGridView extends StatelessWidget {
                   ),
                 ],
               ),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.check, size: 14),
+                const SizedBox(width: 4),
+                Text(
+                  ReadingStatus.lu.label(l10n),
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              ],
+            ),
           ],
         ),
       ],
@@ -106,12 +121,27 @@ class _Pastille extends StatelessWidget {
               constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
               padding: const EdgeInsets.symmetric(horizontal: 8),
               alignment: Alignment.center,
-              child: Text(
-                slot.label,
-                style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                  color: colors.foreground,
-                  fontWeight: FontWeight.w600,
-                ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (slot.isRead)
+                    Padding(
+                      padding: const EdgeInsets.only(right: 2),
+                      child: Icon(
+                        Icons.check,
+                        key: ValueKey('read-${slot.label}'),
+                        size: 14,
+                        color: colors.foreground,
+                      ),
+                    ),
+                  Text(
+                    slot.label,
+                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                      color: colors.foreground,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
