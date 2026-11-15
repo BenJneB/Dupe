@@ -52,7 +52,7 @@ raccourci Android « Scanner », vibrations, lampe torche, signalement des nouve
 | 18 | Hooks, commits conventionnels, tests d'intégration | ✅ fait (2026-11-14) | scripts + 4 parcours (Linux) | hooks non installés ; CI à voir |
 | 19 | Accès rapide : widget et recherche vocale | ✅ fait (2026-11-14) | oui (plugins simulés) | non (téléphone) |
 | 20 | Couvertures hors ligne, stats de lecture, partage des envies | ✅ fait (2026-11-15) | oui (connexion et cache simulés) | non (`O-*`, `T-*`, `E-*`) |
-| 21 | Recette finale (reste de `TESTS_MANUELS.md`) | à faire | — | — |
+| 21 | Recette finale (reste de `TESTS_MANUELS.md`) | en cours (depuis 2026-11-15) — gel des fonctionnalités | — | — |
 
 ## 4. Phases
 
@@ -120,7 +120,7 @@ l'appli ; la clé n'apparaît ni dans une sauvegarde JSON, ni dans le journal, n
 - **Non vérifié** : avec les vrais services et une version publiée (`K-01` à `K-05`, phase 21) ;
   `release.yml` n'a toujours jamais tourné.
 - **Point découvert** : `OPEN_LIBRARY_CONTACT` (l'email de l'utilisateur) serait lui aussi lisible dans une
-  Release publique ; documenté (« le laisser vide dans `ENV_JSON` »), non bloqué par `check-env`.
+  Release publique ; d'abord seulement documenté, puis **refusé par `check-env`** (phase 21, 2026-11-15).
 
 ### Phase 16 — CI renforcée et veille Supabase fiable
 - `ci.yml` : ajouter `dart format --output=none --set-exit-if-changed .` et une **vérification du code
@@ -158,9 +158,12 @@ premières pull requests ; le keep-alive appelle `keep_alive()` avec succès.*
   `search_path` vide, aucune donnée lue). GitHub ne documente pas si réactiver un workflow actif remet le
   compteur des 60 jours à zéro : seule solution sans commit trouvée, à observer (`Y-13`).
 - **Non vérifié** : aucun des workflows modifiés n'a tourné ; `keep_alive()` jamais appelé sur le vrai projet
-  (migration à appliquer, `P-05`). **Dependabot ne peut pas fonctionner tel quel** : sa configuration n'est lue
-  que sur `main` (aujourd'hui « Initial commit ») et `dev` ne contient que `PLAN.MD` (pas de `pubspec.yaml`) —
-  voir `P-06`.
+  (migration à appliquer, `P-05`). **Dependabot ne pouvait pas fonctionner tel quel** : sa configuration n'est lue
+  que sur la branche par défaut, alors `main` (« Initial commit »), et `dev` ne contenait que `PLAN.MD` — voir
+  `P-06`. **Mise à jour 2026-11-15 (phase 21)** : la branche par défaut du dépôt est désormais `dev` (vérifié par
+  l'API GitHub), qui contient le travail des phases et `.github/dependabot.yml` : Dependabot lit donc sa
+  configuration sur `dev`. `P-06` probablement levé, à confirmer sur GitHub (Insights → Dependency graph →
+  Dependabot : dernière exécution sans erreur) ; aucune pull request Dependabot à cette date (`Y-11`).
 
 ### Phase 17 — Tests de synchro contre Supabase local
 Objectif : vérifier contre un vrai PostgREST/GoTrue ce que `fake_sync_remote.dart` simule.
@@ -353,6 +356,11 @@ Phase pilotée par l'utilisateur, sur la version issue de la phase 20 installée
 *Critère : tous les tests de `TESTS_MANUELS.md` passent, sont automatisés, ou ont un écart documenté et
 accepté.*
 
+**Gel des fonctionnalités (2026-11-15, après fusion de la branche Authors dans `dev`)** : seuls les bugs et les
+écarts aux tests sont corrigés ; toute nouvelle idée va dans « Après la v3 — idées notées », sans être codée.
+Avant la reprise des tests : `check-env` refuse aussi `OPEN_LIBRARY_CONTACT` ; architecture détaillée déplacée de
+`CLAUDE.md` vers `docs/ARCHITECTURE.md` (`CLAUDE.md` désormais versionné) ; branche par défaut `dev` (`P-06`).
+
 **Retours déjà traités (2026-11-15, APK release sur Android)** :
 - Free Quest tome 1 scanné en magasin : aucune série proposée. La BnF n'a pas ce tome ; l'autre source
   donne « Free Quest Tome 1 » sans numéro → `withVolumeFromTitle` (`metadata_merge.dart`) sépare le
@@ -416,9 +424,10 @@ accepté.*
 - **Phase 15** : créer le secret `ENV_JSON` **sans** `COMIC_VINE_API_KEY` ni `GOOGLE_BOOKS_API_KEY` (et sans
   `OPEN_LIBRARY_CONTACT` pour ne pas publier son email) ; restreindre la clé Google Books à la Books API ;
   saisir les clés dans l'appli sur chaque appareil. Pas de régénération : aucune Release n'a été publiée.
-- **Phase 16** : appliquer la migration `20261115090000_keep_alive.sql` ; mettre `dev` à jour avec le travail
-  des phases et porter `.github/dependabot.yml` sur `main` (sinon Dependabot ne fait rien) ; activer Dependabot
-  si nécessaire ; protéger `main` (pull request obligatoire, CI verte exigée) dans les réglages du dépôt.
+- **Phase 16** : appliquer la migration `20261115090000_keep_alive.sql` ; activer Dependabot si nécessaire et
+  vérifier qu'il lit sa configuration (branche par défaut = `dev` depuis la phase 21 : plus besoin de porter
+  `.github/dependabot.yml` sur `main`) ; protéger `main` (pull request obligatoire, CI verte exigée) dans les
+  réglages du dépôt.
 - **Phase 17** : accès à Docker sans sudo (`sudo usermod -aG docker $USER`, puis se reconnecter), Supabase CLI
   2.122.1 (`.deb`, README « Tests de synchro contre un Supabase local »), `postgresql-client`.
 - **Phase 18** : installer lefthook 2.2.2 (`.deb`, README « Hooks git ») puis `lefthook install`.
