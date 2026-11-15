@@ -51,6 +51,10 @@ de valeur par défaut (une clé saisie dans l'appli passe devant).
   série, 1 brève = inconnu ; désactivables dans Paramètres → *Scan* (et muettes si le retour haptique est
   coupé dans les réglages du téléphone).
 - **Raccourci** : appui long sur l'icône de l'appli → *Scanner* ; bouton **lampe torche** sur la caméra.
+- **Widget** (Android) : ajouter « Dupe » sur l'écran d'accueil : bouton *Scanner* et nombre d'ouvrages / de
+  prêts en retard.
+- **Recherche vocale** (Android, Windows) : micro de la barre de recherche, puis par exemple « One Piece tome
+  107 » ou « tome 3 de Blacksad » : la fiche du tome s'ouvre, ou la série avec « absent de ta collection ».
 - Paramètres → *Sources de données* : activer/désactiver chaque source.
 
 ## Synchronisation (Supabase, facultatif)

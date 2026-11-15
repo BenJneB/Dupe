@@ -908,6 +908,40 @@
   "scanSection": "Scan",
   "storeHaptics": "Vibrer selon le résultat",
   "storeHapticsHelp": "Mode Magasin : 1 forte = déjà possédé, 2 = en envie, 3 légères = tome manquant d’une série, 1 brève = inconnu",
+  "voiceSearchTitle": "Recherche vocale",
+  "voiceSearchExplain": "Dupe va te demander l’accès au micro. Ce que tu dis est transcrit par le service de reconnaissance vocale de ton appareil, puis cherché dans ta collection : Dupe n’enregistre rien. Dis par exemple « One Piece tome 107 » ou « tome 3 de Blacksad ».",
+  "voiceSearchContinue": "Continuer",
+  "voiceSearchListening": "J’écoute…",
+  "voiceSearchExample": "Dis par exemple « One Piece tome 107 »",
+  "voiceSearchStop": "Arrêter",
+  "voiceSearchNothing": "Je n’ai rien entendu (ou le micro n’est pas autorisé)",
+  "voiceVolumeMissing": "Tome {volume} de {series} : absent de ta collection",
+  "@voiceVolumeMissing": {
+    "placeholders": {
+      "volume": {
+        "type": "String"
+      },
+      "series": {
+        "type": "String"
+      }
+    }
+  },
+  "widgetOwned": "{count, plural, =0{Collection vide} =1{1 ouvrage} other{{count} ouvrages}}",
+  "@widgetOwned": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "widgetOverdue": "{count, plural, =1{1 prêt en retard} other{{count} prêts en retard}}",
+  "@widgetOverdue": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "errorOffline": "Pas de connexion internet.",
   "errorSession": "Session expirée : reconnecte-toi.",
   "errorUnavailable": "Serveur de synchronisation indisponible. Si l’appli n’a pas servi depuis une semaine, le projet Supabase gratuit est peut-être en pause : le réactiver depuis son tableau de bord.",

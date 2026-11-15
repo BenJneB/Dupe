@@ -60,6 +60,7 @@ Tous les tests non faits en phase 14 et non marqués « automatisé ». Le but :
 7c. **CI et Dependabot** : `P-05`, `P-06`, puis `Y-05`, `Y-09` à `Y-12`, `Y-14`.
 7d. **Horloge** (phase 17) : `S-13`.
 7e. **Hooks et intégration** (phase 18) : `H-01` à `H-04`, `Y-15`.
+7f. **Widget et dictée** (phase 19, téléphone) : `G-01` à `G-04`, `V-01` à `V-04`.
 8. **Le lendemain / plus tard** : `N-01` à `N-04` ; `M-12` chronométré en magasin ; `Y-06` (observation sur
    plusieurs semaines) ; `J-06` (facultatif, met le projet en pause).
 
@@ -244,4 +245,24 @@ Automatisé (phase 18) : vérification des messages (`tool/check_commit_msg.sh`)
       le parcours Magasin est sauté à cause de la caméra).
 - [ ] **Y-15** La Release de test (`Y-02`) a pour description les notes générées (groupées par type) ; le job
       `integration` de la CI est vert.
+
+## 13. Widget d'écran d'accueil et recherche vocale (phase 19)
+Automatisé (phase 19) : ouverture du scan depuis le widget (au lancement et appli ouverte), compteurs regroupés
+et non renvoyés s'ils n'ont pas changé, découpage des phrases (« One Piece tome 107 », « tome 3 de Blacksad »,
+nombres en lettres jusqu'à 999 999), ouverture du tome dicté / absence / recherche normale, explication du micro
+une seule fois. Simulés : le plugin du widget et le micro.
+- [ ] **G-01** Ajouter le widget « Dupe » sur l'écran d'accueil : bouton « Scanner » et « N ouvrages » (puis
+      « · N prêts en retard » s'il y en a).
+- [ ] **G-02** « Scanner » depuis l'écran d'accueil ouvre le scan en mode Magasin, appli fermée comme ouverte.
+- [ ] **G-03** Les compteurs suivent un ajout, une suppression, une synchro venant de l'autre appareil (en
+      quelques secondes, appli ouverte).
+- [ ] **G-04** Chrono à froid (appli fermée, balayée des applis récentes) : du toucher sur « Scanner » à la
+      caméra prête, **objectif < 2 s**. Noter la mesure et le modèle de téléphone.
+- [ ] **V-01** Android : micro de la barre de recherche → explication (une seule fois) → autorisation du micro
+      demandée par Android → « J'écoute… ».
+- [ ] **V-02** « One Piece tome 107 » (ou un tome possédé) : la fiche du tome s'ouvre ; un tome absent ouvre la
+      série avec « Tome N de … : absent de ta collection » ; « Dune » lance une recherche normale.
+- [ ] **V-03** Nombres dits en lettres (« Naruto volume douze »), et « Arrêter » / glisser le panneau vers le bas
+      arrête l'écoute.
+- [ ] **V-04** Windows : la dictée fonctionne (reconnaissance vocale de Windows) ; Linux : pas de bouton micro.
 

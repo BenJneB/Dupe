@@ -5,6 +5,9 @@ import 'package:go_router/go_router.dart';
 abstract final class AppRoutes {
   static const search = '/recherche';
 
+  /// Search that starts dictating at once (microphone of the search bar).
+  static const voiceSearch = '/recherche?voix=1';
+
   /// Online lookup; [query] is an ISBN or free text.
   static String onlineSearch({String? query, CollectionType? type}) => Uri(
     path: '/recherche-en-ligne',

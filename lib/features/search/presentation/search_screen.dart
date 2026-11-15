@@ -1,10 +1,14 @@
+import 'dart:async';
+
 import 'package:dupe/app/error_text.dart';
 import 'package:dupe/app/router.dart';
 import 'package:dupe/app/widgets/cover_image.dart';
 import 'package:dupe/app/widgets/placeholder_body.dart';
 import 'package:dupe/features/collection/domain/enums.dart';
 import 'package:dupe/features/collection/presentation/labels.dart';
+import 'package:dupe/features/search/data/voice_input.dart';
 import 'package:dupe/features/search/presentation/search_providers.dart';
+import 'package:dupe/features/search/presentation/voice_search.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -12,7 +16,10 @@ import 'package:material_ui/material_ui.dart';
 
 /// Global search over the whole local collection.
 class SearchScreen extends ConsumerStatefulWidget {
-  const new({super.key});
+  const new({this.dictate = false, super.key});
+
+  /// Opened from the microphone of the search bar: start dictating.
+  final bool dictate;
 
   @override
   ConsumerState<SearchScreen> createState() => _SearchScreenState();
@@ -23,10 +30,29 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   var _query = '';
 
   @override
+  void initState() {
+    super.initState();
+    if (widget.dictate) {
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) => unawaited(_dictate()),
+      );
+    }
+  }
+
+  @override
   void dispose() {
     _controller.dispose();
     super.dispose();
   }
+
+  Future<void> _dictate() => dictateSearch(
+    context,
+    ref,
+    onText: (text) => setState(() {
+      _controller.text = text;
+      _query = text;
+    }),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +76,13 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
           onChanged: (v) => setState(() => _query = v),
         ),
         actions: [
+          if (ref.watch(voiceInputProvider).supported)
+            IconButton(
+              key: const Key('voiceSearch'),
+              tooltip: l10n.voiceSearchTitle,
+              icon: const Icon(Icons.mic_none),
+              onPressed: () => unawaited(_dictate()),
+            ),
           if (_query.isNotEmpty)
             IconButton(
               tooltip: l10n.clear,

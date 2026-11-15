@@ -98,7 +98,8 @@ GoRouter appRouter(Ref ref) {
       GoRoute(
         path: AppRoutes.search,
         parentNavigatorKey: rootNavigatorKey,
-        builder: (context, state) => const SearchScreen(),
+        builder: (context, state) =>
+            SearchScreen(dictate: state.uri.queryParameters['voix'] == '1'),
       ),
       GoRoute(
         path: '/recherche-en-ligne',

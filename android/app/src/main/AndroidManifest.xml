@@ -3,6 +3,8 @@
     <!-- Loan reminders (flutter_local_notifications): reschedule after reboot.
          Inexact alarms only, so no SCHEDULE_EXACT_ALARM. -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <!-- Voice search (speech_to_text): asked on first use, after an explanation. -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <application
         android:label="Dupe"
         android:name="${applicationName}"
@@ -34,6 +36,15 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+        <!-- Home-screen widget (home_widget): "Scanner" button and counters. -->
+        <receiver android:name=".DupeWidgetProvider" android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/dupe_widget_info" />
+        </receiver>
         <receiver android:exported="false" android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver" />
         <receiver android:exported="false" android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver">
             <intent-filter>
@@ -53,6 +64,10 @@
         <intent>
             <action android:name="android.intent.action.PROCESS_TEXT"/>
             <data android:mimeType="text/plain"/>
+        </intent>
+        <!-- Voice search: the device's speech recognition service. -->
+        <intent>
+            <action android:name="android.speech.RecognitionService" />
         </intent>
     </queries>
 </manifest>

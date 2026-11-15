@@ -3,15 +3,19 @@ import 'package:dupe/core/database/app_database.dart';
 import 'package:dupe/core/database/database_provider.dart';
 import 'package:dupe/features/backup/data/auto_backups.dart';
 import 'package:dupe/features/backup/data/backup_store.dart';
+import 'package:dupe/features/home_widget/data/home_screen_widget.dart';
 import 'package:dupe/features/loans/data/loan_reminders.dart';
 import 'package:dupe/features/scan/data/app_shortcuts.dart';
+import 'package:dupe/features/search/data/voice_input.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 
 import 'fake_app_shortcuts.dart';
+import 'fake_home_widget.dart';
 import 'fake_reminders.dart';
+import 'fake_voice_input.dart';
 import 'memory_backup_store.dart';
 
 const phoneSize = Size(400, 800);
@@ -32,6 +36,10 @@ Future<AppDatabase> pumpApp(
   /// Home-screen shortcuts (never the platform plugin).
   FakeAppShortcuts? shortcuts,
 
+  /// Home-screen widget and dictation (never the platform plugins).
+  FakeHomeScreenWidget? homeWidget,
+  FakeVoiceInput? voice,
+
   /// Writes initial data before the app (and its drift streams) starts.
   Future<void> Function(AppDatabase db)? seed,
 }) async {
@@ -49,6 +57,10 @@ Future<AppDatabase> pumpApp(
         ),
         backupStoreProvider.overrideWithValue(backups ?? MemoryBackupStore()),
         appShortcutsProvider.overrideWithValue(shortcuts ?? FakeAppShortcuts()),
+        homeScreenWidgetProvider.overrideWithValue(
+          homeWidget ?? FakeHomeScreenWidget(),
+        ),
+        voiceInputProvider.overrideWithValue(voice ?? FakeVoiceInput()),
         ...overrides,
       ],
       child: const DupeApp(),
