@@ -164,7 +164,8 @@ Description détaillée des choix techniques et de l'organisation du code (dépl
   `linux/runner/my_application.cc`. Pillow est cassé sur ce poste (pas de `_imaging`).
 - Packaging : `android/key.properties` (ignoré) → signature release, sinon clé debug ; `packaging/windows/dupe.iss`
   (Inno Setup, `/DAppVersion=`) ; `packaging/linux/build_appimage.sh` (appimagetool 1.9.1 épinglé).
-- CI (phases 12 et 16, `.github/workflows/`) : `ci.yml` (format `--set-exit-if-changed`, code généré à jour —
+- CI (phases 12 et 16, `.github/workflows/`) : `ci.yml` (déclenché par les pull requests et à la main, plus
+  par les push depuis le 2026-11-15 ; badge du README filtré `?event=pull_request`) (format `--set-exit-if-changed`, code généré à jour —
   build_runner + gen-l10n puis `git status --porcelain` vide —, analyze, `test --coverage` + récapitulatif
   `tool/ci/coverage_summary.sh` hors code généré, builds Linux/Android/Windows + Inno Setup 6.7.1 via choco) ;
   **toujours `dart format .` avant de stager** ; `.github/dependabot.yml` (pub + actions, vers `dev`, lu sur

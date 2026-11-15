@@ -371,6 +371,33 @@ Avant la reprise des tests : `check-env` refuse aussi `OPEN_LIBRARY_CONTACT` ; a
 - Exception au gel demandée par l'utilisateur (2026-11-15) : « Compléter les couvertures manquantes » n'interroge
   plus la BnF (jamais d'image ; source souvent la plus lente) : `lookupIsbn(…, except: {bnf})`. Tests dans
   `missing_covers_test.dart` et `metadata_aggregator_test.dart`.
+- `P-03` OK (cinq *repository secrets* ; un premier essai avec tout dans un seul secret donnait « Missing secret
+  ENV_JSON »). `Y-02` OK : premier passage de `release.yml` (tag `v0.0.1-test` sur `Phase21`), *pre-release*
+  complète, APK signé avec la clé de l'utilisateur, aucune donnée personnelle dans le binaire.
+- `A-01`, `M-01`, `M-02` OK (téléphone, APK de la Release). **Tests reportés de la phase 14 : tous faits.**
+- `P-05` (migration `keep_alive`) et `Y-05` (veille lancée à la main) OK. Release de test supprimée.
+  **Première version stable `v0.1.0`** publiée le 2026-11-15 (tag sur `main`, fusion Phase21 → `dev` → `main`).
+  `N-01` lancé le 2026-11-15 (retour le lendemain) ; date proposée par défaut J+30 (`lend_dialog.dart`, prévu).
+- CI : déclencheur `push` retiré de `ci.yml` (décision de l'utilisateur : une branche avec une PR passait deux
+  fois) ; restent `pull_request` et `workflow_dispatch` ; badge du README sur `?event=pull_request` (`Y-12`).
+- Compte : `S-11`, `S-12` OK ; `S-10` (changement de mot de passe) reporté par l'utilisateur.
+- Synchro : `S-09` OK ; `S-04`/`S-05` déjà validés ; `S-06` à `S-08` reportés par l'utilisateur.
+- Journal : `J-01`, `J-03`, `J-04` OK ; `J-05` partiel (fichier invalide reporté).
+- Téléphone : `M-03` à `M-05`, `M-07`, `M-11`, `M-12` OK. **`M-14` en échec** : avec l'appli en arrière-plan
+  sur l'écran de scan, caméra et lampe restaient allumées (contrôleur `MobileScannerController` créé par nous : le
+  widget ne suit alors pas le cycle de vie) → `AppLifecycleListener` qui arrête la caméra quand l'appli est cachée
+  et la relance au retour. Non testable automatiquement (plugin caméra Android) : à revérifier sur le téléphone.
+  `M-09`/`M-10` (vibrations) : rien ne vibre, réglages haptiques du téléphone à vérifier. **Mode rafale (`R-01` à
+  `R-04`) reporté après la v4** (décision de l'utilisateur) : écart accepté pour la recette de la v3.
+- `M-14` OK après correction (lampe non rallumée au retour : accepté), `M-06` OK, `M-13` OK. Écart corrigé : le
+  message « Code UPC » apparaissait souvent en scannant des livres (deux codes-barres dans la même image, le premier
+  lu n'étant pas toujours l'ISBN) → `pickScannedCode` préfère l'ISBN (`parse_scanned_code_test.dart`).
+- Fichiers et filets de sécurité : `F-01`, `F-02`, `B-01` à `B-03`, `B-05` à `B-08` OK ; `F-03` à `F-05`, `B-04`
+  reportés. Code-barres très petit et plat (livre ActuSF) non lu à distance : conseils donnés (se rapprocher,
+  « Saisir l'ISBN ») ; résolution d'analyse de la caméra à augmenter seulement si le problème persiste de près.
+- Données réelles : `D-04`, `D-05` OK ; `D-01` à `D-03` à confirmer.
+- Plateformes : `A-03`, `L-01` OK (icône absente du dock GNOME sans entrée `.desktop` : intégration documentée
+  dans le README) ; Windows (`W-*`) reporté.
 
 **Retours déjà traités (2026-11-15, APK release sur Android)** :
 - Free Quest tome 1 scanné en magasin : aucune série proposée. La BnF n'a pas ce tome ; l'autre source
@@ -456,6 +483,9 @@ Avant la reprise des tests : `check-env` refuse aussi `OPEN_LIBRARY_CONTACT` ; a
   (Open Library `cover_i`). Piste : si l'ISBN ne donne rien, recherche texte (titre + auteur, ou série + numéro)
   et couverture d'un résultat **concordant** (titre normalisé, auteur, numéro ; même ISBN de préférence), marquée
   comme « autre édition » et proposée à valider plutôt qu'appliquée d'office (risque de mauvaise image).
+- **ISBN affiché dans les résultats de recherche** (demande de l'utilisateur, 2026-11-15) : recherche locale
+  (`search_screen.dart`, tuiles livres) et recherche en ligne (`text_results_view.dart`) : ajouter l'ISBN au
+  sous-titre, pour distinguer deux éditions d'un même titre avant de choisir.
 - **Autre édition d'un livre hors série** (question de l'utilisateur, 2026-11-15) : en magasin, « Tu as ce tome dans
   une autre édition » ne marche que pour un tome de série (série reconnue + même numéro, éditeur compatible). Un
   livre hors série scanné dans une autre édition (autre ISBN : poche / grand format, réédition) donne « pas dans ta
