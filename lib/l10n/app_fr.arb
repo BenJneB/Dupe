@@ -640,18 +640,6 @@
   "signOut": "Se déconnecter",
   "signInTitle": "Connexion",
   "emailLabel": "Adresse email",
-  "sendCode": "Recevoir un code",
-  "codeSent": "Email envoyé à {email}.",
-  "@codeSent": {
-    "placeholders": {
-      "email": {
-        "type": "String"
-      }
-    }
-  },
-  "codeLabel": "Code ou lien reçu par email",
-  "verifyCode": "Se connecter",
-  "changeEmail": "Changer d’adresse",
   "signedInAs": "Connecté : {email}",
   "@signedInAs": {
     "placeholders": {
@@ -660,15 +648,30 @@
       }
     }
   },
-  "signInDone": "Connecté. Ta collection locale est envoyée sur ton compte.",
-  "signInError": "Échec : {message}",
-  "@signInError": {
+  "signUp": "Créer un compte",
+  "signUpTitle": "Créer un compte",
+  "passwordLabel": "Mot de passe",
+  "passwordConfirmLabel": "Confirme le mot de passe",
+  "passwordsDontMatch": "Les deux mots de passe sont différents",
+  "passwordEmpty": "Saisis un mot de passe",
+  "showPassword": "Afficher le mot de passe",
+  "hidePassword": "Masquer le mot de passe",
+  "noAccountYet": "Pas encore de compte ? Créer un compte",
+  "alreadyHaveAccount": "Déjà un compte ? Se connecter",
+  "confirmEmailSent": "Compte créé. Ouvre le lien envoyé à {email} pour confirmer ton adresse, puis connecte-toi ici.",
+  "@confirmEmailSent": {
     "placeholders": {
-      "message": {
+      "email": {
         "type": "String"
       }
     }
   },
+  "forgotPasswordHelp": "Mot de passe oublié : change-le depuis un appareil encore connecté (Paramètres → Mot de passe).",
+  "setPassword": "Mot de passe",
+  "setPasswordHelp": "Définir ou changer le mot de passe du compte",
+  "setPasswordTitle": "Nouveau mot de passe",
+  "setPasswordDone": "Mot de passe enregistré",
+  "signInDone": "Connecté. Ta collection locale est envoyée sur ton compte.",
   "syncNow": "Synchroniser maintenant",
   "syncIdle": "Synchronisé",
   "syncIdleAt": "Synchronisé à {time}",
@@ -691,7 +694,6 @@
   },
   "syncSignedOut": "Non connecté : données sur cet appareil seulement",
   "invalidEmail": "Adresse email invalide",
-  "invalidOtp": "Colle le lien de l’email ou saisis le code à 6 chiffres",
   "coverPhoto": "Photographier la couverture",
   "coverPhotoError": "Photo impossible : {message}",
   "@coverPhotoError": {
@@ -701,7 +703,6 @@
       }
     }
   },
-  "codeHelper": "Dans l’email, copie le lien (appui long ou clic droit → copier l’adresse) sans l’ouvrir, puis colle-le ici. Si l’email contient un code à 6 chiffres, saisis-le.",
   "appearanceSection": "Apparence",
   "themeSystem": "Système",
   "themeLight": "Clair",
@@ -814,8 +815,11 @@
   "errorOffline": "Pas de connexion internet.",
   "errorSession": "Session expirée : reconnecte-toi.",
   "errorServer": "Le serveur a refusé la demande (détails dans À propos → Journal).",
+  "errorInvalidCredentials": "Email ou mot de passe incorrect.",
+  "errorEmailNotConfirmed": "Email pas encore confirmé : ouvre le lien reçu par email, puis reconnecte-toi.",
+  "errorEmailTaken": "Un compte existe déjà avec cet email : connecte-toi.",
+  "errorWeakPassword": "Mot de passe refusé : trop court ou trop simple.",
   "errorTooManyAttempts": "Trop de tentatives : réessaie dans quelques minutes.",
-  "errorInvalidCode": "Code ou lien invalide ou expiré.",
   "errorSignInRefused": "Connexion refusée (détails dans À propos → Journal).",
   "errorNotBackup": "Ce fichier n'est pas une sauvegarde Dupe.",
   "errorFileAccess": "Fichier inaccessible (droits ou emplacement).",

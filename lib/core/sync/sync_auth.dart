@@ -1,6 +1,4 @@
-import 'package:dupe/core/sync/email_sign_in.dart';
-
-/// Account used for the sync (email + 6-digit code, PLAN.md §6).
+/// Account used for the sync: email + password (PLAN_V2 phase 10).
 abstract interface class SyncAuth {
   /// False when env.json has no Supabase URL / key: local-only mode.
   bool get configured;
@@ -15,11 +13,15 @@ abstract interface class SyncAuth {
   /// Restores the saved session (call once at start-up).
   Future<void> restore();
 
-  /// Sends a 6-digit code to [email] (creates the account if needed).
-  Future<void> sendCode(String email);
+  Future<void> signIn(String email, String password);
 
-  /// Signs in with the received code or pasted link.
-  Future<void> verify(String email, EmailCredential credential);
+  /// Creates the account. Returns true when signed in right away, false when
+  /// the email must be confirmed first (Supabase "Confirm email" option).
+  Future<bool> signUp(String email, String password);
+
+  /// Sets or changes the password of the signed-in user (accounts created
+  /// with an email link before phase 10 have none).
+  Future<void> setPassword(String password);
 
   Future<void> signOut();
 }
@@ -39,16 +41,27 @@ class LocalOnlyAuth implements SyncAuth {
   @override
   Future<void> restore() async {}
   @override
-  Future<void> sendCode(String email) => throw UnsupportedError('local only');
+  Future<void> signIn(String email, String password) =>
+      throw UnsupportedError('local only');
   @override
-  Future<void> verify(String email, EmailCredential credential) =>
+  Future<bool> signUp(String email, String password) =>
+      throw UnsupportedError('local only');
+  @override
+  Future<void> setPassword(String password) =>
       throw UnsupportedError('local only');
   @override
   Future<void> signOut() async {}
 }
 
-/// Why a sign-in step was refused.
-enum SignInFailure { tooManyAttempts, invalidCode, refused }
+/// Why a sign-in / sign-up step was refused.
+enum SignInFailure {
+  invalidCredentials,
+  emailNotConfirmed,
+  emailTaken,
+  weakPassword,
+  tooManyAttempts,
+  refused,
+}
 
 class SignInException implements Exception {
   const new(this.failure, this.message);

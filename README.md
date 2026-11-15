@@ -38,16 +38,26 @@ Sans `SUPABASE_URL`, l'appli fonctionne entièrement en local. Pour synchroniser
 1. **Schéma** : dans le tableau de bord Supabase → *SQL Editor*, exécuter dans l'ordre
    `supabase/migrations/20261114120000_collection_sync.sql` puis `20261114120100_cover_photos.sql`
    (ou `supabase link` puis `supabase db push` avec la CLI).
-2. **Connexion par email** : fournisseur *Email* activé (*Authentication → Sign In / Providers*). Sans SMTP
-   personnalisé, Supabase n'envoie qu'aux membres de l'équipe du projet (2 emails/heure) et ses modèles ne
-   sont pas modifiables : l'email contient un **lien**. Dans l'appli, on **copie ce lien sans l'ouvrir** et on
-   le colle à la place du code (un lien ouvert est consommé). Avec un SMTP, on peut mettre `{{ .Token }}`
-   dans le modèle « Magic link or OTP » pour recevoir un code à 6 chiffres ; les deux sont acceptés.
+2. **Comptes (email + mot de passe)** : fournisseur *Email* activé (*Authentication → Sign In / Providers*).
+   Le compte se crée dans l'appli (Paramètres → *Se connecter* → *Créer un compte*). Les inscriptions restent
+   ouvertes : quiconque a l'appli peut créer un compte, mais ne voit que ses propres données (RLS).
+   Option *Confirm email* du même fournisseur :
+   - **activée** (défaut) : Supabase envoie un lien de confirmation. Sans SMTP personnalisé, il n'envoie
+     qu'aux membres de l'équipe du projet (2 emails/heure). Ouvrir le lien dans le navigateur (la page
+     d'arrivée peut ne pas s'afficher), puis se connecter dans l'appli ;
+   - **désactivée** : le compte est utilisable tout de suite.
+
+   Longueur minimale du mot de passe : réglée par le projet Supabase (6 caractères par défaut).
+   **Compte créé avant la v2** (connexion par lien) : il n'a pas de mot de passe. Depuis un appareil encore
+   connecté : Paramètres → *Mot de passe*. **Mot de passe oublié** : même chemin depuis un appareil connecté.
+   En dernier recours, supprimer l'utilisateur (*Authentication → Users*) efface aussi ses données serveur
+   (`on delete cascade`) ; elles sont renvoyées depuis l'appareil à la création du nouveau compte (photos de
+   couverture : à vérifier).
 3. **env.json** : `SUPABASE_URL` (*Settings → Data API* ou bouton *Connect*) et, dans `SUPABASE_ANON_KEY`,
    la **clé publishable** `sb_publishable_…` (*Settings → API Keys*, onglet *Publishable and secret API
    keys*). L'ancienne clé *anon* (`eyJ…`) marche aussi mais Supabase l'abandonne fin 2026. Jamais la clé
    *secret* / *service_role*.
-4. Dans l'appli : Paramètres → *Se connecter* → email → lien (ou code). La collection locale est envoyée sur le
+4. Dans l'appli : Paramètres → *Se connecter* → email + mot de passe. La collection locale est envoyée sur le
    compte ; l'icône nuage dans la barre de recherche indique l'état.
 
 Fonctionnement : SQLite reste la source de vérité ; synchro au lancement, au retour au premier plan,

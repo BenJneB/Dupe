@@ -4,13 +4,12 @@ import 'dart:io';
 
 import 'package:dupe/core/database/local_stores.dart';
 import 'package:dupe/core/logging/app_log.dart';
-import 'package:dupe/core/sync/email_sign_in.dart';
 import 'package:dupe/core/sync/sync_auth.dart';
 import 'package:dupe/core/sync/sync_remote.dart';
 import 'package:http/http.dart' show ClientException;
 import 'package:supabase/supabase.dart';
 
-/// [SyncAuth] with Supabase email OTP. The session is kept in the local
+/// [SyncAuth] with Supabase email + password. The session is kept in the local
 /// `app_settings` table and its token refreshed automatically.
 class SupabaseSyncAuth implements SyncAuth {
   new(this.client, this._settings) {
@@ -60,19 +59,35 @@ class SupabaseSyncAuth implements SyncAuth {
   }
 
   @override
-  Future<void> sendCode(String email) => _signInGuard(
+  Future<void> signIn(String email, String password) => _signInGuard(
     () =>
-        client.auth.signInWithOtp(email: email.trim(), shouldCreateUser: true),
+        client.auth.signInWithPassword(email: email.trim(), password: password),
   );
 
   @override
-  Future<void> verify(String email, EmailCredential credential) =>
-      _signInGuard(() => _verify(email, credential));
+  Future<bool> signUp(String email, String password) => _signInGuard(() async {
+    final response = await client.auth.signUp(
+      email: email.trim(),
+      password: password,
+    );
+    // With "Confirm email" on, an email already registered gets a fake user
+    // without identities instead of an error (no account enumeration).
+    if (response.session == null &&
+        (response.user?.identities?.isEmpty ?? false)) {
+      throw const SignInException(SignInFailure.emailTaken, 'already exists');
+    }
+    return response.session != null;
+  });
+
+  @override
+  Future<void> setPassword(String password) => _signInGuard(
+    () => client.auth.updateUser(UserAttributes(password: password)),
+  );
 
   /// Supabase errors become [SignInException] / offline [SyncException].
-  Future<void> _signInGuard(Future<void> Function() call) async {
+  Future<T> _signInGuard<T>(Future<T> Function() call) async {
     try {
-      await call();
+      return await call();
     } on AuthRetryableFetchException catch (e) {
       throw SyncException.network(e.message);
     } on SocketException catch (e) {
@@ -80,32 +95,24 @@ class SupabaseSyncAuth implements SyncAuth {
     } on ClientException catch (e) {
       throw SyncException.network(e.message);
     } on AuthException catch (e) {
-      throw SignInException(switch ((e.statusCode, e.code)) {
-        ('429', _) ||
-        (_, 'over_email_send_rate_limit') => SignInFailure.tooManyAttempts,
-        (_, 'otp_expired') || ('403', _) => SignInFailure.invalidCode,
-        _ => SignInFailure.refused,
-      }, e.message);
+      throw SignInException(_failure(e), e.message);
     }
   }
 
-  Future<void> _verify(String email, EmailCredential credential) =>
-      switch (credential) {
-        EmailCode(:final code) => client.auth.verifyOTP(
-          email: email.trim(),
-          token: code,
-          type: OtpType.email,
-        ),
-        EmailLink(:final tokenHash, :final type) => client.auth.verifyOTP(
-          tokenHash: tokenHash,
-          type: switch (type) {
-            'signup' => OtpType.signup,
-            'invite' => OtpType.invite,
-            'email' => OtpType.email,
-            _ => OtpType.magiclink,
-          },
-        ),
-      };
+  static SignInFailure _failure(AuthException e) => switch (e.code) {
+    _ when e is AuthWeakPasswordException => SignInFailure.weakPassword,
+    'weak_password' || 'same_password' => SignInFailure.weakPassword,
+    'invalid_credentials' => SignInFailure.invalidCredentials,
+    'email_not_confirmed' => SignInFailure.emailNotConfirmed,
+    'user_already_exists' || 'email_exists' => SignInFailure.emailTaken,
+    'over_request_rate_limit' ||
+    'over_email_send_rate_limit' => SignInFailure.tooManyAttempts,
+    _ when e.statusCode == '429' => SignInFailure.tooManyAttempts,
+    // Older servers: no code, only this message.
+    _ when e.message.contains('Invalid login credentials') =>
+      SignInFailure.invalidCredentials,
+    _ => SignInFailure.refused,
+  };
 
   @override
   Future<void> signOut() => client.auth.signOut();

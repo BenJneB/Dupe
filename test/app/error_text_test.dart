@@ -23,8 +23,16 @@ void main() {
       const SyncException('rls'): l10n.errorServer,
       const SignInException(SignInFailure.tooManyAttempts, 'x'):
           l10n.errorTooManyAttempts,
-      const SignInException(SignInFailure.invalidCode, 'x'):
-          l10n.errorInvalidCode,
+      const SignInException(SignInFailure.invalidCredentials, 'x'):
+          l10n.errorInvalidCredentials,
+      const SignInException(SignInFailure.emailNotConfirmed, 'x'):
+          l10n.errorEmailNotConfirmed,
+      const SignInException(SignInFailure.emailTaken, 'x'):
+          l10n.errorEmailTaken,
+      const SignInException(SignInFailure.weakPassword, 'x'):
+          l10n.errorWeakPassword,
+      const SignInException(SignInFailure.refused, 'x'):
+          l10n.errorSignInRefused,
       const BackupFormatException(): l10n.errorNotBackup,
       const FileSystemException('x'): l10n.errorFileAccess,
       const FormatException('x'): l10n.errorBadFile,

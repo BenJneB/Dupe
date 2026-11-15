@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dupe/app/router.dart';
 import 'package:dupe/core/sync/sync_controller.dart';
 import 'package:dupe/core/sync/sync_providers.dart';
+import 'package:dupe/features/account/presentation/set_password_dialog.dart';
 import 'package:dupe/features/account/presentation/sync_labels.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -12,6 +13,14 @@ import 'package:material_ui/material_ui.dart';
 /// Settings section: account and sync status.
 class AccountSection extends ConsumerWidget {
   const new({super.key});
+
+  Future<void> _setPassword(BuildContext context) async {
+    final messenger = ScaffoldMessenger.of(context);
+    final done = AppLocalizations.of(context).setPasswordDone;
+    if (await showSetPasswordDialog(context) ?? false) {
+      messenger.showSnackBar(SnackBar(content: Text(done)));
+    }
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -49,6 +58,13 @@ class AccountSection extends ConsumerWidget {
           title: Text(l10n.syncNow),
           enabled: state.phase != SyncPhase.syncing,
           onTap: () => unawaited(controller.syncNow()),
+        ),
+        ListTile(
+          key: const Key('setPasswordTile'),
+          leading: const Icon(Icons.password),
+          title: Text(l10n.setPassword),
+          subtitle: Text(l10n.setPasswordHelp),
+          onTap: () => unawaited(_setPassword(context)),
         ),
         ListTile(
           key: const Key('signOutTile'),

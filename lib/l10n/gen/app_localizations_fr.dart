@@ -998,35 +998,64 @@ class AppLocalizationsFr extends AppLocalizations {
   String get emailLabel => 'Adresse email';
 
   @override
-  String get sendCode => 'Recevoir un code';
-
-  @override
-  String codeSent(String email) {
-    return 'Email envoyé à $email.';
-  }
-
-  @override
-  String get codeLabel => 'Code ou lien reçu par email';
-
-  @override
-  String get verifyCode => 'Se connecter';
-
-  @override
-  String get changeEmail => 'Changer d’adresse';
-
-  @override
   String signedInAs(String email) {
     return 'Connecté : $email';
   }
 
   @override
-  String get signInDone =>
-      'Connecté. Ta collection locale est envoyée sur ton compte.';
+  String get signUp => 'Créer un compte';
 
   @override
-  String signInError(String message) {
-    return 'Échec : $message';
+  String get signUpTitle => 'Créer un compte';
+
+  @override
+  String get passwordLabel => 'Mot de passe';
+
+  @override
+  String get passwordConfirmLabel => 'Confirme le mot de passe';
+
+  @override
+  String get passwordsDontMatch => 'Les deux mots de passe sont différents';
+
+  @override
+  String get passwordEmpty => 'Saisis un mot de passe';
+
+  @override
+  String get showPassword => 'Afficher le mot de passe';
+
+  @override
+  String get hidePassword => 'Masquer le mot de passe';
+
+  @override
+  String get noAccountYet => 'Pas encore de compte ? Créer un compte';
+
+  @override
+  String get alreadyHaveAccount => 'Déjà un compte ? Se connecter';
+
+  @override
+  String confirmEmailSent(String email) {
+    return 'Compte créé. Ouvre le lien envoyé à $email pour confirmer ton adresse, puis connecte-toi ici.';
   }
+
+  @override
+  String get forgotPasswordHelp =>
+      'Mot de passe oublié : change-le depuis un appareil encore connecté (Paramètres → Mot de passe).';
+
+  @override
+  String get setPassword => 'Mot de passe';
+
+  @override
+  String get setPasswordHelp => 'Définir ou changer le mot de passe du compte';
+
+  @override
+  String get setPasswordTitle => 'Nouveau mot de passe';
+
+  @override
+  String get setPasswordDone => 'Mot de passe enregistré';
+
+  @override
+  String get signInDone =>
+      'Connecté. Ta collection locale est envoyée sur ton compte.';
 
   @override
   String get syncNow => 'Synchroniser maintenant';
@@ -1059,20 +1088,12 @@ class AppLocalizationsFr extends AppLocalizations {
   String get invalidEmail => 'Adresse email invalide';
 
   @override
-  String get invalidOtp =>
-      'Colle le lien de l’email ou saisis le code à 6 chiffres';
-
-  @override
   String get coverPhoto => 'Photographier la couverture';
 
   @override
   String coverPhotoError(String message) {
     return 'Photo impossible : $message';
   }
-
-  @override
-  String get codeHelper =>
-      'Dans l’email, copie le lien (appui long ou clic droit → copier l’adresse) sans l’ouvrir, puis colle-le ici. Si l’email contient un code à 6 chiffres, saisis-le.';
 
   @override
   String get appearanceSection => 'Apparence';
@@ -1277,11 +1298,23 @@ class AppLocalizationsFr extends AppLocalizations {
       'Le serveur a refusé la demande (détails dans À propos → Journal).';
 
   @override
-  String get errorTooManyAttempts =>
-      'Trop de tentatives : réessaie dans quelques minutes.';
+  String get errorInvalidCredentials => 'Email ou mot de passe incorrect.';
 
   @override
-  String get errorInvalidCode => 'Code ou lien invalide ou expiré.';
+  String get errorEmailNotConfirmed =>
+      'Email pas encore confirmé : ouvre le lien reçu par email, puis reconnecte-toi.';
+
+  @override
+  String get errorEmailTaken =>
+      'Un compte existe déjà avec cet email : connecte-toi.';
+
+  @override
+  String get errorWeakPassword =>
+      'Mot de passe refusé : trop court ou trop simple.';
+
+  @override
+  String get errorTooManyAttempts =>
+      'Trop de tentatives : réessaie dans quelques minutes.';
 
   @override
   String get errorSignInRefused =>
