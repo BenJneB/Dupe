@@ -51,3 +51,47 @@ final class CollectionStatsProvider
 }
 
 String _$collectionStatsHash() => r'953c61753da373e2bc3e1ee773316bf1e0f9e48b';
+
+/// Reading statistics, recomputed on every change of the collection.
+
+@ProviderFor(readingStats)
+final readingStatsProvider = ReadingStatsProvider._();
+
+/// Reading statistics, recomputed on every change of the collection.
+
+final class ReadingStatsProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<ReadingStats>,
+          ReadingStats,
+          Stream<ReadingStats>
+        >
+    with $FutureModifier<ReadingStats>, $StreamProvider<ReadingStats> {
+  /// Reading statistics, recomputed on every change of the collection.
+  ReadingStatsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'readingStatsProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$readingStatsHash();
+
+  @$internal
+  @override
+  $StreamProviderElement<ReadingStats> $createElement(
+    $ProviderPointer pointer,
+  ) => $StreamProviderElement(pointer);
+
+  @override
+  Stream<ReadingStats> create(Ref ref) {
+    return readingStats(ref);
+  }
+}
+
+String _$readingStatsHash() => r'61c8ebcba66a3834d93333a050100df7fcd48f85';

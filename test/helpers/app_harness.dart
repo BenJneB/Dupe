@@ -1,8 +1,10 @@
 import 'package:dupe/app/app.dart';
 import 'package:dupe/core/database/app_database.dart';
 import 'package:dupe/core/database/database_provider.dart';
+import 'package:dupe/core/network/network_status.dart';
 import 'package:dupe/features/backup/data/auto_backups.dart';
 import 'package:dupe/features/backup/data/backup_store.dart';
+import 'package:dupe/features/covers/data/cover_cache.dart';
 import 'package:dupe/features/home_widget/data/home_screen_widget.dart';
 import 'package:dupe/features/loans/data/loan_reminders.dart';
 import 'package:dupe/features/scan/data/app_shortcuts.dart';
@@ -13,6 +15,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 
 import 'fake_app_shortcuts.dart';
+import 'fake_covers.dart';
 import 'fake_home_widget.dart';
 import 'fake_reminders.dart';
 import 'fake_voice_input.dart';
@@ -40,6 +43,10 @@ Future<AppDatabase> pumpApp(
   FakeHomeScreenWidget? homeWidget,
   FakeVoiceInput? voice,
 
+  /// Connection (none by default) and downloaded covers (memory).
+  FakeNetworkStatus? network,
+  FakeCoverCache? coverCache,
+
   /// Writes initial data before the app (and its drift streams) starts.
   Future<void> Function(AppDatabase db)? seed,
 }) async {
@@ -61,6 +68,8 @@ Future<AppDatabase> pumpApp(
           homeWidget ?? FakeHomeScreenWidget(),
         ),
         voiceInputProvider.overrideWithValue(voice ?? FakeVoiceInput()),
+        networkStatusProvider.overrideWithValue(network ?? FakeNetworkStatus()),
+        coverCacheProvider.overrideWithValue(coverCache ?? FakeCoverCache()),
         ...overrides,
       ],
       child: const DupeApp(),

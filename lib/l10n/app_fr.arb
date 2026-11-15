@@ -962,5 +962,149 @@
   "journalCopy": "Copier",
   "journalCopied": "Journal copié",
   "journalShare": "Partager",
-  "journalClear": "Vider le journal"
+  "journalClear": "Vider le journal",
+  "offlineCoversSection": "Couvertures hors ligne",
+  "offlineCovers": "Télécharger toutes les couvertures",
+  "offlineCoversHelp": "Collection et envies, pour les voir sans connexion (en magasin)",
+  "offlineCoversWifiOnly": "Wi-Fi seulement",
+  "offlineCoversWifiOnlyHelp": "Jamais sur les données mobiles",
+  "offlineCoversSize": "{size} Mo utilisés",
+  "@offlineCoversSize": {
+    "placeholders": {
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "offlineCoversRefresh": "toucher pour vérifier",
+  "offlineCoversClear": "Vider",
+  "offlineCoversCleared": "Couvertures téléchargées supprimées (vos photos sont gardées)",
+  "offlineCoversDisabled": "Désactivé",
+  "offlineCoversOffline": "En attente d’une connexion",
+  "offlineCoversMetered": "En attente du Wi-Fi",
+  "offlineCoversProgress": "Téléchargement : {done} / {total}",
+  "@offlineCoversProgress": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "offlineCoversNone": "Aucune couverture à télécharger",
+  "offlineCoversDone": "{total, plural, =1{1 couverture disponible hors ligne} other{{total} couvertures disponibles hors ligne}}",
+  "@offlineCoversDone": {
+    "placeholders": {
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "offlineCoversDoneWithFailures": "{total} couvertures, dont {failed} introuvables",
+  "@offlineCoversDoneWithFailures": {
+    "placeholders": {
+      "total": {
+        "type": "int"
+      },
+      "failed": {
+        "type": "int"
+      }
+    }
+  },
+  "statsReadByMonth": "Tomes lus par mois",
+  "statsNoReadDates": "Aucune date de lecture sur les 12 derniers mois.",
+  "statsReadCount": "Lus",
+  "statsReadWithoutDate": "{count, plural, =1{1 tome lu sans date de lecture n’est pas compté par mois.} other{{count} tomes lus sans date de lecture ne sont pas comptés par mois.}}",
+  "@statsReadWithoutDate": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "statsReadByType": "Lu par type",
+  "statsPile": "Pile à lire et habitudes",
+  "statsPileCount": "{count, plural, =0{Pile à lire vide} =1{1 tome à lire} other{{count} tomes à lire}}",
+  "@statsPileCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "statsPileOldest": "Le plus ancien : {title}, depuis le {date}",
+  "@statsPileOldest": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "statsDelay": "{days, plural, =0{Lu le jour de l’achat, en moyenne} =1{Lu 1 jour après l’achat, en moyenne} other{Lu {days} jours après l’achat, en moyenne}}",
+  "@statsDelay": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "statsDelayUnknown": "Délai entre achat et lecture inconnu",
+  "statsDelayHelp": "Il faut une date d’achat et une date de lecture.",
+  "statsDelaySamples": "{count, plural, =1{Sur 1 tome ayant les deux dates} other{Sur {count} tomes ayant les deux dates}}",
+  "@statsDelaySamples": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "statsAbandoned": "{count, plural, =0{Aucune série abandonnée} =1{1 série abandonnée} other{{count} séries abandonnées}}",
+  "@statsAbandoned": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "shareWishlist": "Partager mes envies",
+  "shareWishlistHeading": "{count, plural, =1{Ma liste d’envies (1)} other{Ma liste d’envies ({count})}}",
+  "@shareWishlistHeading": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "shareWishlistCaption": "{count, plural, =1{1 envie} other{{count} envies}} · {date}",
+  "@shareWishlistCaption": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "sharePriorityAll": "Toutes priorités",
+  "sharePriorityUpTo": "{max, plural, =1{Priorité 1} other{Priorités 1 à {max}}}",
+  "@sharePriorityUpTo": {
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "shareShowPrice": "Afficher le prix max",
+  "shareAsImage": "Partager l’image",
+  "shareAsText": "Partager le texte",
+  "shareNoWish": "Aucune envie ne correspond aux filtres.",
+  "shareFileName": "envies.png",
+  "shareImageSaved": "Image enregistrée",
+  "shareTextCopied": "Liste copiée dans le presse-papiers"
 }

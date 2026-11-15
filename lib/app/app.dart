@@ -5,6 +5,7 @@ import 'package:dupe/app/theme.dart';
 import 'package:dupe/core/logging/app_log.dart';
 import 'package:dupe/core/sync/sync_controller.dart';
 import 'package:dupe/features/backup/data/auto_backups.dart';
+import 'package:dupe/features/covers/data/cover_prefetch.dart';
 import 'package:dupe/features/home_widget/data/home_screen_widget.dart';
 import 'package:dupe/features/home_widget/data/home_widget_updater.dart';
 import 'package:dupe/features/loans/data/loan_actions.dart';
@@ -40,6 +41,8 @@ class _DupeAppState extends ConsumerState<DupeApp> {
     );
     _inBackground('backup', ref.read(autoBackupsProvider).weeklyIfDue);
     _inBackground('update', _checkForUpdate);
+    // Covers downloaded for offline use (Wi-Fi only by default).
+    _inBackground('covers', ref.read(coverPrefetchProvider.notifier).start);
     // Long press on the icon → store-mode scan (Android).
     _inBackground(
       'shortcuts',

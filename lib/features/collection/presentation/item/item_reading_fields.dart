@@ -8,9 +8,12 @@ import 'package:material_ui/material_ui.dart';
 
 /// "Lecture" section: status, read date, rating.
 class ItemReadingFields extends StatelessWidget {
-  const new(this.c, {required this.onChanged, super.key});
+  const new(this.c, {required this.onChanged, required this.today, super.key});
 
   final ItemFormControllers c;
+
+  /// Read date given when the status becomes "lu" (like the reading bar).
+  final DateTime Function() today;
 
   /// Called after a value of [c] changed, to rebuild the form.
   final VoidCallback onChanged;
@@ -27,6 +30,7 @@ class ItemReadingFields extends StatelessWidget {
           items: {for (final s in ReadingStatus.values) s: s.label(l10n)},
           onChanged: (s) {
             c.readingStatus = s;
+            if (s == ReadingStatus.lu) c.readDate ??= today();
             onChanged();
           },
         ),

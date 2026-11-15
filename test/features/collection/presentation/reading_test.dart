@@ -9,6 +9,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../../helpers/app_harness.dart';
 import '../../../helpers/scan_helpers.dart';
+import '../../../helpers/screen_helpers.dart';
 
 late Series naruto;
 
@@ -91,5 +92,31 @@ void main() {
         .go(AppRoutes.series(CollectionType.manga, naruto.id));
     await tester.pumpAndSettle();
     expect(find.text('4 tomes à lire'), findsOneWidget);
+  });
+
+  testWidgets('choosing "Lu" in the form fills the read date', (tester) async {
+    final db = await pumpApp(tester, seed: seedReading);
+    final volume = (await tester.runAsync(
+      () => repoOf(db).listSeriesItems(naruto.id),
+    ))!.first;
+    await goTo(tester, AppRoutes.itemEdit(CollectionType.manga, volume.id));
+
+    final status = find.text('Non lu');
+    await tester.scrollUntilVisible(
+      status,
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(status);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Lu').last);
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('saveButton')));
+    await tester.pumpAndSettle();
+
+    final saved = await tester.runAsync(() => repoOf(db).getItem(volume.id));
+    expect(saved!.readingStatus, ReadingStatus.lu);
+    expect(saved.readDate, isNotNull);
   });
 }

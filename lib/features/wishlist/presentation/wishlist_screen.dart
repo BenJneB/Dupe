@@ -21,7 +21,19 @@ class WishlistScreen extends ConsumerWidget {
     final wishes = ref.watch(wishesProvider).value ?? const [];
     final text = Theme.of(context).textTheme;
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.moreWishlist)),
+      appBar: AppBar(
+        title: Text(l10n.moreWishlist),
+        actions: [
+          IconButton(
+            key: const Key('shareWishlist'),
+            tooltip: l10n.shareWishlist,
+            icon: const Icon(Icons.share_outlined),
+            onPressed: wishes.isEmpty
+                ? null
+                : () => context.push(AppRoutes.wishlistShare),
+          ),
+        ],
+      ),
       body: ListView(
         padding: const EdgeInsets.only(bottom: 96),
         children: [

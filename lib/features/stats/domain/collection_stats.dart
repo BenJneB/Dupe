@@ -67,6 +67,19 @@ class CollectionStats {
   }
 }
 
+/// Copies of each volume: one entry per series + number, or per item for
+/// books outside a series.
+Map<String, List<Item>> volumesOf(Iterable<Item> owned) {
+  final volumes = <String, List<Item>>{};
+  for (final i in owned) {
+    final key = i.seriesId != null && i.volumeNumber != null
+        ? '${i.seriesId}#${i.volumeNumber!.trim()}'
+        : i.id;
+    (volumes[key] ??= []).add(i);
+  }
+  return volumes;
+}
+
 /// Computes the statistics of [items] and [series].
 CollectionStats computeCollectionStats(
   List<Item> items,
@@ -76,14 +89,7 @@ CollectionStats computeCollectionStats(
   final owned = items.where((i) => i.ownership == Ownership.possede);
   final currency = CollectionStats.mainCurrency(owned);
 
-  // One entry per volume: series + number, or the item itself.
-  final volumes = <String, List<Item>>{};
-  for (final i in owned) {
-    final key = i.seriesId != null && i.volumeNumber != null
-        ? '${i.seriesId}#${i.volumeNumber!.trim()}'
-        : i.id;
-    (volumes[key] ??= []).add(i);
-  }
+  final volumes = volumesOf(owned);
   final volumesByType = <CollectionType, int>{};
   var read = 0;
   for (final copies in volumes.values) {

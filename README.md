@@ -153,6 +153,12 @@ flutter test integration_test -d <id-téléphone>        # le parcours Magasin e
   restaurer ou les exporter. Elles restent sur l'appareil : sur Android, les exporter pour les garder ailleurs.
 - Supprimer un ouvrage ou une série affiche « Annuler » pendant quelques secondes.
 
+## Couvertures hors ligne
+Paramètres → *Couvertures hors ligne* : l'appli télécharge en arrière-plan toutes les couvertures de la
+collection et des envies (Wi-Fi seulement par défaut) pour les afficher sans réseau, en magasin par exemple.
+Elles sont gardées dans le dossier de données de l'appli (`cover_cache/`) ; *Vider* libère la place (les photos
+prises soi-même ne sont jamais effacées).
+
 ## Développement
 ```sh
 flutter pub get

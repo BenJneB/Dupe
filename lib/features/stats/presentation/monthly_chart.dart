@@ -1,19 +1,27 @@
-import 'package:dupe/core/utils/formatters.dart';
 import 'package:dupe/features/stats/presentation/chart_colors.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart';
 import 'package:material_ui/material_ui.dart';
 
-typedef MonthAmount = ({DateTime month, double amount});
+typedef MonthValue = ({DateTime month, double value});
 
-/// Column chart of the spending per month; touch a column for its amount.
-/// Single series: no legend, the section title names it.
-class MonthlySpendingChart extends StatelessWidget {
-  const new({required this.months, required this.currency, super.key});
+/// Column chart of a figure per month (spending, volumes read); touch a
+/// column for its value. Single series: no legend, the section title names
+/// it.
+class MonthlyChart extends StatelessWidget {
+  const new({
+    required this.months,
+    required this.format,
+    this.wholeNumbers = false,
+    super.key,
+  });
 
-  final List<MonthAmount> months;
-  final String currency;
+  final List<MonthValue> months;
+  final String Function(double) format;
+
+  /// Counts: no fractional axis labels.
+  final bool wholeNumbers;
 
   @override
   Widget build(BuildContext context) {
@@ -22,9 +30,9 @@ class MonthlySpendingChart extends StatelessWidget {
     final scheme = Theme.of(context).colorScheme;
     final text = Theme.of(context).textTheme;
     final colors = chartColors(context);
-    final maxAmount = months.fold<double>(
+    final maxValue = months.fold<double>(
       0,
-      (m, e) => e.amount > m ? e.amount : m,
+      (m, e) => e.value > m ? e.value : m,
     );
     final short = DateFormat.MMM(locale);
     final long = DateFormat.yMMMM(locale);
@@ -38,7 +46,7 @@ class MonthlySpendingChart extends StatelessWidget {
           height: 220,
           child: BarChart(
             BarChartData(
-              maxY: maxAmount == 0 ? 1 : maxAmount * 1.15,
+              maxY: maxValue == 0 ? 1 : maxValue * 1.15,
               alignment: BarChartAlignment.spaceAround,
               borderData: FlBorderData(show: false),
               gridData: FlGridData(
@@ -53,7 +61,9 @@ class MonthlySpendingChart extends StatelessWidget {
                   sideTitles: SideTitles(
                     showTitles: true,
                     reservedSize: 44,
-                    getTitlesWidget: (value, meta) => value == meta.max
+                    getTitlesWidget: (value, meta) =>
+                        value == meta.max ||
+                            (wholeNumbers && value != value.roundToDouble())
                         ? const SizedBox.shrink()
                         : Text(
                             NumberFormat.compact(locale: locale).format(value),
@@ -87,7 +97,7 @@ class MonthlySpendingChart extends StatelessWidget {
                   getTooltipColor: (_) => scheme.inverseSurface,
                   getTooltipItem: (group, _, rod, _) => BarTooltipItem(
                     '${long.format(months[group.x].month)}\n'
-                    '${Formatters.price(rod.toY, currency, locale)}',
+                    '${format(rod.toY)}',
                     TextStyle(color: scheme.onInverseSurface),
                   ),
                 ),
@@ -98,7 +108,7 @@ class MonthlySpendingChart extends StatelessWidget {
                     x: i,
                     barRods: [
                       BarChartRodData(
-                        toY: m.amount,
+                        toY: m.value,
                         width: 14,
                         color: colors.series,
                         borderRadius: const BorderRadius.vertical(
@@ -117,11 +127,19 @@ class MonthlySpendingChart extends StatelessWidget {
 }
 
 /// Accessible alternative to the chart.
-class MonthlySpendingTable extends StatelessWidget {
-  const new({required this.months, required this.currency, super.key});
+class MonthlyTable extends StatelessWidget {
+  const new({
+    required this.months,
+    required this.format,
+    required this.header,
+    super.key,
+  });
 
-  final List<MonthAmount> months;
-  final String currency;
+  final List<MonthValue> months;
+  final String Function(double) format;
+
+  /// Title of the value column.
+  final String header;
 
   @override
   Widget build(BuildContext context) {
@@ -137,10 +155,7 @@ class MonthlySpendingTable extends StatelessWidget {
               l10n.statsMonth,
               style: const TextStyle(fontWeight: FontWeight.w600),
             ),
-            Text(
-              l10n.statsAmount,
-              style: const TextStyle(fontWeight: FontWeight.w600),
-            ),
+            Text(header, style: const TextStyle(fontWeight: FontWeight.w600)),
           ],
         ),
         for (final m in months.reversed)
@@ -150,10 +165,7 @@ class MonthlySpendingTable extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 2),
                 child: Text(long.format(m.month)),
               ),
-              Text(
-                Formatters.price(m.amount, currency, locale),
-                textAlign: TextAlign.right,
-              ),
+              Text(format(m.value), textAlign: TextAlign.right),
             ],
           ),
       ],

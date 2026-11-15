@@ -15,6 +15,7 @@ abstract final class AppRoutes {
   ).toString();
   static const more = '/plus';
   static const wishlist = '/plus/envies';
+  static const wishlistShare = '/plus/envies/partager';
   static const loans = '/plus/prets';
   static const stats = '/plus/statistiques';
   static const settings = '/plus/parametres';

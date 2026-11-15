@@ -20,6 +20,7 @@ import 'package:dupe/features/search/presentation/online_search/online_search_sc
 import 'package:dupe/features/search/presentation/search_screen.dart';
 import 'package:dupe/features/settings/presentation/settings_screen.dart';
 import 'package:dupe/features/stats/presentation/stats_screen.dart';
+import 'package:dupe/features/wishlist/presentation/share/wishlist_share_screen.dart';
 import 'package:dupe/features/wishlist/presentation/wishlist_screen.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
@@ -50,6 +51,13 @@ GoRouter appRouter(Ref ref) {
                   GoRoute(
                     path: 'envies',
                     builder: (context, state) => const WishlistScreen(),
+                    routes: [
+                      GoRoute(
+                        path: 'partager',
+                        builder: (context, state) =>
+                            const WishlistShareScreen(),
+                      ),
+                    ],
                   ),
                   GoRoute(
                     path: 'prets',
