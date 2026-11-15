@@ -87,6 +87,10 @@ class CoverPrefetch extends _$CoverPrefetch {
   var _run = 0;
   var _wifiOnly = true;
 
+  /// Failures last written to the journal: a run that fails on the same
+  /// covers (start-up, resume, connection changes) does not repeat them.
+  String? _loggedFailures;
+
   @override
   PrefetchState build() {
     final changes = ref
@@ -167,12 +171,14 @@ class CoverPrefetch extends _$CoverPrefetch {
         failed: failed,
       );
     }
-    if (failed > 0) {
+    final report = failures.join('\n');
+    if (failed > 0 && report != _loggedFailures) {
       appLog.info(
         'covers',
-        '$failed couverture(s) non téléchargée(s) :\n${failures.join('\n')}',
+        '$failed couverture(s) non téléchargée(s) :\n$report',
       );
     }
+    _loggedFailures = failed > 0 ? report : null;
   }
 
   /// Why the cover could not be downloaded; null when it is on the device.

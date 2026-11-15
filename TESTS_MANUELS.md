@@ -7,7 +7,7 @@
 > finale. Les phases 15 à 20 ajoutent leurs tests ici et marquent « automatisé (phase N) » ceux que leurs tests
 > automatiques couvrent désormais.
 
-Ce fichier liste ce que les **222 tests automatiques (et 4 parcours d'intégration) ne couvrent pas** : matériel (caméra, vibrations,
+Ce fichier liste ce que les **224 tests automatiques (et 4 parcours d'intégration) ne couvrent pas** : matériel (caméra, vibrations,
 notifications, raccourci), services réels (Supabase, API GitHub, sources de métadonnées), plateformes non
 compilées ici (Windows) et workflows GitHub (jamais exécutés).
 
@@ -83,8 +83,9 @@ Tous les tests non faits en phase 14 et non marqués « automatisé ». Le but :
       de l'appli précisé en conséquence).
       — OK 2026-11-14 (Linux) : compte créé, lien confirmé, connexion réussie.
 - [ ] **P-05** (phase 16) Migration `20261115090000_keep_alive.sql` appliquée (fonction `keep_alive()`).
-- [ ] **P-06** (phase 16) `dev` à jour avec le travail des phases, et `.github/dependabot.yml` présent sur `main`
-      (Dependabot ne lit sa configuration que sur la branche par défaut).
+- [ ] **P-06** (phase 16) `.github/dependabot.yml` présent sur la branche par défaut (Dependabot ne lit sa
+      configuration que là). Branche par défaut = `dev` depuis le 2026-11-15, qui contient le fichier : **probablement
+      levé** ; à confirmer dans Insights → Dependency graph → Dependabot (dernière vérification sans erreur).
 - [x] **P-07** (phase 17) Docker utilisable sans sudo, Supabase CLI 2.122.1 et `psql` installés ;
       `tool/supabase_tests.sh` passe (README « Tests de synchro contre un Supabase local »).
       — OK 2026-11-14 (Linux) : accès Docker donné, CLI via `npx` (sans installation), 8 tests verts.
@@ -132,14 +133,17 @@ Tous les tests non faits en phase 14 et non marqués « automatisé ». Le but :
 Couvert contre un Supabase **local** par les tests `supabase` (phase 17, verts le 2026-11-14) : `S-04` à `S-08`
 et la logique de `S-01`/`S-11`. Restent manuels : le comportement sur le **vrai** projet et sur de vrais
 appareils (reportés de la phase 14).
-- [ ] **S-01** *(reporté de la phase 14)* Connexion email + mot de passe sur chaque appareil ; mauvais mot de passe → « Email ou mot de
+- [x] **S-01** *(reporté de la phase 14)* Connexion email + mot de passe sur chaque appareil ; mauvais mot de passe → « Email ou mot de
       passe incorrect ».
+      — OK 2026-11-15 (téléphone, PC, et instance Linux vide : mauvais mot de passe refusé).
 - [ ] **S-02** Créer un compte avec un autre email (si Supabase peut lui écrire) : lien de confirmation ouvert
       dans le navigateur, puis connexion OK ; avant confirmation → « pas encore confirmé ».
 - [ ] **S-03** Le gestionnaire de mots de passe propose d'enregistrer le mot de passe.
-- [ ] **S-04** *(reporté de la phase 14)* Ajout sur le téléphone → visible sur le PC (≤ 30 s ou bouton synchro), et inversement.
-- [ ] **S-05** *(reporté de la phase 14)* **(critique, phase 9)** Après la mise à jour, la synchro reçoit toujours les changements de
+- [x] **S-04** *(reporté de la phase 14)* Ajout sur le téléphone → visible sur le PC (≤ 30 s ou bouton synchro), et inversement.
+      — OK 2026-11-15 (téléphone ↔ PC, dans les deux sens).
+- [x] **S-05** *(reporté de la phase 14)* **(critique, phase 9)** Après la mise à jour, la synchro reçoit toujours les changements de
       l'autre appareil : le filtre du pull a changé et n'a été testé que contre un faux serveur.
+      — OK 2026-11-15 (téléphone ↔ PC avec la version de la recette).
 - [ ] **S-06** Même tome modifié des deux côtés hors ligne → la modification la plus récente gagne.
 - [ ] **S-07** Modifier sur les deux appareils et synchroniser en même temps (bouton) : identiques à la fin.
 - [ ] **S-08** Suppression propagée.
@@ -155,9 +159,12 @@ appareils (reportés de la phase 14).
 
 ## 6. Journal et messages d'erreur (phase 9)
 - [ ] **J-01** Mode avion puis synchro → une seule entrée « sync » même après plusieurs minutes.
-- [ ] **J-02** « Copier » puis coller dans un message : texte lisible (date, niveau, source, message).
+- [x] **J-02** « Copier » puis coller dans un message : texte lisible (date, niveau, source, message).
       — REPORTÉ en phase 21 (2026-11-14, Linux) : écran vu vide alors que le fichier contenait une entrée
       « sync » (probablement consulté avant la première synchro) ; à revérifier après redémarrage.
+      — OK 2026-11-15 (Linux, après redémarrage : entrées du 14 et du 15 ; Android : journaux collés lisibles).
+      Écart corrigé au passage : le même échec de couvertures était écrit à chaque relance du préchargement
+      (4 fois en 45 s) → écrit une seule fois tant que la liste ne change pas.
 - [ ] **J-03** « Partager » : feuille de partage sur Android, « Enregistrer sous » sur PC.
 - [ ] **J-04** Le journal est conservé après redémarrage de l'appli.
 - [ ] **J-05** Messages en français à l'écran (hors ligne, fichier invalide, mauvais mot de passe).
@@ -233,8 +240,9 @@ une clé saisie active la source sans redémarrage ; « Tester la clé » sur de
       et résumé.
 - [ ] **K-03** Clé volontairement fausse → « Clé refusée » ; mode avion → « Pas de connexion ».
 - [ ] **K-04** Sur le deuxième appareil, la clé n'apparaît pas (elle n'est pas synchronisée) : la saisir aussi.
-- [ ] **K-05** `ENV_JSON` contenant `COMIC_VINE_API_KEY` : le workflow Release échoue au job `check-env` avec
-      le nom de la clé, jamais sa valeur (à vérifier en même temps que `Y-02`, puis retirer la clé du secret).
+- [ ] **K-05** `ENV_JSON` contenant `COMIC_VINE_API_KEY` (ou `OPEN_LIBRARY_CONTACT`) : le workflow Release
+      échoue au job `check-env` avec le nom de la variable, jamais sa valeur (à vérifier en même temps que
+      `Y-02`, puis la retirer du secret).
 
 ## 12. Hooks, commits et tests d'intégration (phase 18)
 Automatisé (phase 18) : vérification des messages (`tool/check_commit_msg.sh`) et notes de version
