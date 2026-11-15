@@ -103,4 +103,50 @@ final class MetadataAggregatorProvider
 }
 
 String _$metadataAggregatorHash() =>
-    r'3242c3a84b1ca3b6b5f5adf448031ea7076e919c';
+    r'584248f4914c59d2582c0077afe5d58473741291';
+
+/// Series-level sources (AniList, Comic Vine when a key is set).
+
+@ProviderFor(seriesLookup)
+final seriesLookupProvider = SeriesLookupProvider._();
+
+/// Series-level sources (AniList, Comic Vine when a key is set).
+
+final class SeriesLookupProvider
+    extends $FunctionalProvider<SeriesLookup, SeriesLookup, SeriesLookup>
+    with $Provider<SeriesLookup> {
+  /// Series-level sources (AniList, Comic Vine when a key is set).
+  SeriesLookupProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'seriesLookupProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$seriesLookupHash();
+
+  @$internal
+  @override
+  $ProviderElement<SeriesLookup> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  SeriesLookup create(Ref ref) {
+    return seriesLookup(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(SeriesLookup value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<SeriesLookup>(value),
+    );
+  }
+}
+
+String _$seriesLookupHash() => r'21ccfd1627d6e1f3826f9ae37103586863091672';

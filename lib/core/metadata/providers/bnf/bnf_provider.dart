@@ -25,6 +25,7 @@ class BnfProvider implements MetadataProvider {
     CollectionType.livre,
     CollectionType.bd,
     CollectionType.manga,
+    CollectionType.comic,
   };
 
   @override

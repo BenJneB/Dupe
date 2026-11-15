@@ -29,9 +29,12 @@ const Map<CollectionType, List<MetadataSource>> defaultPriorities = {
   ],
   CollectionType.bd: [MetadataSource.bnf, MetadataSource.googleBooks],
   CollectionType.manga: [MetadataSource.bnf, MetadataSource.googleBooks],
+  // French TPBs (Urban Comics…) are in the BnF; Comic Vine for US issues.
   CollectionType.comic: [
+    MetadataSource.bnf,
     MetadataSource.googleBooks,
     MetadataSource.openLibrary,
+    MetadataSource.comicVine,
   ],
 };
 

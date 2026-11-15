@@ -1,4 +1,5 @@
 import 'package:dupe/app/widgets/placeholder_body.dart';
+import 'package:dupe/features/collection/domain/collection_type.dart';
 import 'package:dupe/features/scan/presentation/camera_scanner_view.dart';
 import 'package:dupe/features/scan/presentation/code_entry_field.dart';
 import 'package:dupe/features/scan/presentation/handle_scanned_code.dart';
@@ -8,7 +9,10 @@ import 'package:material_ui/material_ui.dart';
 
 /// Barcode scan: camera on Android, keyboard / USB reader elsewhere.
 class ScanScreen extends StatelessWidget {
-  const new({super.key});
+  const new({this.type, super.key});
+
+  /// Collection type to look codes up as (tab the scan was opened from).
+  final CollectionType? type;
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +21,7 @@ class ScanScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text(l10n.scan)),
       body: hasCamera
-          ? const CameraScannerView()
+          ? CameraScannerView(type: type)
           : Center(
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 480),
@@ -31,7 +35,8 @@ class ScanScreen extends StatelessWidget {
                       message: l10n.scanUnavailableDesktop,
                     ),
                     CodeEntryField(
-                      onSubmitted: (code) => handleScannedCode(context, code),
+                      onSubmitted: (code) =>
+                          handleScannedCode(context, code, type: type),
                     ),
                   ],
                 ),

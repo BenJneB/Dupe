@@ -19,15 +19,29 @@ const duneResult = MetadataResult(
   currency: 'EUR',
 );
 
-/// Replaces the real sources by a BnF fake knowing only Dune.
-Override fakeMetadataSources() => metadataAggregatorProvider.overrideWithValue(
-  MetadataAggregator(
-    providers: [
-      FakeProvider(
-        MetadataSource.bnf,
-        isbnResult: duneResult,
-        textResults: [duneResult],
-      ),
-    ],
-  ),
+const onePieceT3Isbn = '9782723428774';
+
+/// BnF-like record of a numbered manga volume.
+const onePieceT3 = MetadataResult(
+  source: MetadataSource.bnf,
+  sourceId: 'ark:/op3',
+  title: 'One Piece',
+  volumeNumber: '3',
+  authors: ['Eiichirō Oda'],
+  publisher: 'Glénat',
+  isbn13: onePieceT3Isbn,
 );
+
+/// Replaces the real sources by a BnF fake answering [result] to any ISBN.
+Override fakeMetadataSources({MetadataResult result = duneResult}) =>
+    metadataAggregatorProvider.overrideWithValue(
+      MetadataAggregator(
+        providers: [
+          FakeProvider(
+            MetadataSource.bnf,
+            isbnResult: result,
+            textResults: [result],
+          ),
+        ],
+      ),
+    );
