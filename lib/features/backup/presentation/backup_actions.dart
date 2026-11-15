@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:drift/drift.dart';
+import 'package:dupe/app/error_text.dart';
 import 'package:dupe/app/router.dart';
 import 'package:dupe/core/database/database_provider.dart';
 import 'package:dupe/features/backup/data/csv_codec.dart';
@@ -36,8 +37,9 @@ class BackupActions {
       if (message != null) {
         messenger.showSnackBar(SnackBar(content: Text(message)));
       }
-    } on Object catch (e) {
-      messenger.showSnackBar(SnackBar(content: Text(l10n.fileError('$e'))));
+    } on Object catch (e, stack) {
+      final text = reportError(l10n, 'backup', e, stack);
+      messenger.showSnackBar(SnackBar(content: Text(l10n.fileError(text))));
     }
   }
 

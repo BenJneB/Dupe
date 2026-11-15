@@ -1,3 +1,4 @@
+import 'package:dupe/app/error_text.dart';
 import 'package:dupe/app/widgets/cover_image.dart';
 import 'package:dupe/app/widgets/placeholder_body.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
@@ -52,7 +53,9 @@ class TextResultsView extends ConsumerWidget {
           );
         },
       ),
-      AsyncError(:final error) => Center(child: Text(l10n.loadError('$error'))),
+      AsyncError(:final error) => Center(
+        child: Text(l10n.loadError(errorText(l10n, error))),
+      ),
       _ => const Center(child: CircularProgressIndicator()),
     };
   }

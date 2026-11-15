@@ -1,3 +1,4 @@
+import 'package:dupe/app/error_text.dart';
 import 'package:dupe/core/database/database_provider.dart';
 import 'package:dupe/features/covers/data/cover_providers.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
@@ -28,9 +29,10 @@ class CoverPhotoButton extends ConsumerWidget {
             extension: picked.extension,
             now: ref.read(clockProvider)(),
           );
-    } on Object catch (e) {
+    } on Object catch (e, stack) {
+      final text = reportError(l10n, 'cover', e, stack);
       messenger.showSnackBar(
-        SnackBar(content: Text(l10n.coverPhotoError('$e'))),
+        SnackBar(content: Text(l10n.coverPhotoError(text))),
       );
     }
   }

@@ -1,3 +1,4 @@
+import 'package:dupe/app/error_text.dart';
 import 'package:dupe/app/widgets/cover_image.dart';
 import 'package:dupe/core/metadata/series_metadata.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
@@ -97,7 +98,7 @@ class _SeriesLookupSheetState extends ConsumerState<_SeriesLookupSheet> {
                 ],
               ),
               AsyncError(:final error) => Center(
-                child: Text(l10n.loadError('$error')),
+                child: Text(l10n.loadError(errorText(l10n, error))),
               ),
               _ => const Center(child: CircularProgressIndicator()),
             },

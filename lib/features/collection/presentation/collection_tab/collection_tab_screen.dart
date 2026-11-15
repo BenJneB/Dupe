@@ -1,3 +1,4 @@
+import 'package:dupe/app/error_text.dart';
 import 'package:dupe/app/router.dart';
 import 'package:dupe/app/widgets/global_search_bar.dart';
 import 'package:dupe/app/widgets/placeholder_body.dart';
@@ -83,7 +84,7 @@ class CollectionTabScreen extends ConsumerWidget {
                       ? EntriesGrid(type: type, entries: value)
                       : EntriesList(type: type, entries: value),
                 AsyncError(:final error) => Center(
-                  child: Text(l10n.loadError('$error')),
+                  child: Text(l10n.loadError(errorText(l10n, error))),
                 ),
                 _ => const Center(child: CircularProgressIndicator()),
               },

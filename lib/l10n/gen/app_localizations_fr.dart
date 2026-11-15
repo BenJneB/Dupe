@@ -1265,4 +1265,60 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get aboutSourceCode => 'Code source';
+
+  @override
+  String get errorOffline => 'Pas de connexion internet.';
+
+  @override
+  String get errorSession => 'Session expirée : reconnecte-toi.';
+
+  @override
+  String get errorServer =>
+      'Le serveur a refusé la demande (détails dans À propos → Journal).';
+
+  @override
+  String get errorTooManyAttempts =>
+      'Trop de tentatives : réessaie dans quelques minutes.';
+
+  @override
+  String get errorInvalidCode => 'Code ou lien invalide ou expiré.';
+
+  @override
+  String get errorSignInRefused =>
+      'Connexion refusée (détails dans À propos → Journal).';
+
+  @override
+  String get errorNotBackup => 'Ce fichier n\'est pas une sauvegarde Dupe.';
+
+  @override
+  String get errorFileAccess => 'Fichier inaccessible (droits ou emplacement).';
+
+  @override
+  String get errorBadFile => 'Fichier illisible ou mal formé.';
+
+  @override
+  String get errorUnknown =>
+      'Une erreur est survenue (détails dans À propos → Journal).';
+
+  @override
+  String get journalTitle => 'Journal';
+
+  @override
+  String get journalSubtitle =>
+      'Erreurs et événements récents, à copier pour signaler un problème';
+
+  @override
+  String get journalEmpty => 'Rien à signaler';
+
+  @override
+  String get journalCopy => 'Copier';
+
+  @override
+  String get journalCopied => 'Journal copié';
+
+  @override
+  String get journalShare => 'Partager';
+
+  @override
+  String get journalClear => 'Vider le journal';
 }

@@ -46,3 +46,16 @@ class LocalOnlyAuth implements SyncAuth {
   @override
   Future<void> signOut() async {}
 }
+
+/// Why a sign-in step was refused.
+enum SignInFailure { tooManyAttempts, invalidCode, refused }
+
+class SignInException implements Exception {
+  const new(this.failure, this.message);
+
+  final SignInFailure failure;
+  final String message;
+
+  @override
+  String toString() => 'SignInException(${failure.name}): $message';
+}

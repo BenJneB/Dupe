@@ -1,7 +1,9 @@
 import 'dart:async';
 
+import 'package:dupe/app/router.dart';
 import 'package:dupe/app/widgets/dupe_logo.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
+import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -60,6 +62,14 @@ class AboutScreen extends StatelessWidget {
             onTap: () => unawaited(launchUrl(_comicVine)),
           ),
           const Divider(),
+          ListTile(
+            key: const Key('journalTile'),
+            contentPadding: EdgeInsets.zero,
+            leading: const Icon(Icons.receipt_long_outlined),
+            title: Text(l10n.journalTitle),
+            subtitle: Text(l10n.journalSubtitle),
+            onTap: () => unawaited(context.push(AppRoutes.journal)),
+          ),
           ListTile(
             contentPadding: EdgeInsets.zero,
             leading: const Icon(Icons.code),

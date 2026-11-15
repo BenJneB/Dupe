@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dupe/app/error_text.dart';
 import 'package:dupe/app/router.dart';
 import 'package:dupe/app/widgets/cover_image.dart';
 import 'package:dupe/app/widgets/placeholder_body.dart';
@@ -41,7 +42,7 @@ class SeriesDetailScreen extends ConsumerWidget {
       ),
       AsyncError(:final error) => Scaffold(
         appBar: AppBar(),
-        body: Center(child: Text(l10n.loadError('$error'))),
+        body: Center(child: Text(l10n.loadError(errorText(l10n, error)))),
       ),
       _ => Scaffold(
         appBar: AppBar(),

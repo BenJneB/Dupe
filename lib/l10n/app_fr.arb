@@ -810,5 +810,22 @@
   "aboutSourcesText": "Bibliothèque nationale de France (catalogue SRU), Open Library, Google Books, AniList, Comic Vine. Les données appartiennent à leurs auteurs ; Dupe ne fait que les consulter.",
   "aboutComicVine": "Données comics fournies par Comic Vine",
   "aboutLicenses": "Licences des composants",
-  "aboutSourceCode": "Code source"
+  "aboutSourceCode": "Code source",
+  "errorOffline": "Pas de connexion internet.",
+  "errorSession": "Session expirée : reconnecte-toi.",
+  "errorServer": "Le serveur a refusé la demande (détails dans À propos → Journal).",
+  "errorTooManyAttempts": "Trop de tentatives : réessaie dans quelques minutes.",
+  "errorInvalidCode": "Code ou lien invalide ou expiré.",
+  "errorSignInRefused": "Connexion refusée (détails dans À propos → Journal).",
+  "errorNotBackup": "Ce fichier n'est pas une sauvegarde Dupe.",
+  "errorFileAccess": "Fichier inaccessible (droits ou emplacement).",
+  "errorBadFile": "Fichier illisible ou mal formé.",
+  "errorUnknown": "Une erreur est survenue (détails dans À propos → Journal).",
+  "journalTitle": "Journal",
+  "journalSubtitle": "Erreurs et événements récents, à copier pour signaler un problème",
+  "journalEmpty": "Rien à signaler",
+  "journalCopy": "Copier",
+  "journalCopied": "Journal copié",
+  "journalShare": "Partager",
+  "journalClear": "Vider le journal"
 }

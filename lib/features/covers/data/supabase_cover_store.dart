@@ -16,7 +16,9 @@ class SupabaseCoverStore implements CoverStore {
 
   String _path(String name) {
     final user = _userId();
-    if (user == null) throw const SyncException('not signed in');
+    if (user == null) {
+      throw const SyncException('not signed in', failure: SyncFailure.session);
+    }
     return '$user/$name';
   }
 

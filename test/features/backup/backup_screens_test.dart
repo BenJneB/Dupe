@@ -130,6 +130,7 @@ void main() {
 
     expect(find.text('Données comics fournies par Comic Vine'), findsOneWidget);
     expect(find.byKey(const Key('aboutVersion')), findsOneWidget);
+    await tester.scrollUntilVisible(find.byKey(const Key('licensesTile')), 200);
     await tester.tap(find.byKey(const Key('licensesTile')));
     await tester.pumpAndSettle();
     expect(find.byType(LicensePage), findsOneWidget);

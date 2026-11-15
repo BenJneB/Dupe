@@ -1,3 +1,4 @@
+import 'package:dupe/app/error_text.dart';
 import 'package:dupe/app/router.dart';
 import 'package:dupe/app/widgets/cover_image.dart';
 import 'package:dupe/app/widgets/placeholder_body.dart';
@@ -57,7 +58,9 @@ class IsbnResultView extends ConsumerWidget {
             type: type,
             isbn13: isbn13,
           ),
-          AsyncError(:final error) => Text(l10n.loadError('$error')),
+          AsyncError(:final error) => Text(
+            l10n.loadError(errorText(l10n, error)),
+          ),
           _ => const Padding(
             padding: EdgeInsets.all(32),
             child: Center(child: CircularProgressIndicator()),
