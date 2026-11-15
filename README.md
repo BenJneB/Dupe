@@ -20,9 +20,23 @@ cp env.example.json env.json   # puis remplir les vraies valeurs
 | Clé | Usage | Obligatoire |
 |---|---|---|
 | `SUPABASE_URL`, `SUPABASE_ANON_KEY` | Synchronisation cloud (phase 7) | non (mode local seul sinon) |
-| `COMIC_VINE_API_KEY` | Métadonnées comics (phase 3) | non |
+| `COMIC_VINE_API_KEY` | Comics (développement seulement : voir « Clés des sources ») | non |
 | `OPEN_LIBRARY_CONTACT` | Email envoyé à Open Library dans le User-Agent (limite 3 req/s au lieu de 1) | non |
-| `GOOGLE_BOOKS_API_KEY` | Google Books (couvertures, résumés). Sans clé la source est désactivée : le quota anonyme est épuisé (HTTP 429) | recommandée |
+| `GOOGLE_BOOKS_API_KEY` | Google Books (développement seulement : voir « Clés des sources ») | non |
+
+### Clés des sources (Google Books, Comic Vine)
+Les Releases sont publiques et leurs binaires peuvent être décompilés : les clés de ces deux services ne sont
+**pas** compilées dans les versions publiées (`release.yml` refuse de publier si `ENV_JSON` en contient). On les
+saisit dans l'appli : **Paramètres → Sources de données → Clé API** sous la source, avec un bouton *Tester la
+clé*. Une clé saisie active la source tout de suite ; elle reste sur l'appareil (ni synchronisée, ni dans les
+sauvegardes, ni dans le journal) : la saisir sur chaque appareil. En développement, une clé de `env.json` sert
+de valeur par défaut (une clé saisie dans l'appli passe devant).
+- **Google Books** (couvertures, résumés ; sans clé le quota anonyme est épuisé, HTTP 429) : console Google
+  Cloud → *API et services* → activer *Books API* → *Identifiants* → créer une clé API, **restreinte à Books
+  API**.
+- **Comic Vine** (comics US) : créer un compte sur comicvine.gamespot.com, la clé est sur
+  comicvine.gamespot.com/api (usage non commercial). Si une Release publique a déjà contenu une clé,
+  la régénérer.
 
 ## Utilisation du scan
 - **Mode Magasin** (par défaut) : vérifie l'ISBN dans ta collection, sans réseau. Les couleurs :
@@ -134,9 +148,10 @@ Paramètres → *Mises à jour*) et ouvre le fichier de la plateforme.
 | `ANDROID_KEY_PASSWORD` | `keyPassword` |
 
 Le dépôt étant **public**, les Releases aussi : tout ce que contient `ENV_JSON` est compilé dans les binaires
-et extractible. La clé Supabase *publishable* est faite pour ça (RLS). Restreindre la clé Google Books dans la
-console Google (API Books seulement) ; pour Comic Vine (clé non restreignable), mettre dans `ENV_JSON` une
-version sans `COMIC_VINE_API_KEY` si on ne veut pas l'exposer.
+et extractible. La clé Supabase *publishable* est faite pour ça (RLS). `ENV_JSON` ne doit **pas** contenir
+`COMIC_VINE_API_KEY` ni `GOOGLE_BOOKS_API_KEY` (le job `check-env` de `release.yml` refuse alors de publier,
+sans afficher les valeurs) : ces clés se saisissent dans l'appli. `OPEN_LIBRARY_CONTACT` (un email) y est
+aussi lisible : le laisser vide dans `ENV_JSON` pour ne pas publier son adresse.
 
 **Supabase gratuit** : un projet est mis en pause après 7 jours de faible activité
 ([doc](https://supabase.com/docs/guides/platform/free-project-pausing)), restaurable depuis le tableau de bord

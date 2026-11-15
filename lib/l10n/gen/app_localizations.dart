@@ -1201,8 +1201,110 @@ abstract class AppLocalizations {
   /// No description provided for @sourceNeedsKey.
   ///
   /// In fr, this message translates to:
-  /// **'Clé API absente de env.json'**
+  /// **'Clé requise : saisis-la ci-dessous'**
   String get sourceNeedsKey;
+
+  /// No description provided for @apiKeyTile.
+  ///
+  /// In fr, this message translates to:
+  /// **'Clé API'**
+  String get apiKeyTile;
+
+  /// No description provided for @apiKeySaved.
+  ///
+  /// In fr, this message translates to:
+  /// **'Clé saisie dans l’appli'**
+  String get apiKeySaved;
+
+  /// No description provided for @apiKeyBuiltIn.
+  ///
+  /// In fr, this message translates to:
+  /// **'Clé intégrée à cette version (env.json)'**
+  String get apiKeyBuiltIn;
+
+  /// No description provided for @apiKeyMissing.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune clé : touche pour en saisir une'**
+  String get apiKeyMissing;
+
+  /// No description provided for @apiKeyTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Clé {source}'**
+  String apiKeyTitle(String source);
+
+  /// No description provided for @apiKeyHelpGoogleBooks.
+  ///
+  /// In fr, this message translates to:
+  /// **'Crée une clé dans la console Google Cloud (console.cloud.google.com → API et services → Identifiants), avec la « Books API » activée, et restreins-la à cette API.'**
+  String get apiKeyHelpGoogleBooks;
+
+  /// No description provided for @apiKeyHelpComicVine.
+  ///
+  /// In fr, this message translates to:
+  /// **'Crée un compte Comic Vine, puis copie ta clé depuis comicvine.gamespot.com/api (usage non commercial).'**
+  String get apiKeyHelpComicVine;
+
+  /// No description provided for @apiKeyPrivacy.
+  ///
+  /// In fr, this message translates to:
+  /// **'La clé reste sur cet appareil : elle n’est ni synchronisée, ni sauvegardée, ni écrite dans le journal.'**
+  String get apiKeyPrivacy;
+
+  /// No description provided for @apiKeyTest.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tester la clé'**
+  String get apiKeyTest;
+
+  /// No description provided for @apiKeyValid.
+  ///
+  /// In fr, this message translates to:
+  /// **'Clé valide'**
+  String get apiKeyValid;
+
+  /// No description provided for @apiKeyInvalid.
+  ///
+  /// In fr, this message translates to:
+  /// **'Clé refusée : vérifie-la (pour Google : Books API activée et autorisée pour cette clé)'**
+  String get apiKeyInvalid;
+
+  /// No description provided for @apiKeyQuota.
+  ///
+  /// In fr, this message translates to:
+  /// **'Clé valide, mais quota dépassé pour l’instant'**
+  String get apiKeyQuota;
+
+  /// No description provided for @apiKeyOffline.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pas de connexion : impossible de tester la clé'**
+  String get apiKeyOffline;
+
+  /// No description provided for @apiKeyFailed.
+  ///
+  /// In fr, this message translates to:
+  /// **'Réponse inattendue du service (réessaie plus tard)'**
+  String get apiKeyFailed;
+
+  /// No description provided for @apiKeyRemove.
+  ///
+  /// In fr, this message translates to:
+  /// **'Effacer'**
+  String get apiKeyRemove;
+
+  /// No description provided for @apiKeyStored.
+  ///
+  /// In fr, this message translates to:
+  /// **'Clé enregistrée'**
+  String get apiKeyStored;
+
+  /// No description provided for @apiKeyRemoved.
+  ///
+  /// In fr, this message translates to:
+  /// **'Clé effacée'**
+  String get apiKeyRemoved;
 
   /// No description provided for @sourceBnfHelp.
   ///

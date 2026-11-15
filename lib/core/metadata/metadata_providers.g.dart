@@ -100,7 +100,7 @@ final class MetadataAggregatorProvider
 }
 
 String _$metadataAggregatorHash() =>
-    r'0d53afe50685db6a8ce8beab44a2fc52fb24db61';
+    r'19d8967741f5d12e52b9e69ffd65db923b5729a5';
 
 /// Enabled series-level sources (AniList, Comic Vine).
 
@@ -146,4 +146,4 @@ final class SeriesLookupProvider
   }
 }
 
-String _$seriesLookupHash() => r'76b3df2d441db7c89fcadd058d7ad9ec912c750d';
+String _$seriesLookupHash() => r'df7b1fcd6d3fcfe44d418758b646a42dcd083074';
