@@ -143,7 +143,7 @@
       }
     }
   },
-  "markOwned": "Je l’ai",
+  "markOwned": "Je l’ai acheté",
   "seeSeries": "Voir la série",
   "ownershipOwned": "Possédé",
   "ownershipWished": "Envie",
@@ -577,5 +577,69 @@
   },
   "addCopy": "Ajouter un exemplaire",
   "storeOtherEdition": "Tu as ce tome dans une autre édition",
-  "addThisCopy": "Ajouter cet exemplaire"
+  "addThisCopy": "Ajouter cet exemplaire",
+  "boughtTitle": "Je l’ai acheté",
+  "paidPriceOptional": "Prix payé (facultatif)",
+  "boughtDone": "« {title} » ajouté à ta collection",
+  "@boughtDone": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "statsSpent": "Dépensé",
+  "statsSpentCaption": "prix payé saisi pour {priced} {total, plural, =1{exemplaire sur 1} other{exemplaires sur {total}}}",
+  "@statsSpentCaption": {
+    "placeholders": {
+      "priced": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "statsValue": "Valeur",
+  "statsValueCaption": "valeur estimée, sinon prix éditeur ou prix payé",
+  "statsVolumes": "Ouvrages",
+  "statsVolumesCaption": "{copies, plural, =1{1 exemplaire} other{{copies} exemplaires}}",
+  "@statsVolumesCaption": {
+    "placeholders": {
+      "copies": {
+        "type": "int"
+      }
+    }
+  },
+  "statsOtherCurrencies": "Hors total (autres devises) : {list}",
+  "@statsOtherCurrencies": {
+    "placeholders": {
+      "list": {
+        "type": "String"
+      }
+    }
+  },
+  "statsRead": "Lus",
+  "statsComplete": "Séries complètes",
+  "statsCompleteCaption": "parmi les séries dont le nombre de tomes est connu",
+  "statsSpendingByMonth": "Dépenses des 12 derniers mois",
+  "statsNoSpending": "Aucun achat daté sur cette période : renseigne la date et le prix d’achat, ou utilise « Je l’ai acheté ».",
+  "statsVolumesByType": "Ouvrages par type",
+  "statsSpendingByType": "Dépenses par type",
+  "statsShowTable": "Voir le tableau",
+  "statsShowChart": "Voir le graphique",
+  "statsMonth": "Mois",
+  "statsAmount": "Montant",
+  "statsEmpty": "Ajoute des ouvrages pour voir tes statistiques",
+  "statsRatio": "{count} sur {total}",
+  "@statsRatio": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  }
 }

@@ -246,7 +246,7 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get markOwned => 'Je l’ai';
+  String get markOwned => 'Je l’ai acheté';
 
   @override
   String get seeSeries => 'Voir la série';
@@ -895,4 +895,98 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get addThisCopy => 'Ajouter cet exemplaire';
+
+  @override
+  String get boughtTitle => 'Je l’ai acheté';
+
+  @override
+  String get paidPriceOptional => 'Prix payé (facultatif)';
+
+  @override
+  String boughtDone(String title) {
+    return '« $title » ajouté à ta collection';
+  }
+
+  @override
+  String get statsSpent => 'Dépensé';
+
+  @override
+  String statsSpentCaption(int priced, int total) {
+    String _temp0 = intl.Intl.pluralLogic(
+      total,
+      locale: localeName,
+      other: 'exemplaires sur $total',
+      one: 'exemplaire sur 1',
+    );
+    return 'prix payé saisi pour $priced $_temp0';
+  }
+
+  @override
+  String get statsValue => 'Valeur';
+
+  @override
+  String get statsValueCaption =>
+      'valeur estimée, sinon prix éditeur ou prix payé';
+
+  @override
+  String get statsVolumes => 'Ouvrages';
+
+  @override
+  String statsVolumesCaption(int copies) {
+    String _temp0 = intl.Intl.pluralLogic(
+      copies,
+      locale: localeName,
+      other: '$copies exemplaires',
+      one: '1 exemplaire',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String statsOtherCurrencies(String list) {
+    return 'Hors total (autres devises) : $list';
+  }
+
+  @override
+  String get statsRead => 'Lus';
+
+  @override
+  String get statsComplete => 'Séries complètes';
+
+  @override
+  String get statsCompleteCaption =>
+      'parmi les séries dont le nombre de tomes est connu';
+
+  @override
+  String get statsSpendingByMonth => 'Dépenses des 12 derniers mois';
+
+  @override
+  String get statsNoSpending =>
+      'Aucun achat daté sur cette période : renseigne la date et le prix d’achat, ou utilise « Je l’ai acheté ».';
+
+  @override
+  String get statsVolumesByType => 'Ouvrages par type';
+
+  @override
+  String get statsSpendingByType => 'Dépenses par type';
+
+  @override
+  String get statsShowTable => 'Voir le tableau';
+
+  @override
+  String get statsShowChart => 'Voir le graphique';
+
+  @override
+  String get statsMonth => 'Mois';
+
+  @override
+  String get statsAmount => 'Montant';
+
+  @override
+  String get statsEmpty => 'Ajoute des ouvrages pour voir tes statistiques';
+
+  @override
+  String statsRatio(int count, int total) {
+    return '$count sur $total';
+  }
 }
