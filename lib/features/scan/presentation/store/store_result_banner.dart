@@ -117,14 +117,22 @@ class _Actions extends StatelessWidget {
       spacing: 8,
       runSpacing: 8,
       children: [
-        if (item != null)
+        if (item != null) ...[
           OutlinedButton(
             key: const Key('storeDetails'),
             style: outlined,
             onPressed: () => context.go(AppRoutes.item(item.type, item.id)),
             child: Text(l10n.storeDetails),
-          )
-        else if (metadata != null) ...[
+          ),
+          if (check.otherEdition && metadata != null)
+            OutlinedButton.icon(
+              key: const Key('addThisCopy'),
+              style: outlined,
+              icon: const Icon(Icons.library_add_outlined),
+              label: Text(l10n.addThisCopy),
+              onPressed: () => addFromResult(context, metadata, item.type),
+            ),
+        ] else if (metadata != null) ...[
           FilledButton.icon(
             key: const Key('addOwned'),
             style: FilledButton.styleFrom(

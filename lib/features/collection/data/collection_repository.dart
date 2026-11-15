@@ -3,7 +3,7 @@ import 'package:dupe/core/database/app_database.dart';
 import 'package:dupe/core/database/database_provider.dart';
 import 'package:dupe/core/database/tables/items_table.drift.dart';
 import 'package:dupe/core/database/tables/series_table.drift.dart';
-import 'package:dupe/core/utils/streams.dart';
+import 'package:dupe/features/collection/data/collection_entries_query.dart';
 import 'package:dupe/features/collection/domain/collection_entry.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
 import 'package:dupe/features/collection/domain/enums.dart';
@@ -209,47 +209,7 @@ class CollectionRepository {
       _db.select(_db.itemsTable)
         ..where((t) => t.seriesId.equals(seriesId) & t.deletedAt.isNull());
 
-  /// Series of [type] with owned/total item counts, plus standalone items.
-  Stream<List<CollectionEntry>> watchEntries(CollectionType type) {
-    final s = _db.seriesTable;
-    final i = _db.itemsTable;
-    final activeItem = i.deletedAt.isNull();
-    // Distinct volumes: several copies (editions) of a volume count once.
-    final ownedCount = coalesce([i.volumeNumber, i.id]).count(
-      distinct: true,
-      filter: activeItem & i.ownership.equalsValue(Ownership.possede),
-    );
-    final itemCount = i.id.count(filter: activeItem);
-
-    final seriesQuery =
-        _db.select(s).join([leftOuterJoin(i, i.seriesId.equalsExp(s.id))])
-          ..where(s.type.equalsValue(type) & s.deletedAt.isNull())
-          ..groupBy([s.id])
-          ..addColumns([ownedCount, itemCount]);
-
-    final seriesStream = seriesQuery.watch().map(
-      (rows) => [
-        for (final row in rows)
-          SeriesEntry(
-            series: row.readTable(s),
-            ownedCount: row.read(ownedCount) ?? 0,
-            itemCount: row.read(itemCount) ?? 0,
-          ),
-      ],
-    );
-    final standalone =
-        (_db.select(i)..where(
-              (t) =>
-                  t.type.equalsValue(type) &
-                  t.seriesId.isNull() &
-                  t.deletedAt.isNull(),
-            ))
-            .watch();
-
-    // Both queries touch the items table, so drift re-runs them together on
-    // item changes; combine the latest values of each.
-    return combineLatest(seriesStream, standalone, (series, items) {
-      return <CollectionEntry>[...series, ...items.map(ItemEntry.new)];
-    });
-  }
+  /// Series of [type] with their counts, plus standalone items.
+  Stream<List<CollectionEntry>> watchEntries(CollectionType type) =>
+      watchCollectionEntries(_db, type);
 }

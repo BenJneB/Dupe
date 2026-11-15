@@ -1,5 +1,6 @@
 import 'package:dupe/core/metadata/metadata_aggregator.dart';
 import 'package:dupe/core/metadata/metadata_providers.dart';
+import 'package:dupe/core/metadata/metadata_result.dart';
 import 'package:dupe/features/collection/data/collection_repository.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
 import 'package:dupe/features/collection/domain/enums.dart';
@@ -53,7 +54,12 @@ class StoreChecker {
       final remember = copy.isbn13 == null;
       final item = remember ? copy.copyWith(isbn13: isbn13) : copy;
       if (remember) await _repo.saveItem(item);
-      yield await _fromItem(item, series: series, isbnRemembered: remember);
+      yield await _fromItem(
+        item,
+        series: series,
+        isbnRemembered: remember,
+        otherEdition: remember ? null : metadata,
+      );
       return;
     }
     yield StoreCheck(
@@ -87,6 +93,7 @@ class StoreChecker {
     Item item, {
     Series? series,
     bool isbnRemembered = false,
+    MetadataResult? otherEdition,
   }) async {
     final seriesId = item.seriesId;
     final s =
@@ -101,6 +108,8 @@ class StoreChecker {
           ? const []
           : _ownedNumbers(await _repo.listSeriesItems(s.id)),
       isbnRemembered: isbnRemembered,
+      metadata: otherEdition,
+      otherEdition: otherEdition != null,
     );
   }
 }

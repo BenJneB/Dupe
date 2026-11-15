@@ -28,6 +28,7 @@ class StoreCheck {
     this.searching = false,
     this.offline = false,
     this.isbnRemembered = false,
+    this.otherEdition = false,
   });
 
   final StoreVerdict verdict;
@@ -53,4 +54,8 @@ class StoreCheck {
   /// The volume was matched by series + number and had no ISBN: the scanned
   /// ISBN was saved on it, so the next check is instant and offline.
   final bool isbnRemembered;
+
+  /// The volume is owned, but the scanned ISBN is another edition
+  /// ([metadata] describes it, to add this copy).
+  final bool otherEdition;
 }

@@ -32,3 +32,9 @@ enum ReadingStatus implements DbEnum {
   @override
   final String dbValue;
 }
+
+/// Owned volumes still to read ("Ma pile à lire").
+const List<ReadingStatus> toReadStatuses = [
+  ReadingStatus.nonLu,
+  ReadingStatus.enCours,
+];

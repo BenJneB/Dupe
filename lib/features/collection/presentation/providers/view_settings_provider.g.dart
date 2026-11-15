@@ -60,7 +60,7 @@ final class CollectionViewSettingsProvider
 }
 
 String _$collectionViewSettingsHash() =>
-    r'50cb4a75217bb57baf09c9d48b2ef9749149c849';
+    r'6bdcd173c291ebba38df4e328e37f84b35909144';
 
 final class CollectionViewSettingsFamily extends $Family
     with

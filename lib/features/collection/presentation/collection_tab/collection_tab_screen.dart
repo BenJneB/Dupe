@@ -69,6 +69,8 @@ class CollectionTabScreen extends ConsumerWidget {
               onSort: notifier.setSort,
               onFilter: notifier.setFilter,
               onToggleGrid: notifier.toggleGrid,
+              toReadOnly: settings.toReadOnly,
+              onToggleToRead: notifier.toggleToRead,
             ),
             Expanded(
               child: switch (entries) {

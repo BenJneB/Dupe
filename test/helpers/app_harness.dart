@@ -1,10 +1,13 @@
 import 'package:dupe/app/app.dart';
 import 'package:dupe/core/database/app_database.dart';
 import 'package:dupe/core/database/database_provider.dart';
+import 'package:dupe/features/loans/data/loan_reminders.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
+
+import 'fake_reminders.dart';
 
 const phoneSize = Size(400, 800);
 const desktopSize = Size(1280, 800);
@@ -14,6 +17,9 @@ Future<AppDatabase> pumpApp(
   WidgetTester tester, {
   Size size = phoneSize,
   List<Override> overrides = const [],
+
+  /// System notifications are never used in tests.
+  LoanReminders? reminders,
 
   /// Writes initial data before the app (and its drift streams) starts.
   Future<void> Function(AppDatabase db)? seed,
@@ -25,7 +31,13 @@ Future<AppDatabase> pumpApp(
   await seed?.call(db);
   await tester.pumpWidget(
     ProviderScope(
-      overrides: [appDatabaseProvider.overrideWithValue(db), ...overrides],
+      overrides: [
+        appDatabaseProvider.overrideWithValue(db),
+        loanRemindersProvider.overrideWithValue(
+          reminders ?? FakeLoanReminders(),
+        ),
+        ...overrides,
+      ],
       child: const DupeApp(),
     ),
   );

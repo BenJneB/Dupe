@@ -115,5 +115,26 @@ void main() {
       expect(grid.missingNumbers, isEmpty);
       expect(grid.slots, hasLength(5));
     });
+
+    test('to read: owned volumes of which no copy has been read', () {
+      final grid = VolumeGrid.compute(
+        items: [
+          testItem('a', volume: '1'),
+          // Volume 2 in two editions, one of them read.
+          testItem('b1', volume: '2'),
+          testItem('b2', volume: '2').copyWith(readingStatus: ReadingStatus.lu),
+          testItem(
+            'c',
+            volume: '3',
+          ).copyWith(readingStatus: ReadingStatus.enCours),
+          testItem('d', volume: '4', ownership: Ownership.envie),
+        ],
+        totalVolumes: 4,
+        followed: true,
+      );
+
+      expect(grid.toReadCount, 2);
+      expect(grid.slots[1].copies, hasLength(2));
+    });
   });
 }

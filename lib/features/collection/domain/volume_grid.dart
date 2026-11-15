@@ -11,6 +11,7 @@ class VolumeSlot {
     required this.status,
     this.number,
     this.item,
+    this.copies = const [],
   });
 
   /// Displayed text ("12", "HS 2").
@@ -22,6 +23,9 @@ class VolumeSlot {
 
   /// Representative item (best status) for this slot; null when missing.
   final Item? item;
+
+  /// Every copy of this volume (editions, variants), best status first.
+  final List<Item> copies;
 }
 
 /// Mangacollec-like view of a series: one slot per volume number.
@@ -31,6 +35,7 @@ class VolumeGrid {
     required this.ownedCount,
     required this.totalVolumes,
     required this.missingNumbers,
+    this.toReadCount = 0,
   });
 
   /// Builds the grid of a series from its (non-deleted) items.
@@ -54,16 +59,19 @@ class VolumeGrid {
           : VolumeSlotStatus.owned;
     }
 
-    final byLabel = <String, Item>{};
+    final copies = <String, List<Item>>{};
     for (final item in items) {
       final label = item.volumeNumber?.trim() ?? '';
       if (label.isEmpty) continue;
       final key = VolumeNumber.asInt(label)?.toString() ?? label;
-      final current = byLabel[key];
-      if (current == null || statusOf(item).index < statusOf(current).index) {
-        byLabel[key] = item;
-      }
+      (copies[key] ??= []).add(item);
     }
+    for (final list in copies.values) {
+      list.sort((a, b) => statusOf(a).index.compareTo(statusOf(b).index));
+    }
+    final byLabel = {
+      for (final MapEntry(:key, :value) in copies.entries) key: value.first,
+    };
 
     var maxNumber = totalVolumes ?? 0;
     for (final key in byLabel.keys) {
@@ -77,6 +85,7 @@ class VolumeGrid {
           label: '$n',
           number: n,
           item: byLabel['$n'],
+          copies: copies['$n'] ?? const [],
           status: byLabel['$n'] == null
               ? VolumeSlotStatus.missing
               : statusOf(byLabel['$n']!),
@@ -90,6 +99,7 @@ class VolumeGrid {
         VolumeSlot(
           label: key,
           item: byLabel[key],
+          copies: copies[key]!,
           status: statusOf(byLabel[key]!),
         ),
       );
@@ -101,8 +111,18 @@ class VolumeGrid {
     final upper = totalVolumes ?? maxNumber;
     final numbered = slots.where((s) => s.number != null && s.number! <= upper);
 
+    // A volume is to read when no owned copy of it has been read.
+    bool isToRead(VolumeSlot s) =>
+        isOwned(s) &&
+        s.copies.every(
+          (i) =>
+              i.ownership != Ownership.possede ||
+              toReadStatuses.contains(i.readingStatus),
+        );
+
     return VolumeGrid(
       slots: slots,
+      toReadCount: slots.where(isToRead).length,
       ownedCount: numbered.where(isOwned).length,
       totalVolumes: totalVolumes,
       missingNumbers: followed
@@ -120,6 +140,9 @@ class VolumeGrid {
   final int ownedCount;
   final int? totalVolumes;
   final List<int> missingNumbers;
+
+  /// Owned volumes not read yet ("Ma pile à lire").
+  final int toReadCount;
 
   bool get isComplete =>
       totalVolumes != null && totalVolumes! > 0 && ownedCount >= totalVolumes!;

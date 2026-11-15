@@ -16,4 +16,6 @@ class CollectionViewSettings extends _$CollectionViewSettings {
       state = state.copyWith(filter: filter);
 
   void toggleGrid() => state = state.copyWith(grid: !state.grid);
+
+  void toggleToRead() => state = state.copyWith(toReadOnly: !state.toReadOnly);
 }

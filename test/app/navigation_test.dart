@@ -36,7 +36,7 @@ void main() {
       await tester.tap(find.text('Prêts'));
       await tester.pumpAndSettle();
 
-      expect(find.text('Bientôt disponible'), findsOneWidget);
+      expect(find.text('Aucun prêt en cours'), findsOneWidget);
       expect(find.byType(BackButton), findsOneWidget);
     });
 

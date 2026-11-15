@@ -8,17 +8,16 @@ import 'package:dupe/features/collection/data/collection_repository.dart';
 import 'package:dupe/features/collection/domain/enums.dart';
 import 'package:dupe/features/collection/domain/series.dart';
 import 'package:dupe/features/collection/domain/volume_grid.dart';
-import 'package:dupe/features/collection/presentation/confirm_delete_dialog.dart';
 import 'package:dupe/features/collection/presentation/labels.dart';
 import 'package:dupe/features/collection/presentation/providers/detail_providers.dart';
+import 'package:dupe/features/collection/presentation/series/series_menu.dart';
+import 'package:dupe/features/collection/presentation/series/volume_copies_sheet.dart';
 import 'package:dupe/features/collection/presentation/series/volume_grid_view.dart';
 import 'package:dupe/features/collection/presentation/series/volume_range_dialog.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
-
-enum _MenuAction { edit, delete }
 
 /// Series sheet: info + Mangacollec-like volume grid.
 class SeriesDetailScreen extends ConsumerWidget {
@@ -58,26 +57,6 @@ class _SeriesDetailView extends ConsumerWidget {
   final Series series;
   final VolumeGrid grid;
 
-  Future<void> _onMenu(
-    BuildContext context,
-    WidgetRef ref,
-    _MenuAction action,
-  ) async {
-    final l10n = AppLocalizations.of(context);
-    switch (action) {
-      case _MenuAction.edit:
-        await context.push(AppRoutes.seriesEdit(series.type, series.id));
-      case _MenuAction.delete:
-        final ok = await confirmDelete(
-          context,
-          l10n.deleteSeriesMessage(series.title),
-        );
-        if (!ok || !context.mounted) return;
-        await ref.read(collectionRepositoryProvider).deleteSeries(series.id);
-        if (context.mounted) context.pop();
-    }
-  }
-
   Future<void> _addRange(BuildContext context, WidgetRef ref) async {
     final l10n = AppLocalizations.of(context);
     final range = await askVolumeRange(
@@ -100,6 +79,10 @@ class _SeriesDetailView extends ConsumerWidget {
   }
 
   void _onTap(BuildContext context, VolumeSlot slot) {
+    if (slot.copies.length > 1) {
+      unawaited(showVolumeCopies(context, series.type, slot));
+      return;
+    }
     final item = slot.item;
     unawaited(
       context.push(
@@ -159,16 +142,7 @@ class _SeriesDetailView extends ConsumerWidget {
             icon: const Icon(Icons.library_add_outlined),
             onPressed: () => _addRange(context, ref),
           ),
-          PopupMenuButton<_MenuAction>(
-            onSelected: (a) => _onMenu(context, ref, a),
-            itemBuilder: (context) => [
-              PopupMenuItem(value: _MenuAction.edit, child: Text(l10n.edit)),
-              PopupMenuItem(
-                value: _MenuAction.delete,
-                child: Text(l10n.delete),
-              ),
-            ],
-          ),
+          SeriesMenu(series: series, grid: grid),
         ],
       ),
       body: ListView(
@@ -205,6 +179,11 @@ class _SeriesDetailView extends ConsumerWidget {
             key: const Key('seriesSummary'),
             style: theme.textTheme.titleMedium,
           ),
+          if (grid.toReadCount > 0)
+            Text(
+              l10n.volumesToRead(grid.toReadCount),
+              key: const Key('seriesToRead'),
+            ),
           const SizedBox(height: 12),
           if (grid.slots.isEmpty)
             Text(l10n.noVolumesYet)
