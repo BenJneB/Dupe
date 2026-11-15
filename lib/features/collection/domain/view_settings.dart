@@ -14,6 +14,9 @@ abstract class ViewSettings with _$ViewSettings {
 
     /// "Ma pile à lire": only what is owned and not read yet.
     @Default(false) bool toReadOnly,
+
+    /// "Par auteur": authors instead of series and books.
+    @Default(false) bool byAuthor,
   }) = _ViewSettings;
 }
 

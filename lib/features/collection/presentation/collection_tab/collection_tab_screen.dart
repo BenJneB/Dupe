@@ -2,6 +2,7 @@ import 'package:dupe/app/error_text.dart';
 import 'package:dupe/app/router.dart';
 import 'package:dupe/app/widgets/global_search_bar.dart';
 import 'package:dupe/app/widgets/placeholder_body.dart';
+import 'package:dupe/features/authors/presentation/authors_list.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
 import 'package:dupe/features/collection/presentation/collection_tab/collection_toolbar.dart';
 import 'package:dupe/features/collection/presentation/collection_tab/entries_grid.dart';
@@ -72,6 +73,8 @@ class CollectionTabScreen extends ConsumerWidget {
               onToggleGrid: notifier.toggleGrid,
               toReadOnly: settings.toReadOnly,
               onToggleToRead: notifier.toggleToRead,
+              byAuthor: settings.byAuthor,
+              onToggleByAuthor: notifier.toggleByAuthor,
             ),
             Expanded(
               child: switch (entries) {
@@ -79,6 +82,7 @@ class CollectionTabScreen extends ConsumerWidget {
                   icon: Icons.filter_alt_off_outlined,
                   title: l10n.noFilterResults,
                 ),
+                AsyncData() when settings.byAuthor => AuthorsList(type: type),
                 AsyncData(:final value) =>
                   settings.grid
                       ? EntriesGrid(type: type, entries: value)

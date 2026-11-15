@@ -508,6 +508,42 @@ abstract class AppLocalizations {
   /// **'{count, plural, =1{Il te manque 1 tome avant le {volume} : l’ajouter comme possédé ?} other{Il te manque {count} tomes avant le {volume} : les ajouter comme possédés ?}}'**
   String previousVolumesOffer(int count, int volume);
 
+  /// No description provided for @byAuthor.
+  ///
+  /// In fr, this message translates to:
+  /// **'Par auteur'**
+  String get byAuthor;
+
+  /// No description provided for @unknownAuthor.
+  ///
+  /// In fr, this message translates to:
+  /// **'Auteur inconnu'**
+  String get unknownAuthor;
+
+  /// No description provided for @authorSummary.
+  ///
+  /// In fr, this message translates to:
+  /// **'{series, plural, =0{} =1{1 série · } other{{series} séries · }}{books, plural, =0{} =1{1 livre · } other{{books} livres · }}{volumes, plural, =0{aucun possédé} =1{1 possédé} other{{volumes} possédés}}'**
+  String authorSummary(int series, int books, int volumes);
+
+  /// No description provided for @authorSeries.
+  ///
+  /// In fr, this message translates to:
+  /// **'Séries'**
+  String get authorSeries;
+
+  /// No description provided for @authorBooks.
+  ///
+  /// In fr, this message translates to:
+  /// **'Livres hors série'**
+  String get authorBooks;
+
+  /// No description provided for @authorNotFound.
+  ///
+  /// In fr, this message translates to:
+  /// **'Plus rien de cet auteur dans cet onglet'**
+  String get authorNotFound;
+
   /// No description provided for @seeSeries.
   ///
   /// In fr, this message translates to:

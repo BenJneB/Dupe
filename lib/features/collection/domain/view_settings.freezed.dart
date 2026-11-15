@@ -16,7 +16,8 @@ T _$identity<T>(T value) => value;
 mixin _$ViewSettings {
 
  CollectionSort get sort; CompletionFilter get filter; bool get grid;/// "Ma pile à lire": only what is owned and not read yet.
- bool get toReadOnly;
+ bool get toReadOnly;/// "Par auteur": authors instead of series and books.
+ bool get byAuthor;
 /// Create a copy of ViewSettings
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,20 +29,20 @@ $ViewSettingsCopyWith<ViewSettings> get copyWith => _$ViewSettingsCopyWithImpl<V
 @override
 bool operator ==(Object other) {
   final _this = this as ViewSettings;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ViewSettings&&(identical(other.sort, _this.sort) || other.sort == _this.sort)&&(identical(other.filter, _this.filter) || other.filter == _this.filter)&&(identical(other.grid, _this.grid) || other.grid == _this.grid)&&(identical(other.toReadOnly, _this.toReadOnly) || other.toReadOnly == _this.toReadOnly));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ViewSettings&&(identical(other.sort, _this.sort) || other.sort == _this.sort)&&(identical(other.filter, _this.filter) || other.filter == _this.filter)&&(identical(other.grid, _this.grid) || other.grid == _this.grid)&&(identical(other.toReadOnly, _this.toReadOnly) || other.toReadOnly == _this.toReadOnly)&&(identical(other.byAuthor, _this.byAuthor) || other.byAuthor == _this.byAuthor));
 }
 
 
 @override
 int get hashCode {
   final _this = this as ViewSettings;
-  return Object.hash(runtimeType,_this.sort,_this.filter,_this.grid,_this.toReadOnly);
+  return Object.hash(runtimeType,_this.sort,_this.filter,_this.grid,_this.toReadOnly,_this.byAuthor);
 }
 
 @override
 String toString() {
   final _this = this as ViewSettings;
-  return 'ViewSettings(sort: ${_this.sort}, filter: ${_this.filter}, grid: ${_this.grid}, toReadOnly: ${_this.toReadOnly})';
+  return 'ViewSettings(sort: ${_this.sort}, filter: ${_this.filter}, grid: ${_this.grid}, toReadOnly: ${_this.toReadOnly}, byAuthor: ${_this.byAuthor})';
 }
 
 
@@ -52,7 +53,7 @@ abstract mixin class $ViewSettingsCopyWith<$Res>  {
   factory $ViewSettingsCopyWith(ViewSettings value, $Res Function(ViewSettings) _then) = _$ViewSettingsCopyWithImpl;
 @useResult
 $Res call({
- CollectionSort sort, CompletionFilter filter, bool grid, bool toReadOnly
+ CollectionSort sort, CompletionFilter filter, bool grid, bool toReadOnly, bool byAuthor
 });
 
 
@@ -69,12 +70,13 @@ class _$ViewSettingsCopyWithImpl<$Res>
 
 /// Create a copy of ViewSettings
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? sort = null,Object? filter = null,Object? grid = null,Object? toReadOnly = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? sort = null,Object? filter = null,Object? grid = null,Object? toReadOnly = null,Object? byAuthor = null,}) {
   return _then(ViewSettings(
 sort: null == sort ? _self.sort : sort // ignore: cast_nullable_to_non_nullable
 as CollectionSort,filter: null == filter ? _self.filter : filter // ignore: cast_nullable_to_non_nullable
 as CompletionFilter,grid: null == grid ? _self.grid : grid // ignore: cast_nullable_to_non_nullable
 as bool,toReadOnly: null == toReadOnly ? _self.toReadOnly : toReadOnly // ignore: cast_nullable_to_non_nullable
+as bool,byAuthor: null == byAuthor ? _self.byAuthor : byAuthor // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }
@@ -160,10 +162,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( CollectionSort sort,  CompletionFilter filter,  bool grid,  bool toReadOnly)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( CollectionSort sort,  CompletionFilter filter,  bool grid,  bool toReadOnly,  bool byAuthor)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ViewSettings() when $default != null:
-return $default(_that.sort,_that.filter,_that.grid,_that.toReadOnly);case _:
+return $default(_that.sort,_that.filter,_that.grid,_that.toReadOnly,_that.byAuthor);case _:
   return orElse();
 
 }
@@ -181,10 +183,10 @@ return $default(_that.sort,_that.filter,_that.grid,_that.toReadOnly);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( CollectionSort sort,  CompletionFilter filter,  bool grid,  bool toReadOnly)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( CollectionSort sort,  CompletionFilter filter,  bool grid,  bool toReadOnly,  bool byAuthor)  $default,) {final _that = this;
 switch (_that) {
 case _ViewSettings():
-return $default(_that.sort,_that.filter,_that.grid,_that.toReadOnly);case _:
+return $default(_that.sort,_that.filter,_that.grid,_that.toReadOnly,_that.byAuthor);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -201,10 +203,10 @@ return $default(_that.sort,_that.filter,_that.grid,_that.toReadOnly);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( CollectionSort sort,  CompletionFilter filter,  bool grid,  bool toReadOnly)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( CollectionSort sort,  CompletionFilter filter,  bool grid,  bool toReadOnly,  bool byAuthor)?  $default,) {final _that = this;
 switch (_that) {
 case _ViewSettings() when $default != null:
-return $default(_that.sort,_that.filter,_that.grid,_that.toReadOnly);case _:
+return $default(_that.sort,_that.filter,_that.grid,_that.toReadOnly,_that.byAuthor);case _:
   return null;
 
 }
@@ -216,7 +218,7 @@ return $default(_that.sort,_that.filter,_that.grid,_that.toReadOnly);case _:
 
 
 class _ViewSettings implements ViewSettings {
-  const _ViewSettings({this.sort = CollectionSort.title, this.filter = CompletionFilter.all, this.grid = false, this.toReadOnly = false});
+  const _ViewSettings({this.sort = CollectionSort.title, this.filter = CompletionFilter.all, this.grid = false, this.toReadOnly = false, this.byAuthor = false});
   
 
 @override@JsonKey() final  CollectionSort sort;
@@ -224,6 +226,8 @@ class _ViewSettings implements ViewSettings {
 @override@JsonKey() final  bool grid;
 /// "Ma pile à lire": only what is owned and not read yet.
 @override@JsonKey() final  bool toReadOnly;
+/// "Par auteur": authors instead of series and books.
+@override@JsonKey() final  bool byAuthor;
 
 /// Create a copy of ViewSettings
 /// with the given fields replaced by the non-null parameter values.
@@ -235,18 +239,18 @@ _$ViewSettingsCopyWith<_ViewSettings> get copyWith => __$ViewSettingsCopyWithImp
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ViewSettings&&(identical(other.sort, sort) || other.sort == sort)&&(identical(other.filter, filter) || other.filter == filter)&&(identical(other.grid, grid) || other.grid == grid)&&(identical(other.toReadOnly, toReadOnly) || other.toReadOnly == toReadOnly));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ViewSettings&&(identical(other.sort, sort) || other.sort == sort)&&(identical(other.filter, filter) || other.filter == filter)&&(identical(other.grid, grid) || other.grid == grid)&&(identical(other.toReadOnly, toReadOnly) || other.toReadOnly == toReadOnly)&&(identical(other.byAuthor, byAuthor) || other.byAuthor == byAuthor));
 }
 
 
 @override
 int get hashCode {
-    return Object.hash(runtimeType,sort,filter,grid,toReadOnly);
+    return Object.hash(runtimeType,sort,filter,grid,toReadOnly,byAuthor);
 }
 
 @override
 String toString() {
-    return 'ViewSettings(sort: $sort, filter: $filter, grid: $grid, toReadOnly: $toReadOnly)';
+    return 'ViewSettings(sort: $sort, filter: $filter, grid: $grid, toReadOnly: $toReadOnly, byAuthor: $byAuthor)';
 }
 
 
@@ -257,7 +261,7 @@ abstract mixin class _$ViewSettingsCopyWith<$Res> implements $ViewSettingsCopyWi
   factory _$ViewSettingsCopyWith(_ViewSettings value, $Res Function(_ViewSettings) _then) = __$ViewSettingsCopyWithImpl;
 @override @useResult
 $Res call({
- CollectionSort sort, CompletionFilter filter, bool grid, bool toReadOnly
+ CollectionSort sort, CompletionFilter filter, bool grid, bool toReadOnly, bool byAuthor
 });
 
 
@@ -274,12 +278,13 @@ class __$ViewSettingsCopyWithImpl<$Res>
 
 /// Create a copy of ViewSettings
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? sort = null,Object? filter = null,Object? grid = null,Object? toReadOnly = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? sort = null,Object? filter = null,Object? grid = null,Object? toReadOnly = null,Object? byAuthor = null,}) {
   return _then(_ViewSettings(
 sort: null == sort ? _self.sort : sort // ignore: cast_nullable_to_non_nullable
 as CollectionSort,filter: null == filter ? _self.filter : filter // ignore: cast_nullable_to_non_nullable
 as CompletionFilter,grid: null == grid ? _self.grid : grid // ignore: cast_nullable_to_non_nullable
 as bool,toReadOnly: null == toReadOnly ? _self.toReadOnly : toReadOnly // ignore: cast_nullable_to_non_nullable
+as bool,byAuthor: null == byAuthor ? _self.byAuthor : byAuthor // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }
