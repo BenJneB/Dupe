@@ -1,0 +1,5 @@
+# Generated code: collapsed in GitHub diffs.
+*.g.dart linguist-generated=true
+*.freezed.dart linguist-generated=true
+*.drift.dart linguist-generated=true
+lib/l10n/gen/** linguist-generated=true

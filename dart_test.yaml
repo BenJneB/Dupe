@@ -1,0 +1,2 @@
+# A hanging test must fail fast instead of blocking the suite.
+timeout: 30s

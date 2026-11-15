@@ -2,12 +2,7 @@ import 'package:material_ui/material_ui.dart';
 
 /// Centered icon + texts, used for empty states and not-yet-built screens.
 class PlaceholderBody extends StatelessWidget {
-  const new({
-    required this.icon,
-    required this.title,
-    this.message,
-    super.key,
-  });
+  const new({required this.icon, required this.title, this.message, super.key});
 
   final IconData icon;
   final String title;

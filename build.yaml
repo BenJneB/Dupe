@@ -1,0 +1,20 @@
+targets:
+  $default:
+    builders:
+      # Modular generation: one `.drift.dart` file per source file instead of
+      # a single huge `app_database.g.dart`.
+      drift_dev:
+        enabled: false
+        options: &drift_options
+          # ISO-8601 text dates: readable and identical to Postgres timestamptz.
+          store_date_time_values_as_text: true
+          databases:
+            app_database: lib/core/database/app_database.dart
+          schema_dir: drift_schemas/
+          test_dir: test/core/database/
+      drift_dev:analyzer:
+        enabled: true
+        options: *drift_options
+      drift_dev:modular:
+        enabled: true
+        options: *drift_options
