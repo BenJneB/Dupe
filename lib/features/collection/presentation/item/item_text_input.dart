@@ -1,6 +1,7 @@
 import 'package:dupe/app/widgets/form_helpers.dart';
 import 'package:dupe/core/utils/formatters.dart';
 import 'package:dupe/features/collection/presentation/item/item_form_controllers.dart';
+import 'package:dupe/features/covers/presentation/cover_photo_button.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -61,9 +62,12 @@ class ItemTextInput extends StatelessWidget {
 
 /// "Informations" section: text-only bibliographic fields.
 class ItemGeneralFields extends StatelessWidget {
-  const new(this.c, {super.key});
+  const new(this.c, {required this.itemId, super.key});
 
   final ItemFormControllers c;
+
+  /// Id of the edited item (name of a cover photo).
+  final String itemId;
 
   @override
   Widget build(BuildContext context) {
@@ -96,7 +100,22 @@ class ItemGeneralFields extends StatelessWidget {
         ItemTextInput(c, ItemTextField.language, l10n.fieldLanguage),
         ItemTextInput(c, ItemTextField.isbn, l10n.fieldIsbn),
         ItemTextInput(c, ItemTextField.upc, l10n.fieldUpc),
-        ItemTextInput(c, ItemTextField.coverUrl, l10n.fieldCoverUrl),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: ItemTextInput(
+                c,
+                ItemTextField.coverUrl,
+                l10n.fieldCoverUrl,
+              ),
+            ),
+            CoverPhotoButton(
+              itemId: itemId,
+              controller: c[ItemTextField.coverUrl],
+            ),
+          ],
+        ),
         ItemTextInput(
           c,
           ItemTextField.description,

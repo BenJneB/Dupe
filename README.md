@@ -33,6 +33,28 @@ cp env.example.json env.json   # puis remplir les vraies valeurs
   « Revoir » permet de corriger et d'ajouter tout en une fois.
 - Paramètres → *Sources de données* : activer/désactiver chaque source.
 
+## Synchronisation (Supabase, facultatif)
+Sans `SUPABASE_URL`, l'appli fonctionne entièrement en local. Pour synchroniser téléphone et PC :
+1. **Schéma** : dans le tableau de bord Supabase → *SQL Editor*, exécuter dans l'ordre
+   `supabase/migrations/20261114120000_collection_sync.sql` puis `20261114120100_cover_photos.sql`
+   (ou `supabase link` puis `supabase db push` avec la CLI).
+2. **Connexion par email** : fournisseur *Email* activé (*Authentication → Sign In / Providers*). Sans SMTP
+   personnalisé, Supabase n'envoie qu'aux membres de l'équipe du projet (2 emails/heure) et ses modèles ne
+   sont pas modifiables : l'email contient un **lien**. Dans l'appli, on **copie ce lien sans l'ouvrir** et on
+   le colle à la place du code (un lien ouvert est consommé). Avec un SMTP, on peut mettre `{{ .Token }}`
+   dans le modèle « Magic link or OTP » pour recevoir un code à 6 chiffres ; les deux sont acceptés.
+3. **env.json** : `SUPABASE_URL` (*Settings → Data API* ou bouton *Connect*) et, dans `SUPABASE_ANON_KEY`,
+   la **clé publishable** `sb_publishable_…` (*Settings → API Keys*, onglet *Publishable and secret API
+   keys*). L'ancienne clé *anon* (`eyJ…`) marche aussi mais Supabase l'abandonne fin 2026. Jamais la clé
+   *secret* / *service_role*.
+4. Dans l'appli : Paramètres → *Se connecter* → email → lien (ou code). La collection locale est envoyée sur le
+   compte ; l'icône nuage dans la barre de recherche indique l'état.
+
+Fonctionnement : SQLite reste la source de vérité ; synchro au lancement, au retour au premier plan,
+3 s après une modification, toutes les 30 s au premier plan et à la demande. En cas de conflit, la
+modification la plus récente gagne. Les photos de couverture prises dans l'appli vont dans le bucket
+privé `covers`.
+
 ## Développement
 ```sh
 flutter pub get

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:dupe/app/router.dart';
 import 'package:dupe/app/theme.dart';
+import 'package:dupe/core/sync/sync_controller.dart';
 import 'package:dupe/features/loans/data/loan_actions.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -20,6 +21,8 @@ class _DupeAppState extends ConsumerState<DupeApp> {
     super.initState();
     // Desktop: overdue loans reminder (Android schedules them instead).
     unawaited(ref.read(loanActionsProvider).notifyOverdueOnStartup());
+    // Starts the sync (restores the session, then syncs if signed in).
+    ref.read(syncControllerProvider);
   }
 
   @override

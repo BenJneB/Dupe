@@ -1641,6 +1641,174 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'{count} sur {total}'**
   String statsRatio(int count, int total);
+
+  /// No description provided for @accountSection.
+  ///
+  /// In fr, this message translates to:
+  /// **'Compte et synchronisation'**
+  String get accountSection;
+
+  /// No description provided for @syncLocalOnly.
+  ///
+  /// In fr, this message translates to:
+  /// **'Synchronisation non configurée'**
+  String get syncLocalOnly;
+
+  /// No description provided for @syncLocalOnlyHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Renseigne SUPABASE_URL et SUPABASE_ANON_KEY dans env.json. L’appli fonctionne entièrement sans compte.'**
+  String get syncLocalOnlyHelp;
+
+  /// No description provided for @signIn.
+  ///
+  /// In fr, this message translates to:
+  /// **'Se connecter'**
+  String get signIn;
+
+  /// No description provided for @signInHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Synchronise ta collection entre ton téléphone et ton PC'**
+  String get signInHelp;
+
+  /// No description provided for @signOut.
+  ///
+  /// In fr, this message translates to:
+  /// **'Se déconnecter'**
+  String get signOut;
+
+  /// No description provided for @signInTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Connexion'**
+  String get signInTitle;
+
+  /// No description provided for @emailLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Adresse email'**
+  String get emailLabel;
+
+  /// No description provided for @sendCode.
+  ///
+  /// In fr, this message translates to:
+  /// **'Recevoir un code'**
+  String get sendCode;
+
+  /// No description provided for @codeSent.
+  ///
+  /// In fr, this message translates to:
+  /// **'Email envoyé à {email}.'**
+  String codeSent(String email);
+
+  /// No description provided for @codeLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Code ou lien reçu par email'**
+  String get codeLabel;
+
+  /// No description provided for @verifyCode.
+  ///
+  /// In fr, this message translates to:
+  /// **'Se connecter'**
+  String get verifyCode;
+
+  /// No description provided for @changeEmail.
+  ///
+  /// In fr, this message translates to:
+  /// **'Changer d’adresse'**
+  String get changeEmail;
+
+  /// No description provided for @signedInAs.
+  ///
+  /// In fr, this message translates to:
+  /// **'Connecté : {email}'**
+  String signedInAs(String email);
+
+  /// No description provided for @signInDone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Connecté. Ta collection locale est envoyée sur ton compte.'**
+  String get signInDone;
+
+  /// No description provided for @signInError.
+  ///
+  /// In fr, this message translates to:
+  /// **'Échec : {message}'**
+  String signInError(String message);
+
+  /// No description provided for @syncNow.
+  ///
+  /// In fr, this message translates to:
+  /// **'Synchroniser maintenant'**
+  String get syncNow;
+
+  /// No description provided for @syncIdle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Synchronisé'**
+  String get syncIdle;
+
+  /// No description provided for @syncIdleAt.
+  ///
+  /// In fr, this message translates to:
+  /// **'Synchronisé à {time}'**
+  String syncIdleAt(String time);
+
+  /// No description provided for @syncRunning.
+  ///
+  /// In fr, this message translates to:
+  /// **'Synchronisation…'**
+  String get syncRunning;
+
+  /// No description provided for @syncOffline.
+  ///
+  /// In fr, this message translates to:
+  /// **'Hors ligne : les modifications seront envoyées au retour du réseau'**
+  String get syncOffline;
+
+  /// No description provided for @syncFailed.
+  ///
+  /// In fr, this message translates to:
+  /// **'Erreur de synchronisation : {message}'**
+  String syncFailed(String message);
+
+  /// No description provided for @syncSignedOut.
+  ///
+  /// In fr, this message translates to:
+  /// **'Non connecté : données sur cet appareil seulement'**
+  String get syncSignedOut;
+
+  /// No description provided for @invalidEmail.
+  ///
+  /// In fr, this message translates to:
+  /// **'Adresse email invalide'**
+  String get invalidEmail;
+
+  /// No description provided for @invalidOtp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Colle le lien de l’email ou saisis le code à 6 chiffres'**
+  String get invalidOtp;
+
+  /// No description provided for @coverPhoto.
+  ///
+  /// In fr, this message translates to:
+  /// **'Photographier la couverture'**
+  String get coverPhoto;
+
+  /// No description provided for @coverPhotoError.
+  ///
+  /// In fr, this message translates to:
+  /// **'Photo impossible : {message}'**
+  String coverPhotoError(String message);
+
+  /// No description provided for @codeHelper.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dans l’email, copie le lien (appui long ou clic droit → copier l’adresse) sans l’ouvrir, puis colle-le ici. Si l’email contient un code à 6 chiffres, saisis-le.'**
+  String get codeHelper;
 }
 
 class _AppLocalizationsDelegate

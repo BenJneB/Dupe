@@ -1,4 +1,5 @@
 import 'package:dupe/core/database/database_provider.dart';
+import 'package:dupe/features/account/presentation/account_section.dart';
 import 'package:dupe/features/collection/data/collection_repository.dart';
 import 'package:dupe/features/settings/data/starter_collection.dart';
 import 'package:dupe/features/settings/presentation/sources_section.dart';
@@ -29,6 +30,8 @@ class SettingsScreen extends ConsumerWidget {
       appBar: AppBar(title: Text(l10n.moreSettings)),
       body: ListView(
         children: [
+          const AccountSection(),
+          const Divider(),
           ListTile(
             key: const Key('seedStarterCollection'),
             leading: const Icon(Icons.download_outlined),
