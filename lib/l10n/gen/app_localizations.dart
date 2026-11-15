@@ -1870,6 +1870,12 @@ abstract class AppLocalizations {
   /// **'Synchronisé'**
   String get syncIdle;
 
+  /// No description provided for @syncClockSkew.
+  ///
+  /// In fr, this message translates to:
+  /// **'Synchronisé, mais l’heure de cet appareil semble fausse (écart de {minutes} min avec le serveur) : corrige-la, sinon tes modifications risquent d’être mal départagées'**
+  String syncClockSkew(int minutes);
+
   /// No description provided for @syncIdleAt.
   ///
   /// In fr, this message translates to:

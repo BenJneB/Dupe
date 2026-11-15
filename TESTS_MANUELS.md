@@ -57,7 +57,8 @@ Tous les tests non faits en phase 14 et non marqués « automatisé ». Le but :
    `v0.1.1`) pour `A-02`, `Y-03`, `Y-04`, `Y-07`, `Y-08` (une *pre-release* n'est pas vue par la vérification
    des mises à jour).
 7b. **Clés des sources** (sur une version publiée) : `K-01` à `K-05`.
-7c. **CI et Dependabot** : `P-05`, `P-06`, puis `Y-05`, `Y-09` à `Y-12`.
+7c. **CI et Dependabot** : `P-05`, `P-06`, puis `Y-05`, `Y-09` à `Y-12`, `Y-14`.
+7d. **Horloge** (phase 17) : `S-13`.
 8. **Le lendemain / plus tard** : `N-01` à `N-04` ; `M-12` chronométré en magasin ; `Y-06` (observation sur
    plusieurs semaines) ; `J-06` (facultatif, met le projet en pause).
 
@@ -79,6 +80,9 @@ Tous les tests non faits en phase 14 et non marqués « automatisé ». Le but :
 - [ ] **P-05** (phase 16) Migration `20261115090000_keep_alive.sql` appliquée (fonction `keep_alive()`).
 - [ ] **P-06** (phase 16) `dev` à jour avec le travail des phases, et `.github/dependabot.yml` présent sur `main`
       (Dependabot ne lit sa configuration que sur la branche par défaut).
+- [x] **P-07** (phase 17) Docker utilisable sans sudo, Supabase CLI 2.122.1 et `psql` installés ;
+      `tool/supabase_tests.sh` passe (README « Tests de synchro contre un Supabase local »).
+      — OK 2026-11-14 (Linux) : accès Docker donné, CLI via `npx` (sans installation), 8 tests verts.
 - [ ] **P-03** *(reporté en phase 21)* Secrets GitHub créés (README § Publier une version) ; décision prise pour la clé Comic Vine.
 
 ## 1. Scan — mode Magasin (téléphone)
@@ -120,6 +124,9 @@ Tous les tests non faits en phase 14 et non marqués « automatisé ». Le but :
 - [ ] **F-05** PC : export/import via les fenêtres « Enregistrer sous » / « Ouvrir ».
 
 ## 5. Compte et synchro Supabase (téléphone + PC)
+Couvert contre un Supabase **local** par les tests `supabase` (phase 17, verts le 2026-11-14) : `S-04` à `S-08`
+et la logique de `S-01`/`S-11`. Restent manuels : le comportement sur le **vrai** projet et sur de vrais
+appareils (reportés de la phase 14).
 - [ ] **S-01** *(reporté de la phase 14)* Connexion email + mot de passe sur chaque appareil ; mauvais mot de passe → « Email ou mot de
       passe incorrect ».
 - [ ] **S-02** Créer un compte avec un autre email (si Supabase peut lui écrire) : lien de confirmation ouvert
@@ -136,6 +143,8 @@ Tous les tests non faits en phase 14 et non marqués « automatisé ». Le but :
       une nouvelle connexion n'accepte que le nouveau mot de passe.
 - [ ] **S-11** (phase 10) Inscription avec un mot de passe trop court → « Mot de passe refusé : trop court ou
       trop simple » ; deux mots de passe différents → message, rien n'est envoyé.
+- [ ] **S-13** (phase 17) Avancer l'heure d'un appareil de 10 minutes (réglage manuel), synchroniser : le
+      statut affiche « l'heure de cet appareil semble fausse (écart de 10 min…) » ; une entrée au journal.
 - [ ] **S-12** (phase 10) Se déconnecter puis se reconnecter au même compte : rien n'est dupliqué, la
       collection est identique sur les deux appareils.
 
@@ -198,6 +207,7 @@ Tous les tests non faits en phase 14 et non marqués « automatisé ». Le but :
 - [ ] **Y-11** (phase 16) Dependabot ouvre ses premières pull requests vers `dev` (une groupée par écosystème
       pour les mises à jour mineures et correctifs) ; leur CI passe ou signale une régénération.
 - [ ] **Y-12** (phase 16) Le badge CI du README affiche l'état réel.
+- [ ] **Y-14** (phase 17) Le job `supabase-tests` de la CI passe sur une pull request.
 - [ ] **Y-13** (au bout de 60 jours sans push, si l'occasion se présente) `Keep Supabase awake` est toujours
       actif dans l'onglet *Actions* (efficacité non documentée de la réactivation par l'API).
 

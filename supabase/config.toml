@@ -1,0 +1,44 @@
+# Local Supabase for the sync tests only (PLAN_V3 phase 17): `supabase start`
+# applies supabase/migrations/. The remote project is never touched from here.
+# Services the tests do not need are off to start faster.
+project_id = "dupe"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public"]
+max_rows = 1000
+
+[db]
+port = 54322
+
+[db.seed]
+enabled = false
+
+[auth]
+enabled = true
+site_url = "http://127.0.0.1:3000"
+enable_signup = true
+
+[auth.email]
+enable_signup = true
+# Tests sign up and are signed in at once (no confirmation email).
+enable_confirmations = false
+
+[storage]
+enabled = true
+
+[local_smtp]
+enabled = false
+
+[realtime]
+enabled = false
+
+[studio]
+enabled = false
+
+[edge_runtime]
+enabled = false
+
+[analytics]
+enabled = false

@@ -687,6 +687,14 @@
   "signInDone": "Connecté. Ta collection locale est envoyée sur ton compte.",
   "syncNow": "Synchroniser maintenant",
   "syncIdle": "Synchronisé",
+  "syncClockSkew": "Synchronisé, mais l’heure de cet appareil semble fausse (écart de {minutes} min avec le serveur) : corrige-la, sinon tes modifications risquent d’être mal départagées",
+  "@syncClockSkew": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
   "syncIdleAt": "Synchronisé à {time}",
   "@syncIdleAt": {
     "placeholders": {

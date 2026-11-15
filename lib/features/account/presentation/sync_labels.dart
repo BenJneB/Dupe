@@ -7,6 +7,10 @@ import 'package:material_ui/material_ui.dart';
 extension SyncStateLabel on SyncState {
   String label(AppLocalizations l10n) {
     final at = lastSync;
+    final skew = clockSkew;
+    if (phase == SyncPhase.idle && skew != null) {
+      return l10n.syncClockSkew(skew.inMinutes.abs());
+    }
     return switch (phase) {
       SyncPhase.localOnly => l10n.syncLocalOnly,
       SyncPhase.signedOut => l10n.syncSignedOut,
@@ -27,6 +31,7 @@ extension SyncStateLabel on SyncState {
     SyncPhase.syncing => Icons.cloud_sync_outlined,
     SyncPhase.offline => Icons.cloud_off_outlined,
     SyncPhase.failed => Icons.sync_problem,
+    SyncPhase.idle when clockSkew != null => Icons.schedule,
     SyncPhase.idle => Icons.cloud_done_outlined,
   };
 }

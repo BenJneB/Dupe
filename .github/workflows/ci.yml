@@ -96,3 +96,25 @@ jobs:
         run: |
           choco install innosetup --version 6.7.1 --no-progress -y
           "/c/Program Files (x86)/Inno Setup 6/ISCC.exe" packaging/windows/dupe.iss
+
+  # Sync tests against a local Supabase in Docker (PLAN_V3 phase 17): real
+  # PostgREST filter, triggers, RLS, auth, storage. Pull requests and `dev`.
+  supabase-tests:
+    if: github.event_name == 'pull_request' || github.ref == 'refs/heads/dev'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: supabase/setup-cli@v3
+        with:
+          version: 2.122.1
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - run: supabase start
+      - run: tool/supabase_tests.sh
+      - if: always()
+        run: supabase stop --no-backup
+

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:drift/drift.dart' show TableUpdateQuery;
 import 'package:dupe/core/database/database_provider.dart';
 import 'package:dupe/core/logging/app_log.dart';
+import 'package:dupe/core/sync/clock_check.dart';
 import 'package:dupe/core/sync/sync_providers.dart';
 import 'package:dupe/core/sync/sync_remote.dart';
 import 'package:dupe/features/covers/data/cover_providers.dart';
@@ -16,7 +17,13 @@ enum SyncPhase { localOnly, signedOut, idle, syncing, offline, failed }
 
 @immutable
 class SyncState {
-  const new(this.phase, {this.email, this.lastSync, this.error});
+  const new(
+    this.phase, {
+    this.email,
+    this.lastSync,
+    this.error,
+    this.clockSkew,
+  });
 
   final SyncPhase phase;
   final String? email;
@@ -25,13 +32,25 @@ class SyncState {
   /// Cause of [SyncPhase.failed] (shown with `errorText`).
   final Object? error;
 
+  /// Device clock minus server clock, when wrong ([ClockCheck]).
+  final Duration? clockSkew;
+
   SyncState to(SyncPhase phase, {DateTime? lastSync, Object? error}) =>
       SyncState(
         phase,
         email: email,
         lastSync: lastSync ?? this.lastSync,
         error: error,
+        clockSkew: clockSkew,
       );
+
+  SyncState withClockSkew(Duration? skew) => SyncState(
+    phase,
+    email: email,
+    lastSync: lastSync,
+    error: error,
+    clockSkew: skew,
+  );
 }
 
 /// Runs the sync when signed in (PLAN.md §6): at start-up, when the app
@@ -48,6 +67,7 @@ class SyncController extends _$SyncController {
   Timer? _debounce;
   AppLifecycleListener? _lifecycle;
   Future<void>? _running;
+  DateTime? _clockCheckedAt;
   ({SyncPhase? phase, String? text}) _lastFailure = (phase: null, text: null);
 
   @override
@@ -146,6 +166,7 @@ class SyncController extends _$SyncController {
         );
       }
       state = state.to(SyncPhase.idle, lastSync: ref.read(clockProvider)());
+      await _checkClock();
     } on Object catch (e, stack) {
       final phase = e is SyncException && e.offline
           ? SyncPhase.offline
@@ -163,6 +184,22 @@ class SyncController extends _$SyncController {
       return;
     }
     _lastFailure = (phase: null, text: null);
+  }
+
+  /// Compares the device clock with the server at most once per hour; never
+  /// fails the sync.
+  Future<void> _checkClock() async {
+    final now = ref.read(clockProvider)();
+    final last = _clockCheckedAt;
+    if (last != null && now.difference(last) < ClockCheck.every) return;
+    _clockCheckedAt = now;
+    final server = await ref.read(syncRemoteProvider)?.serverTime();
+    if (server == null) return;
+    final skew = ClockCheck.skew(ref.read(clockProvider)(), server);
+    if (skew != null && state.clockSkew == null) {
+      appLog.warning('sync', 'Device clock off by ${skew.inMinutes} min');
+    }
+    state = state.withClockSkew(skew);
   }
 
   Future<void> signOut() async {
