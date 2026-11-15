@@ -52,3 +52,21 @@ Future<void> fillSignIn(
   await tester.tap(find.byKey(const Key('submitButton')));
   await tester.pumpAndSettle();
 }
+
+/// Creates a series from the "+" menu of the current tab.
+Future<void> createSeries(
+  WidgetTester tester, {
+  required String title,
+  required String total,
+  required String ownedUpTo,
+}) async {
+  await tester.tap(find.byKey(const Key('addMenu')));
+  await tester.pumpAndSettle();
+  await tester.tap(find.text('Nouvelle série'));
+  await tester.pumpAndSettle();
+  await tester.enterText(find.byKey(const Key('titleField')), title);
+  await tester.enterText(find.byKey(const Key('totalField')), total);
+  await tester.enterText(find.byKey(const Key('ownedUpToField')), ownedUpTo);
+  await tester.tap(find.byKey(const Key('saveButton')));
+  await tester.pumpAndSettle();
+}

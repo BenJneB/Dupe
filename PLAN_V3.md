@@ -49,7 +49,7 @@ raccourci Android « Scanner », vibrations, lampe torche, signalement des nouve
 | 15 | Clés API saisies dans l'appli | ✅ fait (2026-11-14) | oui | non (phase 21 : `K-*`) |
 | 16 | CI renforcée et veille Supabase fiable | ✅ fait (2026-11-14) | local | non (workflows non relancés) |
 | 17 | Tests de synchro contre Supabase local | ✅ fait (2026-11-14) | 8 tests `supabase` (local) + horloge | Supabase local ; CI `supabase-tests` à voir |
-| 18 | Hooks, commits conventionnels, tests d'intégration | à faire | — | — |
+| 18 | Hooks, commits conventionnels, tests d'intégration | ✅ fait (2026-11-14) | scripts + 4 parcours (Linux) | hooks non installés ; CI à voir |
 | 19 | Accès rapide : widget et recherche vocale | à faire | — | — |
 | 20 | Couvertures hors ligne, stats de lecture, partage des envies | à faire | — | — |
 | 21 | Recette finale (reste de `TESTS_MANUELS.md`) | à faire | — | — |
@@ -227,6 +227,25 @@ fait échouer un test.*
 *Critère : un message de commit non conventionnel est refusé localement ; une Release de test affiche un
 changelog généré ; les tests d'intégration passent en CI.*
 
+**Bilan (2026-11-14)**
+- **Réalisé** : `lefthook.yml` (lefthook 2.2.2, syntaxe `jobs` vérifiée dans sa doc à cette version,
+  `glob_matcher: doublestar`) : pré-commit `dart format {staged_files}` + `stage_fixed` et `flutter analyze`,
+  pré-push `flutter test`, commit-msg `tool/check_commit_msg.sh {1}` (bash, sans Node ; types du plan, portée en
+  minuscules, `!`, 100 caractères max ; messages Merge/Revert/fixup!/squash!/amend! acceptés). Notes de Release :
+  `tool/ci/release_notes.sh` (depuis le tag **stable** précédent, groupées par type en français, commits non
+  conventionnels sous « Autres changements »), utilisé comme description par `release.yml` (`body_path`,
+  historique complet). `integration_test/app_flows_test.dart` : ajout d'un tome à la main, mode Magasin
+  (possédé / envie / tome manquant / inconnu), prêt puis retour, annulation d'une suppression ; job CI
+  `integration` (`xvfb-run`). README « Hooks git » et « Tests d'intégration ». `CLAUDE.md` : l'assistant propose
+  un message de commit conventionnel en fin de phase.
+- **Vérifié en local** : les deux scripts par des tests Dart (dont un dépôt git temporaire avec tags stable et
+  *pre-release*) ; les 4 parcours d'intégration passent sur l'appli Linux réelle (12 s).
+- **Écarts** : pas de git-cliff : un script de 40 lignes sans dépendance, testable ici (git-cliff n'est pas
+  installé et je ne peux pas l'exécuter). Le parcours Magasin est sauté sur téléphone (la caméra demande une
+  autorisation que le test ne peut pas accorder).
+- **Non vérifié** : lefthook n'est pas installé sur le poste (hooks jamais déclenchés : `H-01` à `H-03`) ; jobs
+  CI `integration` et notes de Release jamais exécutés (`Y-15`) ; tests d'intégration sur téléphone (`H-04`).
+
 ### Phase 19 — Accès rapide : widget et recherche vocale
 - **Widget Android** d'écran d'accueil (package `home_widget`, version et API vérifiées) : bouton
   « Scanner » qui ouvre le mode Magasin (même routage que le raccourci existant), et compteurs facultatifs
@@ -287,7 +306,7 @@ accepté.*
   si nécessaire ; protéger `main` (pull request obligatoire, CI verte exigée) dans les réglages du dépôt.
 - **Phase 17** : accès à Docker sans sudo (`sudo usermod -aG docker $USER`, puis se reconnecter), Supabase CLI
   2.122.1 (`.deb`, README « Tests de synchro contre un Supabase local »), `postgresql-client`.
-- **Phase 18** : `lefthook install` après récupération du dépôt.
+- **Phase 18** : installer lefthook 2.2.2 (`.deb`, README « Hooks git ») puis `lefthook install`.
 - **Phase 21** : d'abord les tests reportés de la phase 14 (synchro, secrets GitHub, Release de test,
   APK sur le téléphone), puis dérouler `TESTS_MANUELS.md` ; publier deux versions stables successives.
 

@@ -59,6 +59,7 @@ Tous les tests non faits en phase 14 et non marqués « automatisé ». Le but :
 7b. **Clés des sources** (sur une version publiée) : `K-01` à `K-05`.
 7c. **CI et Dependabot** : `P-05`, `P-06`, puis `Y-05`, `Y-09` à `Y-12`, `Y-14`.
 7d. **Horloge** (phase 17) : `S-13`.
+7e. **Hooks et intégration** (phase 18) : `H-01` à `H-04`, `Y-15`.
 8. **Le lendemain / plus tard** : `N-01` à `N-04` ; `M-12` chronométré en magasin ; `Y-06` (observation sur
    plusieurs semaines) ; `J-06` (facultatif, met le projet en pause).
 
@@ -230,4 +231,17 @@ une clé saisie active la source sans redémarrage ; « Tester la clé » sur de
 - [ ] **K-04** Sur le deuxième appareil, la clé n'apparaît pas (elle n'est pas synchronisée) : la saisir aussi.
 - [ ] **K-05** `ENV_JSON` contenant `COMIC_VINE_API_KEY` : le workflow Release échoue au job `check-env` avec
       le nom de la clé, jamais sa valeur (à vérifier en même temps que `Y-02`, puis retirer la clé du secret).
+
+## 12. Hooks, commits et tests d'intégration (phase 18)
+Automatisé (phase 18) : vérification des messages (`tool/check_commit_msg.sh`) et notes de version
+(`tool/ci/release_notes.sh`) testées sur un dépôt git temporaire ; les 4 parcours d'intégration passent sous Linux.
+- [ ] **H-01** `lefthook install` (README « Hooks git ») ; `git commit -m "Phase 19"` est refusé avec le format
+      attendu ; `git commit -m "feat: …"` passe.
+- [ ] **H-02** Un fichier `.dart` mal formaté et stagé est reformaté et re-stagé au commit ; une erreur
+      d'analyse bloque le commit.
+- [ ] **H-03** `git push` lance `flutter test` et s'arrête si un test échoue.
+- [ ] **H-04** Tests d'intégration sur le téléphone : `flutter test integration_test -d <id>` (3 parcours ;
+      le parcours Magasin est sauté à cause de la caméra).
+- [ ] **Y-15** La Release de test (`Y-02`) a pour description les notes générées (groupées par type) ; le job
+      `integration` de la CI est vert.
 
