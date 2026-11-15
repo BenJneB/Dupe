@@ -76,6 +76,16 @@ Lancer : `flutter run -d <id> --dart-define-from-file=env.json` (`flutter device
 - [ ] `ISCC.exe packaging\windows\dupe.iss` → installateur ; installation sans droits admin.
 - [ ] Icône, notifications de retard, dialogues de fichiers, synchro.
 
+## Filets de sécurité (phase 11)
+- [ ] Supprimer un ouvrage puis « Annuler » : il revient, aussi sur l'autre appareil après synchro.
+- [ ] Supprimer une série puis « Annuler » : la série et ses tomes reviennent.
+- [ ] Paramètres → Sauvegardes automatiques : une hebdomadaire apparaît au premier lancement (collection non vide).
+- [ ] Import CSV de test → sauvegarde « Avant import CSV » → « Revenir à cette sauvegarde » : l'import disparaît,
+      y compris sur l'autre appareil après synchro.
+- [ ] Ajouter un ouvrage sur l'autre appareil **sans synchroniser**, puis restaurer : il n'est pas supprimé (la
+      restauration ne connaît que ce que l'appareil a vu). Synchroniser avant de restaurer.
+- [ ] Exporter une sauvegarde automatique (partage / Enregistrer sous) puis la restaurer par fichier.
+
 ## Données réelles
 - [ ] Import de ma collection (CSV Mangacollec / CLZ / tableur) : correspondance des colonnes devinée correctement.
 - [ ] Réimporter le même fichier n'ajoute rien.

@@ -64,7 +64,7 @@ synchro sur le téléphone se retrouve, copiable, dans À propos → Journal.
 Critère : je crée mon compte depuis le téléphone, je valide l'email, puis je me connecte sur le téléphone
 et le PC avec email + mot de passe.
 
-### Phase 11 — Filets de sécurité
+### Phase 11 — Filets de sécurité ✅ (2026-11-14)
 - **Annuler une suppression** : snackbar « Supprimé — Annuler » après suppression d'un ouvrage ou d'une série
   (série : restaure aussi les tomes supprimés avec elle). Restauration = `deleted_at` remis à null + bump
   `updated_at`, donc propagée par la synchro.

@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:dupe/app/router.dart';
 import 'package:dupe/app/theme.dart';
+import 'package:dupe/core/logging/app_log.dart';
 import 'package:dupe/core/sync/sync_controller.dart';
+import 'package:dupe/features/backup/data/auto_backups.dart';
 import 'package:dupe/features/loans/data/loan_actions.dart';
 import 'package:dupe/features/settings/data/theme_mode_provider.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
@@ -24,6 +26,15 @@ class _DupeAppState extends ConsumerState<DupeApp> {
     unawaited(ref.read(loanActionsProvider).notifyOverdueOnStartup());
     // Starts the sync (restores the session, then syncs if signed in).
     ref.read(syncControllerProvider);
+    unawaited(
+      ref
+          .read(autoBackupsProvider)
+          .weeklyIfDue()
+          .then<void>(
+            (_) {},
+            onError: (Object e, StackTrace s) => appLog.error('backup', e, s),
+          ),
+    );
   }
 
   @override

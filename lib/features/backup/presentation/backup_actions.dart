@@ -4,10 +4,12 @@ import 'package:drift/drift.dart';
 import 'package:dupe/app/error_text.dart';
 import 'package:dupe/app/router.dart';
 import 'package:dupe/core/database/database_provider.dart';
+import 'package:dupe/features/backup/data/auto_backups.dart';
 import 'package:dupe/features/backup/data/csv_codec.dart';
 import 'package:dupe/features/backup/data/csv_export.dart';
 import 'package:dupe/features/backup/data/file_io.dart';
 import 'package:dupe/features/backup/data/json_backup.dart';
+import 'package:dupe/features/backup/presentation/restore_dialog.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -32,14 +34,16 @@ class BackupActions {
   Future<void> _guard(Future<String?> Function() action) async {
     final messenger = ScaffoldMessenger.of(context);
     final l10n = _l10n;
+    // Replaces any previous message (e.g. the import report).
+    void show(String text) => messenger
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text(text)));
     try {
-      final message = await action();
-      if (message != null) {
-        messenger.showSnackBar(SnackBar(content: Text(message)));
-      }
+      if (await action() case final message?) show(message);
+    } on BackupFormatException {
+      show(l10n.restoreInvalid);
     } on Object catch (e, stack) {
-      final text = reportError(l10n, 'backup', e, stack);
-      messenger.showSnackBar(SnackBar(content: Text(l10n.fileError(text))));
+      show(l10n.fileError(reportError(l10n, 'backup', e, stack)));
     }
   }
 
@@ -57,7 +61,6 @@ class BackupActions {
   });
 
   Future<void> restoreJson() => _guard(() async {
-    final l10n = _l10n;
     final file = await ref
         .read(fileIoProvider)
         .open(
@@ -66,14 +69,47 @@ class BackupActions {
           mimeTypes: const ['application/json'],
         );
     if (file == null) return null;
-    try {
-      final count = await JsonBackup(ref.read(appDatabaseProvider))
-          .restore(utf8.decode(file.bytes));
-      return l10n.restoreDone(count);
-    } on BackupFormatException {
-      return l10n.restoreInvalid;
-    }
+    final json = utf8.decode(file.bytes);
+    JsonBackup.decode(json); // Not a backup: stop before asking.
+    if (!context.mounted) return null;
+    final choice = await showRestoreDialog(context, subtitle: file.name);
+    return choice == null ? null : await _restore(json, choice);
   });
+
+  /// Restores (or exports) an automatic backup.
+  Future<void> restoreAuto(AutoBackup backup, String label) => _guard(() async {
+    final choice = await showRestoreDialog(
+      context,
+      subtitle: label,
+      export: true,
+    );
+    if (choice == null) return null;
+    // Read first: the backup taken before restoring may prune it.
+    final json = await ref.read(autoBackupsProvider).read(backup);
+    if (choice == RestoreChoice.export) {
+      final saved = await ref
+          .read(fileIoProvider)
+          .save(
+            'dupe-${backup.name}',
+            Uint8List.fromList(utf8.encode(json)),
+            mimeType: 'application/json',
+          );
+      return saved ? _l10n.exportDone : null;
+    }
+    return await _restore(json, choice);
+  });
+
+  Future<String> _restore(String json, RestoreChoice choice) async {
+    final l10n = _l10n;
+    await ref.read(autoBackupsProvider).create(AutoBackupKind.beforeRestore);
+    ref.invalidate(autoBackupListProvider);
+    final backup = JsonBackup(ref.read(appDatabaseProvider));
+    if (choice == RestoreChoice.merge) {
+      return l10n.restoreDone(await backup.restore(json));
+    }
+    final r = await backup.replace(json, now: ref.read(clockProvider)());
+    return l10n.replaceDone(r.restored, r.removed);
+  }
 
   /// [type] null: every type in one file.
   Future<void> exportCsv(CollectionType? type) => _guard(() async {

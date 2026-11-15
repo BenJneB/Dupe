@@ -1,10 +1,12 @@
 import 'dart:async';
 
+import 'package:dupe/app/router.dart';
 import 'package:dupe/features/backup/presentation/backup_actions.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
 import 'package:dupe/features/collection/presentation/labels.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 
 /// Settings section: JSON backup, CSV export and import.
@@ -58,6 +60,13 @@ class BackupSection extends ConsumerWidget {
           title: Text(l10n.restoreJson),
           subtitle: Text(l10n.restoreJsonHelp),
           onTap: () => unawaited(actions.restoreJson()),
+        ),
+        ListTile(
+          key: const Key('autoBackups'),
+          leading: const Icon(Icons.history),
+          title: Text(l10n.autoBackups),
+          subtitle: Text(l10n.autoBackupsHelp),
+          onTap: () => unawaited(context.push(AppRoutes.autoBackups)),
         ),
         ListTile(
           key: const Key('exportCsv'),

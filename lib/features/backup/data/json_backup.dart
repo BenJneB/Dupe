@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:drift/drift.dart';
 import 'package:dupe/core/database/app_database.dart';
 import 'package:dupe/core/sync/sync_codec.dart';
 
@@ -37,19 +38,11 @@ class JsonBackup {
   /// Merges a backup: missing rows are added, rows newer than the local
   /// ones replace them. Returns the number of rows written.
   Future<int> restore(String json) async {
-    final Map<String, dynamic> decoded;
-    try {
-      decoded = jsonDecode(json) as Map<String, dynamic>;
-    } on Object {
-      throw const BackupFormatException();
-    }
-    if (decoded['format'] != format) throw const BackupFormatException();
+    final decoded = decode(json);
     var written = 0;
     await _db.transaction(() async {
       for (final table in _codec.tables) {
-        final rows = decoded[table.actualTableName];
-        if (rows is! List<dynamic>) continue;
-        for (final row in rows.cast<Map<String, dynamic>>()) {
+        for (final row in _rows(decoded, table)) {
           // Restored rows are pushed by the next sync.
           if (await _codec.apply(table, row, pending: true)) written++;
         }
@@ -57,6 +50,76 @@ class JsonBackup {
     });
     return written;
   }
+
+  /// Puts the collection back exactly in the state of the backup: its rows
+  /// are rewritten as of [now] (so that they win at the next sync on every
+  /// device) and the local rows it does not contain are deleted (soft).
+  /// Returns the numbers of items restored and removed.
+  Future<({int restored, int removed})> replace(
+    String json, {
+    required DateTime now,
+  }) async {
+    final decoded = decode(json);
+    final at = now.toUtc().toIso8601String();
+    var restored = 0;
+    var removed = 0;
+    await _db.transaction(() async {
+      for (final table in _codec.tables) {
+        final name = table.actualTableName;
+        final ids = <Object?>{};
+        for (final row in _rows(decoded, table)) {
+          ids.add(row['id']);
+          await _codec.apply(
+            table,
+            {...row, 'updated_at': at},
+            pending: true,
+            force: true,
+          );
+          if (name == 'items' && row['deleted_at'] == null) restored++;
+        }
+        final alive = await _db
+            .customSelect(
+              'SELECT id FROM $name WHERE deleted_at IS NULL',
+              readsFrom: {table},
+            )
+            .get();
+        for (final r in alive.where((r) => !ids.contains(r.data['id']))) {
+          final n = await _db.customUpdate(
+            'UPDATE $name SET deleted_at = ?, updated_at = ?, '
+            'sync_pending = 1 WHERE id = ?',
+            variables: [
+              Variable<DateTime>(now),
+              Variable<DateTime>(now),
+              Variable(r.data['id']),
+            ],
+            updates: {table},
+          );
+          if (name == 'items') removed += n;
+        }
+      }
+    });
+    return (restored: restored, removed: removed);
+  }
+
+  /// Parses a backup; throws [BackupFormatException] if it is not one.
+  static Map<String, dynamic> decode(String json) {
+    final Map<String, dynamic> decoded;
+    try {
+      decoded = jsonDecode(json) as Map<String, dynamic>;
+    } on Object {
+      throw const BackupFormatException();
+    }
+    if (decoded['format'] != format) throw const BackupFormatException();
+    return decoded;
+  }
+
+  static Iterable<Map<String, dynamic>> _rows(
+    Map<String, dynamic> decoded,
+    TableInfo<Table, Object?> table,
+  ) => switch (decoded[table.actualTableName]) {
+    final List<dynamic> rows => rows.cast<Map<String, dynamic>>(),
+    _ => const [],
+  };
 }
 
 /// Not a Dupe backup file.

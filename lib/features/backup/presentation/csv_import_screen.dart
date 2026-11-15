@@ -1,3 +1,5 @@
+import 'package:dupe/app/error_text.dart';
+import 'package:dupe/features/backup/data/auto_backups.dart';
 import 'package:dupe/features/backup/data/csv_import.dart';
 import 'package:dupe/features/backup/domain/import_field.dart';
 import 'package:dupe/features/backup/presentation/import_field_labels.dart';
@@ -46,6 +48,16 @@ class _CsvImportScreenState extends ConsumerState<CsvImportScreen> {
     final l10n = AppLocalizations.of(context);
     final messenger = ScaffoldMessenger.of(context);
     setState(() => _busy = true);
+    try {
+      await ref.read(autoBackupsProvider).create(AutoBackupKind.beforeImport);
+    } on Object catch (e, stack) {
+      final text = reportError(l10n, 'backup', e, stack);
+      messenger.showSnackBar(
+        SnackBar(content: Text(l10n.autoBackupFailed(text))),
+      );
+      if (mounted) setState(() => _busy = false);
+      return;
+    }
     final report = await importCsvRows(
       ref.read(collectionRepositoryProvider),
       _rows,

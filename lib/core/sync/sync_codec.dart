@@ -44,11 +44,13 @@ class SyncCodec {
 
   /// Writes a remote/backup row locally unless a local row is newer
   /// (last write wins). [pending]: whether the row must be pushed later.
+  /// [force]: write even over a newer local row (full restore).
   /// Returns whether the row was written.
   Future<bool> apply(
     TableInfo<Table, Object?> table,
     Map<String, Object?> row, {
     required bool pending,
+    bool force = false,
   }) async {
     final name = table.actualTableName;
     final local = await _db
@@ -58,7 +60,7 @@ class SyncCodec {
           readsFrom: {table},
         )
         .getSingleOrNull();
-    if (local != null) {
+    if (local != null && !force) {
       final localAt = _db.typeMapping.read(
         DriftSqlType.dateTime,
         local.data['updated_at'],

@@ -3,6 +3,7 @@ import 'package:dupe/app/app_routes.dart';
 import 'package:dupe/features/about/presentation/about_screen.dart';
 import 'package:dupe/features/about/presentation/journal_screen.dart';
 import 'package:dupe/features/account/presentation/sign_in_screen.dart';
+import 'package:dupe/features/backup/presentation/auto_backups_screen.dart';
 import 'package:dupe/features/backup/presentation/csv_import_screen.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
 import 'package:dupe/features/collection/domain/metadata_mapping.dart';
@@ -66,6 +67,10 @@ GoRouter appRouter(Ref ref) {
                         path: 'import-csv',
                         builder: (context, state) =>
                             CsvImportScreen(file: state.extra! as CsvFile),
+                      ),
+                      GoRoute(
+                        path: 'sauvegardes',
+                        builder: (context, state) => const AutoBackupsScreen(),
                       ),
                     ],
                   ),

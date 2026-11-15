@@ -1,6 +1,8 @@
 import 'package:dupe/app/app.dart';
 import 'package:dupe/core/database/app_database.dart';
 import 'package:dupe/core/database/database_provider.dart';
+import 'package:dupe/features/backup/data/auto_backups.dart';
+import 'package:dupe/features/backup/data/backup_store.dart';
 import 'package:dupe/features/loans/data/loan_reminders.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart';
@@ -8,6 +10,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 
 import 'fake_reminders.dart';
+import 'memory_backup_store.dart';
 
 const phoneSize = Size(400, 800);
 const desktopSize = Size(1280, 800);
@@ -20,6 +23,9 @@ Future<AppDatabase> pumpApp(
 
   /// System notifications are never used in tests.
   LoanReminders? reminders,
+
+  /// Automatic backups (memory; never the app folder).
+  BackupStore? backups,
 
   /// Writes initial data before the app (and its drift streams) starts.
   Future<void> Function(AppDatabase db)? seed,
@@ -36,6 +42,7 @@ Future<AppDatabase> pumpApp(
         loanRemindersProvider.overrideWithValue(
           reminders ?? FakeLoanReminders(),
         ),
+        backupStoreProvider.overrideWithValue(backups ?? MemoryBackupStore()),
         ...overrides,
       ],
       child: const DupeApp(),
