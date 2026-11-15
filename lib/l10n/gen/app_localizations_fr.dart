@@ -1386,6 +1386,22 @@ class AppLocalizationsFr extends AppLocalizations {
   String get updateDownload => 'Télécharger';
 
   @override
+  String get torchOn => 'Allumer la lampe';
+
+  @override
+  String get torchOff => 'Éteindre la lampe';
+
+  @override
+  String get scanSection => 'Scan';
+
+  @override
+  String get storeHaptics => 'Vibrer selon le résultat';
+
+  @override
+  String get storeHapticsHelp =>
+      'Mode Magasin : 1 forte = déjà possédé, 2 = en envie, 3 légères = tome manquant d’une série, 1 brève = inconnu';
+
+  @override
   String get errorOffline => 'Pas de connexion internet.';
 
   @override

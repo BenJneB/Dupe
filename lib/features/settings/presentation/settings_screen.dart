@@ -1,5 +1,6 @@
 import 'package:dupe/features/account/presentation/account_section.dart';
 import 'package:dupe/features/backup/presentation/backup_section.dart';
+import 'package:dupe/features/scan/presentation/scan_settings_section.dart';
 import 'package:dupe/features/settings/presentation/appearance_section.dart';
 import 'package:dupe/features/settings/presentation/sources_section.dart';
 import 'package:dupe/features/updates/presentation/updates_section.dart';
@@ -21,6 +22,8 @@ class SettingsScreen extends ConsumerWidget {
           AccountSection(),
           Divider(),
           AppearanceSection(),
+          Divider(),
+          ScanSettingsSection(),
           Divider(),
           BackupSection(),
           Divider(),

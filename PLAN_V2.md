@@ -1,135 +1,172 @@
-# Dupe — Plan v2
+# Dupe — Plan v2 et état du projet
 
-Suite de `PLAN.md` (phases 0 à 8 terminées). Même stack, mêmes conventions (`CLAUDE.md`), même méthode :
-une phase à la fois, qui se termine par une appli qui compile sur Android et Linux, `flutter analyze` à zéro,
-`flutter test` vert, puis arrêt en attendant le retour de l'utilisateur. Chaque phase ajoute à
-`TESTS_MANUELS.md` ce qui ne se teste pas automatiquement.
+> Document autonome, à jour au **2026-11-14**, lisible sans accès à l'historique ni au code. Il sert de base à
+> une revue externe : il dit ce qui était prévu, ce qui a été fait (écarts compris), ce qui est vérifié
+> automatiquement et ce qui ne l'est pas encore. Les tests à faire à la main sont dans `TESTS_MANUELS.md`.
 
-Objectif de la v2 : rendre l'appli **fiable au quotidien** avant d'ajouter des fonctionnalités. La v1 fonctionne,
-mais une erreur peut aujourd'hui passer inaperçue (synchro, messages d'erreur), se propager partout (pas
-d'annulation, restauration qui fusionne) ou ne pas être vérifiable (Windows jamais compilé, pas de CI).
+## 1. Contexte
 
-## Constats de départ (relecture du code, 2026-11-14)
+**Dupe** est une application personnelle (un seul utilisateur, plusieurs appareils) pour cataloguer une
+collection de mangas, BD, comics et livres. L'usage principal : en magasin, scanner le code-barres d'un livre
+pour savoir s'il est déjà possédé, en liste d'envies, ou s'il manque à une série suivie.
 
-- **Synchro** : le pull demande `server_updated_at > curseur`. L'horodatage est posé à l'écriture
-  (`clock_timestamp()`), mais la ligne ne devient visible qu'au commit. Si deux appareils synchronisent en
-  même temps, une ligne peut arriver avec un horodatage antérieur au curseur déjà avancé de l'autre appareil :
-  elle n'y sera jamais tirée. Rare, silencieux, sans rattrapage.
-- **Erreurs** : certaines avalées (`debugPrint` dans `supabase_sync.dart`, `loan_reminders.dart`), les autres
-  affichées brutes (`'$e'`) en snackbar. Rien de consultable après coup.
-- **Connexion** : code à 6 chiffres ou lien de l'email collé (modèles d'email non modifiables sans SMTP).
-  Jugée bancale par l'utilisateur.
-- **Suppression** : définitive du point de vue de l'utilisateur, alors que la base fait une suppression logique.
-- **Restauration** : une sauvegarde fusionne (le plus récent gagne) ; elle ne permet donc **pas** de revenir
-  en arrière après une erreur (ex. mauvais import CSV).
-- **Distribution** : version figée à `1.0.0+1` (Android refuse une mise à jour sans numéro plus grand),
-  Windows jamais compilé, pas de dossier `.github`.
-- **Supabase gratuit** : projet mis en pause après une période d'inactivité (durée à vérifier dans la doc).
+- **Cibles** : Android (téléphone, scan caméra), Linux et Windows (PC). iOS/macOS hors périmètre.
+- **Stack** : Flutter 3.50 / Dart 3.14, Riverpod 3, go_router, drift (SQLite local = source de vérité),
+  Supabase (synchro optionnelle entre appareils, projet gratuit de l'utilisateur), dio.
+- **Métadonnées** : BnF (catalogue SRU), Open Library, Google Books (clé), AniList, Comic Vine (clé). Liens
+  seulement vers Bédéthèque / Manga-News (jamais de scraping).
+- **Dépôt** : GitHub public (`BenJneB/Dupe`). Secrets dans `env.json` (jamais versionné), injectés à la
+  compilation par `--dart-define-from-file`.
+- **Méthode** : une phase à la fois ; fin de phase = `flutter analyze` sans remarque, `flutter test` vert,
+  builds debug Linux et Android, puis arrêt jusqu'au retour de l'utilisateur. Rien n'est commité par
+  l'assistant : l'utilisateur relit le diff et committe.
 
-## Phases
+### Ce que contenait déjà la v1 (`PLAN.md`, phases 0 à 8)
+Collection locale (séries, tomes, plusieurs exemplaires/éditions d'un tome), recherche locale et en ligne,
+scan caméra (Android) ou clavier/douchette (PC), rattachement automatique d'un tome à sa série, **mode
+Magasin** (bandeau vert possédé / jaune envie / bleu tome manquant d'une série / gris inconnu) et **mode
+Rafale** (file persistée + écran de revue), statuts de lecture, envies et « prochains tomes à acheter »,
+prêts avec rappels, prix et statistiques, synchro Supabase (RLS, dernière écriture gagnante, photos de
+couverture dans un bucket privé), export/import JSON et CSV, mode sombre, icône, packaging (APK signé,
+Inno Setup, AppImage).
 
-### Phase 9 — Synchro fiable et journal d'erreurs ✅ (2026-11-14)
-- **Pull avec chevauchement** : relire depuis `curseur − marge` (quelques secondes, constante documentée).
-  Réappliquer une ligne déjà reçue ne change rien (`SyncCodec.apply`, plus récent gagne). Garder le curseur
-  réel, n'appliquer la marge qu'à la requête ; éviter une boucle infinie quand une page entière tombe dans la
-  marge (avancer sur `(server_updated_at, id)` si nécessaire).
-- **Test** reproduisant le cas : `FakeSyncRemote` capable d'insérer une ligne « commitée en retard » avec un
-  horodatage antérieur au curseur ; le test échoue avant le correctif, passe après.
-- **Journal local** : `core/logging/` — anneau de N entrées (horodatage, niveau, source, message), persisté
-  dans un fichier du dossier support, pas de dépendance si un fichier texte suffit. Remplace les `debugPrint`
-  et enregistre toute exception attrapée (synchro, sources, fichiers, notifications, photos).
-- **Messages lisibles** : traduire les exceptions connues (hors ligne, session expirée, quota, fichier
-  illisible) en textes français ; le détail technique va au journal, pas dans le snackbar.
-- **À propos → Journal** : écran listant les entrées, bouton « Copier » et « Partager » (pour me les envoyer).
+## 2. Objectif de la v2
 
-Critère : deux appareils qui synchronisent en même temps finissent avec les mêmes données ; une erreur de
-synchro sur le téléphone se retrouve, copiable, dans À propos → Journal.
+Rendre l'appli **fiable au quotidien** avant d'ajouter des fonctionnalités : qu'une erreur ne passe pas
+inaperçue, ne se propage pas partout sans retour possible, et que chaque plateforme soit vérifiable.
 
-### Phase 10 — Inscription et connexion par mot de passe ✅ (2026-11-14)
-- **Écran d'inscription** dans l'appli (email, mot de passe, confirmation) : `signUp`. Règles de mot de
-  passe = celles du projet Supabase (longueur minimale à lire dans le tableau de bord, ne pas l'inventer).
-- **Connexion** email + mot de passe (`signInWithPassword`) ; lien « Créer un compte » depuis l'écran de
-  connexion. Les inscriptions restent donc ouvertes côté Supabase.
-- **Confirmation d'email** : activée par défaut chez Supabase, elle envoie un **lien** (même limite que
-  la v1, pas de SMTP). Le lien s'ouvre dans le navigateur et valide le compte côté serveur ; l'appli affiche
-  « Valide ton email puis connecte-toi ». Alternative : désactiver la confirmation dans le tableau de bord.
-  Vérifier le comportement réel au moment de la phase (redirection après validation).
-- Retirer le code à 6 chiffres et le lien collé (`email_sign_in.dart`), ainsi que l'entrée « Reporté » de
-  `CLAUDE.md`. Les appareils déjà connectés gardent leur session.
-- Mot de passe oublié : la réinitialisation Supabase passe aussi par un lien → hors appli dans un premier
-  temps ; documenter la réinitialisation depuis le tableau de bord.
-- Mot de passe jamais journalisé (phase 9) ni stocké : seule la session l'est, comme aujourd'hui.
-- Tests : `FakeSyncAuth` étendu (inscription, email non confirmé, mauvais mot de passe, email déjà pris).
+### Constats de départ (relecture du code)
+| Constat | Traité en |
+|---|---|
+| Le pull de la synchro pouvait **perdre des lignes** (horodatage serveur posé à l'écriture mais visible au commit ; égalités d'horodatage coupées entre deux pages) | Phase 9 |
+| Erreurs avalées (`debugPrint`) ou affichées brutes ; rien de consultable après coup | Phase 9 |
+| Connexion par code / lien d'email collé, jugée bancale (sans SMTP, modèles d'email non modifiables) | Phase 10 |
+| Suppression sans annulation ; restauration qui **fusionne** (ne permet pas de revenir en arrière) | Phase 11 |
+| Version figée `1.0.0+1`, Windows jamais compilé, pas de CI | Phase 12 |
+| Projet Supabase gratuit mis en pause après 7 jours de faible activité | Phase 12 |
+| Confort en magasin (accès au scan, résultat sans regarder l'écran, faible lumière) | Phase 13 |
 
-Critère : je crée mon compte depuis le téléphone, je valide l'email, puis je me connecte sur le téléphone
-et le PC avec email + mot de passe.
+## 3. État des phases
 
-### Phase 11 — Filets de sécurité ✅ (2026-11-14)
-- **Annuler une suppression** : snackbar « Supprimé — Annuler » après suppression d'un ouvrage ou d'une série
-  (série : restaure aussi les tomes supprimés avec elle). Restauration = `deleted_at` remis à null + bump
-  `updated_at`, donc propagée par la synchro.
-- **Sauvegardes automatiques locales** : JSON (format existant) une fois par semaine, et systématiquement
-  avant un import CSV ou une restauration. Les N dernières sont gardées dans le dossier support.
-  Paramètres → Sauvegarde : liste des sauvegardes automatiques (date, nombre d'ouvrages).
-- **Restauration complète** (en plus de la fusion actuelle) : remettre la collection dans l'état de la
-  sauvegarde — lignes absentes de la sauvegarde marquées supprimées, lignes présentes réécrites avec un
-  `updated_at` actuel pour gagner à la synchro. Confirmation explicite (action destructrice, réversible
-  uniquement via la sauvegarde automatique prise juste avant).
+| Phase | Sujet | État | Tests auto | Vérifié en réel |
+|---|---|---|---|---|
+| 9 | Synchro fiable + journal d'erreurs | ✅ fait | oui | **non** (Supabase réel) |
+| 10 | Inscription / connexion par mot de passe | ✅ fait | oui (faux serveur) | **non** |
+| 11 | Annulation, sauvegardes auto, restauration complète | ✅ fait | oui | **non** |
+| 12 | CI, Releases, versions, veille Supabase, nouvelles versions | ✅ écrit | partiel | **non** (workflows jamais exécutés) |
+| 13 | Confort en magasin | ✅ fait | oui (hors caméra) | **non** (téléphone) |
 
-Critère : après un import CSV raté, je reviens à l'état d'avant en deux appuis, et l'autre appareil suit
-après synchro.
+Fin de phase 13 : **168 tests verts** (~20 s), analyse sans remarque, builds debug Linux et Android OK,
+APK release `--split-per-abi` OK (28 à 34 Mo par architecture).
 
-### Phase 12 — CI, versions et distribution ✅ (2026-11-14, workflows non exécutés)
-- **GitHub Actions — vérification** (à chaque push) : `flutter analyze`, `flutter test`, compilation
-  Linux et Android ; **compilation Windows** sur runner Windows (seule vérification possible sans PC Windows).
-- **GitHub Actions — release** (sur tag `vX.Y.Z`) : version tirée du tag (`--build-name`, `--build-number`
-  croissant), APK release par architecture signé (keystore en secret GitHub encodé base64), AppImage,
-  installateur Inno Setup ; publication dans une Release GitHub. `env.json` reconstruit depuis les secrets
-  GitHub, jamais versionné ni affiché dans les logs.
-- **Dépôt public** : minutes GitHub Actions gratuites sur les runners standard (Windows compris) →
-  vérification à chaque push. Les Releases sont publiques et téléchargeables sans authentification.
-- **Clés dans les binaires publics** : les valeurs de `env.json` sont compilées dans les binaires et
-  extractibles. Clé publishable Supabase : faite pour ça (RLS). **Google Books** : restreindre la clé dans
-  la console Google (API Books seulement, quota) avant la première Release. **Comic Vine** : clé non
-  restreignable → décider avant la première Release (accepter le risque, ou build public sans clé et build
-  perso avec).
-- **Versions** : `pubspec.yaml` garde une version de développement ; README : « créer une release =
-  pousser un tag ».
-- **Supabase en veille** : vérifier d'abord la politique actuelle de mise en pause du palier gratuit. Si elle
-  s'applique, workflow planifié (cron) faisant une requête légère sur le projet. Dans l'appli, détecter un
-  projet en pause et afficher un message clair (au lieu d'une erreur générique).
-- **Nouvelle version disponible** : au démarrage, au plus une fois par jour, requête anonyme sur l'API
-  GitHub (dernière Release du dépôt, sans jeton ; limite 60 req/h par IP, largement suffisant). Si la version
-  est plus récente que celle installée (package_info_plus) : « Version X disponible » avec lien vers le
-  fichier de la plateforme (APK selon l'architecture, AppImage, installateur). Désactivable dans
-  Paramètres ; échec réseau silencieux (journalisé).
+**Rien de la v1 ni de la v2 n'a encore été testé par l'utilisateur sur téléphone, sur le vrai Supabase ou
+sous Windows.** C'est le principal risque restant (voir `TESTS_MANUELS.md`).
 
-Critère : je pousse un tag, je récupère APK, AppImage et installateur Windows ; l'appli installée signale
-la nouvelle version, et l'APK s'installe par-dessus la précédente sans perte de données.
+## 4. Détail par phase
+
+### Phase 9 — Synchro fiable et journal d'erreurs
+**Réalisé**
+- Pull par **pagination sur clé** `(server_updated_at, id)` (filtre PostgREST `or(...)`, valeurs entre
+  guillemets, instants UTC `Z`) et **relecture de la dernière minute** avant le curseur à chaque synchro.
+  Une ligne déjà identique (même `updated_at` et `user_id`) n'est pas réécrite (pas d'écriture ni de
+  rafraîchissement inutiles toutes les 30 s).
+- Hypothèse assumée : deux écritures d'une même ligne n'ont jamais le même `updated_at` (horloge en µs).
+- **Journal** local : 500 entrées, fichier JSON-lines dans le dossier de l'appli, compacté ; reçoit les
+  erreurs Flutter / non attrapées, les échecs de providers, la synchro (une entrée par changement d'état
+  d'échec, pas toutes les 30 s), les sources de métadonnées. À propos → Journal : copier, partager, vider.
+- **Messages en français** pour les erreurs connues ; le détail technique part au journal.
+
+**Vérifié automatiquement** : test du « commit tardif » (échoue sans la relecture, passe avec), test des
+horodatages égaux sur plusieurs pages, journal (rotation, fichier, redémarrage), messages.
+**Non vérifié** : la syntaxe exacte du filtre PostgREST contre le vrai Supabase (faux serveur en test).
+
+### Phase 10 — Inscription et connexion par mot de passe
+**Réalisé** : connexion email + mot de passe ; écran « Créer un compte » ; fonctionne avec l'option Supabase
+*Confirm email* activée (message « ouvre le lien puis connecte-toi ») ou désactivée (connecté tout de suite) ;
+messages précis (mauvais mot de passe, email non confirmé, déjà inscrit, mot de passe trop faible, trop de
+tentatives). Code à 6 chiffres et lien collé supprimés.
+**Écart au plan** : ajout de Paramètres → **Mot de passe** (définir/changer), indispensable car le compte
+existant de l'utilisateur a été créé par lien, donc sans mot de passe.
+**Limites** : mot de passe oublié = le changer depuis un appareil encore connecté (la réinitialisation
+Supabase passe par un lien que l'appli ne reçoit pas). Sans SMTP, Supabase n'envoie d'email qu'aux membres
+du projet. Inscriptions ouvertes : un tiers peut créer un compte, mais ne voit que ses données (RLS).
+Supprimer un utilisateur Supabase efface ses données serveur (`on delete cascade`).
+
+### Phase 11 — Filets de sécurité
+**Réalisé**
+- « Supprimé — Annuler » (8 s) après suppression d'un ouvrage ou d'une série (la série restaure les tomes
+  supprimés au même instant qu'elle). Propagé par la synchro.
+- **Sauvegardes automatiques** JSON : chaque semaine (au lancement), avant chaque import CSV (l'import est
+  annulé si la sauvegarde échoue) et avant chaque restauration ; 8 gardées par sorte ; rien si collection vide.
+  Paramètres → Sauvegardes automatiques : fusionner, revenir à cet état, exporter.
+- **Restauration complète** (« Revenir à cette sauvegarde ») en plus de la fusion : lignes de la sauvegarde
+  réécrites datées de maintenant (elles gagnent à la synchro), autres lignes supprimées (logiquement).
+
+**Limites** : sauvegardes locales à l'appareil (sur Android, les exporter pour les garder ailleurs) ; une
+restauration ne retire pas ce que l'appareil n'a pas encore reçu de l'autre (synchroniser avant) ; les photos
+de couverture ne sont pas dans les sauvegardes (seulement leurs références).
+
+### Phase 12 — CI, versions et distribution
+**Réalisé** (`.github/workflows/`)
+- `ci.yml` : à chaque push, analyse, tests, builds Linux, Android et **Windows** (+ installateur Inno Setup).
+- `release.yml` : sur tag `vX.Y.Z`, version tirée du tag (`1.2.3+10203`), 3 APK signés (un par ABI),
+  AppImage, installateur Windows, publiés en Release GitHub ; refuse de publier sans les secrets (jamais
+  d'APK signé avec la clé de debug).
+- `keep-alive.yml` : une requête par jour sur Supabase ; échoue (email GitHub) sur 5xx ou sans réponse.
+- Appli : « Version X disponible — Télécharger » (API GitHub anonyme, au plus 1×/jour, **builds release
+  seulement**), qui ouvre le fichier de la plateforme (APK de l'architecture du téléphone, AppImage,
+  installateur) ; désactivable ; « Rechercher une mise à jour » dans Paramètres.
+- Appli : erreur serveur 5xx → « Serveur de synchronisation indisponible… projet peut-être en pause ».
+
+**Non vérifié** : aucun workflow n'a tourné (premier push à faire). La compilation Windows n'a jamais été
+essayée. Inconnu : une requête **refusée** par la RLS compte-t-elle comme « activité » pour Supabase ? (le
+schéma n'accorde rien au rôle anonyme). GitHub désactive les tâches planifiées après 60 jours sans commit.
+**Sécurité** : les Releases sont publiques, donc tout `ENV_JSON` est extractible des binaires. Clé Supabase
+*publishable* : prévue pour (RLS). Google Books : à restreindre dans la console Google. Comic Vine : non
+restreignable — décision de l'utilisateur reportée (« on avisera »).
 
 ### Phase 13 — Confort en magasin
-- **Raccourci Android** « Scanner » (appui long sur l'icône) qui ouvre directement le mode Magasin
-  (vérifier le package et sa compatibilité au moment de la phase, ex. `quick_actions`).
-- **Retour haptique** différent selon le bandeau (possédé / envie / manquant / inconnu), pour connaître le
-  résultat sans regarder l'écran ; désactivable dans Paramètres.
-- **Lampe torche** dans l'écran de scan (`MobileScannerController.toggleTorch`).
-- **Anti-doublon de lecture** : vérifier qu'un même code lu deux fois de suite n'est traité qu'une fois en
-  mode Magasin comme en Rafale, l'ajouter sinon.
+**Réalisé**
+- **Raccourci Android** « Scanner » (appui long sur l'icône) → écran de scan en mode Magasin
+  (`quick_actions` 1.1.1, Android seulement, jamais appelé sur PC ni en test).
+- **Vibrations par verdict** en mode Magasin, au verdict final (pas pendant la recherche en ligne) :
+  1 forte = possédé, 2 moyennes = envie, 3 légères = tome manquant d'une série, 1 brève = inconnu. Rafale :
+  1 légère = ajouté à la file, 1 brève = déjà dans la file. Désactivable (Paramètres → Scan).
+- **Lampe torche** dans l'écran caméra (bouton masqué si l'appareil n'en a pas).
+- **Anti-doublon** : déjà en place (la caméra ne signale un code qu'une fois tant qu'un autre n'a pas été vu ;
+  la file Rafale refuse un ISBN déjà présent). Rien ajouté.
 
-Critère : depuis l'écran d'accueil, un appui long → scan → vibration « déjà possédé » en moins de 3 s.
+**Limites** : les vibrations utilisent le retour haptique système ; s'il est coupé dans les réglages Android,
+rien ne vibre. Caméra, torche et raccourci ne sont testables que sur téléphone.
 
-## Toujours hors périmètre
+## 5. Décisions de l'utilisateur
+- Écran d'inscription **dans l'appli** (inscriptions ouvertes côté Supabase).
+- Sauvegardes automatiques : **hebdomadaires, 8 gardées**.
+- Dépôt **public**, Releases publiques, **signalement des nouvelles versions : oui**.
+- Clé Comic Vine dans les Releases publiques : **reportée** (« on avisera »).
+- Collection de départ codée en dur : **supprimée** (la collection passe par l'import CSV / la synchro).
 
-Ceux de `PLAN.md` (iOS/macOS, partage de collection, alertes de sortie des nouveaux tomes, scraping, cote
-automatique). Les alertes de sortie restent exclues : aucune source fiable ne connaît les sorties françaises
-à venir (BnF après parution, AniList = Japon).
+## 6. Risques et questions ouvertes (pour la revue)
+1. **Aucun test réel** : synchro Supabase, connexion, caméra, notifications, Windows, workflows. Le premier
+   passage de `TESTS_MANUELS.md` révélera sans doute des écarts.
+2. **Filtre PostgREST du pull** (phase 9) non vérifié contre le vrai serveur : s'il est faux, la synchro ne
+   reçoit plus rien (l'erreur irait au journal).
+3. **Migration du compte** : le compte existant n'a pas de mot de passe ; il faut le définir depuis un
+   appareil encore connecté, sinon seule la suppression du compte (et de ses données serveur) débloque.
+4. **Clés dans les binaires publics** (Comic Vine) : décision en attente avant la première Release.
+5. **Veille Supabase** : efficacité du `keep-alive` non prouvée (une requête refusée compte-t-elle ?).
+6. **Restauration complète et synchro** : elle gagne grâce à un `updated_at` « maintenant » ; un appareil dont
+   l'horloge avance beaucoup pourrait encore l'emporter (dernière écriture gagnante, horloge client).
+7. **Taille des fichiers** : convention < 250 lignes par fichier écrit à la main, respectée (maximum : 250).
 
-## Décisions (utilisateur, 2026-11-14)
+## 7. Hors périmètre (inchangé)
+iOS/macOS, partage de collection, alertes de sortie des nouveaux tomes (aucune source fiable pour les sorties
+françaises à venir), scraping, cote automatique.
 
-- Phase 10 : **écran d'inscription dans l'appli** (inscriptions ouvertes côté Supabase). Confirmation d'email :
-  l'appli gère les deux réglages ; le choix se fait dans le tableau de bord Supabase. Ajout non prévu : « Mot de
-  passe » dans Paramètres, indispensable pour le compte existant créé par lien (sans mot de passe).
-- Phase 11 : sauvegarde automatique **hebdomadaire, 8 gardées** (plus celles prises avant import/restauration).
-- Phase 12 : dépôt **public** → Releases GitHub publiques, vérification des nouvelles versions par l'API
-  GitHub. **Signaler les nouvelles versions : oui.** Reste à trancher avant la première Release : clé Comic
-  Vine dans le build public ou non (voir phase 12).
+## 8. Repères dans le dépôt
+- `PLAN.md` : spécification v1 (phases 0-8). `README.md` : configuration, Supabase, sauvegardes, publication.
+- `TESTS_MANUELS.md` : checklist des tests à faire à la main, avec identifiants.
+- `lib/core/sync/` (synchro), `lib/core/logging/` (journal), `lib/app/error_text.dart` (messages),
+  `lib/features/backup/` (sauvegardes, CSV), `lib/features/updates/` (nouvelles versions),
+  `lib/features/scan/` (scan, vibrations, raccourci), `supabase/migrations/` (schéma + RLS),
+  `.github/workflows/` (CI, release, veille), `tool/ci/set_version.sh`.

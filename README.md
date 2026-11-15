@@ -31,6 +31,10 @@ cp env.example.json env.json   # puis remplir les vraies valeurs
   puis l'ISBN est mémorisé.
 - **Mode Rafale** : scanne une étagère à la suite ; les infos sont cherchées en arrière-plan, puis
   « Revoir » permet de corriger et d'ajouter tout en une fois.
+- **Vibrations** (mode Magasin, Android) : 1 forte = possédé, 2 = envie, 3 légères = tome manquant d'une
+  série, 1 brève = inconnu ; désactivables dans Paramètres → *Scan* (et muettes si le retour haptique est
+  coupé dans les réglages du téléphone).
+- **Raccourci** : appui long sur l'icône de l'appli → *Scanner* ; bouton **lampe torche** sur la caméra.
 - Paramètres → *Sources de données* : activer/désactiver chaque source.
 
 ## Synchronisation (Supabase, facultatif)

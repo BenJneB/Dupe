@@ -27,6 +27,9 @@ Future<void> tapTile(WidgetTester tester, String key) async {
     100,
     scrollable: find.byType(Scrollable).last,
   );
+  // Built in the list cache but maybe still off screen.
+  await tester.ensureVisible(tile);
+  await tester.pumpAndSettle();
   await tester.tap(tile);
   await tester.pumpAndSettle();
 }
