@@ -432,25 +432,6 @@ class AppLocalizationsFr extends AppLocalizations {
   String get searchItemsSection => 'Ouvrages';
 
   @override
-  String get starterCollectionTitle => 'Importer ma collection de départ';
-
-  @override
-  String get starterCollectionSubtitle =>
-      'Dreamland, Naheulbeuk, Batman, Les Fourmis, Fabien Olicard (sans doublons, complète les ISBN)';
-
-  @override
-  String starterCollectionImported(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count modifications',
-      one: '1 modification',
-      zero: 'Rien à faire : déjà à jour',
-    );
-    return '$_temp0';
-  }
-
-  @override
   String get search => 'Rechercher';
 
   @override
@@ -1092,4 +1073,196 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get codeHelper =>
       'Dans l’email, copie le lien (appui long ou clic droit → copier l’adresse) sans l’ouvrir, puis colle-le ici. Si l’email contient un code à 6 chiffres, saisis-le.';
+
+  @override
+  String get appearanceSection => 'Apparence';
+
+  @override
+  String get themeSystem => 'Système';
+
+  @override
+  String get themeLight => 'Clair';
+
+  @override
+  String get themeDark => 'Sombre';
+
+  @override
+  String get backupSection => 'Sauvegarde et import';
+
+  @override
+  String get exportJson => 'Exporter une sauvegarde';
+
+  @override
+  String get exportJsonHelp => 'Fichier JSON complet : séries, ouvrages, prêts';
+
+  @override
+  String get restoreJson => 'Restaurer une sauvegarde';
+
+  @override
+  String get restoreJsonHelp =>
+      'Ajoute ce qui manque, met à jour ce qui est plus récent ; rien n’est effacé';
+
+  @override
+  String restoreDone(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count éléments restaurés',
+      one: '1 élément restauré',
+      zero: 'Rien à restaurer : déjà à jour',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get restoreInvalid => 'Ce fichier n’est pas une sauvegarde Dupe';
+
+  @override
+  String get exportCsv => 'Exporter en CSV';
+
+  @override
+  String get exportCsvHelp =>
+      'Un tableau par type, lisible dans Excel ou LibreOffice';
+
+  @override
+  String get exportCsvAll => 'Tout';
+
+  @override
+  String get importCsv => 'Importer un CSV';
+
+  @override
+  String get importCsvHelp =>
+      'Reprendre une collection (Mangacollec, CLZ, tableur…)';
+
+  @override
+  String get exportDone => 'Fichier enregistré';
+
+  @override
+  String fileError(String message) {
+    return 'Erreur de fichier : $message';
+  }
+
+  @override
+  String get csvImportTitle => 'Importer un CSV';
+
+  @override
+  String csvRows(String file, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count lignes',
+      one: '1 ligne',
+    );
+    return '$file : $_temp0';
+  }
+
+  @override
+  String get csvDefaults =>
+      'Valeurs par défaut (si la colonne est absente ou vide)';
+
+  @override
+  String get csvMapping => 'Correspondance des colonnes';
+
+  @override
+  String get csvIgnored => '— ignorée —';
+
+  @override
+  String get csvPreview => 'Aperçu';
+
+  @override
+  String csvImportButton(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Importer $count lignes',
+      one: 'Importer 1 ligne',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get csvTitleRequired => 'Associe au moins la colonne Titre ou Série';
+
+  @override
+  String csvImportDone(int created, int series, int duplicates) {
+    return '$created ajoutés, $series séries créées, $duplicates déjà présents';
+  }
+
+  @override
+  String csvInvalidLines(String lines) {
+    return 'Lignes ignorées (sans titre) : $lines';
+  }
+
+  @override
+  String get csvEmpty => 'Fichier vide ou illisible';
+
+  @override
+  String get importFieldTitle => 'Titre';
+
+  @override
+  String get importFieldSeries => 'Série';
+
+  @override
+  String get importFieldVolume => 'Tome / numéro';
+
+  @override
+  String get importFieldType => 'Type';
+
+  @override
+  String get importFieldAuthors => 'Auteurs';
+
+  @override
+  String get importFieldPublisher => 'Éditeur';
+
+  @override
+  String get importFieldIsbn => 'ISBN / EAN';
+
+  @override
+  String get importFieldOwnership => 'Possédé / envie';
+
+  @override
+  String get importFieldReading => 'Statut de lecture';
+
+  @override
+  String get importFieldPurchasePrice => 'Prix payé';
+
+  @override
+  String get importFieldPurchaseDate => 'Date d’achat';
+
+  @override
+  String get importFieldCoverPrice => 'Prix éditeur';
+
+  @override
+  String get importFieldLocation => 'Emplacement';
+
+  @override
+  String get importFieldNotes => 'Notes';
+
+  @override
+  String get moreAbout => 'À propos';
+
+  @override
+  String get aboutDescription =>
+      'Catalogue personnel de mangas, BD, comics et livres : scanne, vérifie en magasin ce que tu as déjà, suis tes séries.';
+
+  @override
+  String aboutVersion(String version) {
+    return 'Version $version';
+  }
+
+  @override
+  String get aboutSources => 'Sources de données';
+
+  @override
+  String get aboutSourcesText =>
+      'Bibliothèque nationale de France (catalogue SRU), Open Library, Google Books, AniList, Comic Vine. Les données appartiennent à leurs auteurs ; Dupe ne fait que les consulter.';
+
+  @override
+  String get aboutComicVine => 'Données comics fournies par Comic Vine';
+
+  @override
+  String get aboutLicenses => 'Licences des composants';
+
+  @override
+  String get aboutSourceCode => 'Code source';
 }

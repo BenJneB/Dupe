@@ -30,14 +30,57 @@ class SyncCodec {
   ) => t.$columns.where((c) => !_localOnly.contains(c.name));
 
   /// Raw SQLite row -> remote JSON.
+  /// [userId] replaces the owner (sync); null keeps it (backup).
   Map<String, Object?> toRemote(
     TableInfo<Table, Object?> table,
-    Map<String, Object?> raw,
-    String userId,
-  ) => {
+    Map<String, Object?> raw, [
+    String? userId,
+  ]) => {
     for (final c in syncedColumns(table))
-      c.name: c.name == 'user_id' ? userId : _out(c, raw[c.name]),
+      c.name: c.name == 'user_id' && userId != null
+          ? userId
+          : _out(c, raw[c.name]),
   };
+
+  /// Writes a remote/backup row locally unless a local row is newer
+  /// (last write wins). [pending]: whether the row must be pushed later.
+  /// Returns whether the row was written.
+  Future<bool> apply(
+    TableInfo<Table, Object?> table,
+    Map<String, Object?> row, {
+    required bool pending,
+  }) async {
+    final name = table.actualTableName;
+    final local = await _db
+        .customSelect(
+          'SELECT updated_at, sync_pending FROM $name WHERE id = ?',
+          variables: [Variable(row['id'])],
+          readsFrom: {table},
+        )
+        .getSingleOrNull();
+    if (local != null) {
+      final localAt = _db.typeMapping.read(
+        DriftSqlType.dateTime,
+        local.data['updated_at'],
+      )!;
+      final rowAt = DateTime.parse(row['updated_at']! as String);
+      // Sync: only a pending local change can be newer. Restore: any.
+      final localMayWin = pending || local.data['sync_pending'] == 1;
+      if (localMayWin && !rowAt.isAfter(localAt)) return false;
+    }
+    final columns = syncedColumns(table).map((c) => c.name).toList();
+    final flag = pending ? 1 : 0;
+    await _db.customInsert(
+      'INSERT INTO $name (${columns.join(', ')}, sync_pending) '
+      'VALUES (${List.filled(columns.length, '?').join(', ')}, $flag) '
+      'ON CONFLICT(id) DO UPDATE SET '
+      '${[for (final c in columns.skip(1)) '$c = excluded.$c'].join(', ')}, '
+      'sync_pending = $flag',
+      variables: toLocal(table, row),
+      updates: {table},
+    );
+    return true;
+  }
 
   Object? _out(GeneratedColumn<Object> c, Object? raw) {
     if (raw == null) return null;

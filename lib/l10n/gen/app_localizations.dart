@@ -844,24 +844,6 @@ abstract class AppLocalizations {
   /// **'Ouvrages'**
   String get searchItemsSection;
 
-  /// No description provided for @starterCollectionTitle.
-  ///
-  /// In fr, this message translates to:
-  /// **'Importer ma collection de départ'**
-  String get starterCollectionTitle;
-
-  /// No description provided for @starterCollectionSubtitle.
-  ///
-  /// In fr, this message translates to:
-  /// **'Dreamland, Naheulbeuk, Batman, Les Fourmis, Fabien Olicard (sans doublons, complète les ISBN)'**
-  String get starterCollectionSubtitle;
-
-  /// No description provided for @starterCollectionImported.
-  ///
-  /// In fr, this message translates to:
-  /// **'{count, plural, =0{Rien à faire : déjà à jour} =1{1 modification} other{{count} modifications}}'**
-  String starterCollectionImported(int count);
-
   /// No description provided for @search.
   ///
   /// In fr, this message translates to:
@@ -1809,6 +1791,312 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Dans l’email, copie le lien (appui long ou clic droit → copier l’adresse) sans l’ouvrir, puis colle-le ici. Si l’email contient un code à 6 chiffres, saisis-le.'**
   String get codeHelper;
+
+  /// No description provided for @appearanceSection.
+  ///
+  /// In fr, this message translates to:
+  /// **'Apparence'**
+  String get appearanceSection;
+
+  /// No description provided for @themeSystem.
+  ///
+  /// In fr, this message translates to:
+  /// **'Système'**
+  String get themeSystem;
+
+  /// No description provided for @themeLight.
+  ///
+  /// In fr, this message translates to:
+  /// **'Clair'**
+  String get themeLight;
+
+  /// No description provided for @themeDark.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sombre'**
+  String get themeDark;
+
+  /// No description provided for @backupSection.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sauvegarde et import'**
+  String get backupSection;
+
+  /// No description provided for @exportJson.
+  ///
+  /// In fr, this message translates to:
+  /// **'Exporter une sauvegarde'**
+  String get exportJson;
+
+  /// No description provided for @exportJsonHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fichier JSON complet : séries, ouvrages, prêts'**
+  String get exportJsonHelp;
+
+  /// No description provided for @restoreJson.
+  ///
+  /// In fr, this message translates to:
+  /// **'Restaurer une sauvegarde'**
+  String get restoreJson;
+
+  /// No description provided for @restoreJsonHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajoute ce qui manque, met à jour ce qui est plus récent ; rien n’est effacé'**
+  String get restoreJsonHelp;
+
+  /// No description provided for @restoreDone.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =0{Rien à restaurer : déjà à jour} =1{1 élément restauré} other{{count} éléments restaurés}}'**
+  String restoreDone(int count);
+
+  /// No description provided for @restoreInvalid.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce fichier n’est pas une sauvegarde Dupe'**
+  String get restoreInvalid;
+
+  /// No description provided for @exportCsv.
+  ///
+  /// In fr, this message translates to:
+  /// **'Exporter en CSV'**
+  String get exportCsv;
+
+  /// No description provided for @exportCsvHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Un tableau par type, lisible dans Excel ou LibreOffice'**
+  String get exportCsvHelp;
+
+  /// No description provided for @exportCsvAll.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tout'**
+  String get exportCsvAll;
+
+  /// No description provided for @importCsv.
+  ///
+  /// In fr, this message translates to:
+  /// **'Importer un CSV'**
+  String get importCsv;
+
+  /// No description provided for @importCsvHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Reprendre une collection (Mangacollec, CLZ, tableur…)'**
+  String get importCsvHelp;
+
+  /// No description provided for @exportDone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fichier enregistré'**
+  String get exportDone;
+
+  /// No description provided for @fileError.
+  ///
+  /// In fr, this message translates to:
+  /// **'Erreur de fichier : {message}'**
+  String fileError(String message);
+
+  /// No description provided for @csvImportTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Importer un CSV'**
+  String get csvImportTitle;
+
+  /// No description provided for @csvRows.
+  ///
+  /// In fr, this message translates to:
+  /// **'{file} : {count, plural, =1{1 ligne} other{{count} lignes}}'**
+  String csvRows(String file, int count);
+
+  /// No description provided for @csvDefaults.
+  ///
+  /// In fr, this message translates to:
+  /// **'Valeurs par défaut (si la colonne est absente ou vide)'**
+  String get csvDefaults;
+
+  /// No description provided for @csvMapping.
+  ///
+  /// In fr, this message translates to:
+  /// **'Correspondance des colonnes'**
+  String get csvMapping;
+
+  /// No description provided for @csvIgnored.
+  ///
+  /// In fr, this message translates to:
+  /// **'— ignorée —'**
+  String get csvIgnored;
+
+  /// No description provided for @csvPreview.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aperçu'**
+  String get csvPreview;
+
+  /// No description provided for @csvImportButton.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{Importer 1 ligne} other{Importer {count} lignes}}'**
+  String csvImportButton(int count);
+
+  /// No description provided for @csvTitleRequired.
+  ///
+  /// In fr, this message translates to:
+  /// **'Associe au moins la colonne Titre ou Série'**
+  String get csvTitleRequired;
+
+  /// No description provided for @csvImportDone.
+  ///
+  /// In fr, this message translates to:
+  /// **'{created} ajoutés, {series} séries créées, {duplicates} déjà présents'**
+  String csvImportDone(int created, int series, int duplicates);
+
+  /// No description provided for @csvInvalidLines.
+  ///
+  /// In fr, this message translates to:
+  /// **'Lignes ignorées (sans titre) : {lines}'**
+  String csvInvalidLines(String lines);
+
+  /// No description provided for @csvEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fichier vide ou illisible'**
+  String get csvEmpty;
+
+  /// No description provided for @importFieldTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Titre'**
+  String get importFieldTitle;
+
+  /// No description provided for @importFieldSeries.
+  ///
+  /// In fr, this message translates to:
+  /// **'Série'**
+  String get importFieldSeries;
+
+  /// No description provided for @importFieldVolume.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tome / numéro'**
+  String get importFieldVolume;
+
+  /// No description provided for @importFieldType.
+  ///
+  /// In fr, this message translates to:
+  /// **'Type'**
+  String get importFieldType;
+
+  /// No description provided for @importFieldAuthors.
+  ///
+  /// In fr, this message translates to:
+  /// **'Auteurs'**
+  String get importFieldAuthors;
+
+  /// No description provided for @importFieldPublisher.
+  ///
+  /// In fr, this message translates to:
+  /// **'Éditeur'**
+  String get importFieldPublisher;
+
+  /// No description provided for @importFieldIsbn.
+  ///
+  /// In fr, this message translates to:
+  /// **'ISBN / EAN'**
+  String get importFieldIsbn;
+
+  /// No description provided for @importFieldOwnership.
+  ///
+  /// In fr, this message translates to:
+  /// **'Possédé / envie'**
+  String get importFieldOwnership;
+
+  /// No description provided for @importFieldReading.
+  ///
+  /// In fr, this message translates to:
+  /// **'Statut de lecture'**
+  String get importFieldReading;
+
+  /// No description provided for @importFieldPurchasePrice.
+  ///
+  /// In fr, this message translates to:
+  /// **'Prix payé'**
+  String get importFieldPurchasePrice;
+
+  /// No description provided for @importFieldPurchaseDate.
+  ///
+  /// In fr, this message translates to:
+  /// **'Date d’achat'**
+  String get importFieldPurchaseDate;
+
+  /// No description provided for @importFieldCoverPrice.
+  ///
+  /// In fr, this message translates to:
+  /// **'Prix éditeur'**
+  String get importFieldCoverPrice;
+
+  /// No description provided for @importFieldLocation.
+  ///
+  /// In fr, this message translates to:
+  /// **'Emplacement'**
+  String get importFieldLocation;
+
+  /// No description provided for @importFieldNotes.
+  ///
+  /// In fr, this message translates to:
+  /// **'Notes'**
+  String get importFieldNotes;
+
+  /// No description provided for @moreAbout.
+  ///
+  /// In fr, this message translates to:
+  /// **'À propos'**
+  String get moreAbout;
+
+  /// No description provided for @aboutDescription.
+  ///
+  /// In fr, this message translates to:
+  /// **'Catalogue personnel de mangas, BD, comics et livres : scanne, vérifie en magasin ce que tu as déjà, suis tes séries.'**
+  String get aboutDescription;
+
+  /// No description provided for @aboutVersion.
+  ///
+  /// In fr, this message translates to:
+  /// **'Version {version}'**
+  String aboutVersion(String version);
+
+  /// No description provided for @aboutSources.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sources de données'**
+  String get aboutSources;
+
+  /// No description provided for @aboutSourcesText.
+  ///
+  /// In fr, this message translates to:
+  /// **'Bibliothèque nationale de France (catalogue SRU), Open Library, Google Books, AniList, Comic Vine. Les données appartiennent à leurs auteurs ; Dupe ne fait que les consulter.'**
+  String get aboutSourcesText;
+
+  /// No description provided for @aboutComicVine.
+  ///
+  /// In fr, this message translates to:
+  /// **'Données comics fournies par Comic Vine'**
+  String get aboutComicVine;
+
+  /// No description provided for @aboutLicenses.
+  ///
+  /// In fr, this message translates to:
+  /// **'Licences des composants'**
+  String get aboutLicenses;
+
+  /// No description provided for @aboutSourceCode.
+  ///
+  /// In fr, this message translates to:
+  /// **'Code source'**
+  String get aboutSourceCode;
 }
 
 class _AppLocalizationsDelegate

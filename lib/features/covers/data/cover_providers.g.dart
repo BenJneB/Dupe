@@ -153,7 +153,7 @@ final class UserCoverFileProvider
   }
 }
 
-String _$userCoverFileHash() => r'8fbfc4049b251f6fc747a3261dfdc3fe8cb36240';
+String _$userCoverFileHash() => r'6849b0a20e1471eacb6f193b7f9c662ed12ee0cb';
 
 /// Local file of a user photo, downloaded on first display on another
 /// device; null when unavailable (offline, not signed in).
