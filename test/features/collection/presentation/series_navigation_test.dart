@@ -116,4 +116,13 @@ void main() {
     );
     expect(volumes!.toSet(), {'1', '2', '3', '4', '5'});
   });
+
+  testWidgets('the grid legend is above the volumes', (tester) async {
+    await pumpApp(tester, seed: seedKaamelott);
+    await goTo(tester, AppRoutes.series(CollectionType.bd, kaamelott.id));
+
+    final legend = tester.getTopLeft(find.text('Manquant'));
+    final firstVolume = tester.getTopLeft(find.byKey(const ValueKey('slot-1')));
+    expect(legend.dy, lessThan(firstVolume.dy));
+  });
 }

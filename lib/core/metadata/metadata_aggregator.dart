@@ -64,14 +64,25 @@ class MetadataAggregator {
   final _isbnCache = MemoryCache<MetadataResult?>();
   final _textCache = MemoryCache<List<MetadataResult>>();
 
-  List<MetadataProvider> _providersFor(CollectionType type) => [
+  List<MetadataProvider> _providersFor(
+    CollectionType type, {
+    Set<MetadataSource> except = const {},
+  }) => [
     for (final source in priorities[type] ?? const <MetadataSource>[])
-      if (_providers[source] case final p? when p.supportedTypes.contains(type))
-        p,
+      if (!except.contains(source))
+        if (_providers[source] case final p?
+            when p.supportedTypes.contains(type))
+          p,
   ];
 
-  Future<IsbnLookup> lookupIsbn(String isbn13, CollectionType type) async {
-    final providers = _providersFor(type);
+  /// Looks [isbn13] up in the sources of [type], minus [except] (sources
+  /// useless for the caller, e.g. the BnF has no cover images).
+  Future<IsbnLookup> lookupIsbn(
+    String isbn13,
+    CollectionType type, {
+    Set<MetadataSource> except = const {},
+  }) async {
+    final providers = _providersFor(type, except: except);
     final outcomes = await Future.wait([
       for (final p in providers)
         _guard(

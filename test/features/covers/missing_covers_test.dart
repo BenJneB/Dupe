@@ -31,6 +31,11 @@ void main() {
   test('fills missing or broken covers with one that downloads', () async {
     final env = TestEnv();
     addTearDown(env.dispose);
+    // Answers every ISBN, but never has images: must not be asked.
+    final bnf = FakeProvider(
+      MetadataSource.bnf,
+      isbnResult: result(withCover, '').copyWith(source: MetadataSource.bnf),
+    );
     final cache = FakeCoverCache()
       ..failing.addAll([
         broken,
@@ -44,6 +49,7 @@ void main() {
         metadataAggregatorProvider.overrideWithValue(
           MetadataAggregator(
             providers: [
+              bnf,
               FakeProvider(
                 MetadataSource.googleBooks,
                 byIsbn: {
@@ -94,6 +100,7 @@ void main() {
       '${CoverPhotos.scheme}p.jpg',
     );
     expect((await repo.getItem(noIsbn.id))!.coverUrl, isNull);
+    expect(bnf.calls, 0);
     // The found cover is already on the device (offline).
     expect(cache.cached, contains(google));
   });

@@ -199,7 +199,8 @@ Description détaillée des choix techniques et de l'organisation du code (dépl
   unitaire (`ProviderContainer`, vraies attentes) : écrire en base après `pumpApp` bloque.
 - Phase 20 : **couvertures hors ligne** (`CoverPrefetch`, `cover_prefetch.dart` : URL distinctes des items et
   séries non supprimés, photos via `ensureUserCover`, démarrage + reprise + changement de connexion, Wi-Fi seulement
-  par défaut `cover_prefetch_enabled` / `cover_prefetch_wifi_only`, annulé par compteur de passage) ; connexion
+  par défaut `cover_prefetch_enabled` / `cover_prefetch_wifi_only`, annulé par compteur de passage ; les
+  adresses en échec sont journalisées avec leur cause, une seule fois tant que la liste ne change pas) ; connexion
   `core/network/network_status.dart` (`connectivity_plus`, `NetworkKind` unmetered/metered/none) ; Paramètres
   `covers/presentation/offline_covers_section.dart`. `pumpApp` injecte `FakeNetworkStatus` (aucune connexion par
   défaut) et `FakeCoverCache` (`test/helpers/fake_covers.dart`). **Stats de lecture** :
@@ -209,7 +210,8 @@ Description détaillée des choix techniques et de l'organisation du code (dépl
   couvertures préchargées par `loadShareCovers`), `FileIo.shareText` (Android : partage ; PC : presse-papiers).
   Capturer une image en test widget : appui puis attente réelle dans `tester.runAsync`.
   « Compléter les couvertures manquantes » : `covers/data/missing_covers.dart` (`MissingCoversFill`, URL gardée
-  seulement si `CoverCache.fetch` réussit ; remplace aussi une URL qui ne se télécharge pas, jamais une photo).
+  seulement si `CoverCache.fetch` réussit ; remplace aussi une URL qui ne se télécharge pas, jamais une photo ;
+  n'interroge pas la BnF, sans images : `MetadataAggregator.lookupIsbn(…, except:)`).
   Après l'ajout d'un tome N possédé : `offerPreviousVolumes` propose 1..N-1 manquants (snackbar, `persist: false`).
 - Tests de Paramètres : la liste est longue ; une tuile peut être construite (cache) mais hors écran →
   `scrollUntilVisible` puis `ensureVisible` avant `tap` (`tapTile` de `backup_screens_test.dart`).

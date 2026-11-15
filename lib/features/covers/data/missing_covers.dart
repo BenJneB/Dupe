@@ -4,6 +4,7 @@ import 'package:dupe/core/database/database_provider.dart';
 import 'package:dupe/core/logging/app_log.dart';
 import 'package:dupe/core/metadata/metadata_aggregator.dart';
 import 'package:dupe/core/metadata/metadata_providers.dart';
+import 'package:dupe/core/metadata/metadata_result.dart';
 import 'package:dupe/features/collection/data/collection_repository.dart';
 import 'package:dupe/features/collection/domain/item.dart';
 import 'package:dupe/features/covers/data/cover_cache.dart';
@@ -61,7 +62,12 @@ Future<({String? url, String why})> findCover(
   CoverCache cache,
   Item item,
 ) async {
-  final lookup = await sources.lookupIsbn(item.isbn13!, item.type);
+  // The BnF never has images: not queried (faster on a large collection).
+  final lookup = await sources.lookupIsbn(
+    item.isbn13!,
+    item.type,
+    except: const {MetadataSource.bnf},
+  );
   final broken = item.coverUrl;
   final candidates = <String>{
     for (final r in lookup.results)

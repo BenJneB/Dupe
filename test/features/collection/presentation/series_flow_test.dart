@@ -25,6 +25,9 @@ void main() {
     await pumpApp(tester);
     await createSeries(tester, title: 'Naruto', total: '10', ownedUpTo: '7');
 
+    // The grid is under its legend: scroll it clear of the scan button.
+    await tester.drag(find.byType(Scrollable).first, const Offset(0, -200));
+    await tester.pumpAndSettle();
     await tester.longPress(find.byKey(const ValueKey('slot-8')));
     await tester.pumpAndSettle();
 

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:dupe/core/database/database_provider.dart';
+import 'package:dupe/core/logging/app_log.dart';
 import 'package:dupe/core/network/network_status.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
 import 'package:dupe/features/covers/data/cover_cache.dart';
@@ -26,6 +27,7 @@ void main() {
   late ProviderContainer container;
 
   setUp(() async {
+    await appLog.clear();
     env = TestEnv();
     photosDir = await Directory.systemTemp.createTemp('dupe_prefetch');
     network = FakeNetworkStatus(NetworkKind.unmetered);
@@ -98,6 +100,10 @@ void main() {
     cache.fetched.clear();
     await prefetch().restart();
     expect(cache.fetched, ['https://c/bad.jpg']);
+    // Same failure again: written to the journal once, with its cause.
+    final logged = appLog.entries.where((e) => e.source == 'covers').toList();
+    expect(logged, hasLength(1));
+    expect(logged.single.message, contains('https://c/bad.jpg (StateError)'));
   });
 
   test('Wi-Fi only by default; mobile data once allowed', () async {

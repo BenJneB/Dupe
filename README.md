@@ -213,7 +213,7 @@ Paramètres → *Mises à jour*) et ouvre le fichier de la plateforme.
 
 | Secret | Valeur |
 |---|---|
-| `ENV_JSON` | le contenu de `env.json` |
+| `ENV_JSON` | le contenu de `env.json` **sans** `COMIC_VINE_API_KEY`, `GOOGLE_BOOKS_API_KEY` ni `OPEN_LIBRARY_CONTACT` (voir ci-dessous) |
 | `ANDROID_KEYSTORE_BASE64` | `base64 -w0 ~/dupe-release.jks` (la clé créée ci-dessous) |
 | `ANDROID_KEYSTORE_PASSWORD` | `storePassword` |
 | `ANDROID_KEY_ALIAS` | `dupe` |

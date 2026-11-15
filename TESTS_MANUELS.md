@@ -7,7 +7,7 @@
 > finale. Les phases 15 à 20 ajoutent leurs tests ici et marquent « automatisé (phase N) » ceux que leurs tests
 > automatiques couvrent désormais.
 
-Ce fichier liste ce que les **222 tests automatiques (et 4 parcours d'intégration) ne couvrent pas** : matériel (caméra, vibrations,
+Ce fichier liste ce que les **224 tests automatiques (et 4 parcours d'intégration) ne couvrent pas** : matériel (caméra, vibrations,
 notifications, raccourci), services réels (Supabase, API GitHub, sources de métadonnées), plateformes non
 compilées ici (Windows) et workflows GitHub (jamais exécutés).
 
@@ -133,14 +133,17 @@ Tous les tests non faits en phase 14 et non marqués « automatisé ». Le but :
 Couvert contre un Supabase **local** par les tests `supabase` (phase 17, verts le 2026-11-14) : `S-04` à `S-08`
 et la logique de `S-01`/`S-11`. Restent manuels : le comportement sur le **vrai** projet et sur de vrais
 appareils (reportés de la phase 14).
-- [ ] **S-01** *(reporté de la phase 14)* Connexion email + mot de passe sur chaque appareil ; mauvais mot de passe → « Email ou mot de
+- [x] **S-01** *(reporté de la phase 14)* Connexion email + mot de passe sur chaque appareil ; mauvais mot de passe → « Email ou mot de
       passe incorrect ».
+      — OK 2026-11-15 (téléphone, PC, et instance Linux vide : mauvais mot de passe refusé).
 - [ ] **S-02** Créer un compte avec un autre email (si Supabase peut lui écrire) : lien de confirmation ouvert
       dans le navigateur, puis connexion OK ; avant confirmation → « pas encore confirmé ».
 - [ ] **S-03** Le gestionnaire de mots de passe propose d'enregistrer le mot de passe.
-- [ ] **S-04** *(reporté de la phase 14)* Ajout sur le téléphone → visible sur le PC (≤ 30 s ou bouton synchro), et inversement.
-- [ ] **S-05** *(reporté de la phase 14)* **(critique, phase 9)** Après la mise à jour, la synchro reçoit toujours les changements de
+- [x] **S-04** *(reporté de la phase 14)* Ajout sur le téléphone → visible sur le PC (≤ 30 s ou bouton synchro), et inversement.
+      — OK 2026-11-15 (téléphone ↔ PC, dans les deux sens).
+- [x] **S-05** *(reporté de la phase 14)* **(critique, phase 9)** Après la mise à jour, la synchro reçoit toujours les changements de
       l'autre appareil : le filtre du pull a changé et n'a été testé que contre un faux serveur.
+      — OK 2026-11-15 (téléphone ↔ PC avec la version de la recette).
 - [ ] **S-06** Même tome modifié des deux côtés hors ligne → la modification la plus récente gagne.
 - [ ] **S-07** Modifier sur les deux appareils et synchroniser en même temps (bouton) : identiques à la fin.
 - [ ] **S-08** Suppression propagée.
@@ -156,9 +159,12 @@ appareils (reportés de la phase 14).
 
 ## 6. Journal et messages d'erreur (phase 9)
 - [ ] **J-01** Mode avion puis synchro → une seule entrée « sync » même après plusieurs minutes.
-- [ ] **J-02** « Copier » puis coller dans un message : texte lisible (date, niveau, source, message).
+- [x] **J-02** « Copier » puis coller dans un message : texte lisible (date, niveau, source, message).
       — REPORTÉ en phase 21 (2026-11-14, Linux) : écran vu vide alors que le fichier contenait une entrée
       « sync » (probablement consulté avant la première synchro) ; à revérifier après redémarrage.
+      — OK 2026-11-15 (Linux, après redémarrage : entrées du 14 et du 15 ; Android : journaux collés lisibles).
+      Écart corrigé au passage : le même échec de couvertures était écrit à chaque relance du préchargement
+      (4 fois en 45 s) → écrit une seule fois tant que la liste ne change pas.
 - [ ] **J-03** « Partager » : feuille de partage sur Android, « Enregistrer sous » sur PC.
 - [ ] **J-04** Le journal est conservé après redémarrage de l'appli.
 - [ ] **J-05** Messages en français à l'écran (hors ligne, fichier invalide, mauvais mot de passe).
