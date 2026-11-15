@@ -5,11 +5,11 @@ import 'package:dupe/app/router.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
 import 'package:dupe/features/covers/data/cover_photos.dart';
 import 'package:dupe/features/covers/data/cover_providers.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../helpers/app_harness.dart';
+import '../../helpers/screen_helpers.dart';
 
 void main() {
   testWidgets('the camera button puts the photo on the item', (tester) async {
@@ -31,10 +31,7 @@ void main() {
         }),
       ],
     );
-    ProviderScope.containerOf(tester.element(find.byType(Scaffold).first))
-        .read(appRouterProvider)
-        .go(AppRoutes.newItem(CollectionType.livre));
-    await tester.pumpAndSettle();
+    await goTo(tester, AppRoutes.newItem(CollectionType.livre));
 
     await tester.enterText(
       find.widgetWithText(TextFormField, 'Titre'),

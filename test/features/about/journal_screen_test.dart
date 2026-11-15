@@ -2,12 +2,12 @@ import 'package:dupe/app/router.dart';
 import 'package:dupe/core/logging/app_log.dart';
 import 'package:dupe/features/backup/data/file_io.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../helpers/app_harness.dart';
 import '../../helpers/fake_file_io.dart';
+import '../../helpers/screen_helpers.dart';
 
 void main() {
   testWidgets('the journal lists, copies, shares and clears entries', (
@@ -36,10 +36,7 @@ void main() {
       ..info('sync', 'sent 2, received 0')
       ..error('backup', const FormatException('ligne 3'));
 
-    ProviderScope.containerOf(tester.element(find.byType(Scaffold).first))
-        .read(appRouterProvider)
-        .go(AppRoutes.about);
-    await tester.pumpAndSettle();
+    await goTo(tester, AppRoutes.about);
     await tester.scrollUntilVisible(find.byKey(const Key('journalTile')), 200);
     await tester.tap(find.byKey(const Key('journalTile')));
     await tester.pumpAndSettle();

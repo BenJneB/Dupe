@@ -3,13 +3,13 @@ import 'package:dupe/core/database/app_database.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
 import 'package:dupe/features/collection/domain/item.dart';
 import 'package:dupe/features/collection/domain/series.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../helpers/app_harness.dart';
 import '../../../helpers/fake_sources.dart';
 import '../../../helpers/scan_helpers.dart';
+import '../../../helpers/screen_helpers.dart';
 
 late Series dreamland;
 late Item first;
@@ -39,10 +39,7 @@ Future<List<Item>> volume1Copies(WidgetTester tester, AppDatabase db) async =>
 void main() {
   testWidgets('"Ajouter un exemplaire" from the item sheet', (tester) async {
     final db = await pumpApp(tester, seed: seedDreamland);
-    ProviderScope.containerOf(tester.element(find.byType(Scaffold).first))
-        .read(appRouterProvider)
-        .go(AppRoutes.item(first.type, first.id));
-    await tester.pumpAndSettle();
+    await goTo(tester, AppRoutes.item(first.type, first.id));
 
     await tester.tap(find.byKey(const Key('addCopy')));
     await tester.pumpAndSettle();

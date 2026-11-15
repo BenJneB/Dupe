@@ -5,7 +5,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../helpers/app_harness.dart';
 import '../../helpers/fake_sync_auth.dart';
 import '../../helpers/fake_sync_remote.dart';
-import 'sync_flow_test.dart' show fillSignIn, openSettings;
+import '../../helpers/screen_helpers.dart';
 
 Future<FakeSyncAuth> pumpWith(WidgetTester tester, FakeSyncAuth auth) async {
   await pumpApp(

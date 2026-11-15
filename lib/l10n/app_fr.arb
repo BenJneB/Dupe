@@ -15,7 +15,6 @@
   "moreStats": "Statistiques",
   "moreSettings": "Paramètres",
   "moreSettingsSubtitle": "Compte, synchronisation, export/import, sources",
-  "comingSoon": "Bientôt disponible",
   "scanUnavailableDesktop": "Pas de caméra sur cette plateforme : saisis l’ISBN ou utilise une douchette USB.",
   "add": "Ajouter",
   "cancel": "Annuler",
@@ -228,8 +227,6 @@
   "addToWishlist": "Ajouter aux envies",
   "isbnEntryLabel": "ISBN",
   "isbnEntryHelper": "Tape l’ISBN ou scanne avec une douchette USB, puis Entrée",
-  "scanDesktopTitle": "Scanner un code-barres",
-  "scanHint": "Vise le code-barres au dos de l’ouvrage",
   "typeIsbn": "Saisir l’ISBN",
   "cameraUnavailable": "Caméra indisponible ({error}). Vérifie l’autorisation caméra ou saisis l’ISBN.",
   "@invalidCode": {
@@ -536,14 +533,6 @@
   "loansHistory": "Historique",
   "loansEmpty": "Aucun prêt en cours",
   "loansHistoryEmpty": "Aucun prêt rendu",
-  "loanReturnedSnack": "« {title} » marqué comme rendu",
-  "@loanReturnedSnack": {
-    "placeholders": {
-      "title": {
-        "type": "String"
-      }
-    }
-  },
   "wishlistItems": "Envies",
   "nextVolumes": "Prochains tomes à acheter",
   "wishlistEmpty": "Ta liste d’envies est vide",
@@ -658,7 +647,7 @@
   "hidePassword": "Masquer le mot de passe",
   "noAccountYet": "Pas encore de compte ? Créer un compte",
   "alreadyHaveAccount": "Déjà un compte ? Se connecter",
-  "confirmEmailSent": "Compte créé. Ouvre le lien envoyé à {email} pour confirmer ton adresse, puis connecte-toi ici.",
+  "confirmEmailSent": "Compte créé. Ouvre le lien envoyé à {email} pour confirmer ton adresse (la page qui s’ouvre ensuite peut afficher une erreur « localhost » : c’est normal, l’adresse est confirmée), puis reviens ici et touche « Se connecter ».",
   "@confirmEmailSent": {
     "placeholders": {
       "email": {

@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import '../../helpers/app_harness.dart';
 import '../../helpers/fake_sync_auth.dart';
 import '../../helpers/fake_sync_remote.dart';
-import 'sync_flow_test.dart' show openSettings;
+import '../../helpers/screen_helpers.dart';
 
 void main() {
   testWidgets('sync failures: logged once, shown as a sentence', (
