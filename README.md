@@ -193,7 +193,7 @@ flutter run -d windows --dart-define-from-file=env.json
 - `keep-alive.yml` : un appel par jour à la fonction `keep_alive()` de Supabase (voir plus bas) ;
 - `.github/dependabot.yml` : mises à jour hebdomadaires des dépendances `pub` et des actions GitHub, en pull
   requests vers `dev` (mineures et correctifs regroupés). Dependabot ne lit ce fichier que sur la **branche par
-  défaut** (`main`). Si une mise à jour exige de régénérer du code (freezed, drift, riverpod), l'étape *Generated
+  défaut** (`dev`). Si une mise à jour exige de régénérer du code (freezed, drift, riverpod), l'étape *Generated
   code is up to date* de la CI échoue : lancer `dart run build_runner build -d` sur la branche de la PR.
 
 Contrôles de `ci.yml` : formatage (`dart format --set-exit-if-changed`), code généré à jour (build_runner +
@@ -213,7 +213,7 @@ Paramètres → *Mises à jour*) et ouvre le fichier de la plateforme.
 
 | Secret | Valeur |
 |---|---|
-| `ENV_JSON` | le contenu de `env.json` |
+| `ENV_JSON` | le contenu de `env.json` **sans** `COMIC_VINE_API_KEY`, `GOOGLE_BOOKS_API_KEY` ni `OPEN_LIBRARY_CONTACT` (voir ci-dessous) |
 | `ANDROID_KEYSTORE_BASE64` | `base64 -w0 ~/dupe-release.jks` (la clé créée ci-dessous) |
 | `ANDROID_KEYSTORE_PASSWORD` | `storePassword` |
 | `ANDROID_KEY_ALIAS` | `dupe` |
@@ -221,9 +221,9 @@ Paramètres → *Mises à jour*) et ouvre le fichier de la plateforme.
 
 Le dépôt étant **public**, les Releases aussi : tout ce que contient `ENV_JSON` est compilé dans les binaires
 et extractible. La clé Supabase *publishable* est faite pour ça (RLS). `ENV_JSON` ne doit **pas** contenir
-`COMIC_VINE_API_KEY` ni `GOOGLE_BOOKS_API_KEY` (le job `check-env` de `release.yml` refuse alors de publier,
-sans afficher les valeurs) : ces clés se saisissent dans l'appli. `OPEN_LIBRARY_CONTACT` (un email) y est
-aussi lisible : le laisser vide dans `ENV_JSON` pour ne pas publier son adresse.
+`COMIC_VINE_API_KEY`, `GOOGLE_BOOKS_API_KEY` ni `OPEN_LIBRARY_CONTACT` (le job `check-env` de `release.yml`
+refuse alors de publier, en n'affichant que les noms) : les clés se saisissent dans l'appli, et le contact Open
+Library est un email qui serait lisible dans les binaires publiés (sans lui, Open Library est limité à 1 req/s).
 
 **Supabase gratuit** : un projet est mis en pause après 7 jours de faible activité
 ([doc](https://supabase.com/docs/guides/platform/free-project-pausing)), restaurable depuis le tableau de bord

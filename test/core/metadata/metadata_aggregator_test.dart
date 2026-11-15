@@ -191,6 +191,28 @@ void main() {
     expect(ol.calls, 0);
   });
 
+  test('excluded sources are not queried', () async {
+    final bnf = FakeProvider(
+      MetadataSource.bnf,
+      isbnResult: r(MetadataSource.bnf),
+    );
+    final google = FakeProvider(
+      MetadataSource.googleBooks,
+      isbnResult: r(MetadataSource.googleBooks, cover: 'https://g/c.jpg'),
+    );
+    final agg = MetadataAggregator(providers: [bnf, google]);
+
+    final lookup = await agg.lookupIsbn(
+      isbn,
+      CollectionType.livre,
+      except: {MetadataSource.bnf},
+    );
+
+    expect(bnf.calls, 0);
+    expect(google.calls, 1);
+    expect(lookup.merged!.coverUrl, 'https://g/c.jpg');
+  });
+
   test('caches lookups per source', () async {
     final bnf = FakeProvider(
       MetadataSource.bnf,

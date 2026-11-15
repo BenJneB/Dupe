@@ -28,7 +28,10 @@ jobs:
   check-env:
     runs-on: ubuntu-latest
     steps:
-      - name: No third-party API key in ENV_JSON
+      # The repository is public: everything in ENV_JSON ends up in the
+      # binaries. API keys are entered in the app; the Open Library contact
+      # is the owner's email.
+      - name: No third-party API key nor personal email in ENV_JSON
         env:
           ENV_JSON: ${{ secrets.ENV_JSON }}
         run: |
@@ -36,10 +39,10 @@ jobs:
           printf '%s' "$ENV_JSON" | jq -e 'type == "object"' > /dev/null \
             || { echo "ENV_JSON is not a JSON object" >&2; exit 1; }
           FOUND=$(printf '%s' "$ENV_JSON" | jq -r '
-            ["COMIC_VINE_API_KEY", "GOOGLE_BOOKS_API_KEY"][] as $k
+            ["COMIC_VINE_API_KEY", "GOOGLE_BOOKS_API_KEY", "OPEN_LIBRARY_CONTACT"][] as $k
             | select((.[$k] // "") != "") | $k')
           if [ -n "$FOUND" ]; then
-            echo "Remove from ENV_JSON (enter them in the app instead): $FOUND" >&2
+            echo "Remove from ENV_JSON (keys: enter them in the app; contact: not in a public release): $FOUND" >&2
             exit 1
           fi
 

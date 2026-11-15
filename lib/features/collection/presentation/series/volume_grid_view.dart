@@ -5,7 +5,8 @@ import 'package:dupe/features/collection/presentation/series/volume_slot_colors.
 import 'package:dupe/l10n/gen/app_localizations.dart';
 import 'package:material_ui/material_ui.dart';
 
-/// Grid of colored pastilles, one per volume.
+/// Grid of colored pastilles, one per volume, under its legend (visible
+/// without scrolling through a long series).
 class VolumeGridView extends StatelessWidget {
   const new({
     required this.grid,
@@ -25,26 +26,6 @@ class VolumeGridView extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          children: [
-            for (final slot in grid.slots)
-              _Pastille(
-                slot: slot,
-                semanticLabel: l10n.slotSemantics(
-                  slot.label,
-                  [
-                    slot.status.label(l10n),
-                    if (slot.isRead) ReadingStatus.lu.label(l10n),
-                  ].join(', '),
-                ),
-                onTap: () => onTap(slot),
-                onLongPress: () => onLongPress(slot),
-              ),
-          ],
-        ),
-        const SizedBox(height: 12),
         Wrap(
           spacing: 16,
           runSpacing: 4,
@@ -72,6 +53,26 @@ class VolumeGridView extends StatelessWidget {
                 ),
               ],
             ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: [
+            for (final slot in grid.slots)
+              _Pastille(
+                slot: slot,
+                semanticLabel: l10n.slotSemantics(
+                  slot.label,
+                  [
+                    slot.status.label(l10n),
+                    if (slot.isRead) ReadingStatus.lu.label(l10n),
+                  ].join(', '),
+                ),
+                onTap: () => onTap(slot),
+                onLongPress: () => onLongPress(slot),
+              ),
           ],
         ),
       ],
