@@ -162,6 +162,13 @@ class CollectionRepository {
             ..limit(1))
           .getSingleOrNull();
 
+  /// First non-deleted item with this ISBN-13 (any ownership).
+  Future<Item?> findItemByIsbn(String isbn13) =>
+      (_db.select(_db.itemsTable)
+            ..where((t) => t.isbn13.equals(isbn13) & t.deletedAt.isNull())
+            ..limit(1))
+          .getSingleOrNull();
+
   Future<Item?> getItem(String id) => (_db.select(
     _db.itemsTable,
   )..where((t) => t.id.equals(id) & t.deletedAt.isNull())).getSingleOrNull();

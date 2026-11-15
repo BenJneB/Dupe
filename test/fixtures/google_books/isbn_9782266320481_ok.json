@@ -1,0 +1,70 @@
+{
+  "kind": "books#volumes",
+  "totalItems": 1,
+  "items": [
+    {
+      "kind": "books#volume",
+      "id": "EVehzgEACAAJ",
+      "etag": "2Qy/XkPMhyo",
+      "selfLink": "https://www.googleapis.com/books/v1/volumes/EVehzgEACAAJ",
+      "volumeInfo": {
+        "title": "Dune",
+        "authors": [
+          "Frank Herbert"
+        ],
+        "publishedDate": "2021-08-26",
+        "industryIdentifiers": [
+          {
+            "type": "ISBN_10",
+            "identifier": "2266320483"
+          },
+          {
+            "type": "ISBN_13",
+            "identifier": "9782266320481"
+          }
+        ],
+        "readingModes": {
+          "text": false,
+          "image": false
+        },
+        "pageCount": 928,
+        "printType": "BOOK",
+        "maturityRating": "NOT_MATURE",
+        "allowAnonLogging": false,
+        "contentVersion": "preview-1.0.0",
+        "panelizationSummary": {
+          "containsEpubBubbles": false,
+          "containsImageBubbles": false
+        },
+        "language": "fr",
+        "previewLink": "http://books.google.be/books?id=EVehzgEACAAJ&dq=isbn:9782266320481&hl=&cd=1&source=gbs_api",
+        "infoLink": "http://books.google.be/books?id=EVehzgEACAAJ&dq=isbn:9782266320481&hl=&source=gbs_api",
+        "canonicalVolumeLink": "https://books.google.com/books/about/Dune.html?hl=&id=EVehzgEACAAJ"
+      },
+      "saleInfo": {
+        "country": "BE",
+        "saleability": "NOT_FOR_SALE",
+        "isEbook": false
+      },
+      "accessInfo": {
+        "country": "BE",
+        "viewability": "NO_PAGES",
+        "embeddable": false,
+        "publicDomain": false,
+        "textToSpeechPermission": "ALLOWED",
+        "epub": {
+          "isAvailable": false
+        },
+        "pdf": {
+          "isAvailable": false
+        },
+        "webReaderLink": "http://play.google.com/books/reader?id=EVehzgEACAAJ&hl=&source=gbs_api",
+        "accessViewStatus": "NONE",
+        "quoteSharingAllowed": false
+      },
+      "searchInfo": {
+        "textSnippet": "T.2- Paul Atréides a gagné la grande guerre sainte de Dune et a fait triompher ses Fremen pour la possession de l&#39;épice de longue vie."
+      }
+    }
+  ]
+}

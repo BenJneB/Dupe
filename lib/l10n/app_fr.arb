@@ -220,5 +220,61 @@
         "type": "int"
       }
     }
+  },
+  "search": "Rechercher",
+  "searchOnline": "Chercher en ligne",
+  "onlineSearchTitle": "Rechercher en ligne",
+  "onlineSearchHint": "ISBN, titre ou auteur",
+  "onlineSearchPrompt": "Saisis un ISBN ou un titre, puis lance la recherche.",
+  "upcNotSupported": "Code UPC (comics US) : la recherche par titre et numéro arrive avec les comics.",
+  "invalidCode": "Code « {code} » non reconnu comme ISBN",
+  "alreadyOwned": "Déjà dans ta collection",
+  "alreadyWished": "Déjà dans ta liste d’envies",
+  "isbnNotFound": "ISBN {isbn} introuvable",
+  "isbnNotFoundHint": "Tu peux l’ajouter à la main avec le bouton +.",
+  "sourcesUsed": "Sources : {sources}",
+  "sourcesUnavailable": "Sources indisponibles : {sources}",
+  "addToCollection": "Ajouter à la collection",
+  "addToWishlist": "Ajouter aux envies",
+  "isbnEntryLabel": "ISBN",
+  "isbnEntryHelper": "Tape l’ISBN ou scanne avec une douchette USB, puis Entrée",
+  "scanDesktopTitle": "Scanner un code-barres",
+  "scanHint": "Vise le code-barres au dos de l’ouvrage",
+  "typeIsbn": "Saisir l’ISBN",
+  "cameraUnavailable": "Caméra indisponible ({error}). Vérifie l’autorisation caméra ou saisis l’ISBN.",
+  "@invalidCode": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "@isbnNotFound": {
+    "placeholders": {
+      "isbn": {
+        "type": "String"
+      }
+    }
+  },
+  "@sourcesUsed": {
+    "placeholders": {
+      "sources": {
+        "type": "String"
+      }
+    }
+  },
+  "@sourcesUnavailable": {
+    "placeholders": {
+      "sources": {
+        "type": "String"
+      }
+    }
+  },
+  "@cameraUnavailable": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
   }
 }

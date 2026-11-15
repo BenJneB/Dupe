@@ -1,5 +1,6 @@
 import 'package:dupe/app/adaptive_shell.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
+import 'package:dupe/features/collection/domain/metadata_mapping.dart';
 import 'package:dupe/features/collection/presentation/collection_tab/collection_tab_screen.dart';
 import 'package:dupe/features/collection/presentation/item/item_detail_screen.dart';
 import 'package:dupe/features/collection/presentation/item/item_form_screen.dart';
@@ -8,6 +9,7 @@ import 'package:dupe/features/collection/presentation/series/series_form_screen.
 import 'package:dupe/features/loans/presentation/loans_screen.dart';
 import 'package:dupe/features/more/presentation/more_screen.dart';
 import 'package:dupe/features/scan/presentation/scan_screen.dart';
+import 'package:dupe/features/search/presentation/online_search/online_search_screen.dart';
 import 'package:dupe/features/search/presentation/search_screen.dart';
 import 'package:dupe/features/settings/presentation/settings_screen.dart';
 import 'package:dupe/features/stats/presentation/stats_screen.dart';
@@ -21,6 +23,12 @@ part 'router.g.dart';
 /// Route paths, kept in one place to avoid typos.
 abstract final class AppRoutes {
   static const search = '/recherche';
+
+  /// Online lookup; [query] is an ISBN or free text.
+  static String onlineSearch({String? query, CollectionType? type}) => Uri(
+    path: '/recherche-en-ligne',
+    queryParameters: {'q': ?query, 'type': ?type?.dbValue},
+  ).toString();
   static const more = '/plus';
   static const wishlist = '/plus/envies';
   static const loans = '/plus/prets';
@@ -107,6 +115,16 @@ GoRouter appRouter(Ref ref) {
         builder: (context, state) => const SearchScreen(),
       ),
       GoRoute(
+        path: '/recherche-en-ligne',
+        parentNavigatorKey: rootNavigatorKey,
+        builder: (context, state) => OnlineSearchScreen(
+          initialQuery: state.uri.queryParameters['q'],
+          initialType: CollectionType.values
+              .where((t) => t.dbValue == state.uri.queryParameters['type'])
+              .firstOrNull,
+        ),
+      ),
+      GoRoute(
         path: AppRoutes.scan,
         parentNavigatorKey: rootNavigatorKey,
         builder: (context, state) => const ScanScreen(),
@@ -149,6 +167,7 @@ StatefulShellBranch _collectionBranch(CollectionType type) =>
                 type: type,
                 seriesId: state.uri.queryParameters['serie'],
                 volumeNumber: state.uri.queryParameters['tome'],
+                prefill: state.extra as ItemPrefill?,
               ),
             ),
             GoRoute(

@@ -1,5 +1,6 @@
 import 'package:dupe/app/widgets/form_helpers.dart';
 import 'package:dupe/core/utils/formatters.dart';
+import 'package:dupe/features/collection/domain/enums.dart';
 import 'package:dupe/features/collection/domain/item.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -28,8 +29,18 @@ enum ItemTextField {
   notes,
 }
 
-/// Text controllers of the item form and their mapping to/from [Item].
+/// State of the item form (text controllers + choices) and its mapping
+/// to/from [Item].
 class ItemFormControllers {
+  Ownership ownership = Ownership.possede;
+  ReadingStatus readingStatus = ReadingStatus.nonLu;
+  int? rating;
+  int? priority;
+  bool firstEdition = false;
+  bool variant = false;
+  DateTime? readDate;
+  DateTime? purchaseDate;
+
   final Map<ItemTextField, TextEditingController> _c = {
     for (final f in ItemTextField.values) f: TextEditingController(),
   };
@@ -39,6 +50,14 @@ class ItemFormControllers {
   static String _price(double? v) => v?.toString().replaceAll('.', ',') ?? '';
 
   void fill(Item i) {
+    ownership = i.ownership;
+    readingStatus = i.readingStatus;
+    rating = i.rating;
+    priority = i.wishlistPriority;
+    firstEdition = i.isFirstEdition;
+    variant = i.isVariant;
+    readDate = i.readDate;
+    purchaseDate = i.purchaseDate;
     final values = <ItemTextField, String>{
       ItemTextField.title: i.title,
       ItemTextField.volume: i.volumeNumber ?? '',
@@ -71,8 +90,16 @@ class ItemFormControllers {
 
   double? _d(ItemTextField f) => Formatters.parseDecimal(_c[f]!.text);
 
-  /// Copies the text fields into [item].
+  /// Copies the form values into [item].
   Item applyTo(Item item) => item.copyWith(
+    ownership: ownership,
+    readingStatus: readingStatus,
+    readDate: readDate,
+    rating: rating,
+    isFirstEdition: firstEdition,
+    isVariant: variant,
+    purchaseDate: purchaseDate,
+    wishlistPriority: priority,
     title: _c[ItemTextField.title]!.text.trim(),
     volumeNumber: _t(ItemTextField.volume),
     isbn13: _t(ItemTextField.isbn)?.replaceAll(RegExp(r'[\s-]'), ''),

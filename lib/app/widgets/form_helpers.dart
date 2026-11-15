@@ -110,3 +110,36 @@ String? textOrNull(TextEditingController c) {
   final v = c.text.trim();
   return v.isEmpty ? null : v;
 }
+
+/// Outlined dropdown with an optional "none" entry.
+class FormDropdown<T> extends StatelessWidget {
+  const new({
+    required this.label,
+    required this.value,
+    required this.items,
+    required this.onChanged,
+    super.key,
+  });
+
+  final String label;
+  final T value;
+
+  /// Value → displayed text, in display order.
+  final Map<T, String> items;
+  final ValueChanged<T> onChanged;
+
+  @override
+  Widget build(BuildContext context) => DropdownButtonFormField<T>(
+    isExpanded: true,
+    initialValue: value,
+    decoration: InputDecoration(
+      labelText: label,
+      border: const OutlineInputBorder(),
+    ),
+    items: [
+      for (final MapEntry(:key, value: text) in items.entries)
+        DropdownMenuItem(value: key, child: Text(text)),
+    ],
+    onChanged: (v) => onChanged(v as T),
+  );
+}

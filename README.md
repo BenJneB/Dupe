@@ -21,7 +21,8 @@ cp env.example.json env.json   # puis remplir les vraies valeurs
 |---|---|---|
 | `SUPABASE_URL`, `SUPABASE_ANON_KEY` | Synchronisation cloud (phase 7) | non (mode local seul sinon) |
 | `COMIC_VINE_API_KEY` | Métadonnées comics (phase 3) | non |
-| `GOOGLE_BOOKS_API_KEY` | Google Books (quota plus élevé) | non |
+| `OPEN_LIBRARY_CONTACT` | Email envoyé à Open Library dans le User-Agent (limite 3 req/s au lieu de 1) | non |
+| `GOOGLE_BOOKS_API_KEY` | Google Books (couvertures, résumés). Sans clé la source est désactivée : le quota anonyme est épuisé (HTTP 429) | recommandée |
 
 ## Développement
 ```sh

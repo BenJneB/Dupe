@@ -64,9 +64,22 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
         null => PlaceholderBody(icon: Icons.search, title: l10n.searchPrompt),
         AsyncValue(:final value?)
             when value.series.isEmpty && value.items.isEmpty =>
-          PlaceholderBody(
-            icon: Icons.search_off,
-            title: l10n.searchNoResults(query),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              PlaceholderBody(
+                icon: Icons.search_off,
+                title: l10n.searchNoResults(query),
+              ),
+              FilledButton.icon(
+                key: const Key('searchOnline'),
+                icon: const Icon(Icons.travel_explore),
+                label: Text(l10n.searchOnline),
+                onPressed: () => context.pushReplacement(
+                  AppRoutes.onlineSearch(query: query),
+                ),
+              ),
+            ],
           ),
         AsyncValue(:final value?) => ListView(
           children: [

@@ -861,6 +861,132 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'{count, plural, =0{Rien à importer : déjà présent} =1{1 élément importé} other{{count} éléments importés}}'**
   String starterCollectionImported(int count);
+
+  /// No description provided for @search.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rechercher'**
+  String get search;
+
+  /// No description provided for @searchOnline.
+  ///
+  /// In fr, this message translates to:
+  /// **'Chercher en ligne'**
+  String get searchOnline;
+
+  /// No description provided for @onlineSearchTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rechercher en ligne'**
+  String get onlineSearchTitle;
+
+  /// No description provided for @onlineSearchHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'ISBN, titre ou auteur'**
+  String get onlineSearchHint;
+
+  /// No description provided for @onlineSearchPrompt.
+  ///
+  /// In fr, this message translates to:
+  /// **'Saisis un ISBN ou un titre, puis lance la recherche.'**
+  String get onlineSearchPrompt;
+
+  /// No description provided for @upcNotSupported.
+  ///
+  /// In fr, this message translates to:
+  /// **'Code UPC (comics US) : la recherche par titre et numéro arrive avec les comics.'**
+  String get upcNotSupported;
+
+  /// No description provided for @invalidCode.
+  ///
+  /// In fr, this message translates to:
+  /// **'Code « {code} » non reconnu comme ISBN'**
+  String invalidCode(String code);
+
+  /// No description provided for @alreadyOwned.
+  ///
+  /// In fr, this message translates to:
+  /// **'Déjà dans ta collection'**
+  String get alreadyOwned;
+
+  /// No description provided for @alreadyWished.
+  ///
+  /// In fr, this message translates to:
+  /// **'Déjà dans ta liste d’envies'**
+  String get alreadyWished;
+
+  /// No description provided for @isbnNotFound.
+  ///
+  /// In fr, this message translates to:
+  /// **'ISBN {isbn} introuvable'**
+  String isbnNotFound(String isbn);
+
+  /// No description provided for @isbnNotFoundHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tu peux l’ajouter à la main avec le bouton +.'**
+  String get isbnNotFoundHint;
+
+  /// No description provided for @sourcesUsed.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sources : {sources}'**
+  String sourcesUsed(String sources);
+
+  /// No description provided for @sourcesUnavailable.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sources indisponibles : {sources}'**
+  String sourcesUnavailable(String sources);
+
+  /// No description provided for @addToCollection.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter à la collection'**
+  String get addToCollection;
+
+  /// No description provided for @addToWishlist.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter aux envies'**
+  String get addToWishlist;
+
+  /// No description provided for @isbnEntryLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'ISBN'**
+  String get isbnEntryLabel;
+
+  /// No description provided for @isbnEntryHelper.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tape l’ISBN ou scanne avec une douchette USB, puis Entrée'**
+  String get isbnEntryHelper;
+
+  /// No description provided for @scanDesktopTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Scanner un code-barres'**
+  String get scanDesktopTitle;
+
+  /// No description provided for @scanHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vise le code-barres au dos de l’ouvrage'**
+  String get scanHint;
+
+  /// No description provided for @typeIsbn.
+  ///
+  /// In fr, this message translates to:
+  /// **'Saisir l’ISBN'**
+  String get typeIsbn;
+
+  /// No description provided for @cameraUnavailable.
+  ///
+  /// In fr, this message translates to:
+  /// **'Caméra indisponible ({error}). Vérifie l’autorisation caméra ou saisis l’ISBN.'**
+  String cameraUnavailable(String error);
 }
 
 class _AppLocalizationsDelegate

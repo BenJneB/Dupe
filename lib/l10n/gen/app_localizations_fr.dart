@@ -449,4 +449,81 @@ class AppLocalizationsFr extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get search => 'Rechercher';
+
+  @override
+  String get searchOnline => 'Chercher en ligne';
+
+  @override
+  String get onlineSearchTitle => 'Rechercher en ligne';
+
+  @override
+  String get onlineSearchHint => 'ISBN, titre ou auteur';
+
+  @override
+  String get onlineSearchPrompt =>
+      'Saisis un ISBN ou un titre, puis lance la recherche.';
+
+  @override
+  String get upcNotSupported =>
+      'Code UPC (comics US) : la recherche par titre et numéro arrive avec les comics.';
+
+  @override
+  String invalidCode(String code) {
+    return 'Code « $code » non reconnu comme ISBN';
+  }
+
+  @override
+  String get alreadyOwned => 'Déjà dans ta collection';
+
+  @override
+  String get alreadyWished => 'Déjà dans ta liste d’envies';
+
+  @override
+  String isbnNotFound(String isbn) {
+    return 'ISBN $isbn introuvable';
+  }
+
+  @override
+  String get isbnNotFoundHint =>
+      'Tu peux l’ajouter à la main avec le bouton +.';
+
+  @override
+  String sourcesUsed(String sources) {
+    return 'Sources : $sources';
+  }
+
+  @override
+  String sourcesUnavailable(String sources) {
+    return 'Sources indisponibles : $sources';
+  }
+
+  @override
+  String get addToCollection => 'Ajouter à la collection';
+
+  @override
+  String get addToWishlist => 'Ajouter aux envies';
+
+  @override
+  String get isbnEntryLabel => 'ISBN';
+
+  @override
+  String get isbnEntryHelper =>
+      'Tape l’ISBN ou scanne avec une douchette USB, puis Entrée';
+
+  @override
+  String get scanDesktopTitle => 'Scanner un code-barres';
+
+  @override
+  String get scanHint => 'Vise le code-barres au dos de l’ouvrage';
+
+  @override
+  String get typeIsbn => 'Saisir l’ISBN';
+
+  @override
+  String cameraUnavailable(String error) {
+    return 'Caméra indisponible ($error). Vérifie l’autorisation caméra ou saisis l’ISBN.';
+  }
 }
