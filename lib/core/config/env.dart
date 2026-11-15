@@ -14,8 +14,4 @@ abstract final class Env {
   static const openLibraryContact = String.fromEnvironment(
     'OPEN_LIBRARY_CONTACT',
   );
-
-  /// Whether cloud sync can be enabled (the app stays usable offline).
-  static bool get hasSupabase =>
-      supabaseUrl.isNotEmpty && supabaseAnonKey.isNotEmpty;
 }

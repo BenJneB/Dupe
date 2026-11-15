@@ -13,7 +13,11 @@ String? storeHeadline(StoreCheck c, AppLocalizations l10n) {
     return volume == null ? item.title : l10n.volumeTitle(item.title, volume);
   }
   if (series != null && metadata != null) {
-    return l10n.storeVolumeOf(metadata.volumeNumber ?? '?', series.title);
+    // No volume number (BnF record without one): its own title, not "Tome ?".
+    return switch (metadata.volumeNumber) {
+      final volume? => l10n.storeVolumeOf(volume, series.title),
+      null => l10n.storeInSeries(resultTitle(l10n, metadata), series.title),
+    };
   }
   return metadata == null ? null : resultTitle(l10n, metadata);
 }

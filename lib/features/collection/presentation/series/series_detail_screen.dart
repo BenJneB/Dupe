@@ -152,7 +152,11 @@ class _SeriesDetailView extends ConsumerWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              CoverImage(url: series.coverUrl, width: 96, height: 144),
+              CoverImage(
+                url: _nonEmpty(series.coverUrl) ?? grid.firstCover,
+                width: 96,
+                height: 144,
+              ),
               const SizedBox(width: 16),
               Expanded(
                 child: Column(
@@ -219,3 +223,5 @@ class _SeriesDetailView extends ConsumerWidget {
     return '$owned, ${l10n.missingVolumes(list)}';
   }
 }
+
+String? _nonEmpty(String? s) => s == null || s.isEmpty ? null : s;

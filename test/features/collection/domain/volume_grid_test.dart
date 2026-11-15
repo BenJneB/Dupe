@@ -23,6 +23,24 @@ void main() {
       );
     });
 
+    test('a volume without number is shown last as "?"', () {
+      // Jumeaux Fowl 1 in Folio: the BnF record has no volume number.
+      final grid = VolumeGrid.compute(
+        items: [
+          testItem('t2', volume: '2'),
+          testItem('t1'),
+        ],
+        totalVolumes: null,
+        followed: true,
+      );
+
+      expect(grid.slots.map((s) => s.label), ['1', '2', '?']);
+      expect(grid.slots.last.item?.id, 't1');
+      expect(grid.slots.last.status, VolumeSlotStatus.owned);
+      // Its number is unknown: volume 1 stays missing.
+      expect(grid.missingNumbers, [1]);
+    });
+
     test('wished volumes are shown as wished and still count as missing', () {
       final grid = VolumeGrid.compute(
         items: [

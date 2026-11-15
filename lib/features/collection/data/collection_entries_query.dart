@@ -23,12 +23,21 @@ Stream<List<CollectionEntry>> watchCollectionEntries(
     filter: owned & i.readingStatus.isInValues(toReadStatuses),
   );
   final itemCount = i.id.count(filter: activeItem);
+  // Cover of the first volume with one, numbered volumes first (as in the
+  // series grid).
+  const firstCover = CustomExpression<String>('''
+    (SELECT c.cover_url FROM items c
+     WHERE c.series_id = series.id AND c.deleted_at IS NULL
+       AND c.cover_url IS NOT NULL AND c.cover_url <> ''
+     ORDER BY c.volume_number GLOB '[0-9]*' DESC,
+       CAST(c.volume_number AS REAL), c.volume_number, c.created_at
+     LIMIT 1)''');
 
   final seriesQuery =
       db.select(s).join([leftOuterJoin(i, i.seriesId.equalsExp(s.id))])
         ..where(s.type.equalsValue(type) & s.deletedAt.isNull())
         ..groupBy([s.id])
-        ..addColumns([ownedCount, unreadCount, itemCount]);
+        ..addColumns([ownedCount, unreadCount, itemCount, firstCover]);
 
   final seriesStream = seriesQuery.watch().map(
     (rows) => [
@@ -38,6 +47,7 @@ Stream<List<CollectionEntry>> watchCollectionEntries(
           ownedCount: row.read(ownedCount) ?? 0,
           unreadCount: row.read(unreadCount) ?? 0,
           itemCount: row.read(itemCount) ?? 0,
+          firstVolumeCover: row.read(firstCover),
         ),
     ],
   );

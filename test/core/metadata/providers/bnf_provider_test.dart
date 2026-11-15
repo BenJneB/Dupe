@@ -69,6 +69,32 @@ void main() {
     );
     expect(results, hasLength(20));
     expect(results.every((r) => r.title.isNotEmpty), isTrue);
+    // 200\$h "[Livre 1]" (real record): only the number is kept.
+    expect(results.map((r) => r.volumeNumber), isNot(contains('[Livre 1]')));
+    expect(results.map((r) => r.volumeNumber), contains('1'));
+  });
+
+  test('a publisher collection number is not a series volume', () async {
+    http.on((u) => true, fixture('bnf/search_jumeaux_fowl.xml'));
+
+    final results = await provider.searchByText('jumeaux fowl');
+    MetadataResult byIsbn(String isbn) =>
+        results.firstWhere((r) => r.isbn13 == isbn);
+
+    // 200 "Les jumeaux Fowl" \$h 3, 225 "Folio junior" \$v 1987, no 461:
+    // the title is the series (was "Folio junior").
+    final t3 = byIsbn('9782075215091');
+    expect(t3.title, 'Les jumeaux Fowl');
+    expect(t3.volumeNumber, '3');
+    expect(t3.seriesTitle, isNull);
+    // 461 "Les jumeaux Fowl" without number, 225 "Folio junior" \$v 1940.
+    final t1 = byIsbn('9782075173827');
+    expect(t1.seriesTitle, 'Les jumeaux Fowl');
+    expect(t1.volumeNumber, isNull);
+    // 225 of the series (\$v 2) and of the collection (\$v 1962).
+    final t2 = byIsbn('9782075198134');
+    expect(t2.seriesTitle, 'Les jumeaux Fowl');
+    expect(t2.volumeNumber, '2');
   });
 
   test('volume labels are cleaned', () {
@@ -77,6 +103,7 @@ void main() {
     expect(cleanVolumeNumber('vol. 3'), '3');
     expect(cleanVolumeNumber('Saison 1'), 'Saison 1');
     expect(cleanVolumeNumber('HS 2'), 'HS 2');
+    expect(cleanVolumeNumber('[Livre 1]'), '1');
     expect(cleanVolumeNumber('  '), isNull);
   });
 

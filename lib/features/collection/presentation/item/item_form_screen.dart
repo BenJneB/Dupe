@@ -14,6 +14,7 @@ import 'package:dupe/features/collection/domain/series_attachment.dart';
 import 'package:dupe/features/collection/presentation/item/item_form_controllers.dart';
 import 'package:dupe/features/collection/presentation/item/item_reading_fields.dart';
 import 'package:dupe/features/collection/presentation/item/item_text_input.dart';
+import 'package:dupe/features/collection/presentation/item/previous_volumes_offer.dart';
 import 'package:dupe/features/collection/presentation/item/series_attachment_tile.dart';
 import 'package:dupe/features/collection/presentation/labels.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
@@ -108,6 +109,16 @@ class _ItemFormScreenState extends ConsumerState<ItemFormScreen> {
     final item = await applyAttachment(repo, _c.applyTo(original), _attachment);
     await repo.saveItem(item);
     if (!mounted) return;
+    if (_isNew) {
+      unawaited(
+        offerPreviousVolumes(
+          ScaffoldMessenger.of(context),
+          AppLocalizations.of(context),
+          repo,
+          item,
+        ),
+      );
+    }
     final seriesId = item.seriesId;
     if (widget.popOnSave) {
       context.pop();

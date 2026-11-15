@@ -246,6 +246,33 @@ class AppLocalizationsFr extends AppLocalizations {
   String get markOwned => 'Je l’ai acheté';
 
   @override
+  String get pressBackAgainToExit =>
+      'Appuie de nouveau sur retour pour quitter';
+
+  @override
+  String get allRead => 'tout lu';
+
+  @override
+  String get scanType => 'Type des livres scannés';
+
+  @override
+  String storeInSeries(String title, String series) {
+    return '$title — série $series';
+  }
+
+  @override
+  String previousVolumesOffer(int count, int volume) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          'Il te manque $count tomes avant le $volume : les ajouter comme possédés ?',
+      one: 'Il te manque 1 tome avant le $volume : l’ajouter comme possédé ?',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get seeSeries => 'Voir la série';
 
   @override
@@ -1596,6 +1623,23 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get offlineCoversRefresh => 'toucher pour vérifier';
+
+  @override
+  String get missingCovers => 'Compléter les couvertures manquantes';
+
+  @override
+  String get missingCoversHelp =>
+      'Cherche par ISBN une couverture pour chaque livre qui n’en a pas ou dont la couverture ne se charge pas (sans rien changer d’autre ; tes photos sont gardées)';
+
+  @override
+  String missingCoversProgress(int done, int total, int found) {
+    return '$done / $total livres vérifiés · $found trouvée(s)';
+  }
+
+  @override
+  String missingCoversDone(int found, int total) {
+    return '$found couverture(s) ajoutée(s) ou remplacée(s) · $total livres vérifiés';
+  }
 
   @override
   String get offlineCoversClear => 'Vider';

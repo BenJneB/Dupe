@@ -100,7 +100,7 @@ final class CoverPrefetchProvider
   }
 }
 
-String _$coverPrefetchHash() => r'ae7f4c889130c00735386faa503ab4f9b5fbb744';
+String _$coverPrefetchHash() => r'13921527d8bad8182a330ad29a1aa73b6d78ce0f';
 
 /// Downloads in the background every cover not on the device yet, so that
 /// the collection shows its covers offline (PLAN_V3 phase 20). Runs at

@@ -151,4 +151,56 @@ void main() {
     );
     expect(find.byKey(const Key('storeOnlineSearch')), findsOneWidget);
   }, variant: linux);
+
+  testWidgets('a series volume without number shows its own title', (
+    tester,
+  ) async {
+    // Like BnF 9782075173827: series known, no volume number.
+    await pumpApp(
+      tester,
+      size: desktopSize,
+      overrides: [
+        fakeMetadataSources(
+          result: onePieceT3.copyWith(
+            title: 'Romance Dawn',
+            seriesTitle: 'One Piece',
+            volumeNumber: null,
+          ),
+        ),
+      ],
+      seed: seedOnePiece,
+    );
+
+    await openScan(tester);
+    await typeCode(tester, onePieceT3Isbn);
+
+    expect(find.text('Romance Dawn — série One Piece'), findsOneWidget);
+    expect(find.textContaining('Tome ?'), findsNothing);
+  }, variant: linux);
+
+  testWidgets('scan opened outside a tab: type chosen and remembered', (
+    tester,
+  ) async {
+    await pumpApp(tester, size: desktopSize);
+    await tester.tap(find.text('Plus').last);
+    await tester.pumpAndSettle();
+    await openScan(tester);
+    final menu = find.byKey(const Key('scanTypeMenu'));
+    expect(
+      find.descendant(of: menu, matching: find.text('Livres')),
+      findsOneWidget,
+    );
+
+    await tester.tap(menu);
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('scanType_bd')));
+    await tester.pumpAndSettle();
+    await goBack(tester);
+    await openScan(tester);
+
+    expect(
+      find.descendant(of: menu, matching: find.text('BD')),
+      findsOneWidget,
+    );
+  }, variant: linux);
 }

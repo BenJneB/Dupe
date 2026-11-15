@@ -153,8 +153,12 @@ class CoverPrefetch extends _$CoverPrefetch {
     if (run != _run) return;
     state = PrefetchState(running: urls.isNotEmpty, total: urls.length);
     var failed = 0;
+    final failures = <String>[];
     for (final (i, url) in urls.indexed) {
-      if (!await _fetch(url)) failed++;
+      if (await _fetch(url) case final error?) {
+        failed++;
+        if (failures.length < 20) failures.add('$url ($error)');
+      }
       if (run != _run) return; // Cancelled: the new state is already set.
       state = PrefetchState(
         running: i + 1 < urls.length,
@@ -164,26 +168,29 @@ class CoverPrefetch extends _$CoverPrefetch {
       );
     }
     if (failed > 0) {
-      appLog.info('covers', '$failed couverture(s) non téléchargée(s)');
+      appLog.info(
+        'covers',
+        '$failed couverture(s) non téléchargée(s) :\n${failures.join('\n')}',
+      );
     }
   }
 
-  /// False when the cover could not be downloaded.
-  Future<bool> _fetch(String url) async {
+  /// Why the cover could not be downloaded; null when it is on the device.
+  Future<String?> _fetch(String url) async {
     try {
       if (CoverPhotos.nameOf(url) case final name?) {
-        return await ensureUserCover(
-              ref.read(coverPhotosProvider),
-              ref.read(coverStoreProvider),
-              name,
-            ) !=
-            null;
+        final file = await ensureUserCover(
+          ref.read(coverPhotosProvider),
+          ref.read(coverStoreProvider),
+          name,
+        );
+        return file == null ? 'photo absente' : null;
       }
       final cache = ref.read(coverCacheProvider);
       if (!await cache.has(url)) await cache.fetch(url);
-      return true;
-    } on Object {
-      return false;
+      return null;
+    } on Object catch (e) {
+      return coverError(e);
     }
   }
 }

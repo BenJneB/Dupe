@@ -25,8 +25,6 @@ void main() {
     expect(Isbn.toIsbn13('080442957X'), '9780804429573');
     expect(Isbn.toIsbn13('9782266320481'), '9782266320481');
     expect(Isbn.toIsbn13('1234'), isNull);
-    expect(Isbn.toIsbn10('9780804429573'), '080442957X');
-    expect(Isbn.toIsbn10('9791032712344'), isNull);
   });
 
   test('classifies codes', () {

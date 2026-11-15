@@ -95,7 +95,9 @@ class MetadataAggregator {
     for (var i = 0; i < providers.length; i++) {
       switch (outcomes[i]) {
         case (ok: true, :final value?):
-          results.add(value);
+          // Per source: a "Tome 1" in Google's title fills a volume number
+          // the BnF record lacks.
+          results.add(withVolumeFromTitle(value));
         case (ok: false, value: _):
           failed.add(providers[i].source);
         default:
@@ -142,7 +144,7 @@ class MetadataAggregator {
       for (final r in outcome.value ?? const <MetadataResult>[]) {
         final isbn = r.isbn13;
         if (isbn != null && !seenIsbns.add(isbn)) continue;
-        results.add(r);
+        results.add(withVolumeFromTitle(r));
       }
     }
     return (results: results, failed: failed);

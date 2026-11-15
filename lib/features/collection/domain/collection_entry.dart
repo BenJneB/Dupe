@@ -16,9 +16,13 @@ class SeriesEntry extends CollectionEntry {
     required this.ownedCount,
     required this.itemCount,
     this.unreadCount = 0,
+    this.firstVolumeCover,
   });
 
   final Series series;
+
+  /// Cover of the first volume that has one (series without own cover).
+  final String? firstVolumeCover;
 
   /// Owned volumes (distinct numbers) not deleted.
   final int ownedCount;

@@ -184,8 +184,10 @@ class _ItemDetailView extends ConsumerWidget {
               leading: const Icon(Icons.collections_bookmark_outlined),
               title: Text(series.title),
               subtitle: Text(l10n.seeSeries),
-              onTap: () =>
-                  context.push(AppRoutes.series(series.type, series.id)),
+              // go, not push: the stack becomes tab > series, so "back"
+              // from the series returns to the tab instead of replaying
+              // every series/volume visited.
+              onTap: () => context.go(AppRoutes.series(series.type, series.id)),
             ),
           if (item.ownership == Ownership.possede) ...[
             const SizedBox(height: 8),
