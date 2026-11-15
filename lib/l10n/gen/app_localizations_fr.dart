@@ -1451,6 +1451,57 @@ class AppLocalizationsFr extends AppLocalizations {
       'Mode Magasin : 1 forte = déjà possédé, 2 = en envie, 3 légères = tome manquant d’une série, 1 brève = inconnu';
 
   @override
+  String get voiceSearchTitle => 'Recherche vocale';
+
+  @override
+  String get voiceSearchExplain =>
+      'Dupe va te demander l’accès au micro. Ce que tu dis est transcrit par le service de reconnaissance vocale de ton appareil, puis cherché dans ta collection : Dupe n’enregistre rien. Dis par exemple « One Piece tome 107 » ou « tome 3 de Blacksad ».';
+
+  @override
+  String get voiceSearchContinue => 'Continuer';
+
+  @override
+  String get voiceSearchListening => 'J’écoute…';
+
+  @override
+  String get voiceSearchExample => 'Dis par exemple « One Piece tome 107 »';
+
+  @override
+  String get voiceSearchStop => 'Arrêter';
+
+  @override
+  String get voiceSearchNothing =>
+      'Je n’ai rien entendu (ou le micro n’est pas autorisé)';
+
+  @override
+  String voiceVolumeMissing(String volume, String series) {
+    return 'Tome $volume de $series : absent de ta collection';
+  }
+
+  @override
+  String widgetOwned(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count ouvrages',
+      one: '1 ouvrage',
+      zero: 'Collection vide',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String widgetOverdue(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count prêts en retard',
+      one: '1 prêt en retard',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get errorOffline => 'Pas de connexion internet.';
 
   @override

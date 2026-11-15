@@ -1,15 +1,17 @@
 import 'package:dupe/app/router.dart';
 import 'package:dupe/features/account/presentation/sync_status_icon.dart';
+import 'package:dupe/features/search/data/voice_input.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 
 /// Entry point to the global local search, shown at the top of each tab.
-class GlobalSearchBar extends StatelessWidget {
+class GlobalSearchBar extends ConsumerWidget {
   const new({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     return ConstrainedBox(
       constraints: const BoxConstraints(maxWidth: 720),
@@ -35,6 +37,13 @@ class GlobalSearchBar extends StatelessWidget {
                     ),
                   ),
                 ),
+                if (ref.watch(voiceInputProvider).supported)
+                  IconButton(
+                    key: const Key('voiceSearchBar'),
+                    tooltip: AppLocalizations.of(context).voiceSearchTitle,
+                    icon: const Icon(Icons.mic_none),
+                    onPressed: () => context.push(AppRoutes.voiceSearch),
+                  ),
                 const SyncStatusIcon(),
               ],
             ),

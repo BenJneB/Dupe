@@ -2410,6 +2410,66 @@ abstract class AppLocalizations {
   /// **'Mode Magasin : 1 forte = déjà possédé, 2 = en envie, 3 légères = tome manquant d’une série, 1 brève = inconnu'**
   String get storeHapticsHelp;
 
+  /// No description provided for @voiceSearchTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Recherche vocale'**
+  String get voiceSearchTitle;
+
+  /// No description provided for @voiceSearchExplain.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dupe va te demander l’accès au micro. Ce que tu dis est transcrit par le service de reconnaissance vocale de ton appareil, puis cherché dans ta collection : Dupe n’enregistre rien. Dis par exemple « One Piece tome 107 » ou « tome 3 de Blacksad ».'**
+  String get voiceSearchExplain;
+
+  /// No description provided for @voiceSearchContinue.
+  ///
+  /// In fr, this message translates to:
+  /// **'Continuer'**
+  String get voiceSearchContinue;
+
+  /// No description provided for @voiceSearchListening.
+  ///
+  /// In fr, this message translates to:
+  /// **'J’écoute…'**
+  String get voiceSearchListening;
+
+  /// No description provided for @voiceSearchExample.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dis par exemple « One Piece tome 107 »'**
+  String get voiceSearchExample;
+
+  /// No description provided for @voiceSearchStop.
+  ///
+  /// In fr, this message translates to:
+  /// **'Arrêter'**
+  String get voiceSearchStop;
+
+  /// No description provided for @voiceSearchNothing.
+  ///
+  /// In fr, this message translates to:
+  /// **'Je n’ai rien entendu (ou le micro n’est pas autorisé)'**
+  String get voiceSearchNothing;
+
+  /// No description provided for @voiceVolumeMissing.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tome {volume} de {series} : absent de ta collection'**
+  String voiceVolumeMissing(String volume, String series);
+
+  /// No description provided for @widgetOwned.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =0{Collection vide} =1{1 ouvrage} other{{count} ouvrages}}'**
+  String widgetOwned(int count);
+
+  /// No description provided for @widgetOverdue.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{1 prêt en retard} other{{count} prêts en retard}}'**
+  String widgetOverdue(int count);
+
   /// No description provided for @errorOffline.
   ///
   /// In fr, this message translates to:

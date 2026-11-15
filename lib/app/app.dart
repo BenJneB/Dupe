@@ -5,6 +5,8 @@ import 'package:dupe/app/theme.dart';
 import 'package:dupe/core/logging/app_log.dart';
 import 'package:dupe/core/sync/sync_controller.dart';
 import 'package:dupe/features/backup/data/auto_backups.dart';
+import 'package:dupe/features/home_widget/data/home_screen_widget.dart';
+import 'package:dupe/features/home_widget/data/home_widget_updater.dart';
 import 'package:dupe/features/loans/data/loan_actions.dart';
 import 'package:dupe/features/scan/data/app_shortcuts.dart';
 import 'package:dupe/features/settings/data/theme_mode_provider.dart';
@@ -43,12 +45,33 @@ class _DupeAppState extends ConsumerState<DupeApp> {
       'shortcuts',
       () => ref
           .read(appShortcutsProvider)
-          .setUp(
-            scanTitle: _l10n.scan,
-            onScan: () =>
-                ref.read(appRouterProvider).go(AppRoutes.scanFor(null)),
-          ),
+          .setUp(scanTitle: _l10n.scan, onScan: _openScan),
     );
+    // Home-screen widget (Android): its "Scanner" button, and its counters.
+    _inBackground('widget', _listenToHomeWidget);
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      ref.read(homeWidgetUpdaterProvider);
+    }
+  }
+
+  StreamSubscription<Uri?>? _widgetTaps;
+
+  @override
+  void dispose() {
+    unawaited(_widgetTaps?.cancel());
+    super.dispose();
+  }
+
+  void _openScan() => ref.read(appRouterProvider).go(AppRoutes.scanFor(null));
+
+  Future<void> _listenToHomeWidget() async {
+    final widget = ref.read(homeScreenWidgetProvider);
+    void open(Uri? link) {
+      if (link?.host == 'scan') _openScan();
+    }
+
+    open(await widget.initialLaunch());
+    _widgetTaps = widget.taps.listen(open);
   }
 
   /// No context needed: the app is French only.

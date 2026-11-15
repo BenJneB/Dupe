@@ -50,7 +50,7 @@ raccourci Android « Scanner », vibrations, lampe torche, signalement des nouve
 | 16 | CI renforcée et veille Supabase fiable | ✅ fait (2026-11-14) | local | non (workflows non relancés) |
 | 17 | Tests de synchro contre Supabase local | ✅ fait (2026-11-14) | 8 tests `supabase` (local) + horloge | Supabase local ; CI `supabase-tests` à voir |
 | 18 | Hooks, commits conventionnels, tests d'intégration | ✅ fait (2026-11-14) | scripts + 4 parcours (Linux) | hooks non installés ; CI à voir |
-| 19 | Accès rapide : widget et recherche vocale | à faire | — | — |
+| 19 | Accès rapide : widget et recherche vocale | ✅ fait (2026-11-14) | oui (plugins simulés) | non (téléphone) |
 | 20 | Couvertures hors ligne, stats de lecture, partage des envies | à faire | — | — |
 | 21 | Recette finale (reste de `TESTS_MANUELS.md`) | à faire | — | — |
 
@@ -262,6 +262,31 @@ changelog généré ; les tests d'intégration passent en CI.*
 
 *Critère : depuis l'écran d'accueil du téléphone, le widget ouvre le scan ; « One Piece tome 107 » dicté
 affiche directement ce tome ou son absence.*
+
+**Bilan (2026-11-14)**
+- **Réalisé** :
+  - **widget Android** (`home_widget` 0.10.0, Android et iOS seulement) : `DupeWidgetProvider.kt` + mise en
+    page `dupe_widget.xml` (bouton « Scanner » bleu de l'icône, compteurs) ; le bouton ouvre `dupe://scan`, routé
+    comme le raccourci (au lancement : `initiallyLaunchedFromHomeWidget`, appli ouverte : `widgetClicked`) ;
+    compteurs « N ouvrages · N prêts en retard » préparés en Dart (traductions) et envoyés 2 s après la dernière
+    modification d'ouvrages ou de prêts (synchro comprise), seulement si le texte change (`HomeWidgetUpdater`) ;
+  - **dictée** (`speech_to_text` 7.5.0 : Android et Windows, **pas Linux** → bouton masqué) : micro dans la barre
+    de recherche globale et dans l'écran de recherche, explication avant le premier usage (puis autorisation
+    Android), panneau « J'écoute… » avec « Arrêter » (le refermer arrête l'écoute), français, `RECORD_AUDIO` et
+    `RecognitionService` déclarés ;
+  - **`parseSpokenQuery`** (domaine pur) : « X tome/numéro/n°/volume N », « tome N de/du/d' X », « X 12 » ;
+    nombres en lettres jusqu'à 999 999 (`parseFrenchNumber`) ; `lookUpSpoken` : tome trouvé (exemplaire possédé
+    d'abord) → fiche, série sans ce tome → série + « absent de ta collection », sinon recherche normale.
+- **Tests** : 13 cas de phrases et 18 de nombres ; widget (ouverture du scan au lancement et appli ouverte,
+  compteurs regroupés et non renvoyés à l'identique) ; dictée (tome trouvé, absent, phrase simple, explication
+  une seule fois, annulation, rien entendu, pas de micro). Suite : 190 tests ; intégration : 4 parcours.
+- **Écarts** : le compteur « prêts en retard » n'apparaît que s'il y en a ; une seule taille de widget
+  (redimensionnable en largeur).
+- **Non vérifié** : tout le côté téléphone (widget réel, chrono < 2 s à froid, micro, reconnaissance française,
+  Windows) — `G-01` à `G-04`, `V-01` à `V-04`.
+- **Risque nouveau** : `home_widget` 0.10.0 (dernière version) applique encore le Kotlin Gradle Plugin ; Flutter
+  annonce que de futures versions refuseront de compiler (avertissement au build Android). Surveiller ses
+  mises à jour (Dependabot).
 
 ### Phase 20 — Couvertures hors ligne, stats de lecture, partage des envies
 - **Couvertures hors ligne** : préchargement en arrière-plan de toutes les couvertures de la collection et

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Texts of the native Android parts (home-screen widget). The app's own texts
+     are in lib/l10n/app_fr.arb. -->
+<resources>
+    <string name="widget_scan">Scanner</string>
+    <string name="widget_description">Scanner un code-barres en un appui, et l’état de ta collection</string>
+</resources>
