@@ -1,11 +1,13 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'metadata_result.freezed.dart';
+part 'metadata_result.g.dart';
 
 /// External metadata sources.
 enum MetadataSource { bnf, googleBooks, openLibrary, comicVine }
 
-/// Normalized metadata returned by any source.
+/// Normalized metadata returned by any source. JSON for the persistent
+/// response cache and the burst scan queue.
 @freezed
 abstract class MetadataResult with _$MetadataResult {
   const factory({
@@ -32,4 +34,6 @@ abstract class MetadataResult with _$MetadataResult {
     double? coverPrice,
     String? currency,
   }) = _MetadataResult;
+
+  factory fromJson(Map<String, dynamic> json) => _$MetadataResultFromJson(json);
 }

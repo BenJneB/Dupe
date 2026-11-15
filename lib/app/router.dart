@@ -8,6 +8,7 @@ import 'package:dupe/features/collection/presentation/series/series_detail_scree
 import 'package:dupe/features/collection/presentation/series/series_form_screen.dart';
 import 'package:dupe/features/loans/presentation/loans_screen.dart';
 import 'package:dupe/features/more/presentation/more_screen.dart';
+import 'package:dupe/features/scan/presentation/burst/scan_review_screen.dart';
 import 'package:dupe/features/scan/presentation/scan_screen.dart';
 import 'package:dupe/features/search/presentation/online_search/online_search_screen.dart';
 import 'package:dupe/features/search/presentation/search_screen.dart';
@@ -35,6 +36,14 @@ abstract final class AppRoutes {
   static const stats = '/plus/statistiques';
   static const settings = '/plus/parametres';
   static const scan = '/scan';
+  static const scanReview = '/scan/revue';
+
+  /// Item form opened from the burst review (extra: ItemPrefill); returns
+  /// to the review on save.
+  static String scanReviewItem(CollectionType type) => Uri(
+    path: '$scanReview/ouvrage',
+    queryParameters: {'type': type.dbValue},
+  ).toString();
 
   /// Scan screen; found codes are looked up as [type].
   static String scanFor(CollectionType? type) =>
@@ -135,6 +144,24 @@ GoRouter appRouter(Ref ref) {
         parentNavigatorKey: rootNavigatorKey,
         builder: (context, state) =>
             ScanScreen(type: AppRoutes.typeParam(state)),
+        routes: [
+          GoRoute(
+            path: 'revue',
+            parentNavigatorKey: rootNavigatorKey,
+            builder: (context, state) => const ScanReviewScreen(),
+            routes: [
+              GoRoute(
+                path: 'ouvrage',
+                parentNavigatorKey: rootNavigatorKey,
+                builder: (context, state) => ItemFormScreen(
+                  type: AppRoutes.typeParam(state) ?? CollectionType.livre,
+                  prefill: state.extra as ItemPrefill?,
+                  popOnSave: true,
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     ],
   );

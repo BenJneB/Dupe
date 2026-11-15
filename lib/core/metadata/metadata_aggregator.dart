@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:dupe/core/metadata/metadata_merge.dart';
 import 'package:dupe/core/metadata/metadata_provider.dart';
 import 'package:dupe/core/metadata/metadata_result.dart';
+import 'package:dupe/core/metadata/response_store.dart';
 import 'package:dupe/core/network/memory_cache.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
 
@@ -39,17 +41,25 @@ const Map<CollectionType, List<MetadataSource>> defaultPriorities = {
 };
 
 /// Queries the relevant sources in parallel, each with its own timeout, and
-/// never fails because of one source.
+/// never fails because of one source. Answers are cached in memory and, with
+/// a [store], on disk (offline use, fewer calls to rate-limited APIs).
 class MetadataAggregator {
   new({
     required List<MetadataProvider> providers,
     this.priorities = defaultPriorities,
     this.timeout = const Duration(seconds: 5),
-  }) : _providers = {for (final p in providers) p.source: p};
+    this.store,
+    this.policy = const CachePolicy(),
+    DateTime Function()? now,
+  }) : _providers = {for (final p in providers) p.source: p},
+       _now = now ?? DateTime.now;
 
   final Map<MetadataSource, MetadataProvider> _providers;
   final Map<CollectionType, List<MetadataSource>> priorities;
   final Duration timeout;
+  final ResponseStore? store;
+  final CachePolicy policy;
+  final DateTime Function() _now;
   final _isbnCache = MemoryCache<MetadataResult?>();
   final _textCache = MemoryCache<List<MetadataResult>>();
 
@@ -66,7 +76,16 @@ class MetadataAggregator {
         _guard(
           _isbnCache.getOrCompute(
             '${p.source.name}:$isbn13',
-            () => p.searchByIsbn(isbn13),
+            () => _persisted(
+              '${p.source.name}:isbn:$isbn13',
+              () => p.searchByIsbn(isbn13),
+              encode: (r) => jsonEncode(r?.toJson()),
+              decode: (json) => switch (jsonDecode(json)) {
+                final Map<String, dynamic> m => MetadataResult.fromJson(m),
+                _ => null,
+              },
+              ttl: (r) => r == null ? policy.notFound : policy.found,
+            ),
           ),
         ),
     ]);
@@ -97,7 +116,16 @@ class MetadataAggregator {
         _guard(
           _textCache.getOrCompute(
             '${p.source.name}:$key',
-            () => p.searchByText(query),
+            () => _persisted(
+              '${p.source.name}:text:$key',
+              () => p.searchByText(query),
+              encode: (list) => jsonEncode([for (final r in list) r.toJson()]),
+              decode: (json) => [
+                for (final m in jsonDecode(json) as List<dynamic>)
+                  MetadataResult.fromJson(m as Map<String, dynamic>),
+              ],
+              ttl: (_) => policy.text,
+            ),
           ),
         ),
     ]);
@@ -119,9 +147,42 @@ class MetadataAggregator {
     return (results: results, failed: failed);
   }
 
+  /// Disk cache around one source call: fresh entries are returned as is,
+  /// stale ones only when the source fails. Store errors are ignored.
+  Future<T> _persisted<T>(
+    String key,
+    Future<T> Function() fetch, {
+    required String Function(T) encode,
+    required T Function(String) decode,
+    required Duration Function(T) ttl,
+  }) async {
+    final store = this.store;
+    if (store == null) return await fetch().timeout(timeout);
+    T? stale;
+    var hasStale = false;
+    try {
+      if (await store.read(key) case final stored?) {
+        final value = decode(stored.payload);
+        if (_now().difference(stored.fetchedAt) < ttl(value)) return value;
+        (stale, hasStale) = (value, true);
+      }
+    } on Object {
+      // Unreadable entry: refetch.
+    }
+    try {
+      final value = await fetch().timeout(timeout);
+      unawaited(store.write(key, encode(value)).catchError((Object _) {}));
+      return value;
+    } on Object {
+      if (hasStale) return stale as T;
+      rethrow;
+    }
+  }
+
   Future<({bool ok, T? value})> _guard<T>(Future<T> future) async {
     try {
-      return (ok: true, value: await future.timeout(timeout));
+      // Timeouts are applied per source call in _persisted.
+      return (ok: true, value: await future);
     } on Object {
       // Timeouts, HTTP and parsing errors: the source is reported as failed.
       return (ok: false, value: null);

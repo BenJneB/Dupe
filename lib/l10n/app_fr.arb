@@ -212,8 +212,8 @@
   "searchSeriesSection": "Séries",
   "searchItemsSection": "Ouvrages",
   "starterCollectionTitle": "Importer ma collection de départ",
-  "starterCollectionSubtitle": "One Piece, Dreamland, Naheulbeuk, Batman, Les Fourmis, Fabien Olicard (sans doublons)",
-  "starterCollectionImported": "{count, plural, =0{Rien à importer : déjà présent} =1{1 élément importé} other{{count} éléments importés}}",
+  "starterCollectionSubtitle": "Dreamland, Naheulbeuk, Batman, Les Fourmis, Fabien Olicard (sans doublons, complète les ISBN)",
+  "starterCollectionImported": "{count, plural, =0{Rien à faire : déjà à jour} =1{1 modification} other{{count} modifications}}",
   "@starterCollectionImported": {
     "placeholders": {
       "count": {
@@ -311,5 +311,128 @@
       }
     }
   },
-  "seriesLookupHint": "Titre de la série"
+  "seriesLookupHint": "Titre de la série",
+  "storeOwned": "Déjà possédé",
+  "storeWished": "Dans ta liste d’envies",
+  "storeSeriesNotOwned": "Pas encore possédé",
+  "storeUnknown": "Pas dans ta collection",
+  "storeVolumeOf": "Tome {volume} de {series}",
+  "@storeVolumeOf": {
+    "placeholders": {
+      "volume": {
+        "type": "String"
+      },
+      "series": {
+        "type": "String"
+      }
+    }
+  },
+  "storeYouHave": "tu as {list}",
+  "@storeYouHave": {
+    "placeholders": {
+      "list": {
+        "type": "String"
+      }
+    }
+  },
+  "storeYouHaveNone": "tu n’en as aucun",
+  "storePurchasedOn": "Acheté le {date}",
+  "@storePurchasedOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "storeLocation": "Emplacement : {location}",
+  "@storeLocation": {
+    "placeholders": {
+      "location": {
+        "type": "String"
+      }
+    }
+  },
+  "storeMaxPrice": "Prix max : {price}",
+  "@storeMaxPrice": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "storeSearching": "Recherche en ligne…",
+  "storeOffline": "Hors ligne : seule ta collection a été vérifiée",
+  "storeIsbnRemembered": "ISBN mémorisé sur ce tome pour les prochains scans",
+  "storeDetails": "Détails",
+  "scanModeStore": "Magasin",
+  "scanModeBurst": "Rafale",
+  "burstQueued": "Ajouté à la file ({count})",
+  "@burstQueued": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "burstAlreadyQueued": "Déjà dans la file",
+  "burstHint": "Scanne les ouvrages à la suite : les infos sont cherchées en arrière-plan, tu valides ensuite.",
+  "burstReview": "{count, plural, =0{File vide} other{Revoir ({count})}}",
+  "@burstReview": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "burstProgress": "{done}/{total} recherchés",
+  "@burstProgress": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "scanReviewTitle": "Revue de la rafale",
+  "reviewPending": "Recherche…",
+  "reviewNotFound": "Introuvable : appuie pour chercher",
+  "reviewFailed": "Échec (hors ligne ?) : appuie pour chercher",
+  "reviewInCollection": "Déjà dans ta collection",
+  "reviewNewSeries": "Nouvelle série « {title} »",
+  "@reviewNewSeries": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewAddAll": "{count, plural, =0{Rien à ajouter} =1{Ajouter 1 ouvrage} other{Ajouter {count} ouvrages}}",
+  "@reviewAddAll": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewAdded": "{count, plural, =0{Aucun ouvrage ajouté} =1{1 ouvrage ajouté} other{{count} ouvrages ajoutés}}",
+  "@reviewAdded": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewRetry": "Relancer les échecs",
+  "reviewEmpty": "La file est vide. Passe en mode Rafale sur l’écran Scanner pour la remplir.",
+  "reviewRemoved": "Retiré de la file",
+  "reviewEditHint": "Appuie sur un ouvrage pour le corriger avant de l’ajouter",
+  "settingsSources": "Sources de données",
+  "sourceNeedsKey": "Clé API absente de env.json",
+  "sourceBnfHelp": "Catalogue de la BnF : éditions françaises, prix, séries",
+  "sourceGoogleBooksHelp": "Couvertures et résumés",
+  "sourceOpenLibraryHelp": "Livres, couvertures",
+  "sourceComicVineHelp": "Comics US : séries et numéros",
+  "sourceAnilistHelp": "Mangas : infos de série (nombre de tomes, statut)"
 }

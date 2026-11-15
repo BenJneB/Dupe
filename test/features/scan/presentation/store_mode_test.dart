@@ -1,0 +1,154 @@
+import 'dart:io';
+
+import 'package:dupe/core/database/app_database.dart';
+import 'package:dupe/features/collection/domain/collection_type.dart';
+import 'package:dupe/features/collection/domain/enums.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
+
+import '../../../helpers/app_harness.dart';
+import '../../../helpers/fake_sources.dart';
+import '../../../helpers/scan_helpers.dart';
+
+const offline = SocketException('Network is unreachable');
+
+/// One Piece (Glénat) with volumes 1 and 2 owned, without ISBN (added
+/// from the grid).
+Future<void> seedOnePiece(AppDatabase db) async {
+  final repo = repoOf(db);
+  final series = repo
+      .newSeries(CollectionType.manga)
+      .copyWith(title: 'One Piece', publisher: 'Glénat');
+  await repo.saveSeries(series);
+  await repo.addVolumeRange(series, from: 1, to: 2);
+}
+
+void main() {
+  testWidgets('an owned ISBN is recognised offline, with purchase details '
+      '(phase 4 criterion)', (tester) async {
+    final stopwatch = Stopwatch()..start();
+    await pumpApp(
+      tester,
+      size: desktopSize,
+      overrides: [fakeMetadataSources(error: offline)],
+      seed: (db) async {
+        final repo = repoOf(db);
+        await repo.saveItem(
+          repo
+              .newItem(CollectionType.livre)
+              .copyWith(
+                title: 'Dune',
+                isbn13: duneIsbn,
+                purchaseDate: DateTime(2024, 3, 12),
+                location: 'Salon, étagère 2',
+              ),
+        );
+      },
+    );
+
+    await openScan(tester);
+    await typeCode(tester, duneIsbn);
+
+    expect(find.byKey(const Key('store_owned')), findsOneWidget);
+    expect(find.text('Déjà possédé'), findsOneWidget);
+    expect(find.text('Dune'), findsOneWidget);
+    expect(find.text('Acheté le 12 mars 2024'), findsOneWidget);
+    expect(find.text('Emplacement : Salon, étagère 2'), findsOneWidget);
+    // Simulated time does not measure real speed; this bounds the real
+    // time of start + local query in the test environment.
+    expect(stopwatch.elapsed, lessThan(const Duration(seconds: 3)));
+  }, variant: linux);
+
+  testWidgets('a wished ISBN shows the max price', (tester) async {
+    await pumpApp(
+      tester,
+      size: desktopSize,
+      overrides: [fakeMetadataSources(error: offline)],
+      seed: (db) async {
+        final repo = repoOf(db);
+        await repo.saveItem(
+          repo
+              .newItem(CollectionType.livre)
+              .copyWith(
+                title: 'Dune',
+                isbn13: duneIsbn,
+                ownership: Ownership.envie,
+                wishlistMaxPrice: 7.5,
+              ),
+        );
+      },
+    );
+
+    await openScan(tester);
+    await typeCode(tester, duneIsbn);
+
+    expect(find.byKey(const Key('store_wished')), findsOneWidget);
+    expect(find.textContaining('Prix max : 7,50'), findsOneWidget);
+  }, variant: linux);
+
+  testWidgets('next volume of a series: blue banner with owned volumes', (
+    tester,
+  ) async {
+    await pumpApp(
+      tester,
+      size: desktopSize,
+      overrides: [fakeMetadataSources(result: onePieceT3)],
+      seed: seedOnePiece,
+    );
+
+    await openScan(tester);
+    await typeCode(tester, onePieceT3Isbn);
+
+    expect(find.byKey(const Key('store_seriesNotOwned')), findsOneWidget);
+    expect(find.text('Tome 3 de One Piece'), findsOneWidget);
+    expect(find.text('tu as 1, 2'), findsOneWidget);
+    expect(find.byKey(const Key('addOwned')), findsOneWidget);
+  }, variant: linux);
+
+  testWidgets('a volume owned without ISBN is recognised by series and '
+      'number, and its ISBN is remembered', (tester) async {
+    final db = await pumpApp(
+      tester,
+      size: desktopSize,
+      overrides: [
+        fakeMetadataSources(result: onePieceT3.copyWith(volumeNumber: '2')),
+      ],
+      seed: seedOnePiece,
+    );
+
+    await openScan(tester);
+    await typeCode(tester, onePieceT3Isbn);
+
+    expect(find.byKey(const Key('store_owned')), findsOneWidget);
+    expect(
+      find.text('ISBN mémorisé sur ce tome pour les prochains scans'),
+      findsOneWidget,
+    );
+    final volume2 = await tester.runAsync(
+      () => (db.select(
+        db.itemsTable,
+      )..where((t) => t.volumeNumber.equals('2'))).getSingle(),
+    );
+    expect(volume2!.isbn13, onePieceT3Isbn);
+  }, variant: linux);
+
+  testWidgets('unknown ISBN offline: grey banner and online search button', (
+    tester,
+  ) async {
+    await pumpApp(
+      tester,
+      size: desktopSize,
+      overrides: [fakeMetadataSources(error: offline)],
+    );
+
+    await openScan(tester);
+    await typeCode(tester, duneIsbn);
+
+    expect(find.byKey(const Key('store_unknown')), findsOneWidget);
+    expect(
+      find.text('Hors ligne : seule ta collection a été vérifiée'),
+      findsOneWidget,
+    );
+    expect(find.byKey(const Key('storeOnlineSearch')), findsOneWidget);
+  }, variant: linux);
+}

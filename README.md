@@ -24,6 +24,15 @@ cp env.example.json env.json   # puis remplir les vraies valeurs
 | `OPEN_LIBRARY_CONTACT` | Email envoyé à Open Library dans le User-Agent (limite 3 req/s au lieu de 1) | non |
 | `GOOGLE_BOOKS_API_KEY` | Google Books (couvertures, résumés). Sans clé la source est désactivée : le quota anonyme est épuisé (HTTP 429) | recommandée |
 
+## Utilisation du scan
+- **Mode Magasin** (par défaut) : vérifie l'ISBN dans ta collection, sans réseau. Les couleurs :
+  vert = déjà possédé, jaune = envie, bleu = tome manquant d'une de tes séries, gris = inconnu.
+  Les tomes ajoutés sans ISBN (grille, « possédés jusqu'au ») sont reconnus en ligne par série + numéro,
+  puis l'ISBN est mémorisé.
+- **Mode Rafale** : scanne une étagère à la suite ; les infos sont cherchées en arrière-plan, puis
+  « Revoir » permet de corriger et d'ajouter tout en une fois.
+- Paramètres → *Sources de données* : activer/désactiver chaque source.
+
 ## Développement
 ```sh
 flutter pub get

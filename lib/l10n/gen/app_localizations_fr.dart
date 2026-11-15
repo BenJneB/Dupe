@@ -436,16 +436,16 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get starterCollectionSubtitle =>
-      'One Piece, Dreamland, Naheulbeuk, Batman, Les Fourmis, Fabien Olicard (sans doublons)';
+      'Dreamland, Naheulbeuk, Batman, Les Fourmis, Fabien Olicard (sans doublons, complète les ISBN)';
 
   @override
   String starterCollectionImported(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count éléments importés',
-      one: '1 élément importé',
-      zero: 'Rien à importer : déjà présent',
+      other: '$count modifications',
+      one: '1 modification',
+      zero: 'Rien à faire : déjà à jour',
     );
     return '$_temp0';
   }
@@ -556,4 +556,172 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get seriesLookupHint => 'Titre de la série';
+
+  @override
+  String get storeOwned => 'Déjà possédé';
+
+  @override
+  String get storeWished => 'Dans ta liste d’envies';
+
+  @override
+  String get storeSeriesNotOwned => 'Pas encore possédé';
+
+  @override
+  String get storeUnknown => 'Pas dans ta collection';
+
+  @override
+  String storeVolumeOf(String volume, String series) {
+    return 'Tome $volume de $series';
+  }
+
+  @override
+  String storeYouHave(String list) {
+    return 'tu as $list';
+  }
+
+  @override
+  String get storeYouHaveNone => 'tu n’en as aucun';
+
+  @override
+  String storePurchasedOn(String date) {
+    return 'Acheté le $date';
+  }
+
+  @override
+  String storeLocation(String location) {
+    return 'Emplacement : $location';
+  }
+
+  @override
+  String storeMaxPrice(String price) {
+    return 'Prix max : $price';
+  }
+
+  @override
+  String get storeSearching => 'Recherche en ligne…';
+
+  @override
+  String get storeOffline => 'Hors ligne : seule ta collection a été vérifiée';
+
+  @override
+  String get storeIsbnRemembered =>
+      'ISBN mémorisé sur ce tome pour les prochains scans';
+
+  @override
+  String get storeDetails => 'Détails';
+
+  @override
+  String get scanModeStore => 'Magasin';
+
+  @override
+  String get scanModeBurst => 'Rafale';
+
+  @override
+  String burstQueued(int count) {
+    return 'Ajouté à la file ($count)';
+  }
+
+  @override
+  String get burstAlreadyQueued => 'Déjà dans la file';
+
+  @override
+  String get burstHint =>
+      'Scanne les ouvrages à la suite : les infos sont cherchées en arrière-plan, tu valides ensuite.';
+
+  @override
+  String burstReview(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Revoir ($count)',
+      zero: 'File vide',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String burstProgress(int done, int total) {
+    return '$done/$total recherchés';
+  }
+
+  @override
+  String get scanReviewTitle => 'Revue de la rafale';
+
+  @override
+  String get reviewPending => 'Recherche…';
+
+  @override
+  String get reviewNotFound => 'Introuvable : appuie pour chercher';
+
+  @override
+  String get reviewFailed => 'Échec (hors ligne ?) : appuie pour chercher';
+
+  @override
+  String get reviewInCollection => 'Déjà dans ta collection';
+
+  @override
+  String reviewNewSeries(String title) {
+    return 'Nouvelle série « $title »';
+  }
+
+  @override
+  String reviewAddAll(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Ajouter $count ouvrages',
+      one: 'Ajouter 1 ouvrage',
+      zero: 'Rien à ajouter',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reviewAdded(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count ouvrages ajoutés',
+      one: '1 ouvrage ajouté',
+      zero: 'Aucun ouvrage ajouté',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get reviewRetry => 'Relancer les échecs';
+
+  @override
+  String get reviewEmpty =>
+      'La file est vide. Passe en mode Rafale sur l’écran Scanner pour la remplir.';
+
+  @override
+  String get reviewRemoved => 'Retiré de la file';
+
+  @override
+  String get reviewEditHint =>
+      'Appuie sur un ouvrage pour le corriger avant de l’ajouter';
+
+  @override
+  String get settingsSources => 'Sources de données';
+
+  @override
+  String get sourceNeedsKey => 'Clé API absente de env.json';
+
+  @override
+  String get sourceBnfHelp =>
+      'Catalogue de la BnF : éditions françaises, prix, séries';
+
+  @override
+  String get sourceGoogleBooksHelp => 'Couvertures et résumés';
+
+  @override
+  String get sourceOpenLibraryHelp => 'Livres, couvertures';
+
+  @override
+  String get sourceComicVineHelp => 'Comics US : séries et numéros';
+
+  @override
+  String get sourceAnilistHelp =>
+      'Mangas : infos de série (nombre de tomes, statut)';
 }

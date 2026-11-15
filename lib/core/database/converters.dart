@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:drift/drift.dart';
+import 'package:dupe/core/metadata/metadata_result.dart';
 import 'package:dupe/core/utils/db_enum.dart';
 
 /// Stores a [DbEnum] as its stable text value.
@@ -38,4 +39,16 @@ class StringMapConverter extends TypeConverter<Map<String, String>, String> {
 
   @override
   String toSql(Map<String, String> value) => jsonEncode(value);
+}
+
+/// Stores a [MetadataResult] as JSON.
+class MetadataResultConverter extends TypeConverter<MetadataResult, String> {
+  const new();
+
+  @override
+  MetadataResult fromSql(String fromDb) =>
+      MetadataResult.fromJson(jsonDecode(fromDb) as Map<String, dynamic>);
+
+  @override
+  String toSql(MetadataResult value) => jsonEncode(value.toJson());
 }

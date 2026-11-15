@@ -12,6 +12,7 @@ part of 'metadata_result.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
+
 /// @nodoc
 mixin _$MetadataResult {
 
@@ -25,6 +26,8 @@ mixin _$MetadataResult {
 @pragma('vm:prefer-inline')
 $MetadataResultCopyWith<MetadataResult> get copyWith => _$MetadataResultCopyWithImpl<MetadataResult>(this as MetadataResult, _$identity);
 
+  /// Serializes this MetadataResult to a JSON map.
+  Map<String, dynamic> toJson();
 
 
 @override
@@ -33,7 +36,7 @@ bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is MetadataResult&&(identical(other.source, _this.source) || other.source == _this.source)&&(identical(other.sourceId, _this.sourceId) || other.sourceId == _this.sourceId)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.subtitle, _this.subtitle) || other.subtitle == _this.subtitle)&&const DeepCollectionEquality().equals(other.authors, _this.authors)&&(identical(other.publisher, _this.publisher) || other.publisher == _this.publisher)&&(identical(other.publishDate, _this.publishDate) || other.publishDate == _this.publishDate)&&(identical(other.pageCount, _this.pageCount) || other.pageCount == _this.pageCount)&&(identical(other.language, _this.language) || other.language == _this.language)&&(identical(other.isbn13, _this.isbn13) || other.isbn13 == _this.isbn13)&&(identical(other.coverUrl, _this.coverUrl) || other.coverUrl == _this.coverUrl)&&(identical(other.description, _this.description) || other.description == _this.description)&&(identical(other.seriesTitle, _this.seriesTitle) || other.seriesTitle == _this.seriesTitle)&&(identical(other.volumeNumber, _this.volumeNumber) || other.volumeNumber == _this.volumeNumber)&&(identical(other.coverPrice, _this.coverPrice) || other.coverPrice == _this.coverPrice)&&(identical(other.currency, _this.currency) || other.currency == _this.currency));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as MetadataResult;
@@ -227,11 +230,11 @@ return $default(_that.source,_that.sourceId,_that.title,_that.subtitle,_that.aut
 }
 
 /// @nodoc
-
+@JsonSerializable()
 
 class _MetadataResult implements MetadataResult {
   const _MetadataResult({required this.source, required this.sourceId, required this.title, this.subtitle,  List<String> authors = const <String>[], this.publisher, this.publishDate, this.pageCount, this.language, this.isbn13, this.coverUrl, this.description, this.seriesTitle, this.volumeNumber, this.coverPrice, this.currency}): _authors = authors;
-  
+  factory _MetadataResult.fromJson(Map<String, dynamic> json) => _$MetadataResultFromJson(json);
 
 @override final  MetadataSource source;
 @override final  String sourceId;
@@ -265,14 +268,17 @@ class _MetadataResult implements MetadataResult {
 @pragma('vm:prefer-inline')
 _$MetadataResultCopyWith<_MetadataResult> get copyWith => __$MetadataResultCopyWithImpl<_MetadataResult>(this, _$identity);
 
-
+@override
+Map<String, dynamic> toJson() {
+  return _$MetadataResultToJson(this, );
+}
 
 @override
 bool operator ==(Object other) {
     return identical(this, other) || (other.runtimeType == runtimeType&&other is _MetadataResult&&(identical(other.source, source) || other.source == source)&&(identical(other.sourceId, sourceId) || other.sourceId == sourceId)&&(identical(other.title, title) || other.title == title)&&(identical(other.subtitle, subtitle) || other.subtitle == subtitle)&&const DeepCollectionEquality().equals(other.authors, _authors)&&(identical(other.publisher, publisher) || other.publisher == publisher)&&(identical(other.publishDate, publishDate) || other.publishDate == publishDate)&&(identical(other.pageCount, pageCount) || other.pageCount == pageCount)&&(identical(other.language, language) || other.language == language)&&(identical(other.isbn13, isbn13) || other.isbn13 == isbn13)&&(identical(other.coverUrl, coverUrl) || other.coverUrl == coverUrl)&&(identical(other.description, description) || other.description == description)&&(identical(other.seriesTitle, seriesTitle) || other.seriesTitle == seriesTitle)&&(identical(other.volumeNumber, volumeNumber) || other.volumeNumber == volumeNumber)&&(identical(other.coverPrice, coverPrice) || other.coverPrice == coverPrice)&&(identical(other.currency, currency) || other.currency == currency));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
     return Object.hash(runtimeType,source,sourceId,title,subtitle,const DeepCollectionEquality().hash(_authors),publisher,publishDate,pageCount,language,isbn13,coverUrl,description,seriesTitle,volumeNumber,coverPrice,currency);

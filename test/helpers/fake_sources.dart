@@ -32,16 +32,30 @@ const onePieceT3 = MetadataResult(
   isbn13: onePieceT3Isbn,
 );
 
-/// Replaces the real sources by a BnF fake answering [result] to any ISBN.
-Override fakeMetadataSources({MetadataResult result = duneResult}) =>
-    metadataAggregatorProvider.overrideWithValue(
-      MetadataAggregator(
-        providers: [
-          FakeProvider(
-            MetadataSource.bnf,
-            isbnResult: result,
-            textResults: [result],
-          ),
-        ],
+const onePieceT4Isbn = '9782723428781';
+final MetadataResult onePieceT4 = onePieceT3.copyWith(
+  sourceId: 'ark:/op4',
+  volumeNumber: '4',
+  isbn13: onePieceT4Isbn,
+);
+
+/// Replaces the real sources by a BnF fake answering [result] to any ISBN
+/// (or [byIsbn] when given: other ISBNs are then unknown), or failing with
+/// [error] (offline).
+Override fakeMetadataSources({
+  MetadataResult result = duneResult,
+  Map<String, MetadataResult>? byIsbn,
+  Exception? error,
+}) => metadataAggregatorProvider.overrideWithValue(
+  MetadataAggregator(
+    providers: [
+      FakeProvider(
+        MetadataSource.bnf,
+        isbnResult: byIsbn == null ? result : null,
+        byIsbn: byIsbn ?? const {},
+        textResults: [result],
+        error: error,
       ),
-    );
+    ],
+  ),
+);

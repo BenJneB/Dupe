@@ -5,13 +5,23 @@ import 'package:drift/native.dart';
 import 'package:dupe/core/database/app_database.drift.dart';
 import 'package:dupe/core/database/tables/items_table.dart';
 import 'package:dupe/core/database/tables/loans_table.dart';
+import 'package:dupe/core/database/tables/local_tables.dart';
 import 'package:dupe/core/database/tables/series_table.dart';
 import 'package:dupe/core/utils/text_fold.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:sqlite3/sqlite3.dart' as sqlite;
 
-@DriftDatabase(tables: [SeriesTable, ItemsTable, LoansTable])
+@DriftDatabase(
+  tables: [
+    SeriesTable,
+    ItemsTable,
+    LoansTable,
+    AppSettingsTable,
+    MetadataCacheTable,
+    ScanQueueTable,
+  ],
+)
 class AppDatabase extends $AppDatabase {
   new(super.e);
 
@@ -35,11 +45,19 @@ class AppDatabase extends $AppDatabase {
       AppDatabase(NativeDatabase.memory(setup: setupConnection));
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
     onCreate: (m) => m.createAll(),
+    onUpgrade: (m, from, to) async {
+      if (from < 2) {
+        // v2: device-local tables (settings, response cache, burst queue).
+        await m.createTable(appSettingsTable);
+        await m.createTable(metadataCacheTable);
+        await m.createTable(scanQueueTable);
+      }
+    },
     beforeOpen: (details) async {
       await customStatement('PRAGMA foreign_keys = ON');
     },
