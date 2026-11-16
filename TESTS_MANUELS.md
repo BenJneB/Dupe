@@ -1,13 +1,13 @@
 # Dupe — Tests manuels
 
-> Document autonome, à jour au **2026-11-15**. Dupe est une appli Flutter personnelle de catalogue de
+> Document autonome, à jour au **2026-11-16**. Dupe est une appli Flutter personnelle de catalogue de
 > collection (mangas, BD, comics, livres) pour Android, Linux et Windows, avec synchro Supabase optionnelle.
 > Contexte : `PLAN_V2.md` (phases 9-13) et `PLAN_V3.md`. Une petite partie de ces tests est faite **maintenant**
 > (phase 14, vérifications de base) ; tout le reste l'est à la fin (**phase 21, recette finale**), sur la version
 > finale. Les phases 15 à 20 ajoutent leurs tests ici et marquent « automatisé (phase N) » ceux que leurs tests
 > automatiques couvrent désormais.
 
-Ce fichier liste ce que les **284 tests automatiques (et 4 parcours d'intégration) ne couvrent pas** : matériel (caméra, vibrations,
+Ce fichier liste ce que les **301 tests automatiques (et 4 parcours d'intégration) ne couvrent pas** : matériel (caméra, vibrations,
 notifications, raccourci), services réels (Supabase, API GitHub, sources de métadonnées), plateformes non
 compilées ici (Windows) et workflows GitHub (jamais exécutés).
 
@@ -143,7 +143,9 @@ Tous les tests non faits en phase 14 et non marqués « automatisé ». Le but :
 - [ ] **R-02** Fermer l'appli en cours de file, rouvrir : la file reprend.
       — REPORTÉ après la v4 (décision de l'utilisateur, 2026-11-15).
 - [ ] **R-03** Revue : correction d'une fiche, puis import en lot ; séries créées correctement.
-      — REPORTÉ après la v4 (décision de l'utilisateur, 2026-11-15).
+      — REPORTÉ après la v4 (décision de l'utilisateur, 2026-11-15). Retour du 2026-11-16 (Everdark : certains tomes
+      importés hors de la série) : un tome sans série ni numéro dont une source a échoué est désormais « en échec »
+      (à réessayer) au lieu d'être importé — automatisé (phase 29).
 - [ ] **R-04** (phase 13) 1 vibration légère par ajout ; 1 brève et « déjà dans la file » pour un doublon.
       — REPORTÉ après la v4 (décision de l'utilisateur, 2026-11-15).
 
@@ -505,7 +507,8 @@ point sur les pastilles. Simulées : les sources.
 - [ ] **C-03** Scanner un livre déjà dans la collection → « Cet ISBN est déjà celui de … » ; un autre livre que celui
       affiché → demande de confirmation.
 - [ ] **C-04** Fiche d'un livre possédé sans ISBN → « ISBN manquant · scanner ». Par défaut : point sur les
-      pastilles concernées, icône sur les séries, livres et auteurs qui ont des livres sans ISBN (nombre en appui long) ;
+      pastilles concernées, icône sur les lignes de la vue liste des tomes, et sur les séries, livres et auteurs qui ont
+      des livres sans ISBN (nombre en appui long) ;
       Qualité → « Signaler les ISBN manquants » décoché → plus aucun indicateur.
 
 ## 19. Éditions et couvertures (v4, phase 25)
@@ -518,3 +521,18 @@ refus non reproposé, « autre édition » d'un livre hors série en magasin et 
 - [ ] **X-03** En magasin, scanner un roman que tu possèdes dans une autre édition (poche / grand format) : bandeau
       vert « Tu as ce livre dans une autre édition ».
 
+## 20. Photos de couverture : redressement et recadrage (v4, phase 29)
+Automatisé (phase 29) : calcul de la perspective, orientation EXIF, suppression de l'EXIF, dimensions de sortie,
+éditeur (valider, quart de tour), scanner simulé, recadrage d'une photo existante, purge des originaux.
+- [ ] **P-01** Téléphone : fiche d'un livre → appareil photo → le scanner Google s'ouvre, détecte la couverture
+      posée de biais sur une table ; valider → couverture droite, sans bord de table, **en trois appuis au plus**.
+      Essayer aussi en faible lumière et avec une couverture brillante (reflets).
+- [ ] **P-02** Téléphone en mode avion, **première** utilisation du scanner (ou services Google Play absents) : l'appli
+      bascule sur l'appareil photo puis l'éditeur manuel (coins, loupe sous le doigt, quart de tour, ratio) ; aucun
+      blocage. Le traitement ne fige pas l'écran.
+- [ ] **P-03** PC : fiche → bouton photo → choisir une photo prise de biais → éditeur ; placer les coins (zoom à la
+      molette/pince) → Valider → couverture droite. Puis « Recadrer la couverture » (icône recadrage) → l'éditeur
+      rouvre l'original, on peut refaire.
+- [ ] **P-04** La couverture envoyée sur Supabase (téléchargée sur l'autre appareil) ne contient aucune donnée EXIF
+      (`exiftool` ou propriétés du fichier : ni position, ni appareil) ; Paramètres → « Photos originales » → Vider :
+      les couvertures restent affichées.

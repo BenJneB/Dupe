@@ -110,7 +110,7 @@ sources de métadonnées, scan, synchro, sauvegardes, couvertures, CI…). Le me
   en mémoire, `goBack` car `tester.pageBack()` ne connaît pas le BackButton de material_ui),
   `test_repositories.dart` (repo + horloge contrôlable).
 - En test widget, la base se ferme via `tester.runAsync` (sinon blocage en temps simulé).
-  `dart_test.yaml` : timeout 30 s par test. Suite complète ~30 s (257 tests, 2026-11-16) : le temps vient surtout
+  `dart_test.yaml` : timeout 30 s par test. Suite complète ~40 s (301 tests, 2026-11-16) : le temps vient surtout
   de la compilation de chaque fichier de test widget. Helpers de navigation : `test/helpers/screen_helpers.dart`
   (`goTo`, `openSettings`, `tapTile`, `fillSignIn`) ; ne jamais importer un fichier `_test.dart` depuis un autre.
 
@@ -141,8 +141,9 @@ Windows ne se compile pas depuis Linux (à vérifier sur un PC Windows).
   `commit-msg` (`tool/check_commit_msg.sh`) et alimente les notes de Release (`tool/ci/release_notes.sh`).
 - Publier une version (tag, Release) : **toujours fait à la main par l'utilisateur** ; ne pas proposer de script de
   release (décision du 2026-11-16).
-- Hooks lefthook (`lefthook.yml`, phase 18) : pré-commit format + analyze (en parallèle, seulement si des `.dart`
-  sont stagés), pré-push tests.
+- Hooks lefthook (`lefthook.yml`, phase 18) : pré-commit format, en parallèle de `tool/ci/check_generated.sh`
+  (refuse un fichier généré à jour non stagé) puis analyze (seulement si des `.dart` / `.arb` sont stagés),
+  pré-push tests.
 - Tests d'intégration : `integration_test/` (helpers de `test/helpers/` importés en relatif), `flutter test
   integration_test -d linux` (ouvre une fenêtre) ; CI : `xvfb-run -a`.
 - `CLAUDE.md` est versionné (retiré de `.git/info/exclude` le 2026-11-15). **Exception pour ce projet**

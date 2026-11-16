@@ -2416,6 +2416,84 @@ abstract class AppLocalizations {
   /// **'Photographier la couverture'**
   String get coverPhoto;
 
+  /// No description provided for @coverRecrop.
+  ///
+  /// In fr, this message translates to:
+  /// **'Recadrer la couverture'**
+  String get coverRecrop;
+
+  /// No description provided for @cropTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Recadrer'**
+  String get cropTitle;
+
+  /// No description provided for @cropHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Place les quatre coins sur ceux de la couverture (pince pour zoomer).'**
+  String get cropHelp;
+
+  /// No description provided for @cropRotate.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pivoter d’un quart de tour'**
+  String get cropRotate;
+
+  /// No description provided for @cropReset.
+  ///
+  /// In fr, this message translates to:
+  /// **'Réinitialiser le cadre'**
+  String get cropReset;
+
+  /// No description provided for @cropDone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Valider'**
+  String get cropDone;
+
+  /// No description provided for @cropAspectFree.
+  ///
+  /// In fr, this message translates to:
+  /// **'Libre'**
+  String get cropAspectFree;
+
+  /// No description provided for @cropAspectPocket.
+  ///
+  /// In fr, this message translates to:
+  /// **'Manga / poche'**
+  String get cropAspectPocket;
+
+  /// No description provided for @cropAspectAlbum.
+  ///
+  /// In fr, this message translates to:
+  /// **'Album BD'**
+  String get cropAspectAlbum;
+
+  /// No description provided for @cropAspectComics.
+  ///
+  /// In fr, this message translates to:
+  /// **'Comics'**
+  String get cropAspectComics;
+
+  /// No description provided for @coverOriginals.
+  ///
+  /// In fr, this message translates to:
+  /// **'Photos originales'**
+  String get coverOriginals;
+
+  /// No description provided for @coverOriginalsHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'gardées sur cet appareil pour recadrer à nouveau'**
+  String get coverOriginalsHelp;
+
+  /// No description provided for @coverOriginalsPurged.
+  ///
+  /// In fr, this message translates to:
+  /// **'Photos originales supprimées (les couvertures restent)'**
+  String get coverOriginalsPurged;
+
   /// No description provided for @coverPhotoError.
   ///
   /// In fr, this message translates to:

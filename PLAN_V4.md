@@ -53,7 +53,7 @@ deux fonctions tournées vers la suite de la collection : être prévenu des nou
 | 2 | 24 | Titres des tomes (champ dédié, vue pastilles) | ✅ fait (2026-11-16) | oui (+ Supabase local) | non (`I-*`) |
 | 3 | 22 | Qualité des données et ISBN manquants | ✅ fait (2026-11-16) | oui | non (`C-*`) |
 | 4 | 25 | Éditions et couvertures | ✅ fait (2026-11-16) | oui | non (`X-*`) |
-| 5 | 29 | Photos : redressement et recadrage | à faire | — | — |
+| 5 | 29 | Photos : redressement et recadrage | ✅ fait (2026-11-16) | oui | non (`P-*`) |
 | 6 | 30 | Dédicaces | à faire | — | — |
 | 7 | 31 | Nouvelles sources de métadonnées | à faire | — | — |
 | 8 | 32 | Alertes de nouveautés | à faire | — | — |
@@ -287,6 +287,40 @@ Objectif : une photo prise de travers devient une couverture droite, bien cadré
 
 *Critère : une photo de couverture prise de biais sur le téléphone donne une image droite et sans bord de table
 en moins de trois appuis ; l'image envoyée ne contient aucune donnée EXIF.*
+
+**Bilan (2026-11-16)**
+- **Réalisé** :
+  - `covers/domain/perspective.dart` : homographie quatre coins → rectangle (vraie perspective, élimination de
+    Gauss ; pas `copyRectify` du package `image`, qui n'est qu'un mélange bilinéaire et courbe les bords),
+    `outputSize` (côtés opposés les plus longs, préréglage de ratio, 1200 px max, jamais agrandi),
+    `rotateQuadClockwise`, `CoverAspect` (libre, manga/poche 11,5×18, album BD 24×32, comics 17×26).
+  - `covers/data/cover_processing.dart` (package `image` 4.13, chaque étape dans `Isolate.run`) : `prepare`
+    (orientation EXIF appliquée, 2400 px max), `rotate`, `crop` (source réduite d'abord si elle est bien plus grande
+    que la sortie, puis échantillonnage bilinéaire), `normalize` (sortie du scanner) ; JPEG qualité 85, **EXIF
+    vidé** à chaque encodage.
+  - Android : scanner ML Kit `google_mlkit_document_scanner` 0.7.2 (`cover_scanner.dart`, mode `base` : détection,
+    recadrage, rotation, sans les filtres de « nettoyage » ; import depuis la galerie possible). Annulation → rien ;
+    impossible de démarrer (services Google Play absents/anciens, module pas encore téléchargé hors ligne) →
+    `ScannerUnavailable`, journalisé, puis éditeur manuel.
+  - Éditeur manuel toutes plateformes (`presentation/crop/`) : quatre coins déplaçables (cadre par défaut à 10 % des
+    bords), loupe ×2,5 sous le doigt (`RawMagnifier`), zoom `InteractiveViewer` (poignées de taille constante),
+    quart de tour, réinitialisation, préréglages de ratio.
+  - Original (photo redressée par l'EXIF, sans EXIF, 2400 px max) gardé dans `covers/originals/<itemId>.jpg`,
+    **jamais synchronisé** (la synchro ne lit que les URL des items) ; bouton « Recadrer la couverture » sur la fiche
+    (photos `dupe-cover:` ; original absent → la couverture elle-même, téléchargée si besoin) ; Paramètres → « Photos
+    originales » (taille, « Vider » : les couvertures restent).
+  - Tests : `perspective_test.dart`, `cover_processing_test.dart` (orientation, EXIF supprimé, coins sans bord noir
+    après redressement, dimensions), `cover_photo_form_test.dart` (éditeur, scanner, recadrage d'une photo existante),
+    `cover_photos_test.dart` (originaux, purge). `pumpApp` injecte `FakeCoverScanner` (indisponible par défaut).
+- **Écarts** : pas de détection automatique des bords hors Android (cadre par défaut à déplacer) ; avec le scanner
+  ML Kit, l'« original » gardé est l'image déjà recadrée par ML Kit (il ne rend pas la photo brute) ; la photo
+  passe par `image_picker` (2400 px, qualité 92) avant l'éditeur.
+- **Non vérifié** : prises de vue réelles (biais, faible lumière, couverture brillante), ML Kit sur le téléphone
+  (premier téléchargement du module, hors ligne), temps de traitement sur le téléphone (`P-01` à `P-04`).
+- **Correctif rafale (retour de l'utilisateur pendant la phase, Everdark)** : un tome dont la BnF n'avait pas répondu
+  (délai, limite de débit) était importé avec la seule fiche Google Books (titre « Everdark », sans numéro) → livre
+  isolé hors de la série. `ScanQueueWorker` : si une source a échoué et que le résultat n'a **ni série ni numéro**,
+  l'entrée passe « échec » (bouton Réessayer de la revue) au lieu d'être importée (`scan_queue_worker_test.dart`).
 
 ### Phase 30 — Dédicaces
 - **Schéma** : sur `items`, `is_signed` (bool), `signed_by` (texte, pré-rempli avec les auteurs de l'ouvrage),

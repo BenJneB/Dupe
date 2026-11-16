@@ -80,7 +80,7 @@ class OfflineCoversSection extends ConsumerWidget {
           title: Text(_status(l10n, progress)),
           subtitle: Text(
             [
-              if (size != null) l10n.offlineCoversSize(_megabytes(size)),
+              if (size != null) l10n.offlineCoversSize(megabytes(size)),
               l10n.offlineCoversRefresh,
             ].join(' · '),
           ),
@@ -121,8 +121,8 @@ class OfflineCoversSection extends ConsumerWidget {
     ),
     _ => l10n.offlineCoversDone(s.total),
   };
-
-  /// French decimal comma, one decimal ("48,2").
-  static String _megabytes(int bytes) =>
-      (bytes / (1024 * 1024)).toStringAsFixed(1).replaceAll('.', ',');
 }
+
+/// French decimal comma, one decimal ("48,2").
+String megabytes(int bytes) =>
+    (bytes / (1024 * 1024)).toStringAsFixed(1).replaceAll('.', ',');

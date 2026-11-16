@@ -236,4 +236,53 @@ final class PickImageProvider
   }
 }
 
-String _$pickImageHash() => r'020d0dcee0521b936c284af8ae842d0f8d33afb6';
+String _$pickImageHash() => r'8276bfb5a36b7b06dd7a5fafceba8b4f793f6c9f';
+
+/// Automatic capture on Android (ML Kit), null elsewhere. Overridden in
+/// tests (`pumpApp`).
+
+@ProviderFor(coverScanner)
+final coverScannerProvider = CoverScannerProvider._();
+
+/// Automatic capture on Android (ML Kit), null elsewhere. Overridden in
+/// tests (`pumpApp`).
+
+final class CoverScannerProvider
+    extends $FunctionalProvider<CoverScanner?, CoverScanner?, CoverScanner?>
+    with $Provider<CoverScanner?> {
+  /// Automatic capture on Android (ML Kit), null elsewhere. Overridden in
+  /// tests (`pumpApp`).
+  CoverScannerProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'coverScannerProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$coverScannerHash();
+
+  @$internal
+  @override
+  $ProviderElement<CoverScanner?> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  CoverScanner? create(Ref ref) {
+    return coverScanner(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(CoverScanner? value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<CoverScanner?>(value),
+    );
+  }
+}
+
+String _$coverScannerHash() => r'e568f80ec90283e3072cec4bbc8f83838ad47a5f';

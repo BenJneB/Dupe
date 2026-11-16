@@ -39,6 +39,43 @@ class CoverPhotos {
     await file.writeAsBytes(bytes, flush: true);
     return '$scheme$name';
   }
+
+  /// Uncropped photo of [itemId], kept on this device only (never synced)
+  /// to crop it again (phase 29).
+  Future<File> originalOf(String itemId) async =>
+      File(p.join((await _dir()).path, _originals, '$itemId.jpg'));
+
+  Future<void> saveOriginal(String itemId, Uint8List bytes) async {
+    final file = await originalOf(itemId);
+    await file.parent.create(recursive: true);
+    await file.writeAsBytes(bytes, flush: true);
+  }
+
+  /// Disk space of the originals, in bytes.
+  Future<int> originalsSize() async {
+    var total = 0;
+    await for (final f in _originalFiles()) {
+      total += await f.length();
+    }
+    return total;
+  }
+
+  /// Deletes every original; the covers themselves are kept.
+  Future<void> purgeOriginals() async {
+    await for (final f in _originalFiles()) {
+      await f.delete();
+    }
+  }
+
+  Stream<File> _originalFiles() async* {
+    final dir = Directory(p.join((await _dir()).path, _originals));
+    if (!dir.existsSync()) return;
+    await for (final entry in dir.list()) {
+      if (entry is File) yield entry;
+    }
+  }
+
+  static const _originals = 'originals';
 }
 
 /// Remote storage of the photos.

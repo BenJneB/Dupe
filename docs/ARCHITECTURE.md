@@ -35,7 +35,8 @@ Description détaillée des choix techniques et de l'organisation du code (dépl
   Couleurs : `chart_colors.dart` (bleu de la palette dataviz validée clair/sombre), textes aux couleurs du thème.
 - Supabase : package Dart pur `supabase` 2.16 (pas supabase_flutter : évite app_links/plugins natifs sur
   desktop). Session dans `app_settings` (`supabase_session`), flux implicite, connexion email + mot de passe.
-- Photos de couverture : image_picker 1.2 (caméra sur Android, sélecteur de fichier sur desktop).
+- Photos de couverture : image_picker 1.2 (caméra sur Android, sélecteur de fichier sur desktop),
+  google_mlkit_document_scanner 0.7 (Android, services Google Play), image 4.13 (redressement, Dart pur).
 
 ## Architecture (`lib/`)
 - `app/` : `app.dart` (MaterialApp.router), `router.dart` (go_router, `AppRoutes`), `theme.dart`,
@@ -82,7 +83,8 @@ Description détaillée des choix techniques et de l'organisation du code (dépl
     Bandeau `store/` (couleurs fixes vert/jaune/bleu, gris = thème).
   - Rafale : file persistée `scan_queue` (`ScanQueueRepository`), `ScanQueueWorker` séquentiel (sources
     limitées), relancé à l'ouverture du scan et de la revue ; `importScanQueue` ajoute en lot (séries créées au
-    fil de l'eau) ; revue `/scan/revue`, correction via `/scan/revue/ouvrage` (`ItemFormScreen(popOnSave)`).
+    fil de l'eau ; une entrée sans série ni numéro dont une source a échoué reste « échec », à réessayer) ;
+    revue `/scan/revue`, correction via `/scan/revue/ouvrage` (`ItemFormScreen(popOnSave)`).
   - `loadItemDraft` / `applyAttachment` : `features/collection/data/item_drafts.dart` (partagés formulaire/rafale).
 - Nombre de tomes (v4 phase 23) : `matchSeriesTotal` (titre identique seulement) + `checkVolumeCount` ;
   `series_total_actions.dart` (menu « Vérifier le nombre de tomes », question au premier tome numéroté d'une série
@@ -98,7 +100,7 @@ Description détaillée des choix techniques et de l'organisation du code (dépl
   `titlesFit`, puis `fillBlanks`) pour la complétion par scan (`isbn_completion_screen.dart`, caméra sur Android,
   `CodeEntryField` ailleurs), puce « ISBN manquant » de la fiche, point optionnel sur les pastilles
   (`MissingIsbnInGrid`, `grid_missing_isbn`, activé par défaut) et icône `MissingIsbnMark` sur les séries, livres et
-  auteurs des listes (`SeriesEntry.missingIsbnCount`).
+  auteurs des listes, et sur les lignes de la vue liste des tomes (`SeriesEntry.missingIsbnCount`).
 - Titre propre d'un tome (v4 phase 24) : `Item.volumeTitle` / `items.volume_title` (schéma v3, migration Supabase
   `20261116120000_volume_title.sql`) ; `volumeTitleOf` (`metadata_mapping.dart`) pour l'ajout et le scan,
   `VolumeTitleFill` (Plus → Qualité) pour l'existant, `VolumeSlot.ownTitle` (repli sur l'ancien titre) pour
@@ -161,6 +163,12 @@ Description détaillée des choix techniques et de l'organisation du code (dépl
   `test/helpers/fake_sync_remote.dart` (mêmes règles que les triggers) et `fake_sync_auth.dart`.
 - Photos (`features/covers/`) : URL `dupe-cover:<itemId>-<ms>.jpg`, fichier local `<support>/covers/`, upload
   après la synchro (`uploadPendingCovers`), téléchargement à l'affichage (`userCoverFileProvider`).
+  Redressement (v4 phase 29) : `presentation/crop/cover_capture.dart` (`captureCover` : scanner ML Kit
+  `coverScannerProvider` sur Android, sinon / s'il est indisponible `pickImage` puis éditeur ; `recropCover`),
+  éditeur `cover_crop_screen.dart` + `crop_canvas.dart` (coins, loupe, zoom), calcul `domain/perspective.dart`
+  (homographie), traitement `data/cover_processing.dart` (isolates, JPEG 85, 1200 px, EXIF vidé). Originaux non
+  synchronisés dans `covers/originals/<itemId>.jpg` (`CoverPhotos.saveOriginal`, purge : `CoverOriginalsTile`).
+  Tests : `FakeCoverScanner` (indisponible par défaut, param `coverScanner:` de `pumpApp`).
 - Sauvegarde/import (`features/backup/`, phase 8) : JSON = format de la synchro (`SyncCodec.toRemote`, lignes
   supprimées incluses), restauration = `SyncCodec.apply(pending: true)` (fusion, plus récent gagne, jamais
   d'effacement). CSV maison (`csv_codec.dart` : `;` + BOM en écriture, séparateur détecté en lecture, lignes

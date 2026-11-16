@@ -86,4 +86,29 @@ void main() {
       isNull,
     );
   });
+
+  test(
+    'originals: kept per item, measured, purged without the covers',
+    () async {
+      final url = await photos.save(
+        'item-1',
+        jpeg,
+        extension: '.jpg',
+        now: DateTime(2026, 11, 16),
+      );
+      await photos.saveOriginal('item-1', jpeg);
+      // Cropped again: the original of the item is replaced, not added.
+      await photos.saveOriginal('item-1', Uint8List.fromList([...jpeg, 4]));
+      expect(await photos.originalsSize(), jpeg.length + 1);
+      // Never mistaken for a cover photo.
+      expect((await photos.originalOf('item-1')).path, contains('originals'));
+
+      await photos.purgeOriginals();
+      expect(await photos.originalsSize(), 0);
+      expect(
+        (await photos.fileOf(CoverPhotos.nameOf(url)!)).existsSync(),
+        isTrue,
+      );
+    },
+  );
 }

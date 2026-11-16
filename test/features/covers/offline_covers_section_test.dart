@@ -35,7 +35,7 @@ void main() {
       scrollable: find.byType(Scrollable).last,
     );
     expect(find.text('1 couverture disponible hors ligne'), findsOneWidget);
-    expect(find.textContaining('0,1 Mo utilisés'), findsOneWidget);
+    expect(find.textContaining('0,1 Mo utilisés · toucher'), findsOneWidget);
 
     await tester.ensureVisible(find.byKey(const Key('clearCoverCache')));
     await tester.pumpAndSettle();
@@ -43,7 +43,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(cache.cached, isEmpty);
     expect(find.textContaining('vos photos sont gardées'), findsOneWidget);
-    expect(find.textContaining('0,0 Mo utilisés'), findsOneWidget);
+    expect(find.textContaining('0,0 Mo utilisés · toucher'), findsOneWidget);
   });
 
   testWidgets('mobile data: waits for Wi-Fi unless allowed', (tester) async {
