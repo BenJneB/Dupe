@@ -314,6 +314,139 @@ class AppLocalizationsFr extends AppLocalizations {
   String get authorNotFound => 'Plus rien de cet auteur dans cet onglet';
 
   @override
+  String get indicativeProgress =>
+      'Progression estimée : nombre total de tomes inconnu';
+
+  @override
+  String get authorMarkBooksRead => 'Marquer les livres hors série comme lus';
+
+  @override
+  String get authorMarkAllRead => 'Tout marquer comme lu (séries comprises)';
+
+  @override
+  String authorMarkReadQuestion(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Marquer $count livres comme lus ?',
+      one: 'Marquer 1 livre comme lu ?',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get authorMarkReadHelp =>
+      'Seuls les livres possédés et pas encore lus changent ; la date de lecture du jour est mise sur ceux qui n’en ont pas.';
+
+  @override
+  String booksMarkedRead(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count livres marqués comme lus',
+      one: '1 livre marqué comme lu',
+      zero: 'Rien à marquer : tout est déjà lu',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get later => 'Plus tard';
+
+  @override
+  String totalFromAniList(String title, int count) {
+    return 'AniList : « $title », $count tomes (nombre de l’édition japonaise)';
+  }
+
+  @override
+  String totalFromComicVine(String title, int count) {
+    return 'Comic Vine : « $title », $count numéros (édition américaine)';
+  }
+
+  @override
+  String get seriesTotalHelp =>
+      'Les tomes que tu n’as pas apparaîtront en gris dans la série.';
+
+  @override
+  String get checkTotalAction => 'Vérifier le nombre de tomes';
+
+  @override
+  String get checkTotalTitle => 'Nombre total de tomes';
+
+  @override
+  String checkTotalNone(String title) {
+    return 'Aucun nombre de tomes trouvé pour « $title »';
+  }
+
+  @override
+  String checkTotalSaved(String title, int count) {
+    return '$title : $count tomes';
+  }
+
+  @override
+  String get nextVolumesTitle => 'Combien de tomes compte la série ?';
+
+  @override
+  String get volumeCountsTitle => 'Nombre de tomes des séries';
+
+  @override
+  String get volumeCountsTile => 'Vérifier le nombre de tomes des séries';
+
+  @override
+  String get volumeCountsTileHelp =>
+      'Mangas (AniList) et comics (Comic Vine) sans nombre total : propositions à valider';
+
+  @override
+  String get volumeCountsHelp =>
+      'Cherche le nombre total de tomes des séries qui n’en ont pas (mangas et comics). Rien n’est modifié avant ta validation.';
+
+  @override
+  String get volumeCountsRun => 'Lancer';
+
+  @override
+  String volumeCountsProgress(int done, int total) {
+    return '$done / $total séries vérifiées';
+  }
+
+  @override
+  String volumeCountsDone(int total, int found) {
+    return '$total séries vérifiées · $found nombre(s) de tomes trouvé(s)';
+  }
+
+  @override
+  String volumeCountsFailed(int count) {
+    return '$count série(s) non vérifiée(s) : source indisponible (détails dans le journal)';
+  }
+
+  @override
+  String volumeCountsApply(int count) {
+    return 'Appliquer ($count)';
+  }
+
+  @override
+  String volumeCountsApplied(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count séries mises à jour',
+      one: '1 série mise à jour',
+      zero: 'Aucune série modifiée',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String volumeLabel(String label) {
+    return 'Tome $label';
+  }
+
+  @override
+  String get showVolumesAsList => 'Afficher les tomes en liste';
+
+  @override
+  String get showVolumesAsGrid => 'Afficher les tomes en pastilles';
+
+  @override
   String get seeSeries => 'Voir la série';
 
   @override

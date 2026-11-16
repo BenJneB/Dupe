@@ -9,9 +9,15 @@ String resultTitle(AppLocalizations l10n, MetadataResult r) =>
     : l10n.volumeTitle(r.title, r.volumeNumber!);
 
 /// "Authors · Publisher · 2022 · BnF".
-String resultSubtitle(MetadataResult r, {bool withSource = true}) => [
+String resultSubtitle(
+  MetadataResult r, {
+  bool withSource = true,
+  bool withIsbn = false,
+}) => [
   if (r.authors.isNotEmpty) r.authors.join(', '),
   ?r.publisher,
   ?r.publishDate,
+  // Tells two editions of the same title apart (text search results).
+  if (withIsbn) ?r.isbn13,
   if (withSource) r.source.label,
 ].join(' · ');

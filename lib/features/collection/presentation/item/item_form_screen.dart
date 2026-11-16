@@ -17,6 +17,7 @@ import 'package:dupe/features/collection/presentation/item/item_text_input.dart'
 import 'package:dupe/features/collection/presentation/item/previous_volumes_offer.dart';
 import 'package:dupe/features/collection/presentation/item/series_attachment_tile.dart';
 import 'package:dupe/features/collection/presentation/labels.dart';
+import 'package:dupe/features/collection/presentation/series/series_total_actions.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -109,6 +110,12 @@ class _ItemFormScreenState extends ConsumerState<ItemFormScreen> {
     final item = await applyAttachment(repo, _c.applyTo(original), _attachment);
     await repo.saveItem(item);
     if (!mounted) return;
+    // First volume of a series without total: how many volumes? (not in
+    // the burst review, which saves many volumes in a row).
+    if (_isNew && !widget.popOnSave) {
+      await offerSeriesTotal(context, ref, item);
+      if (!mounted) return;
+    }
     if (_isNew) {
       unawaited(
         offerPreviousVolumes(

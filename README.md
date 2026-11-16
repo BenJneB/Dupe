@@ -129,7 +129,8 @@ curl -fLO https://github.com/evilmartians/lefthook/releases/download/v2.2.2/left
 sudo dpkg -i lefthook_2.2.2_amd64.deb
 lefthook install
 ```
-- avant un commit : `dart format` des fichiers `.dart` stagés (re-stagés automatiquement) et `flutter analyze` ;
+- avant un commit : `dart format` des fichiers `.dart` stagés (re-stagés automatiquement) et `flutter analyze`,
+  en parallèle et seulement si le commit contient du Dart (un commit de documentation est immédiat) ;
 - avant un push : `flutter test` ;
 - message de commit : `tool/check_commit_msg.sh` (refuse un message non conventionnel).
 
@@ -204,6 +205,11 @@ le récapitulatif du job, `lcov.info` en artefact), builds.
 ```sh
 git tag v1.0.0 && git push origin v1.0.0
 ```
+Les binaires des Releases sont **obfusqués** (`--obfuscate --split-debug-info`) ; chaque Release contient aussi
+`dupe-<version>-symbols-<android|linux|windows>.zip`. Pour lire une trace d'erreur copiée du journal d'une version
+publiée : `flutter symbolize -i trace.txt -d app.android-arm64.symbols` (fichier du zip de la bonne plateforme et de
+la bonne version). Les builds locaux (`flutter build …` sans ces options) ne sont pas obfusqués.
+
 Un tag avec suffixe (`v0.0.1-test`, `v1.2.0-rc.1`) publie une **pre-release** : mêmes fichiers, mais jamais
 proposée comme mise à jour par l'appli. Pour la supprimer : supprimer la Release sur GitHub, puis
 `git push --delete origin v0.0.1-test && git tag -d v0.0.1-test`.

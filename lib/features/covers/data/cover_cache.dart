@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:file/file.dart' as fs;
@@ -79,8 +80,17 @@ class NetworkCoverCache implements CoverCache {
 @Riverpod(keepAlive: true)
 CoverCache coverCache(Ref ref) => const NetworkCoverCache();
 
-/// Short cause for the journal: "HTTP 404", or the error type.
+/// Short cause for the journal: "HTTP 404", "pas de réseau"… Never the
+/// class name (`runtimeType`): public Releases are obfuscated, class names
+/// become meaningless there; messages are kept (string literals).
 String coverError(Object e) => switch (e) {
   HttpExceptionWithStatus(:final statusCode) => 'HTTP $statusCode',
-  _ => e.runtimeType.toString(),
+  SocketException() => 'pas de réseau',
+  TimeoutException() => 'délai dépassé',
+  _ => _firstLine('$e'),
 };
+
+String _firstLine(String text) {
+  final line = text.split('\n').first.trim();
+  return line.length <= 80 ? line : '${line.substring(0, 80)}…';
+}

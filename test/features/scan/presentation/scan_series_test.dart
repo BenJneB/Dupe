@@ -62,11 +62,18 @@ void main() {
     expect(find.text('Créer la série « One Piece »'), findsOneWidget);
     await tester.tap(find.byKey(const Key('saveButton')));
     await tester.pumpAndSettle();
+    // First volume of a series without total: how many volumes?
+    expect(find.text('Combien de tomes compte la série ?'), findsOneWidget);
+    await tester.enterText(find.byKey(const Key('seriesTotalField')), '5');
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('saveSeriesTotal')));
+    await tester.pumpAndSettle();
 
     final series = await db.select(db.seriesTable).get();
     expect(series.single.title, 'One Piece');
     expect(series.single.type, CollectionType.manga);
     expect(series.single.publisher, 'Glénat');
-    expect(find.text('1 tome, il manque 1, 2'), findsOneWidget);
+    expect(series.single.totalVolumes, 5);
+    expect(find.text('1/5 tomes, il manque 1, 2, 4, 5'), findsOneWidget);
   }, variant: linux);
 }

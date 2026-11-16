@@ -13,6 +13,7 @@ import 'package:dupe/features/collection/presentation/item/item_detail_screen.da
 import 'package:dupe/features/collection/presentation/item/item_form_screen.dart';
 import 'package:dupe/features/collection/presentation/series/series_detail_screen.dart';
 import 'package:dupe/features/collection/presentation/series/series_form_screen.dart';
+import 'package:dupe/features/collection/presentation/volume_counts/volume_counts_screen.dart';
 import 'package:dupe/features/loans/presentation/loans_screen.dart';
 import 'package:dupe/features/more/presentation/more_screen.dart';
 import 'package:dupe/features/scan/presentation/burst/scan_review_screen.dart';
@@ -80,6 +81,10 @@ GoRouter appRouter(Ref ref) {
                       GoRoute(
                         path: 'sauvegardes',
                         builder: (context, state) => const AutoBackupsScreen(),
+                      ),
+                      GoRoute(
+                        path: 'nombre-de-tomes',
+                        builder: (context, state) => const VolumeCountsScreen(),
                       ),
                     ],
                   ),

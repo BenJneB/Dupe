@@ -1,6 +1,8 @@
 import 'package:dupe/app/app.dart';
 import 'package:dupe/core/database/app_database.dart';
 import 'package:dupe/core/database/database_provider.dart';
+import 'package:dupe/core/metadata/metadata_providers.dart';
+import 'package:dupe/core/metadata/series_lookup.dart';
 import 'package:dupe/core/network/network_status.dart';
 import 'package:dupe/features/backup/data/auto_backups.dart';
 import 'package:dupe/features/backup/data/backup_store.dart';
@@ -47,6 +49,9 @@ Future<AppDatabase> pumpApp(
   FakeNetworkStatus? network,
   FakeCoverCache? coverCache,
 
+  /// Series sources (AniList, Comic Vine): none by default, never the network.
+  SeriesLookup? seriesLookup,
+
   /// Writes initial data before the app (and its drift streams) starts.
   Future<void> Function(AppDatabase db)? seed,
 }) async {
@@ -70,6 +75,7 @@ Future<AppDatabase> pumpApp(
         voiceInputProvider.overrideWithValue(voice ?? FakeVoiceInput()),
         networkStatusProvider.overrideWithValue(network ?? FakeNetworkStatus()),
         coverCacheProvider.overrideWithValue(coverCache ?? FakeCoverCache()),
+        seriesLookupProvider.overrideWithValue(seriesLookup ?? SeriesLookup()),
         ...overrides,
       ],
       child: const DupeApp(),

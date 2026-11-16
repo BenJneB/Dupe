@@ -7,7 +7,7 @@
 > finale. Les phases 15 à 20 ajoutent leurs tests ici et marquent « automatisé (phase N) » ceux que leurs tests
 > automatiques couvrent désormais.
 
-Ce fichier liste ce que les **225 tests automatiques (et 4 parcours d'intégration) ne couvrent pas** : matériel (caméra, vibrations,
+Ce fichier liste ce que les **236 tests automatiques (et 4 parcours d'intégration) ne couvrent pas** : matériel (caméra, vibrations,
 notifications, raccourci), services réels (Supabase, API GitHub, sources de métadonnées), plateformes non
 compilées ici (Windows) et workflows GitHub (jamais exécutés).
 
@@ -63,7 +63,7 @@ Tous les tests non faits en phase 14 et non marqués « automatisé ». Le but :
 7f. **Widget et dictée** (phase 19, téléphone) : `G-01` à `G-04`, `V-01` à `V-04`.
 7g. **Couvertures, stats, envies** (phase 20) : `O-01` à `O-04` (`O-02` en mode avion), `T-01`, `T-02`,
    `E-01` à `E-03`.
-7h. **Retours de recette Android** (2026-11-15, téléphone + vraie collection) : `Q-01` à `Q-06`.
+7h. **Retours de recette Android** (2026-11-15, téléphone + vraie collection) : `Q-01` à `Q-09`.
 8. **Le lendemain / plus tard** : `N-01` à `N-04` ; `M-12` chronométré en magasin ; `Y-06` (observation sur
    plusieurs semaines) ; `J-06` (facultatif, met le projet en pause).
 
@@ -280,12 +280,22 @@ appareils (reportés de la phase 14).
 - [ ] **Y-08** « Rechercher une mise à jour » sur la dernière version → « Dupe est à jour ».
 - [ ] **Y-09** (phase 16) Sur une branche de test : un fichier `.dart` mal formaté fait échouer l'étape
       *Formatting* de la CI ; un `.g.dart` modifié à la main fait échouer *Generated code is up to date*.
-- [ ] **Y-10** (phase 16) Le récapitulatif du job `test` affiche « Couverture des tests » et l'artefact
+- [x] **Y-10** (phase 16) Le récapitulatif du job `test` affiche « Couverture des tests » et l'artefact
       `coverage` contient `lcov.info`.
+      — PARTIEL 2026-11-15 : artefact `coverage` présent (30 Ko) ; le récapitulatif « Couverture des tests »
+      du job `test` n'est pas lisible par l'API : à regarder sur GitHub.
+      — OK 2026-11-15 (vu par l'utilisateur sur GitHub).
 - [ ] **Y-11** (phase 16) Dependabot ouvre ses premières pull requests vers `dev` (une groupée par écosystème
       pour les mises à jour mineures et correctifs) ; leur CI passe ou signale une régénération.
-- [ ] **Y-12** (phase 16) Le badge CI du README affiche l'état réel.
-- [ ] **Y-14** (phase 17) Le job `supabase-tests` de la CI passe sur une pull request.
+      — EN ATTENTE 2026-11-15 : aucune PR Dependabot à ce jour (première exécution hebdomadaire à venir).
+- [x] **Y-12** (phase 16) Le badge CI du README affiche l'état réel.
+      — OK 2026-11-15 : badge filtré `?event=pull_request` → « CI - passing » (dernier run de PR vert).
+- [x] **Y-14** (phase 17) Le job `supabase-tests` de la CI passe sur une pull request.
+      — OK 2026-11-15 : `supabase-tests` vert sur la PR `dev` → `main` (run 43746943865), comme les 5 autres jobs.
+- [ ] **Y-16** (recette, obfuscation) Prochaine Release (`v0.1.1`) : elle contient aussi
+      `dupe-0.1.1-symbols-android.zip`, `…-linux.zip`, `…-windows.zip` ; l'APK et l'AppImage obfusqués démarrent
+      et fonctionnent normalement (clés saisies et sources désactivées conservées après la mise à jour) ; le journal
+      reste en français et lisible (causes des couvertures : « HTTP 404 », « pas de réseau »).
 - [ ] **Y-13** (au bout de 60 jours sans push, si l'occasion se présente) `Keep Supabase awake` est toujours
       actif dans l'onglet *Actions* (efficacité non documentée de la réactivation par l'API).
 
@@ -304,29 +314,38 @@ appareils (reportés de la phase 14).
 ## 11. Clés des sources (phase 15)
 Automatisé (phase 15) : la clé n'est ni dans une sauvegarde JSON, ni dans le journal, ni envoyée à Supabase ;
 une clé saisie active la source sans redémarrage ; « Tester la clé » sur des réponses réelles enregistrées.
-- [ ] **K-01** Version **publiée** (sans clé compilée) : Paramètres → Sources → Comic Vine → *Clé API* →
+- [x] **K-01** Version **publiée** (sans clé compilée) : Paramètres → Sources → Comic Vine → *Clé API* →
       saisir la clé → *Tester la clé* → « Clé valide » → *Enregistrer* ; la recherche « Batman 3 » (type
       Comics) trouve des résultats.
-- [ ] **K-02** Idem pour Google Books (clé restreinte à Books API) : une recherche par ISBN affiche couverture
+      — OK 2026-11-15 (AppImage v0.1.0).
+- [x] **K-02** Idem pour Google Books (clé restreinte à Books API) : une recherche par ISBN affiche couverture
       et résumé.
-- [ ] **K-03** Clé volontairement fausse → « Clé refusée » ; mode avion → « Pas de connexion ».
-- [ ] **K-04** Sur le deuxième appareil, la clé n'apparaît pas (elle n'est pas synchronisée) : la saisir aussi.
-- [ ] **K-05** `ENV_JSON` contenant `COMIC_VINE_API_KEY` (ou `OPEN_LIBRARY_CONTACT`) : le workflow Release
+      — OK 2026-11-15 (AppImage v0.1.0).
+- [x] **K-03** Clé volontairement fausse → « Clé refusée » ; mode avion → « Pas de connexion ».
+      — OK 2026-11-15 (AppImage v0.1.0).
+- [x] **K-04** Sur le deuxième appareil, la clé n'apparaît pas (elle n'est pas synchronisée) : la saisir aussi.
+      — OK 2026-11-15 (téléphone en v0.1.0 : aucune clé reçue, saisies à part).
+- [x] **K-05** `ENV_JSON` contenant `COMIC_VINE_API_KEY` (ou `OPEN_LIBRARY_CONTACT`) : le workflow Release
       échoue au job `check-env` avec le nom de la variable, jamais sa valeur (à vérifier en même temps que
       `Y-02`, puis la retirer du secret).
+      — VÉRIFIÉ EN LOCAL 2026-11-15 (filtre jq de `check-env` : refuse les 3 variables, n'affiche que leur
+      nom) ; `check-env` vert sur la vraie Release. Refus non constaté sur GitHub (facultatif).
 
 ## 12. Hooks, commits et tests d'intégration (phase 18)
 Automatisé (phase 18) : vérification des messages (`tool/check_commit_msg.sh`) et notes de version
 (`tool/ci/release_notes.sh`) testées sur un dépôt git temporaire ; les 4 parcours d'intégration passent sous Linux.
-- [ ] **H-01** `lefthook install` (README « Hooks git ») ; `git commit -m "Phase 19"` est refusé avec le format
+- [x] **H-01** `lefthook install` (README « Hooks git ») ; `git commit -m "Phase 19"` est refusé avec le format
       attendu ; `git commit -m "feat: …"` passe.
+      — OK 2026-11-15 : commit au message de 103 caractères refusé par le hook, message conforme accepté.
 - [ ] **H-02** Un fichier `.dart` mal formaté et stagé est reformaté et re-stagé au commit ; une erreur
       d'analyse bloque le commit.
 - [ ] **H-03** `git push` lance `flutter test` et s'arrête si un test échoue.
 - [ ] **H-04** Tests d'intégration sur le téléphone : `flutter test integration_test -d <id>` (3 parcours ;
       le parcours Magasin est sauté à cause de la caméra).
-- [ ] **Y-15** La Release de test (`Y-02`) a pour description les notes générées (groupées par type) ; le job
+- [x] **Y-15** La Release de test (`Y-02`) a pour description les notes générées (groupées par type) ; le job
       `integration` de la CI est vert.
+      — OK 2026-11-15 : notes de `v0.0.1-test` groupées par type (Nouveautés, Corrections, Documentation…) ;
+      job `integration` vert sur les PR.
 
 ## 13. Widget d'écran d'accueil et recherche vocale (phase 19)
 Automatisé (phase 19) : ouverture du scan depuis le widget (au lancement et appli ouverte), compteurs regroupés
@@ -396,3 +415,22 @@ remplacées, photos gardées), vue et page par auteur. Simulés : les sources et
 - [ ] **Q-06** Livres → « Par auteur » sur la vraie collection : un auteur écrit de deux façons selon la source
       n'apparaît qu'une fois ; sa page liste toutes ses séries et livres ; toucher un nom d'auteur sur une fiche
       ouvre la même page.
+- [ ] **Q-07** Recherche (locale, et en ligne par texte) : l'ISBN apparaît dans le sous-titre des livres.
+- [ ] **Q-08** Séries sans nombre total de tomes : barre **grise** (possédés / plus haut tome), distincte de la barre
+      normale des séries dont le total est connu ; un appui long sur la barre grise explique « Progression estimée ».
+- [ ] **Q-09** Page d'un auteur → menu ⋮ → « Marquer les livres hors série comme lus » / « Tout marquer comme lu » :
+      confirmation avec le nombre de livres, puis livres marqués « Lu » avec la date du jour.
+
+## 16. Séries : nombre de tomes et vue liste (v4, phase 23)
+Automatisé (phase 23) : seul un titre identique propose un total ; vérification depuis le menu d'une série et en
+lot (propositions décochables, rien d'enregistré avant « Appliquer ») ; question au premier tome (pré-remplie,
+« Plus tard ») ; vue liste avec titres propres, statut et choix mémorisé. Simulés : AniList et Comic Vine.
+- [ ] **U-01** Manga suivi sans total (ex. One Piece) : ⋮ → « Vérifier le nombre de tomes » → total AniList
+      proposé (nombre japonais) → Enregistrer → les tomes manquants apparaissent en gris, la barre devient normale.
+- [ ] **U-02** Paramètres → Sources → « Vérifier le nombre de tomes des séries » sur la vraie collection :
+      propositions plausibles (titres identiques), décocher une erreur éventuelle, Appliquer.
+- [ ] **U-03** Scanner le tome 1 d'une nouvelle série : « Combien de tomes compte la série ? » (pré-rempli pour un
+      manga ou un comic si la source connaît la série, vide pour une BD) ; « Plus tard » ne change rien.
+- [ ] **U-04** Écran d'une série → icône liste : couvertures, « Tome N », titres propres des tomes (BnF), statut
+      et « Lu » ; le choix liste/pastilles est conservé après redémarrage.
+

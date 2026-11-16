@@ -1,4 +1,3 @@
-import 'package:dupe/core/metadata/metadata_providers.dart';
 import 'package:dupe/core/metadata/series_lookup.dart';
 import 'package:dupe/core/metadata/series_metadata.dart';
 import 'package:dupe/features/collection/domain/enums.dart';
@@ -35,9 +34,7 @@ void main() {
     final anilist = FakeAniList();
     final db = await pumpApp(
       tester,
-      overrides: [
-        seriesLookupProvider.overrideWithValue(SeriesLookup(anilist: anilist)),
-      ],
+      seriesLookup: SeriesLookup(anilist: anilist),
     );
 
     await tester.tap(find.byKey(const Key('addMenu')));

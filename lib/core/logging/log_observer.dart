@@ -13,7 +13,9 @@ final class LogObserver extends ProviderObserver {
   ) {
     final provider = context.provider;
     appLog.error(
-      'provider:${provider.name ?? provider.runtimeType}',
+      // Generated providers have a name; never runtimeType (obfuscated in
+      // public Releases).
+      'provider:${provider.name ?? 'anonyme'}',
       error,
       stackTrace,
     );

@@ -62,6 +62,11 @@ void main() {
     await pumpApp(tester, overrides: [fakeMetadataSources()]);
 
     await openOnlineSearch(tester, 'dune herbert');
+    // The ISBN tells editions apart.
+    expect(
+      find.text('Frank Herbert · Pocket · 2022 · $duneIsbn · BnF'),
+      findsOneWidget,
+    );
     await tester.tap(find.text('Dune'));
     await tester.pumpAndSettle();
 
