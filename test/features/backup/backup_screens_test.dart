@@ -1,16 +1,16 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:dupe/app/router.dart';
 import 'package:dupe/core/database/database_provider.dart';
 import 'package:dupe/features/backup/data/file_io.dart';
-import 'package:dupe/features/collection/data/collection_repository.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
-import 'package:dupe/features/collection/domain/item.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../helpers/app_harness.dart';
+import '../../helpers/failing_repository.dart';
 import '../../helpers/fake_file_io.dart';
 import '../../helpers/scan_helpers.dart';
 import '../../helpers/screen_helpers.dart';
@@ -48,6 +48,26 @@ void main() {
     await tester.tap(find.byKey(const Key('csvType-livre')));
     await tester.pumpAndSettle();
     expect(files.text('dupe-livre-2026-11-14.csv'), contains(';Dune;'));
+  });
+
+  testWidgets('export finished after leaving the screen: still reported', (
+    tester,
+  ) async {
+    final files = FakeFileIo()..gate = Completer<void>();
+    await pumpApp(
+      tester,
+      size: desktopSize,
+      overrides: [fileIoProvider.overrideWithValue(files)],
+    );
+    await openSettings(tester);
+    await tapTile(tester, 'exportJson');
+    // The share sheet is open; the user goes back meanwhile.
+    await goBack(tester);
+    files.gate!.complete();
+    await tester.pumpAndSettle();
+
+    expect(tester.takeException(), isNull);
+    expect(find.text('Fichier enregistré'), findsOneWidget);
   });
 
   testWidgets('CSV import: guessed mapping, defaults, then import', (
@@ -96,16 +116,7 @@ void main() {
     final db = await pumpApp(
       tester,
       size: desktopSize,
-      overrides: [
-        fileIoProvider.overrideWithValue(files),
-        collectionRepositoryProvider.overrideWith(
-          (ref) => _FailingRepository(
-            ref.watch(appDatabaseProvider),
-            now: ref.watch(clockProvider),
-            newId: ref.watch(idGeneratorProvider),
-          ),
-        ),
-      ],
+      overrides: [fileIoProvider.overrideWithValue(files), failingRepository()],
     );
     await openSettings(tester);
 
@@ -152,12 +163,4 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byType(LicensePage), findsOneWidget);
   });
-}
-
-class _FailingRepository extends CollectionRepository {
-  new(super._db, {required super.now, required super.newId});
-
-  /// A SQLite failure midway.
-  @override
-  Future<void> saveItem(Item item) async => throw StateError('disk full');
 }

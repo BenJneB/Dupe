@@ -78,14 +78,17 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
     }
     final l10n = AppLocalizations.of(context);
     final messenger = ScaffoldMessenger.of(context);
+    // Read before any await: the screen may be closed meanwhile.
     final queue = ref.read(scanQueueRepositoryProvider);
+    final haptics = ref.read(storeHapticsProvider);
+    final worker = ref.read(scanQueueWorkerProvider);
     final added = await queue.enqueue(isbn, _type);
-    if (await ref.read(storeHapticsProvider).enabled) {
+    if (await haptics.enabled) {
       unawaited(
         added ? HapticFeedback.lightImpact() : HapticFeedback.selectionClick(),
       );
     }
-    unawaited(ref.read(scanQueueWorkerProvider).run());
+    unawaited(worker.run());
     final count = await queue.count();
     messenger
       ..hideCurrentSnackBar()

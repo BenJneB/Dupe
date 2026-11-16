@@ -79,4 +79,46 @@ void main() {
     expect((await repo.getItem(typed.id))!.volumeTitle, 'Mon titre');
     expect((await repo.getItem(noIsbn.id))!.volumeTitle, isNull);
   });
+
+  test('a second tap while starting does not run it twice', () async {
+    final env = TestEnv();
+    addTearDown(env.dispose);
+    final bnf = FakeProvider(
+      MetadataSource.bnf,
+      byIsbn: {
+        k9: const MetadataResult(
+          source: MetadataSource.bnf,
+          sourceId: 'k9',
+          title: 'Les renforts maléfiques',
+          volumeNumber: '9',
+        ),
+      },
+      delay: const Duration(milliseconds: 20),
+    );
+    final container = ProviderContainer(
+      overrides: [
+        appDatabaseProvider.overrideWithValue(env.db),
+        collectionRepositoryProvider.overrideWithValue(env.repo),
+        metadataAggregatorProvider.overrideWithValue(
+          MetadataAggregator(providers: [bnf]),
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
+    final repo = env.repo;
+    final kaamelott = repo
+        .newSeries(CollectionType.bd)
+        .copyWith(title: 'Kaamelott');
+    await repo.saveSeries(kaamelott);
+    await repo.saveItem(
+      repo
+          .newItem(CollectionType.bd, series: kaamelott, volumeNumber: '9')
+          .copyWith(isbn13: k9),
+    );
+
+    final fill = container.read(volumeTitleFillProvider.notifier);
+    await Future.wait([fill.run(), fill.run()]);
+
+    expect(bnf.calls, 1);
+  });
 }

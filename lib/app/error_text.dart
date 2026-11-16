@@ -8,6 +8,7 @@ import 'package:dupe/core/sync/sync_remote.dart';
 import 'package:dupe/features/backup/data/json_backup.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
 import 'package:http/http.dart' show ClientException;
+import 'package:material_ui/material_ui.dart';
 
 /// A sentence for the user; the technical detail goes to the journal
 /// (About → Journal), never on screen.
@@ -50,4 +51,17 @@ String reportError(
 ]) {
   appLog.error(source, error, stack);
   return errorText(l10n, error);
+}
+
+/// Logs [error] under [source] and shows its [errorText] in a snackbar.
+void showError(
+  BuildContext context,
+  String source,
+  Object error, [
+  StackTrace? stack,
+]) {
+  final l10n = AppLocalizations.of(context);
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(content: Text(reportError(l10n, source, error, stack))),
+  );
 }

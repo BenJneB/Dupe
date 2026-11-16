@@ -44,10 +44,20 @@ MetadataAggregator metadataAggregator(Ref ref) {
         OpenLibraryProvider(dio, contact: Env.openLibraryContact),
       if (on(SourceId.googleBooks))
         GoogleBooksProvider(dio, apiKey: keys[SourceId.googleBooks]!),
-      if (on(SourceId.comicVine))
-        ComicVineProvider(dio, apiKey: keys[SourceId.comicVine]!),
+      ?ref.watch(comicVineSourceProvider),
     ],
   );
+}
+
+/// The one Comic Vine client, shared by the volume lookups and the series
+/// lookups: its rate limiter (1 request/s, or Comic Vine blocks the key)
+/// then covers both. Null when the source is off or has no key.
+@Riverpod(keepAlive: true)
+ComicVineProvider? comicVineSource(Ref ref) {
+  final key = ref.watch(apiKeysProvider)[SourceId.comicVine];
+  return _enabledSources(ref)(SourceId.comicVine) && key != null
+      ? ComicVineProvider(ref.watch(httpClientProvider), apiKey: key)
+      : null;
 }
 
 /// Enabled series-level sources (AniList, Comic Vine).
@@ -55,11 +65,8 @@ MetadataAggregator metadataAggregator(Ref ref) {
 SeriesLookup seriesLookup(Ref ref) {
   final dio = ref.watch(httpClientProvider);
   final on = _enabledSources(ref);
-  final keys = ref.watch(apiKeysProvider);
   return SeriesLookup(
     anilist: on(SourceId.anilist) ? AniListProvider(dio) : null,
-    comicVine: on(SourceId.comicVine)
-        ? ComicVineProvider(dio, apiKey: keys[SourceId.comicVine]!)
-        : null,
+    comicVine: ref.watch(comicVineSourceProvider),
   );
 }

@@ -41,6 +41,8 @@ class VolumeCountScan extends _$VolumeCountScan {
 
   Future<void> run() async {
     if (state.running) return;
+    // Running from the first await on: a second tap meanwhile is ignored.
+    state = const VolumeCountScanState(running: true);
     final lookup = ref.read(seriesLookupProvider);
     final candidates = [
       for (final s in await ref.read(collectionRepositoryProvider).listSeries())

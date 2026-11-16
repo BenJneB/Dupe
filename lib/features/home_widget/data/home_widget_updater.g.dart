@@ -50,7 +50,7 @@ final class HomeWidgetUpdaterProvider
   }
 }
 
-String _$homeWidgetUpdaterHash() => r'419af89dfb96826ca56bfb0735b7b823f305533e';
+String _$homeWidgetUpdaterHash() => r'9e1e4f4875a68c10f3596b52b88c1f00e65be1fb';
 
 /// Keeps the counters of the home-screen widget up to date: [delay] after
 /// the last change of items or loans (local edits and sync alike), so that

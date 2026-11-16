@@ -36,7 +36,7 @@ class BackupSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
-    final actions = BackupActions(context, ref);
+    final actions = BackupActions(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 import 'package:dupe/core/database/app_database.dart';
 import 'package:dupe/core/database/database_provider.dart';
+import 'package:dupe/core/utils/isbn.dart';
 import 'package:dupe/core/utils/text_fold.dart';
 import 'package:dupe/features/collection/domain/item.dart';
 import 'package:dupe/features/collection/domain/series.dart';
@@ -47,8 +48,10 @@ class SearchRepository {
               ..limit(_limit))
             .get();
 
-    // ISBN typed with dashes/spaces: compare digits only.
-    final digits = rawQuery.replaceAll(RegExp(r'[\s-]'), '');
+    // ISBN typed with dashes/spaces: compare digits only; a full ISBN-10
+    // (back covers of older books) as the ISBN-13 that is stored.
+    final typed = rawQuery.replaceAll(RegExp(r'[\s-]'), '');
+    final digits = typed.length == 10 ? Isbn.toIsbn13(typed) ?? typed : typed;
     final isIsbnLike = RegExp(r'^\d{4,13}$').hasMatch(digits);
     final i = _db.itemsTable;
     final items =

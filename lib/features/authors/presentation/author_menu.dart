@@ -30,7 +30,9 @@ class AuthorMenu extends ConsumerWidget {
   ) async {
     final l10n = AppLocalizations.of(context);
     final messenger = ScaffoldMessenger.of(context);
+    // Read before any await: the menu may be gone after the dialog.
     final repo = ref.read(collectionRepositoryProvider);
+    final now = ref.read(clockProvider);
     final items = await _items(repo, scope);
     final count = repo.unreadOwned(items).length;
     if (count > 0) {
@@ -55,10 +57,7 @@ class AuthorMenu extends ConsumerWidget {
       );
       if (ok != true) return;
     }
-    final changed = await repo.markOwnedRead(
-      items,
-      today: ref.read(clockProvider)(),
-    );
+    final changed = await repo.markOwnedRead(items, today: now());
     messenger
       ..hideCurrentSnackBar()
       ..showSnackBar(SnackBar(content: Text(l10n.booksMarkedRead(changed))));

@@ -1,3 +1,4 @@
+import 'package:dupe/app/error_text.dart';
 import 'package:dupe/app/widgets/placeholder_body.dart';
 import 'package:dupe/core/utils/formatters.dart';
 import 'package:dupe/features/collection/presentation/labels.dart';
@@ -17,16 +18,20 @@ class StatsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
-    final stats = ref.watch(collectionStatsProvider).value;
     return Scaffold(
       appBar: AppBar(title: Text(l10n.moreStats)),
-      body: switch (stats) {
-        null => const Center(child: CircularProgressIndicator()),
-        CollectionStats(ownedCopies: 0) => PlaceholderBody(
+      body: switch (ref.watch(collectionStatsProvider)) {
+        AsyncError(:final error) => Center(
+          child: Text(l10n.loadError(errorText(l10n, error))),
+        ),
+        AsyncValue(value: null) => const Center(
+          child: CircularProgressIndicator(),
+        ),
+        AsyncValue(value: CollectionStats(ownedCopies: 0)) => PlaceholderBody(
           icon: Icons.bar_chart,
           title: l10n.statsEmpty,
         ),
-        final s => Center(
+        AsyncValue(value: final s?) => Center(
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 720),
             child: _StatsBody(stats: s),

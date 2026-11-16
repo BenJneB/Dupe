@@ -38,6 +38,11 @@ void main() {
     expect(results.items.single.title, 'Dune');
   });
 
+  test('matches the ISBN-10 of a book stored with its ISBN-13', () async {
+    final results = await search.search('2-266-32048-3');
+    expect(results.items.single.title, 'Dune');
+  });
+
   test('ignores deleted rows and empty queries', () async {
     final item = (await search.search('dune')).items.single;
     await env.repo.deleteItem(item.id);

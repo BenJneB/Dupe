@@ -78,7 +78,8 @@ class BarRow extends StatelessWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(4),
             child: LinearProgressIndicator(
-              value: fraction.clamp(0, 1).toDouble(),
+              // 0 / 0 (every price paid at 0): an empty bar, not a full one.
+              value: fraction.isFinite ? fraction.clamp(0, 1).toDouble() : 0,
               minHeight: 8,
               color: colors.series,
               backgroundColor: colors.track,

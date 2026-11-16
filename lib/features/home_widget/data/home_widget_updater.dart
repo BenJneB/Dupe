@@ -6,7 +6,7 @@ import 'package:dupe/core/logging/app_log.dart';
 import 'package:dupe/features/home_widget/data/home_screen_widget.dart';
 import 'package:dupe/features/home_widget/data/widget_counts.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
-import 'package:flutter/widgets.dart' show Locale;
+import 'package:flutter/widgets.dart' show AppLifecycleListener, Locale;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'home_widget_updater.g.dart';
@@ -29,8 +29,12 @@ class HomeWidgetUpdater extends _$HomeWidgetUpdater {
           TableUpdateQuery.onAllTables([db.itemsTable, db.loansTable]),
         )
         .listen((_) => _schedule());
+    // Back in the app: a loan may have become overdue since, without any
+    // change of the data.
+    final lifecycle = AppLifecycleListener(onResume: _schedule);
     ref.onDispose(() {
       _timer?.cancel();
+      lifecycle.dispose();
       unawaited(changes.cancel());
     });
     _schedule();

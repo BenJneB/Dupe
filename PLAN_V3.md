@@ -505,6 +505,18 @@ Avant la reprise des tests : `check-env` refuse aussi `OPEN_LIBRARY_CONTACT` ; a
   la Release (nouveau job `verify` : format, code généré, analyze, tests avant tout build) et le hook pré-commit
   (refuse un fichier généré non stagé) ; tests Supabase de la CI à chaque exécution. Étape 3 (autres
   factorisations, efficacité) : idées après la v3.
+  Bugs mineurs de la revue (2026-11-16, un test par bug, 284 tests) : CSV (deux exemplaires sans ISBN d'un tome
+  gardés, date 31/02 refusée) ; photo de couverture écrite à part puis renommée ; appui long sur une envie =
+  « acheté » (date d'achat, priorité retirée) ; recherche par ISBN-10 ; Statistiques (erreur affichée, barre 0/0
+  vide) ; double appui sans effet (« Ajouter les manquants », nombres de tomes, titres des tomes) ; formulaires
+  tome et série : erreur affichée, bouton rendu (série et tomes « possédés jusqu'à » en une transaction) ;
+  actions de sauvegarde, scan, recherche vocale, menu auteur : plus de `ref` / `context` après fermeture de
+  l'écran ; thème choisi pendant son chargement gardé ; widget d'accueil recalculé au retour dans l'appli, retard
+  compté comme sur l'écran Prêts (dès le lendemain de l'échéance) ; un seul client Comic Vine (1 requête/s) ;
+  `check_commit_msg.sh` compte les caractères quelle que soit la locale.
+  Écarts acceptés : au démarrage, une image dans le thème système avant le thème choisi (le lire avant
+  `runApp` demanderait d'ouvrir la base plus tôt) ; passer une envie à « Possédé » dans le formulaire ne remplit
+  pas la date d'achat (champ éditable à côté).
 
 ### Après la v3 — idées notées
 Revue avec l'utilisateur le 2026-11-15 :

@@ -1,7 +1,14 @@
+import 'package:dupe/app/router.dart';
+import 'package:dupe/core/database/database_provider.dart';
+import 'package:dupe/features/collection/domain/collection_type.dart';
+import 'package:dupe/features/collection/domain/enums.dart';
+import 'package:dupe/features/collection/domain/item.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../helpers/app_harness.dart';
+import '../../../helpers/failing_repository.dart';
+import '../../../helpers/scan_helpers.dart';
 import '../../../helpers/screen_helpers.dart';
 
 void main() {
@@ -33,6 +40,72 @@ void main() {
 
     expect(find.text('8/10 tomes, il manque 9, 10'), findsOneWidget);
     expect(find.text('Tome 8 marqué comme possédé'), findsOneWidget);
+  });
+
+  testWidgets('long press on a wished volume: bought today', (tester) async {
+    late Item wish;
+    final db = await pumpApp(
+      tester,
+      overrides: [
+        clockProvider.overrideWithValue(() => DateTime(2026, 11, 16, 15)),
+      ],
+      seed: (db) async {
+        final repo = repoOf(db);
+        final series = repo
+            .newSeries(CollectionType.manga)
+            .copyWith(title: 'Naruto', totalVolumes: 3);
+        await repo.saveSeries(series);
+        wish = repo
+            .newItem(CollectionType.manga, series: series, volumeNumber: '2')
+            .copyWith(ownership: Ownership.envie, wishlistPriority: 1);
+        await repo.saveItem(wish);
+      },
+    );
+    await goTo(tester, AppRoutes.series(CollectionType.manga, wish.seriesId!));
+    await tester.longPress(find.byKey(const ValueKey('slot-2')));
+    await tester.pumpAndSettle();
+
+    final saved = await tester.runAsync(
+      () => (db.select(
+        db.itemsTable,
+      )..where((t) => t.id.equals(wish.id))).getSingle(),
+    );
+    expect(saved!.ownership, Ownership.possede);
+    expect(saved.purchaseDate, DateTime(2026, 11, 16));
+    expect(saved.wishlistPriority, isNull);
+  });
+
+  testWidgets('a save that fails: error shown, form usable again', (
+    tester,
+  ) async {
+    bool saveEnabled() =>
+        tester
+            .widget<TextButton>(find.byKey(const Key('saveButton')))
+            .onPressed !=
+        null;
+
+    // Series form.
+    await pumpApp(tester, overrides: [failingRepository(failSeries: true)]);
+    await createSeries(tester, title: 'Akira', total: '6', ownedUpTo: '');
+    expect(find.textContaining('Une erreur est survenue'), findsOneWidget);
+    expect(saveEnabled(), isTrue);
+  });
+
+  testWidgets('an item save that fails: error shown, form usable again', (
+    tester,
+  ) async {
+    await pumpApp(tester, overrides: [failingRepository()]);
+    await createSeries(tester, title: 'Akira', total: '6', ownedUpTo: '');
+    await tester.tap(find.byKey(const ValueKey('slot-3')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('saveButton')));
+    await tester.pumpAndSettle();
+
+    expect(find.textContaining('Une erreur est survenue'), findsOneWidget);
+    expect(
+      tester.widget<TextButton>(find.byKey(const Key('saveButton'))).onPressed,
+      isNotNull,
+    );
   });
 
   testWidgets('series appears in the tab list with its progress', (

@@ -4,9 +4,11 @@ import 'package:dupe/app/error_text.dart';
 import 'package:dupe/app/router.dart';
 import 'package:dupe/app/widgets/cover_image.dart';
 import 'package:dupe/app/widgets/placeholder_body.dart';
+import 'package:dupe/core/database/database_provider.dart';
 import 'package:dupe/core/utils/formatters.dart';
 import 'package:dupe/features/authors/presentation/author_links.dart';
 import 'package:dupe/features/collection/data/collection_repository.dart';
+import 'package:dupe/features/collection/data/purchase_actions.dart';
 import 'package:dupe/features/collection/domain/enums.dart';
 import 'package:dupe/features/collection/domain/series.dart';
 import 'package:dupe/features/collection/domain/volume_grid.dart';
@@ -115,7 +117,8 @@ class _SeriesDetailView extends ConsumerWidget {
         repo.newItem(series.type, series: series, volumeNumber: slot.label),
       );
     } else if (item.ownership == Ownership.envie) {
-      await repo.saveItem(item.copyWith(ownership: Ownership.possede));
+      // Bought: purchase date (spending stats), wishlist priority dropped.
+      await repo.markBought(item, today: ref.read(clockProvider)());
     } else {
       return;
     }

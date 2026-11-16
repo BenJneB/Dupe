@@ -78,8 +78,9 @@ abstract final class ImportValues {
   static DateTime? _date(String y, String m, String d) {
     final month = int.parse(m);
     final day = int.parse(d);
-    if (month < 1 || month > 12 || day < 1 || day > 31) return null;
-    return DateTime(int.parse(y), month, day);
+    final date = DateTime(int.parse(y), month, day);
+    // DateTime rolls over (31/02 -> 3 March): such a date is invalid.
+    return date.month == month && date.day == day ? date : null;
   }
 
   /// "A, B", "A; B", "A / B", "A & B".

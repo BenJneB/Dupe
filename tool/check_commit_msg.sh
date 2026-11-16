@@ -4,6 +4,9 @@
 # Merge / Revert / fixup! / squash! / amend! messages made by git are accepted.
 # Usage: tool/check_commit_msg.sh <file containing the message>
 set -euo pipefail
+# Characters, not bytes, whatever the locale of the git client (a GUI or a
+# hook run outside a terminal may use C): accents count once.
+export LC_ALL=C.UTF-8
 
 FILE="${1:?commit message file}"
 # First line that is neither empty nor a git comment.

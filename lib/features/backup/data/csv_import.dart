@@ -39,7 +39,11 @@ Future<ImportReport> _importRows(
 ) async {
   final report = ImportReport();
   final seriesCache = <String, Series>{};
+  // Items present before the import, read once per series / title: lines
+  // of this file are never duplicates of each other (two copies of a volume
+  // without ISBN are two lines), but a second import finds them all.
   final volumesCache = <String, List<Item>>{};
+  final standaloneCache = <String, bool>{};
 
   for (final (index, row) in rows.indexed) {
     if (Csv.isBlank(row)) continue;
@@ -85,6 +89,7 @@ Future<ImportReport> _importRows(
     if (await _isDuplicate(
       repo,
       volumesCache,
+      standaloneCache,
       type,
       series,
       title,
@@ -115,7 +120,6 @@ Future<ImportReport> _importRows(
           source: 'csv',
         );
     await repo.saveItem(item);
-    if (series != null) volumesCache[series.id]?.add(item);
     report.created++;
   }
   return report;
@@ -124,6 +128,7 @@ Future<ImportReport> _importRows(
 Future<bool> _isDuplicate(
   CollectionRepository repo,
   Map<String, List<Item>> volumesCache,
+  Map<String, bool> standaloneCache,
   CollectionType type,
   Series? series,
   String title,
@@ -132,7 +137,9 @@ Future<bool> _isDuplicate(
 ) async {
   if (isbn != null && await repo.findItemByIsbn(isbn) != null) return true;
   if (series == null) {
-    return isbn == null && await repo.findStandaloneItem(type, title) != null;
+    return isbn == null &&
+        (standaloneCache['${type.dbValue}|$title'] ??=
+            await repo.findStandaloneItem(type, title) != null);
   }
   final items = volumesCache[series.id] ??= await repo.listSeriesItems(
     series.id,

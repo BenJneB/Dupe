@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dupe/app/error_text.dart';
 import 'package:dupe/app/router.dart';
 import 'package:dupe/app/widgets/form_helpers.dart';
 import 'package:dupe/core/metadata/metadata_providers.dart';
@@ -81,10 +82,19 @@ class _SeriesFormScreenState extends ConsumerState<SeriesFormScreen> {
     setState(() => _saving = true);
     final repo = ref.read(collectionRepositoryProvider);
     final series = _c.applyTo(original);
-    await repo.saveSeries(series);
     final ownedUpTo = int.tryParse(_c.ownedUpTo.text);
-    if (_isNew && ownedUpTo != null && ownedUpTo > 0) {
-      await repo.addVolumeRange(series, from: 1, to: ownedUpTo);
+    try {
+      await repo.inTransaction(() async {
+        await repo.saveSeries(series);
+        if (_isNew && ownedUpTo != null && ownedUpTo > 0) {
+          await repo.addVolumeRange(series, from: 1, to: ownedUpTo);
+        }
+      });
+    } on Object catch (e, stack) {
+      if (!mounted) return;
+      showError(context, 'collection', e, stack);
+      setState(() => _saving = false);
+      return;
     }
     if (!mounted) return;
     if (_isNew) {

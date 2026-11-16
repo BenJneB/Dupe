@@ -17,13 +17,18 @@ import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 
 /// Backup / export / import actions of the settings screen.
+///
+/// The texts and the provider container are taken at creation: an action
+/// carries on (restore, export after the share sheet) even when its screen
+/// is closed meanwhile; only dialogs and navigation need [context].
 class BackupActions {
-  const new(this.context, this.ref);
+  new(this.context)
+    : _l10n = AppLocalizations.of(context),
+      ref = ProviderScope.containerOf(context, listen: false);
 
   final BuildContext context;
-  final WidgetRef ref;
-
-  AppLocalizations get _l10n => AppLocalizations.of(context);
+  final ProviderContainer ref;
+  final AppLocalizations _l10n;
 
   String _stamp() {
     final d = ref.read(clockProvider)();

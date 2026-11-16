@@ -104,6 +104,24 @@ void main() {
     expect(copy.notes, 'Dédicacé; "rare"');
   });
 
+  test('two copies without ISBN of a volume are both imported', () async {
+    // Editions of a volume, or a book bought twice: exported as two lines.
+    const csv =
+        'Série;Tome;Titre;ISBN\n'
+        'One Piece;1;;\n'
+        'One Piece;1;;\n'
+        ';;Dune;\n'
+        ';;Dune;\n';
+    final report = await importText(csv);
+    expect(report.created, 4);
+    expect(report.duplicates, 0);
+
+    // Running it again changes nothing.
+    final again = await importText(csv);
+    expect(again.created, 0);
+    expect(again.duplicates, 4);
+  });
+
   test('JSON backup restores everything, deletions included', () async {
     final series = env.repo
         .newSeries(CollectionType.manga)

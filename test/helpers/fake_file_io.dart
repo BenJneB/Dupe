@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 
@@ -11,6 +12,9 @@ class FakeFileIo implements FileIo {
   /// Texts given to [shareText].
   final sharedTexts = <String>[];
 
+  /// When set, [save] waits for it (share sheet left open).
+  Completer<void>? gate;
+
   String text(String name) => utf8.decode(saved[name]!);
 
   @override
@@ -19,6 +23,7 @@ class FakeFileIo implements FileIo {
     Uint8List bytes, {
     required String mimeType,
   }) async {
+    await gate?.future;
     saved[name] = bytes;
     return true;
   }
