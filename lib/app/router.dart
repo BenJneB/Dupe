@@ -17,6 +17,7 @@ import 'package:dupe/features/collection/presentation/volume_counts/volume_count
 import 'package:dupe/features/loans/presentation/loans_screen.dart';
 import 'package:dupe/features/more/presentation/more_screen.dart';
 import 'package:dupe/features/quality/domain/collection_quality.dart';
+import 'package:dupe/features/quality/presentation/cover_proposals_screen.dart';
 import 'package:dupe/features/quality/presentation/isbn_completion_screen.dart';
 import 'package:dupe/features/quality/presentation/quality_list_screen.dart';
 import 'package:dupe/features/quality/presentation/quality_screen.dart';
@@ -84,6 +85,11 @@ GoRouter appRouter(Ref ref) {
                             state.pathParameters['issue']!,
                           ),
                         ),
+                      ),
+                      GoRoute(
+                        path: 'couvertures',
+                        builder: (context, state) =>
+                            const CoverProposalsScreen(),
                       ),
                       GoRoute(
                         path: 'isbn',

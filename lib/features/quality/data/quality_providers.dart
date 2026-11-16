@@ -21,15 +21,16 @@ Stream<CollectionQuality> collectionQuality(Ref ref) {
   return combineLatest(items, series, computeQuality);
 }
 
-/// Setting: mark the owned volumes without ISBN on the series grid (off by
-/// default, not to overload it).
+/// Setting: mark the owned volumes without ISBN (dot on the series grid,
+/// icon on series, books and authors in the lists). On by default (user's
+/// choice, 2026-11-16).
 @Riverpod(keepAlive: true)
 class MissingIsbnInGrid extends _$MissingIsbnInGrid {
   static const settingKey = 'grid_missing_isbn';
 
   @override
   Future<bool> build() async =>
-      await ref.watch(appSettingsStoreProvider).get(settingKey) == '1';
+      await ref.watch(appSettingsStoreProvider).get(settingKey) != '0';
 
   Future<void> set({required bool on}) async {
     state = AsyncData(on);

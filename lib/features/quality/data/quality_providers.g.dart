@@ -54,18 +54,21 @@ final class CollectionQualityProvider
 
 String _$collectionQualityHash() => r'c9f4153ba47b8d595f6b1078c4a70327b5d98dc0';
 
-/// Setting: mark the owned volumes without ISBN on the series grid (off by
-/// default, not to overload it).
+/// Setting: mark the owned volumes without ISBN (dot on the series grid,
+/// icon on series, books and authors in the lists). On by default (user's
+/// choice, 2026-11-16).
 
 @ProviderFor(MissingIsbnInGrid)
 final missingIsbnInGridProvider = MissingIsbnInGridProvider._();
 
-/// Setting: mark the owned volumes without ISBN on the series grid (off by
-/// default, not to overload it).
+/// Setting: mark the owned volumes without ISBN (dot on the series grid,
+/// icon on series, books and authors in the lists). On by default (user's
+/// choice, 2026-11-16).
 final class MissingIsbnInGridProvider
     extends $AsyncNotifierProvider<MissingIsbnInGrid, bool> {
-  /// Setting: mark the owned volumes without ISBN on the series grid (off by
-  /// default, not to overload it).
+  /// Setting: mark the owned volumes without ISBN (dot on the series grid,
+  /// icon on series, books and authors in the lists). On by default (user's
+  /// choice, 2026-11-16).
   MissingIsbnInGridProvider._()
     : super(
         from: null,
@@ -85,10 +88,11 @@ final class MissingIsbnInGridProvider
   MissingIsbnInGrid create() => MissingIsbnInGrid();
 }
 
-String _$missingIsbnInGridHash() => r'155cd4c86806e6f7a57b43dbe3891c99dbcd69bf';
+String _$missingIsbnInGridHash() => r'54f02dd5f3ab8dee3e09e357baa7ec0798f54f42';
 
-/// Setting: mark the owned volumes without ISBN on the series grid (off by
-/// default, not to overload it).
+/// Setting: mark the owned volumes without ISBN (dot on the series grid,
+/// icon on series, books and authors in the lists). On by default (user's
+/// choice, 2026-11-16).
 
 abstract class _$MissingIsbnInGrid extends $AsyncNotifier<bool> {
   FutureOr<bool> build();

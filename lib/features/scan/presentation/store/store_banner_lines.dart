@@ -40,7 +40,10 @@ List<String> storeDetails(StoreCheck c, AppLocalizations l10n) {
       if (item?.location case final location? when location.isNotEmpty)
         l10n.storeLocation(location),
       if (c.isbnRemembered) l10n.storeIsbnRemembered,
-      if (c.otherEdition) l10n.storeOtherEdition,
+      if (c.otherEdition && c.series == null)
+        l10n.storeOtherEditionBook
+      else if (c.otherEdition)
+        l10n.storeOtherEdition,
     ],
     StoreVerdict.wished => [
       if (item?.wishlistMaxPrice case final price?)

@@ -18,6 +18,7 @@ class SeriesEntry extends CollectionEntry {
     this.unreadCount = 0,
     this.firstVolumeCover,
     this.highestVolume,
+    this.missingIsbnCount = 0,
   });
 
   final Series series;
@@ -27,6 +28,9 @@ class SeriesEntry extends CollectionEntry {
 
   /// Highest plain volume number among the items (owned or wished).
   final int? highestVolume;
+
+  /// Owned volumes without ISBN (quality marker).
+  final int missingIsbnCount;
 
   /// Owned volumes (distinct numbers) not deleted.
   final int ownedCount;
@@ -87,3 +91,14 @@ class ItemEntry extends CollectionEntry {
 enum CollectionSort { title, recent, progress }
 
 enum CompletionFilter { all, complete, incomplete }
+
+extension EntryMissingIsbn on CollectionEntry {
+  /// Owned books without ISBN in this row: a series' volumes, or the book.
+  int get missingIsbnCount => switch (this) {
+    SeriesEntry(:final missingIsbnCount) => missingIsbnCount,
+    ItemEntry(:final item) =>
+      item.ownership == Ownership.possede && (item.isbn13 ?? '').trim().isEmpty
+          ? 1
+          : 0,
+  };
+}

@@ -811,14 +811,20 @@ abstract class AppLocalizations {
   /// No description provided for @missingIsbnInGrid.
   ///
   /// In fr, this message translates to:
-  /// **'Signaler les ISBN manquants dans les séries'**
+  /// **'Signaler les ISBN manquants'**
   String get missingIsbnInGrid;
 
   /// No description provided for @missingIsbnInGridHelp.
   ///
   /// In fr, this message translates to:
-  /// **'Un point sur la pastille des tomes possédés sans ISBN'**
+  /// **'Un point sur la pastille des tomes possédés sans ISBN, et une icône sur les séries, livres et auteurs concernés'**
   String get missingIsbnInGridHelp;
+
+  /// No description provided for @missingIsbnCount.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{1 livre possédé sans ISBN} other{{count} livres possédés sans ISBN}}'**
+  String missingIsbnCount(int count);
 
   /// No description provided for @missingIsbn.
   ///
@@ -897,6 +903,60 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'{count, plural, =0{Terminé : aucun ISBN enregistré.} =1{Terminé : 1 ISBN enregistré.} other{Terminé : {count} ISBN enregistrés.}}'**
   String isbnCompletionDone(int count);
+
+  /// No description provided for @coverProposalsTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Couvertures proposées'**
+  String get coverProposalsTitle;
+
+  /// No description provided for @coverProposalsTileHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Trouvées pour d’autres éditions : à garder ou refuser'**
+  String get coverProposalsTileHelp;
+
+  /// No description provided for @coverProposalsHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ces couvertures viennent d’une autre édition du même livre (recherche par titre et auteur). Garde celles qui conviennent ; une couverture refusée n’est plus proposée sur cet appareil.'**
+  String get coverProposalsHelp;
+
+  /// No description provided for @coverProposalsNone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune couverture à valider.'**
+  String get coverProposalsNone;
+
+  /// No description provided for @coverProposalsKeepAll.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tout garder'**
+  String get coverProposalsKeepAll;
+
+  /// No description provided for @coverProposalKeep.
+  ///
+  /// In fr, this message translates to:
+  /// **'Garder'**
+  String get coverProposalKeep;
+
+  /// No description provided for @coverProposalRefuse.
+  ///
+  /// In fr, this message translates to:
+  /// **'Refuser'**
+  String get coverProposalRefuse;
+
+  /// No description provided for @coverProposalFrom.
+  ///
+  /// In fr, this message translates to:
+  /// **'Trouvée via {source} : « {title} »'**
+  String coverProposalFrom(String source, String title);
+
+  /// No description provided for @storeOtherEditionBook.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tu as ce livre dans une autre édition'**
+  String get storeOtherEditionBook;
 
   /// No description provided for @seeSeries.
   ///

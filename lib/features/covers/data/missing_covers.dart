@@ -9,6 +9,7 @@ import 'package:dupe/features/collection/data/collection_repository.dart';
 import 'package:dupe/features/collection/domain/item.dart';
 import 'package:dupe/features/covers/data/cover_cache.dart';
 import 'package:dupe/features/covers/data/cover_photos.dart';
+import 'package:dupe/features/covers/data/cover_proposals.dart';
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -109,13 +110,35 @@ class MissingCoversFill extends _$MissingCoversFill {
     final sources = ref.read(metadataAggregatorProvider);
     final cache = ref.read(coverCacheProvider);
     final items = await itemsWithIsbn(ref.read(appDatabaseProvider));
+    final proposals = ref.read(coverProposalsProvider.notifier);
+    final refused = await proposals.refusedKeys();
+    final seriesTitles = {
+      for (final s in await repo.listSeries()) s.id: s.title,
+    };
     state = CoverFillState(running: items.isNotEmpty, total: items.length);
     var found = 0;
+    var proposed = 0;
     final notFound = <String>[];
     for (final (i, item) in items.indexed) {
       try {
         if (!await needsCover(cache, item)) continue;
         final (:url, :why) = await findCover(sources, cache, item);
+        if (url == null) {
+          // Another edition's cover, by text search: proposed, not applied
+          // (phase 25).
+          final proposal = await proposeCover(
+            sources,
+            cache,
+            item,
+            refused: refused,
+            seriesTitle: seriesTitles[item.seriesId],
+          );
+          if (proposal != null) {
+            proposals.add(proposal);
+            proposed++;
+            continue;
+          }
+        }
         if (url == null && notFound.length < 30) {
           notFound.add(
             '${item.title} ${item.volumeNumber ?? ''} [${item.isbn13}] $why',
@@ -142,6 +165,7 @@ class MissingCoversFill extends _$MissingCoversFill {
     }
     final summary =
         '$found couverture(s) ajoutée(s) ou remplacée(s), '
+        "$proposed proposée(s) d'une autre édition, "
         '${items.length} livres vérifiés';
     appLog.info(
       'covers',

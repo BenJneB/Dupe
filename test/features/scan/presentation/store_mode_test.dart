@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dupe/core/database/app_database.dart';
+import 'package:dupe/core/metadata/metadata_result.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
 import 'package:dupe/features/collection/domain/enums.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -207,5 +208,56 @@ void main() {
       find.descendant(of: menu, matching: find.text('BD')),
       findsOneWidget,
     );
+  }, variant: linux);
+
+  testWidgets('a standalone book owned in another edition (title + author)', (
+    tester,
+  ) async {
+    // Owned: Dune, large format, no ISBN known for the pocket one.
+    const pocket = '9782266320481';
+    await pumpApp(
+      tester,
+      size: desktopSize,
+      overrides: [
+        fakeMetadataSources(
+          byIsbn: {
+            pocket: const MetadataResult(
+              source: MetadataSource.bnf,
+              sourceId: 'p',
+              title: 'Dune',
+              authors: ['Frank Herbert'],
+              publisher: 'Pocket',
+            ),
+            '9782070612758': const MetadataResult(
+              source: MetadataSource.bnf,
+              sourceId: 'n',
+              title: 'Dune',
+              authors: ['Ann Other'],
+            ),
+          },
+        ),
+      ],
+      seed: (db) async {
+        final repo = repoOf(db);
+        await repo.saveItem(
+          repo
+              .newItem(CollectionType.livre)
+              .copyWith(
+                title: 'Dune',
+                authors: ['Frank Herbert'],
+                publisher: 'Robert Laffont',
+              ),
+        );
+      },
+    );
+
+    await openScan(tester);
+    await typeCode(tester, pocket);
+    expect(find.byKey(const Key('store_owned')), findsOneWidget);
+    expect(find.text('Tu as ce livre dans une autre édition'), findsOneWidget);
+
+    // Same title by someone else: not "already owned".
+    await typeCode(tester, '9782070612758');
+    expect(find.byKey(const Key('store_owned')), findsNothing);
   }, variant: linux);
 }

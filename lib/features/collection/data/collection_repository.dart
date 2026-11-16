@@ -208,6 +208,11 @@ class CollectionRepository {
             ..limit(1))
           .getSingleOrNull();
 
+  /// Non-deleted standalone items (no series), every type.
+  Future<List<Item>> listStandaloneItems() => (_db.select(
+    _db.itemsTable,
+  )..where((t) => t.seriesId.isNull() & t.deletedAt.isNull())).get();
+
   /// First non-deleted item with this ISBN-13 (any ownership).
   Future<Item?> findItemByIsbn(String isbn13) =>
       (_db.select(_db.itemsTable)

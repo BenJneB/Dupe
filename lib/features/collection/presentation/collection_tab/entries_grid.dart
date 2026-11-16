@@ -3,6 +3,7 @@ import 'package:dupe/features/collection/domain/collection_entry.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
 import 'package:dupe/features/collection/presentation/collection_tab/entry_display.dart';
 import 'package:dupe/features/collection/presentation/collection_tab/series_progress_bar.dart';
+import 'package:dupe/features/quality/presentation/missing_isbn_mark.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
@@ -34,12 +35,22 @@ class EntriesGrid extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
-                child: LayoutBuilder(
-                  builder: (context, constraints) => CoverImage(
-                    url: entryCover(entry),
-                    width: constraints.maxWidth,
-                    height: constraints.maxHeight,
-                  ),
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    LayoutBuilder(
+                      builder: (context, constraints) => CoverImage(
+                        url: entryCover(entry),
+                        width: constraints.maxWidth,
+                        height: constraints.maxHeight,
+                      ),
+                    ),
+                    Positioned(
+                      top: 4,
+                      right: 4,
+                      child: MissingIsbnMark(count: entry.missingIsbnCount),
+                    ),
+                  ],
                 ),
               ),
               if (SeriesProgressBar.shows(entry))

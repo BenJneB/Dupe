@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:dupe/features/covers/data/cover_cache.dart';
 import 'package:dupe/features/covers/data/cover_prefetch.dart';
-import 'package:dupe/features/covers/presentation/missing_covers_tile.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
@@ -96,7 +95,6 @@ class OfflineCoversSection extends ConsumerWidget {
             child: Text(l10n.offlineCoversClear),
           ),
         ),
-        const MissingCoversTile(),
       ],
     );
   }

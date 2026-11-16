@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:dupe/app/router.dart';
 import 'package:dupe/features/collection/presentation/volume_titles/volume_titles_tile.dart';
+import 'package:dupe/features/covers/data/cover_proposals.dart';
 import 'package:dupe/features/covers/presentation/missing_covers_tile.dart';
 import 'package:dupe/features/quality/data/quality_providers.dart';
 import 'package:dupe/features/quality/domain/collection_quality.dart';
@@ -21,6 +22,7 @@ class QualityScreen extends ConsumerWidget {
     final text = Theme.of(context).textTheme;
     final quality = ref.watch(collectionQualityProvider).value;
     final markIsbn = ref.watch(missingIsbnInGridProvider).value ?? false;
+    final proposals = ref.watch(coverProposalsProvider).length;
     Widget header(String title) => Padding(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
       child: Text(title, style: text.titleSmall),
@@ -46,6 +48,15 @@ class QualityScreen extends ConsumerWidget {
               onTap: (quality?.count(issue) ?? 0) == 0
                   ? null
                   : () => context.push(AppRoutes.qualityList(issue.name)),
+            ),
+          if (proposals > 0)
+            ListTile(
+              key: const Key('qualityCoverProposals'),
+              leading: const Icon(Icons.photo_library_outlined),
+              title: Text(l10n.coverProposalsTitle),
+              subtitle: Text(l10n.coverProposalsTileHelp),
+              trailing: Text('$proposals', style: text.titleMedium),
+              onTap: () => context.push(AppRoutes.coverProposals),
             ),
           if ((quality?.count(QualityIssue.noIsbn) ?? 0) > 0)
             Padding(

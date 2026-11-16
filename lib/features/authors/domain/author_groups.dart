@@ -35,6 +35,10 @@ class AuthorGroup {
       series.fold(0, (sum, s) => sum + s.ownedCount) +
       books.where((b) => b.item.ownership == Ownership.possede).length;
 
+  /// Owned books without ISBN among its series and books (quality marker).
+  int get missingIsbnCount =>
+      entries.fold(0, (sum, e) => sum + e.missingIsbnCount);
+
   /// Sorted by last name ("Colfer" for "Eoin Colfer").
   String get sortKey => key.split(' ').reversed.join(' ');
 

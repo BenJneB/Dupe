@@ -3,6 +3,7 @@ import 'package:dupe/features/collection/domain/collection_entry.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
 import 'package:dupe/features/collection/presentation/collection_tab/entry_display.dart';
 import 'package:dupe/features/collection/presentation/collection_tab/series_progress_bar.dart';
+import 'package:dupe/features/quality/presentation/missing_isbn_mark.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
@@ -46,9 +47,14 @@ class EntryTile extends StatelessWidget {
             ),
         ],
       ),
-      trailing: entry is SeriesEntry && entry.isComplete
-          ? Icon(Icons.check_circle, color: Colors.green.shade600)
-          : null,
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          MissingIsbnMark(count: entry.missingIsbnCount),
+          if (entry is SeriesEntry && entry.isComplete)
+            Icon(Icons.check_circle, color: Colors.green.shade600),
+        ],
+      ),
       onTap: () => context.push(entryRoute(type, entry)),
     );
   }
