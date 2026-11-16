@@ -156,4 +156,59 @@ void main() {
     await actions.markReturned(loan);
     expect(reminders.scheduled, isEmpty);
   });
+
+  test(
+    'start-up: reminders scheduled again, returned loans cancelled',
+    () async {
+      // Recette N-01: after a reinstall (or for loans of another device), no
+      // reminder was scheduled any more.
+      final db = AppDatabase.memory();
+      addTearDown(db.close);
+      final reminders = FakeLoanReminders(canSchedule: true);
+      final container = ProviderContainer(
+        overrides: [
+          appDatabaseProvider.overrideWithValue(db),
+          loanRemindersProvider.overrideWithValue(reminders),
+        ],
+      );
+      addTearDown(container.dispose);
+      await seedDune(db);
+      final repo = container.read(loansRepositoryProvider);
+      final soon = DateTime.now().add(const Duration(days: 3));
+      final active = await repo.lend(dune.id, borrower: 'Bob', dueAt: soon);
+      final returned = await repo.lend(dune.id, borrower: 'Eve', dueAt: soon);
+      await repo.markReturned(returned);
+      await repo.lend(dune.id, borrower: 'Zoé'); // No due date.
+      reminders.scheduled.add(returned.id); // Left over from before.
+
+      await container.read(loanActionsProvider).syncReminders();
+
+      expect(reminders.scheduled, {active.id});
+    },
+  );
+
+  test('a reminder will not show when notifications are off', () async {
+    final db = AppDatabase.memory();
+    addTearDown(db.close);
+    LoanActions actions(FakeLoanReminders reminders) => ProviderContainer(
+      overrides: [
+        appDatabaseProvider.overrideWithValue(db),
+        loanRemindersProvider.overrideWithValue(reminders),
+      ],
+    ).read(loanActionsProvider);
+    final due = DateTime.now().add(const Duration(days: 1));
+
+    final off = actions(FakeLoanReminders(canSchedule: true, allowed: false));
+    expect(await off.reminderWillShow(due), isFalse);
+    expect(await off.reminderWillShow(null), isTrue);
+    expect(
+      await actions(FakeLoanReminders(canSchedule: true)).reminderWillShow(due),
+      isTrue,
+    );
+    // Desktop: no scheduled reminders, nothing to warn about.
+    expect(
+      await actions(FakeLoanReminders(allowed: false)).reminderWillShow(due),
+      isTrue,
+    );
+  });
 }

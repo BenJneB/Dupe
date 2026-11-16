@@ -19,6 +19,10 @@ abstract interface class LoanReminders {
 
   Future<void> schedule(Loan loan, String itemTitle);
   Future<void> cancel(Loan loan);
+
+  /// False when the user turned Dupe's notifications off (Android): a
+  /// scheduled reminder would never show.
+  Future<bool> notificationsAllowed();
   Future<void> showOverdue(List<LoanWithItem> overdue);
 }
 
@@ -99,6 +103,17 @@ class LocalLoanReminders implements LoanReminders {
       notificationDetails: _details,
       androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
     );
+  }
+
+  @override
+  Future<bool> notificationsAllowed() async {
+    if (!canSchedule || !await _init()) return true;
+    return await _plugin
+            .resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin
+            >()
+            ?.areNotificationsEnabled() ??
+        true;
   }
 
   @override

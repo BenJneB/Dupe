@@ -412,6 +412,13 @@ Avant la reprise des tests : `check-env` refuse aussi `OPEN_LIBRARY_CONTACT` ; a
 - Hooks : le pré-commit lance format et analyse en parallèle, et seulement si le commit contient du Dart (commits
   de documentation instantanés) ; pré-push inchangé (tests).
 - Clés des sources : `K-01` à `K-04` OK sur la v0.1.0 (AppImage + téléphone) ; `K-05` vérifié en local.
+- **Release `v0.1.1`** publiée le 2026-11-16 (fusion Phase21 → `dev` → `main`) : premier passage obfusqué, 3 zips
+  de symboles présents, APK ~2 Mo plus légers.
+- `N-01` en échec : notifications de Dupe désactivées sur le téléphone (autorisation perdue avec une
+  désinstallation), sans que l'utilisateur le sache ; et une réinstallation perdait tous les rappels. Corrigé :
+  `LoanActions.reminderWillShow` (message au prêt si les notifications sont coupées, `areNotificationsEnabled`) et
+  `syncReminders` au démarrage (rappels des prêts en cours reprogrammés, ceux des prêts rendus annulés).
+  Tests dans `loans_flow_test.dart`.
 
 **Retours déjà traités (2026-11-15, APK release sur Android)** :
 - Free Quest tome 1 scanné en magasin : aucune série proposée. La BnF n'a pas ce tome ; l'autre source

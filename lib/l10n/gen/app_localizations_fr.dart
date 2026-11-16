@@ -447,6 +447,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get showVolumesAsGrid => 'Afficher les tomes en pastilles';
 
   @override
+  String get loanReminderNotificationsOff =>
+      'Prêt enregistré, mais le rappel ne s’affichera pas : les notifications de Dupe sont désactivées (Paramètres Android → Applications → Dupe → Notifications).';
+
+  @override
   String get seeSeries => 'Voir la série';
 
   @override

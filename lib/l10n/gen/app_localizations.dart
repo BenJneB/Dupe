@@ -712,6 +712,12 @@ abstract class AppLocalizations {
   /// **'Afficher les tomes en pastilles'**
   String get showVolumesAsGrid;
 
+  /// No description provided for @loanReminderNotificationsOff.
+  ///
+  /// In fr, this message translates to:
+  /// **'Prêt enregistré, mais le rappel ne s’affichera pas : les notifications de Dupe sont désactivées (Paramètres Android → Applications → Dupe → Notifications).'**
+  String get loanReminderNotificationsOff;
+
   /// No description provided for @seeSeries.
   ///
   /// In fr, this message translates to:

@@ -27,6 +27,8 @@ Description détaillée des choix techniques et de l'organisation du code (dépl
   de fuseaux) ; Linux n'a pas de planificateur et Windows hors MSIX ne sait pas annuler → sur desktop,
   notification « prêts en retard » au démarrage, une fois par jour (`loans_overdue_notified_on`).
   Android : compileSdk 37 + core library desugaring (`android/app/build.gradle.kts`), receivers dans le manifest.
+  Au démarrage, `LoanActions.syncReminders` reprogramme les rappels des prêts en cours et annule ceux des prêts
+  rendus (réinstallation, autre appareil) ; au prêt, `reminderWillShow` prévient si les notifications sont coupées.
   Tests : `pumpApp` injecte `FakeLoanReminders` (`test/helpers/fake_reminders.dart`), jamais le vrai plugin.
 - Graphiques : fl_chart 1.3 pour la seule courbe temporelle (`stats/presentation/monthly_chart.dart` : `MonthlyChart` /
   `MonthlyTable` génériques — dépenses et tomes lus —, infobulle au toucher + vue tableau) ; le reste en widgets simples (tuiles, barres classées `BarRow`).

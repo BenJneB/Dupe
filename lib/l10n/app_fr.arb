@@ -197,6 +197,7 @@
   "@volumeLabel": {"placeholders": {"label": {"type": "String"}}},
   "showVolumesAsList": "Afficher les tomes en liste",
   "showVolumesAsGrid": "Afficher les tomes en pastilles",
+  "loanReminderNotificationsOff": "Prêt enregistré, mais le rappel ne s’affichera pas : les notifications de Dupe sont désactivées (Paramètres Android → Applications → Dupe → Notifications).",
   "seeSeries": "Voir la série",
   "ownershipOwned": "Possédé",
   "ownershipWished": "Envie",

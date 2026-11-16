@@ -39,6 +39,8 @@ class _DupeAppState extends ConsumerState<DupeApp> {
       'loans',
       ref.read(loanActionsProvider).notifyOverdueOnStartup,
     );
+    // Android: loan reminders scheduled again (reinstall, other device).
+    _inBackground('loans', ref.read(loanActionsProvider).syncReminders);
     _inBackground('backup', ref.read(autoBackupsProvider).weeklyIfDue);
     _inBackground('update', _checkForUpdate);
     // Covers downloaded for offline use (Wi-Fi only by default).

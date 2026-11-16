@@ -7,7 +7,7 @@
 > finale. Les phases 15 à 20 ajoutent leurs tests ici et marquent « automatisé (phase N) » ceux que leurs tests
 > automatiques couvrent désormais.
 
-Ce fichier liste ce que les **236 tests automatiques (et 4 parcours d'intégration) ne couvrent pas** : matériel (caméra, vibrations,
+Ce fichier liste ce que les **238 tests automatiques (et 4 parcours d'intégration) ne couvrent pas** : matériel (caméra, vibrations,
 notifications, raccourci), services réels (Supabase, API GitHub, sources de métadonnées), plateformes non
 compilées ici (Windows) et workflows GitHub (jamais exécutés).
 
@@ -146,6 +146,13 @@ Tous les tests non faits en phase 14 et non marqués « automatisé ». Le but :
 
 ## 3. Prêts et notifications
 - [ ] **N-01** Prêter un tome avec retour aujourd'hui ou demain → notification vers 10 h (inexacte, peut tarder).
+      — À REFAIRE 2026-11-16 : pas de notification (prêt créé le 15 en v0.1.0, retour le 16 ; appli réinstallée
+      plusieurs fois entre-temps). Pistes : autorisation de notifier refusée, restrictions de batterie / démarrage
+      automatique du fabricant, alarme inexacte retardée. Refaire sans réinstaller l'appli avant l'échéance.
+      — Cause trouvée 2026-11-16 : notifications de Dupe **désactivées** (autorisation perdue avec une
+      désinstallation). Corrigé : message au prêt si le rappel ne peut pas s'afficher ; rappels des prêts en cours
+      reprogrammés au démarrage (réinstallation, prêt créé sur un autre appareil), ceux des prêts rendus annulés.
+      À refaire avec les notifications autorisées.
 - [ ] **N-02** Marquer rendu avant la date → pas de notification.
 - [ ] **N-03** Redémarrer le téléphone avant la date → la notification vient quand même.
 - [ ] **N-04** PC (Linux/Windows) : notification « prêts en retard » au démarrage, une fois par jour.

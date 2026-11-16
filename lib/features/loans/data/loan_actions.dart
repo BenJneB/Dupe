@@ -30,6 +30,29 @@ class LoanActions {
     return loan;
   }
 
+  /// A reminder of a loan due on [dueAt] would show: scheduling is possible
+  /// here and notifications are allowed (recette N-01: they were off).
+  Future<bool> reminderWillShow(DateTime? dueAt) async =>
+      dueAt == null ||
+      !_reminders.canSchedule ||
+      await _reminders.notificationsAllowed();
+
+  /// At start-up (Android): reminders of the current loans scheduled again,
+  /// those of returned loans cancelled. Covers a reinstalled app (scheduled
+  /// reminders are lost) and loans created or returned on another device.
+  /// Scheduling a loan again replaces its reminder (same id).
+  Future<void> syncReminders() async {
+    if (!_reminders.canSchedule) return;
+    for (final (:loan, :item) in await _repo.allLoans()) {
+      if (loan.dueAt == null) continue;
+      if (loan.isActive) {
+        await _reminders.schedule(loan, item.title);
+      } else {
+        await _reminders.cancel(loan);
+      }
+    }
+  }
+
   Future<void> markReturned(Loan loan) async {
     await _repo.markReturned(loan);
     await _reminders.cancel(loan);
