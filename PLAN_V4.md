@@ -1,44 +1,91 @@
-# Dupe — Plan v4 (brouillon)
+# Dupe — Plan v4
 
-> Commencé le 2026-11-15, pendant la recette de la v3 (phase 21). **Brouillon à valider par l'utilisateur** avant
-> de démarrer : périmètre, découpage et ordre des phases peuvent changer. La v4 ne commence qu'une fois la
-> phase 21 close. Mêmes règles qu'avant (`CLAUDE.md`) : une phase à la fois, tests automatisés + tests manuels
-> ajoutés à `TESTS_MANUELS.md`, bilan « Réalisé / Écarts / Non vérifié » sous chaque phase, arrêt en fin de phase.
+> Suite de `PLAN_V3.md`. Les conventions de `CLAUDE.md` restent valables sans exception (une phase à la fois,
+> fichiers < 250 lignes, textes dans `app_fr.arb`, jamais de lecture de `env.json`, jamais de connexion au Supabase
+> distant, l'assistant stage et propose un message de commit conventionnel, l'utilisateur committe).
+>
+> Comme les plans précédents, ce fichier sert d'**état du projet** : mettre à jour le tableau de la section 3 et
+> ajouter un bilan « Réalisé / Écarts / Non vérifié » sous chaque phase terminée.
+>
+> Les bibliothèques citées sont des pistes : **vérifier version, plateformes supportées (Android, Linux,
+> Windows) et maintenance** avant de les adopter, et préférer du code maison simple quand un package n'apporte
+> pas assez.
+>
+> **Calendrier (décisions de l'utilisateur)** : la v4 a commencé pendant la recette de la v3 (2026-11-15/16) avec
+> les phases 23 et 24 ; la **fin de la recette v3 est la phase 26**, à faire **juste avant les livres numériques**,
+> eux-mêmes placés en fin de v4 (avant la recette de la v4). Le
+> plan ci-dessous fusionne le premier brouillon (idées issues de la recette, 2026-11-15) et le plan v4 rédigé par
+> l'utilisateur (2026-11-16) ; les numéros déjà utilisés sont gardés, l'**ordre d'exécution** est dans la section 3.
 
 ## 1. Objectif de la v4
-Rendre la collection plus complète et plus juste sans saisie manuelle : comptes plus simples à gérer, séries
-complétées (nombre de tomes, tomes manquants, titres), couvertures et éditions mieux reconnues, et livres
-numériques rangés avec les livres papier. Toutes ces idées viennent de la recette de la v3 (2026-11-15) ; leur
-texte d'origine est dans les phases ci-dessous.
 
-## 2. Repris de la v3
-- **Déjà livré pendant la phase 21** (exception au gel, 2026-11-15) : ISBN dans les résultats de recherche, barre
-  de progression indicative pour les séries sans total, « marquer comme lus » depuis la page d'un auteur ; aussi :
-  ajout des tomes précédents à l'ajout d'un tome N, légende de la grille en haut.
+Enrichir la collection après la v3 : des données plus complètes et plus justes (ISBN, couvertures, séries, titres
+des tomes), des photos propres, le suivi des dédicaces, les livres numériques rangés avec les livres papier, et
+deux fonctions tournées vers la suite de la collection : être prévenu des nouveautés et recevoir des suggestions.
+
+## 2. Principes transverses
+
+- **Tout changement de schéma** suit la procédure de `CLAUDE.md` : `schemaVersion`, migration drift, dump du
+  schéma, test de migration, migration SQL Supabase avec RLS, prise en charge par `SyncCodec`, sauvegarde JSON
+  et export CSV. **La migration Supabase est appliquée par l'utilisateur avant d'installer la version qui
+  l'utilise** (sinon la synchro est refusée) ; les versions plus anciennes ignorent les colonnes inconnues.
+- **Plugins mono-plateforme** (Android seulement) : jamais instanciés ailleurs, fake injecté par `pumpApp`,
+  repli fonctionnel sur PC.
+- **Nouvelles sources** : fixtures réelles, limiteur de débit, cache disque `CachePolicy`, activables dans
+  Paramètres → Sources, échecs au journal, jamais de scraping.
+- **Photos** : jamais de métadonnées EXIF conservées (position GPS notamment), puisqu'elles partent sur Supabase.
+
+### Repris de la v3
+- **Déjà livré pendant la phase 21** (exceptions au gel) : ISBN dans les résultats de recherche, barre de
+  progression indicative pour les séries sans total, « marquer comme lus » depuis la page d'un auteur, ajout des
+  tomes précédents à l'ajout d'un tome N, légende de la grille en haut, glisser pour retirer une envie, tomes vides
+  complétés au scan.
 - **Fait en fin de v3** (2026-11-15) : obfuscation des Releases publiques (seulement elles ; les APK locaux de
   l'utilisateur restent lisibles), symboles joints à la Release, `coverError` sans `runtimeType`.
 - **Tests reportés après la v4** (décision de l'utilisateur) : mode rafale `R-01` à `R-04`, à dérouler dans la
-  recette de la v4 (phase 27).
+  recette de la v4 (phase 35).
 
 ## 3. État des phases
-| Phase | Sujet | État |
-|---|---|---|
-| 22 | Compte : mot de passe oublié, liens de confirmation | à valider |
-| 23 | Séries : nombre de tomes, tomes suivants, titres des tomes | ✅ fait (2026-11-15, avancée pendant la recette v3 à la demande de l'utilisateur) |
-| 24 | Éditions et couvertures | à valider |
-| 25 | Livres numériques (1/2) : support numérique, import Calibre | à valider |
-| 26 | Livres numériques (2/2) : dossier EPUB/CBZ, Kobo | à valider |
-| 27 | Recette de la v4 (dont mode rafale) | à valider |
+
+| Ordre | Phase | Sujet | État | Tests auto | Vérifié en réel |
+|---|---|---|---|---|---|
+| 1 | 23 | Séries : nombre de tomes, tomes suivants, vue liste | ✅ fait (2026-11-15/16) | oui | en partie (`U-*`) |
+| 2 | 24 | Titres des tomes (champ dédié, vue pastilles) | ✅ fait (2026-11-16) | oui (+ Supabase local) | non (`I-*`) |
+| 3 | 22 | Qualité des données et ISBN manquants | à faire | — | — |
+| 4 | 25 | Éditions et couvertures | à faire | — | — |
+| 5 | 29 | Photos : redressement et recadrage | à faire | — | — |
+| 6 | 30 | Dédicaces | à faire | — | — |
+| 7 | 31 | Nouvelles sources de métadonnées | à faire | — | — |
+| 8 | 32 | Alertes de nouveautés | à faire | — | — |
+| 9 | 33 | Recommandations | à faire | — | — |
+| 10 | 34 | Compte : mot de passe oublié, liens de confirmation | à faire | — | — |
+| 11 | 26 | Fin de la recette de la v3 (reprise de la phase 21) | à faire, juste avant les livres numériques | — | — |
+| 12 | 27 | Livres numériques (1/2) : support numérique, import Calibre | à faire | — | — |
+| 13 | 28 | Livres numériques (2/2) : dossier EPUB/CBZ, Kobo | à faire | — | — |
+| 14 | 35 | Recette de la v4 (dont mode rafale) | à faire | — | — |
+
+L'ordre compte : 22 est rapide et utile tout de suite ; 29 sert à 30 ; 31 fournit les données dont 32 et 33 ont
+besoin. **Décision de l'utilisateur (2026-11-16)** : les livres numériques (27-28) passent à la fin, juste avant
+la recette de la v4, et la fin de la recette de la v3 (26) juste avant eux. L'ordre reste ajustable.
 
 ## 4. Phases
 
-### Phase 22 — Compte : mot de passe oublié, liens de confirmation
-- **Mot de passe oublié sans être connecté** : lien « Mot de passe oublié ? » sur l'écran de connexion
-  (email de réinitialisation Supabase), au lieu de passer par Paramètres → Mot de passe une fois connecté.
-- **Lien de confirmation d'inscription** : il ouvre `localhost` (404). *Site URL* / *Redirect URLs* du projet
-  Supabase à régler (action de l'utilisateur), et page d'arrivée (ou lien profond `dupe://`) qui confirme puis
-  renvoie dans l'appli. Le lien de réinitialisation du mot de passe a le même besoin : à traiter ensemble.
-- Question ouverte : lien profond `dupe://` (Android ; Linux/Windows à étudier) ou petite page web statique.
+### Phase 22 — Qualité des données et ISBN manquants
+- **Indicateur ISBN manquant** : badge discret sur la fiche d'un ouvrage possédé sans ISBN, et sur sa pastille
+  dans la grille des tomes (activable, pour ne pas surcharger la grille).
+- **Écran « Qualité de la collection »** (Plus → Statistiques ou Paramètres) : compteurs cliquables qui ouvrent
+  la liste filtrée correspondante : sans ISBN, sans couverture, sans numéro de tome dans une série, livre isolé
+  qui ressemble à un tome de série, série sans nombre total de tomes. Reprend l'action existante « Compléter
+  les couvertures manquantes » (et « Vérifier le nombre de tomes des séries », phase 23).
+- **Mode complétion par scan** : depuis la liste « sans ISBN », parcourir les ouvrages un par un ; pour chacun,
+  scanner le livre (caméra sur Android, champ ISBN ou douchette sur PC) pour lui attribuer l'ISBN. Contrôles :
+  ISBN valide, pas déjà porté par un autre ouvrage (sinon proposer de voir le doublon), titre trouvé en ligne
+  cohérent avec celui de l'ouvrage (sinon demander confirmation). Option « Compléter aussi les infos
+  manquantes » qui réutilise `Compléter` sans écraser les champs saisis (`fillBlanks`, déjà utilisé au scan).
+- Réutilise le mécanisme « ISBN mémorisé » du mode Magasin plutôt que de dupliquer la logique.
+
+*Critère : depuis l'écran Qualité, j'attribue un ISBN à dix ouvrages à la suite en les scannant, et le compteur
+« sans ISBN » baisse d'autant.*
 
 ### Phase 23 — Séries : nombre de tomes, tomes suivants, titres des tomes
 - **« Vérifier le nombre de tomes »** (sur une série, ou en lot dans Paramètres) : recherche AniList (manga) /
@@ -79,12 +126,48 @@ texte d'origine est dans les phases ci-dessous.
   - **Fait (2026-11-16)** : action « Nombre total de tomes… » dans le menu de **toutes** les séries ; pour BD,
     livres et séries introuvables (ou source en échec), le dialogue s'ouvre avec la raison et le total actuel, pour
     une saisie manuelle (`checkSeriesTotal`, tests `series_total_test.dart`).
-  - **À faire** : titres des tomes aussi dans la vue pastilles, et un vrai **titre de tome** : aujourd'hui un tome
+  - **Repris en phase 24** : titres des tomes aussi dans la vue pastilles, et un vrai **titre de tome** : aujourd'hui un tome
     n'a pas de champ « titre propre » (`applyMetadata` jette le sous-titre d'un tome numéroté ; le titre propre n'est
     connu que si la BnF le met en titre principal, ex. Kaamelott) → champ `volume_title` sur l'item (migration de
     schéma locale v3 + Supabase), rempli depuis BnF 200$a/$e/$i, Google Books `subtitle`, Comic Vine `name`.
 
-### Phase 24 — Éditions et couvertures
+### Phase 24 — Titres des tomes
+Demande de l'utilisateur (`U-04`, 2026-11-16) : un tome n'affiche souvent que « Tome 1 ».
+- Champ **`volume_title`** (titre propre du tome) sur l'item : migration de schéma locale v3 + migration Supabase,
+  synchro, sauvegarde/import (JSON, CSV).
+- Rempli à l'ajout et au scan (`applyMetadata`, `fillBlanks`) depuis BnF (200$a quand c'est le titre du tome, $e,
+  $i), Google Books `subtitle`, Comic Vine `name` ; modifiable dans le formulaire.
+- Affiché dans la vue liste, sur la fiche, et **sous les pastilles** de la vue grille (ou en infobulle si la place
+  manque) ; « Compléter les couvertures »/le scan complètent aussi les titres manquants.
+
+**Bilan (2026-11-16)**
+- **Réalisé** :
+  - Champ `volumeTitle` / `volume_title` : modèle `Item`, table `items`, **schéma local v3** (`addColumn`, dump
+    `drift_schema_v3.json`, tests de migration v1→v3 et v2→v3), migration Supabase
+    `20261116120000_volume_title.sql` (colonne facultative ; RLS et trigger inchangés). Synchro et sauvegarde JSON
+    par `SyncCodec` (générique) ; CSV : colonne « Titre du tome » à l'export et à l'import (`ImportField.volumeTitle`,
+    en-têtes « Titre du tome », « Sous-titre », « Subtitle »…).
+  - Règle `volumeTitleOf` (`metadata_mapping.dart`) : pour un tome de série, le titre de la notice quand il diffère
+    de celui de la série (BnF : « Les renforts maléfiques »), le sous-titre (Comic Vine : nom de l'issue ; BnF
+    200 $e/$i ; Google), ou les deux ; **vide** pour un livre isolé ou un tome connu seulement par son numéro.
+    Appliquée à l'ajout (`applyMetadata` via `loadItemDraft`), au scan d'un tome vide (`fillBlanks`, sans écraser
+    une saisie) ; champ « Titre du tome » dans le formulaire.
+  - **Tomes déjà présents** : Paramètres → Sources → « Compléter les titres des tomes » (`VolumeTitleFill`) :
+    tomes de série numérotés, avec ISBN, sans titre ; recherche par ISBN (réponses souvent déjà en cache), titre
+    seul enregistré. Les tomes ajoutés avant dont le titre est déjà le titre propre (ex. Kaamelott) s'affichent sans
+    rien faire (`VolumeSlot.ownTitle`).
+  - Affichage : vue liste, fiche (sous le titre), et sous chaque pastille de la vue grille (colonnes de largeur
+    fixe dès qu'un tome a un titre, deux lignes au plus).
+  - Tests : `fill_blanks_test.dart`, `item_drafts_test.dart`, `volume_title_fill_test.dart`, `migration_test.dart`,
+    `import_export_test.dart`, `series_navigation_test.dart` ; tests `supabase` verts sur le Supabase local **après**
+    la migration (avant : « Could not find the 'volume_title' column », la synchro est refusée).
+- **Écarts** : pas d'infobulle sur les pastilles (l'appui long y ajoute un tome) : titre affiché en dessous. Les
+  tomes sans ISBN ne peuvent pas être complétés automatiquement (formulaire, ou futur mode complétion par scan de
+  la phase 22).
+- **Non vérifié** : migration appliquée au vrai projet Supabase (action de l'utilisateur, **avant** d'installer
+  cette version) ; titres trouvés sur la vraie collection (`I-01` à `I-03`).
+
+### Phase 25 — Éditions et couvertures
 - **« Compléter les couvertures » par recherche texte** : aujourd'hui recherche **par ISBN** seulement (Google Books
   avec clé, devinette Open Library ; la BnF n'est plus interrogée) et livres sans ISBN ignorés. La recherche en ligne
   est une recherche **texte** : Google Books et Open Library y renvoient d'autres éditions, souvent illustrées
@@ -97,7 +180,13 @@ texte d'origine est dans les phases ci-dessous.
   normalisé + auteur (`normalizeTitle`, `authorKey`) aux livres possédés sans série ; bandeau vert « autre
   édition ». Limite : il faut le réseau (l'ISBN seul ne relie pas deux éditions).
 
-### Phase 25 — Livres numériques (1/2) : support numérique, import Calibre
+### Phase 26 — Fin de la recette de la v3
+Décision de l'utilisateur (2026-11-16) : terminer la recette de la v3 (phase 21, `TESTS_MANUELS.md`) avant les
+livres numériques. Tests restants (reportés ou non faits) déroulés comme en phase 21, puis clôture de la phase 21
+dans `PLAN_V3.md` (critère : chaque test OK, automatisé, ou écart documenté et accepté). Les tests du mode rafale
+restent pour la phase 35.
+
+### Phase 27 — Livres numériques (1/2) : support numérique, import Calibre
 Ebooks du téléphone/PC, Kindle ou Kobo, rangés dans la collection. **Métadonnées seulement** : jamais de
 contournement de DRM ni de copie des fichiers.
 - **Modèle** : support « papier / numérique » sur l'item (champ dédié plutôt que le texte libre `format`, migration
@@ -108,7 +197,7 @@ contournement de DRM ni de copie des fichiers.
 - Classement : recherche par ISBN puis rattachement aux séries existantes (`series_matching.dart`), doublons par
   ISBN, revue avant import (comme la rafale).
 
-### Phase 26 — Livres numériques (2/2) : dossier EPUB/CBZ, Kobo
+### Phase 28 — Livres numériques (2/2) : dossier EPUB/CBZ, Kobo
 - **Dossier de fichiers** (EPUB : OPF `dc:title`/`dc:creator`/`dc:identifier`, série `calibre:series` ou
   `belongs-to-collection` + `group-position` ; CBZ : `ComicInfo.xml` Series/Number ; PDF : titre seulement).
   Android : dossier choisi via le Storage Access Framework (accès persistant) ; desktop : file_selector.
@@ -119,10 +208,136 @@ contournement de DRM ni de copie des fichiers.
 - Chemins/URI des fichiers en table **locale** (propres à l'appareil, non synchronisés), bouton « Ouvrir » vers la
   liseuse système.
 
-### Phase 27 — Recette de la v4
-Pilotée par l'utilisateur, comme la phase 21 : tests manuels ajoutés par les phases 22 à 26, puis **mode rafale
+### Phase 29 — Photos : redressement et recadrage
+Objectif : une photo prise de travers devient une couverture droite, bien cadrée, au bon format.
+
+- **Android, détection automatique** : scanner de documents ML Kit (`google_mlkit_document_scanner` ou
+  équivalent) qui détecte les bords, corrige la perspective et recadre. Vérifier sa dépendance aux services
+  Google Play et le comportement hors ligne ; en cas d'indisponibilité, basculer sur l'éditeur manuel.
+- **Éditeur manuel, toutes plateformes** (fichiers maison, Flutter pur) : l'image avec quatre coins
+  déplaçables (pré-placés sur un cadre par défaut, loupe sous le doigt pour la précision), rotation par quart de
+  tour, zoom via `InteractiveViewer`. Le redressement est calculé avec le package `image` (correction de
+  perspective par les quatre coins, application de l'orientation EXIF, redimensionnement), dans un isolate pour
+  ne pas figer l'interface.
+- **Sortie normalisée** : JPEG, côté long 1200 px maximum, qualité ~85, EXIF supprimé. Ratio libre par défaut,
+  avec préréglages (manga/livre de poche, album BD, comics).
+- **Original conservé localement** (non synchronisé) pour pouvoir refaire le recadrage ; seule l'image finale
+  est envoyée sur Supabase. Purge des originaux possible dans Paramètres.
+- Action « Recadrer la couverture » sur les photos existantes (`dupe-cover:`).
+- Tests : calcul des coins et de la transformation sur des images de test générées, suppression de l'EXIF,
+  dimensions de sortie.
+
+*Critère : une photo de couverture prise de biais sur le téléphone donne une image droite et sans bord de table
+en moins de trois appuis ; l'image envoyée ne contient aucune donnée EXIF.*
+
+### Phase 30 — Dédicaces
+- **Schéma** : sur `items`, `is_signed` (bool), `signed_by` (texte, pré-rempli avec les auteurs de l'ouvrage),
+  `signed_on` (date), `signed_place` (festival, librairie…), `signing_note` (texte de la dédicace, à qui).
+- **Photos multiples** : nouvelle table synchronisée `item_photos` (`item_id`, `kind` : dédicace | autre,
+  `position`, chemin), stockées dans le même bucket privé que les couvertures et passées par le pipeline
+  d'envoi existant. Prise de vue avec l'éditeur de la phase 29 (sans correction de perspective forcée : une
+  dédicace se photographie souvent page ouverte).
+- **Interface** : section « Dédicace » sur la fiche (coche, champs, galerie, plein écran avec zoom), badge sur la
+  pastille du tome et dans les listes, filtre « Dédicacés », compteur dans les statistiques, colonnes dans
+  l'export CSV.
+- **Sauvegarde des photos** : les photos de dédicace sont irremplaçables, or les sauvegardes JSON n'en
+  gardent que les références. Ajouter un export « Archive complète » (zip : JSON + toutes les photos, package
+  `archive`) et sa restauration.
+
+*Critère : je coche un tome comme dédicacé, j'ajoute deux photos sur le téléphone, et je les retrouve sur le PC
+après synchro ; l'archive complète restaure les photos sur un appareil vierge.*
+
+### Phase 31 — Nouvelles sources de métadonnées
+**Avant de coder** : produire un bilan à partir du journal et de la base (par type : part des ouvrages sans
+couverture, sans numéro, sans série, sans ISBN, sources en échec) et le présenter à l'utilisateur pour
+prioriser.
+
+Sources candidates (vérifier documentation et conditions d'utilisation actuelles) :
+- **Wikidata** (SPARQL, sans clé, User-Agent identifiant l'appli exigé) : ISBN → œuvre, série et numéro
+  d'ordre, suite/précédent, auteurs avec identifiants stables. Sert le rattachement aux séries et prépare les
+  phases 32-33 (œuvres d'un auteur).
+- **MangaDex** (sans clé) : couvertures par tome, parfois de l'édition française ; recherche par titre de
+  série puis numéro, avec préférence pour la langue `fr`.
+- **MangaUpdates** (API publique v1, sans clé) : nombre de tomes, statut, recommandations ; complète AniList
+  pour le nombre total de tomes (dont des œuvres non japonaises qu'AniList ignore, cf. retours `U-01`).
+- **Metron** (comics, jeton gratuit saisi dans l'appli comme en phase 15, 20 requêtes/min) : issues, dates de
+  sortie, couvertures ; complète Comic Vine.
+- **Sudoc** (`isbn2ppn` puis notice) : dernier recours, recoupe largement la BnF.
+
+Intégration : chaque source comme `MetadataProvider` ou `SeriesMetadataProvider`, priorités par type mises à
+jour dans `defaultPriorities`, fusion sans écraser une donnée plus fiable (BnF reste prioritaire pour les
+éditions françaises).
+
+*Critère : sur un échantillon fixé des ouvrages sans couverture ou sans numéro (fixtures), le taux de
+complétion mesuré avant/après progresse, chiffres notés dans le bilan de phase.*
+
+### Phase 32 — Alertes de nouveautés
+**Limite assumée** : aucune source fiable ne liste les sorties françaises *à venir*. L'alerte signale une
+nouveauté **dès qu'elle apparaît** dans une source (souvent à la parution, parfois un peu avant via Google
+Books), pas des mois à l'avance. Exception : les comics US, dont Metron connaît les dates de sortie.
+
+- **Abonnements** : interrupteur « Prévenir des nouveaux tomes » par série (activé par défaut pour les séries
+  suivies, réglable) ; nouvelle table synchronisée `followed_authors` (nom, identifiants externes Wikidata /
+  BnF / AniList quand connus) pour suivre un auteur depuis la vue par auteur.
+- **Détection** :
+  - série : chercher un tome de numéro supérieur au plus grand connu (BnF par titre de série et éditeur, Google
+    Books triée par nouveauté, Metron pour les comics) ;
+  - auteur : nouvelles notices de l'auteur depuis la dernière vérification (BnF, Google Books, Wikidata) ;
+  - dédoublonnage par ISBN, ignorer ce qui est déjà possédé ou en envie.
+- **Exécution sur l'appareil**, pas de serveur : au plus une fois par jour, au démarrage ou à la reprise ; sur
+  Android, tâche de fond périodique (`workmanager`, Wi-Fi par défaut). Vérification étalée : nombre de séries
+  par passage limité, limiteurs de débit et cache existants respectés.
+- **Résultats** : table synchronisée `release_alerts` (statut nouveau / vu / ignoré / ajouté) pour qu'une
+  alerte traitée sur un appareil ne revienne pas sur l'autre ; écran « Nouveautés » (Plus), notification locale
+  regroupée (« 3 nouveautés dans tes séries »), ajout aux envies en un appui.
+- Paramètres : activation globale, fréquence, Wi-Fi seulement, notifications.
+
+*Critère : avec une série dont je possède les tomes 1 à N-1 et dont le tome N existe à la BnF (fixtures), une
+alerte apparaît une seule fois, sur les deux appareils, et part en envie en un appui.*
+
+### Phase 33 — Recommandations
+Calcul local et explicable, sans apprentissage automatique ni service externe d'IA.
+
+- **Profil** déduit de la collection : auteurs, éditeurs/collections, genres et tags (AniList, MangaUpdates,
+  sujets Open Library), pondérés par le nombre d'ouvrages, le statut lu et la note.
+- **Familles de suggestions**, chacune avec sa raison affichée (« Parce que tu as 12 albums de Larcenet ») :
+  - du même auteur (via les identifiants d'auteur de la phase 31) ;
+  - recommandations communautaires d'AniList et MangaUpdates pour les mangas bien notés ;
+  - même collection d'éditeur ;
+  - suites et séries liées (Wikidata).
+- **Classement** : score simple et documenté (poids du profil, popularité modérée, diversité des familles),
+  exclusion de ce qui est possédé, en envie ou déjà écarté.
+- **Retour utilisateur** : « Pas intéressé » (table synchronisée `recommendation_feedback`) qui écarte la
+  suggestion et réduit le poids de sa raison ; « Ajouter aux envies » en un appui.
+- **Calcul** en arrière-plan, résultats mis en cache une semaine, rafraîchissement manuel ; écran
+  « Suggestions » (Plus) avec filtre par type.
+- Tests : scoring et exclusions sur un jeu de données construit à la main, raisons affichées.
+
+*Critère : sur la vraie collection, au moins la moitié des dix premières suggestions paraissent pertinentes à
+l'utilisateur, et chacune affiche une raison compréhensible.*
+
+### Phase 34 — Compte : mot de passe oublié, liens de confirmation
+- **Mot de passe oublié sans être connecté** : lien « Mot de passe oublié ? » sur l'écran de connexion
+  (email de réinitialisation Supabase), au lieu de passer par Paramètres → Mot de passe une fois connecté.
+- **Lien de confirmation d'inscription** : il ouvre `localhost` (404). *Site URL* / *Redirect URLs* du projet
+  Supabase à régler (action de l'utilisateur), et page d'arrivée (ou lien profond `dupe://`) qui confirme puis
+  renvoie dans l'appli. Le lien de réinitialisation du mot de passe a le même besoin : à traiter ensemble.
+- Question ouverte : lien profond `dupe://` (Android ; Linux/Windows à étudier) ou petite page web statique.
+
+### Phase 35 — Recette de la v4
+Pilotée par l'utilisateur, comme la phase 21 : tests manuels ajoutés par les phases 22 à 34, puis **mode rafale
 `R-01` à `R-04`** (reportés de la v3), et ce qui resterait non fait de la recette v3.
 
-## 5. Hors périmètre (inchangé)
-iOS/macOS, partage de collection, alertes de sortie des nouveaux tomes, scraping, cote automatique, service
-externe de suivi d'erreurs.
+## 5. Actions manuelles de l'utilisateur
+- **Phase 24** : appliquer la migration Supabase du titre de tome **avant** d'installer la version qui l'utilise.
+- **Phase 29** : tester sur téléphone plusieurs prises de vue (biais, faible lumière, couverture brillante).
+- **Phase 30** : tester l'archive complète sur un appareil vierge (ou une installation propre).
+- **Phase 31** : créer un compte Metron et générer un jeton ; relire le bilan avant priorisation.
+- **Phase 32** : vérifier sur Android que la tâche de fond n'est pas tuée par l'économiseur de batterie.
+- **Phase 33** : juger la pertinence des suggestions sur la vraie collection.
+- **Phase 34** : régler *Site URL* / *Redirect URLs* du projet Supabase.
+
+## 6. Hors périmètre
+iOS/macOS, partage de collection, scraping, cote automatique, notifications poussées par un serveur,
+recommandations par service d'IA externe, service externe de suivi d'erreurs, recherche du nombre de tomes des
+BD et des livres (abandonnée par l'utilisateur le 2026-11-16).

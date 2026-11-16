@@ -1,7 +1,6 @@
 import 'package:dupe/app/widgets/cover_image.dart';
 import 'package:dupe/features/collection/domain/enums.dart';
 import 'package:dupe/features/collection/domain/series.dart';
-import 'package:dupe/features/collection/domain/series_matching.dart';
 import 'package:dupe/features/collection/domain/volume_grid.dart';
 import 'package:dupe/features/collection/presentation/labels.dart';
 import 'package:dupe/features/collection/presentation/series/volume_slot_colors.dart';
@@ -24,13 +23,6 @@ class VolumeListView extends StatelessWidget {
   final ValueChanged<VolumeSlot> onTap;
   final ValueChanged<VolumeSlot> onLongPress;
 
-  /// The volume's title when it is not just the series title.
-  String? _ownTitle(VolumeSlot slot) {
-    final title = slot.item?.title.trim();
-    if (title == null || title.isEmpty) return null;
-    return normalizeTitle(title) == normalizeTitle(series.title) ? null : title;
-  }
-
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
@@ -50,7 +42,7 @@ class VolumeListView extends StatelessWidget {
             title: Text(l10n.volumeLabel(slot.label)),
             subtitle: Text(
               [
-                ?_ownTitle(slot),
+                ?slot.ownTitle(series.title),
                 slot.status.label(l10n),
                 if (slot.isRead) ReadingStatus.lu.label(l10n),
                 if (slot.copies.length > 1) '×${slot.copies.length}',

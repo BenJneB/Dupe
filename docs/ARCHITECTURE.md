@@ -88,6 +88,10 @@ Description détaillée des choix techniques et de l'organisation du code (dépl
   `series_total_actions.dart` (menu « Vérifier le nombre de tomes », question au premier tome numéroté d'une série
   sans total, pré-remplie, délai 5 s) ; `VolumeCountScan` + `volume_counts_screen.dart` (Paramètres → Sources, en
   lot, propositions à valider). Vue liste des tomes : `volume_list_view.dart`, bascule `VolumesAsList`.
+- Titre propre d'un tome (v4 phase 24) : `Item.volumeTitle` / `items.volume_title` (schéma v3, migration Supabase
+  `20261116120000_volume_title.sql`) ; `volumeTitleOf` (`metadata_mapping.dart`) pour l'ajout et le scan,
+  `VolumeTitleFill` (Paramètres → Sources) pour l'existant, `VolumeSlot.ownTitle` (repli sur l'ancien titre) pour
+  l'affichage : vue liste, fiche, sous les pastilles ; colonne CSV « Titre du tome ».
 - Progression des séries (`collection_tab/series_progress_bar.dart`) : barre réelle si `totalVolumes` est connu,
   sinon barre **indicative** grise (`SeriesEntry.indicativeProgress` = possédés / `highestVolume`, plus haut numéro
   simple calculé en SQL dans `collection_entries_query.dart`).

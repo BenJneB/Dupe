@@ -7,7 +7,7 @@
 > finale. Les phases 15 à 20 ajoutent leurs tests ici et marquent « automatisé (phase N) » ceux que leurs tests
 > automatiques couvrent désormais.
 
-Ce fichier liste ce que les **242 tests automatiques (et 4 parcours d'intégration) ne couvrent pas** : matériel (caméra, vibrations,
+Ce fichier liste ce que les **247 tests automatiques (et 4 parcours d'intégration) ne couvrent pas** : matériel (caméra, vibrations,
 notifications, raccourci), services réels (Supabase, API GitHub, sources de métadonnées), plateformes non
 compilées ici (Windows) et workflows GitHub (jamais exécutés).
 
@@ -478,4 +478,16 @@ lot (propositions décochables, rien d'enregistré avant « Appliquer ») ; ques
       et « Lu » ; le choix liste/pastilles est conservé après redémarrage.
       — OK 2026-11-16 pour la vue liste ; souhaits : titres aussi dans la vue pastilles, et un vrai titre de tome
       (souvent seulement « Tome 1 » : le titre propre n'est connu que si la BnF le donne en titre principal).
+
+## 17. Titres des tomes (v4, phase 24)
+Automatisé (phase 24) : règle de remplissage (titre propre, sous-titre, vide), ajout depuis une source, tome vide
+complété au scan, remplissage en lot par ISBN, CSV, migrations locale (v3) et Supabase (local), affichage.
+- [ ] **I-00** **Avant d'installer cette version** : appliquer `supabase/migrations/20261116120000_volume_title.sql`
+      dans le SQL Editor du projet Supabase (sinon la synchro est refusée).
+- [ ] **I-01** Paramètres → Sources → « Compléter les titres des tomes » : progression, puis des titres apparaissent
+      sous les pastilles et dans la vue liste (Kaamelott, Jumeaux Fowl…).
+- [ ] **I-02** Scanner le tome d'une série dont la notice a un titre propre : « Titre du tome » pré-rempli dans le
+      formulaire, affiché sur la fiche et sous la pastille ; modifiable.
+- [ ] **I-03** Synchro : un titre de tome saisi sur le téléphone arrive sur le PC ; l'export CSV a la colonne
+      « Titre du tome ».
 

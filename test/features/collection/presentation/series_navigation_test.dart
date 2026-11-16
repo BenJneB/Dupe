@@ -3,6 +3,7 @@ import 'package:dupe/app/router.dart';
 import 'package:dupe/core/database/app_database.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
 import 'package:dupe/features/collection/domain/enums.dart';
+import 'package:dupe/features/collection/domain/item.dart';
 import 'package:dupe/features/collection/domain/series.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
@@ -202,5 +203,40 @@ void main() {
     await goBack(tester);
     await goTo(tester, AppRoutes.series(CollectionType.bd, kaamelott.id));
     expect(find.byKey(const Key('volumeList')), findsOneWidget);
+  });
+
+  testWidgets('volume titles under the pastilles and on the sheet', (
+    tester,
+  ) async {
+    late Item volume9;
+    await pumpApp(
+      tester,
+      seed: (db) async {
+        await seedKaamelott(db);
+        final repo = repoOf(db);
+        volume9 = repo
+            .newItem(CollectionType.bd, series: kaamelott, volumeNumber: '9')
+            .copyWith(
+              title: 'Kaamelott',
+              volumeTitle: 'Les renforts maléfiques',
+            );
+        await repo.saveItem(volume9);
+      },
+    );
+    await goTo(tester, AppRoutes.series(CollectionType.bd, kaamelott.id));
+
+    // Grid (default view): the title under its pastille.
+    expect(
+      tester.widget<Text>(find.byKey(const ValueKey('volumeTitle-9'))).data,
+      'Les renforts maléfiques',
+    );
+    expect(find.byKey(const ValueKey('volumeTitle-1')), findsNothing);
+
+    await tester.tap(find.byKey(const ValueKey('slot-9')));
+    await tester.pumpAndSettle();
+    expect(
+      tester.widget<Text>(find.byKey(const Key('itemVolumeTitle'))).data,
+      'Les renforts maléfiques',
+    );
   });
 }

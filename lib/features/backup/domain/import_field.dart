@@ -5,6 +5,7 @@ enum ImportField {
   title,
   series,
   volume,
+  volumeTitle,
   type,
   authors,
   publisher,
@@ -31,6 +32,13 @@ const _synonyms = <ImportField, List<String>>{
     'issue nr',
     'no',
     'n',
+  ],
+  ImportField.volumeTitle: [
+    'titre du tome',
+    'sous titre',
+    'subtitle',
+    'volume title',
+    'issue title',
   ],
   ImportField.type: ['type', 'categorie', 'category', 'format type'],
   ImportField.authors: [

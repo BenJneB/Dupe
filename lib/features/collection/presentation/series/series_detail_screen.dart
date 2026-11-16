@@ -217,6 +217,7 @@ class _SeriesDetailView extends ConsumerWidget {
           else
             VolumeGridView(
               grid: grid,
+              seriesTitle: series.title,
               onTap: (slot) => _onTap(context, slot),
               onLongPress: (slot) => _onLongPress(context, ref, slot),
             ),

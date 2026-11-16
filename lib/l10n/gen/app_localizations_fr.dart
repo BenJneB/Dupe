@@ -460,6 +460,23 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String get volumeTitlesTile => 'Compléter les titres des tomes';
+
+  @override
+  String get volumeTitlesHelp =>
+      'Cherche par ISBN le titre propre des tomes déjà dans ta collection (sans rien changer d’autre)';
+
+  @override
+  String volumeTitlesProgress(int done, int total, int found) {
+    return '$done / $total tomes vérifiés · $found titre(s) trouvé(s)';
+  }
+
+  @override
+  String volumeTitlesDone(int found, int total) {
+    return '$found titre(s) ajouté(s) · $total tomes vérifiés';
+  }
+
+  @override
   String get seeSeries => 'Voir la série';
 
   @override
@@ -546,6 +563,13 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get fieldNotes => 'Notes';
+
+  @override
+  String get fieldVolumeTitle => 'Titre du tome';
+
+  @override
+  String get fieldVolumeTitleHelper =>
+      'Le titre propre de ce tome, s’il en a un (vide sinon)';
 
   @override
   String get fieldVolumeNumber => 'Numéro de tome';

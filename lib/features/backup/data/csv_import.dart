@@ -92,6 +92,7 @@ Future<ImportReport> importCsvRows(
         .newItem(type, series: series, volumeNumber: volume)
         .copyWith(
           title: title,
+          volumeTitle: get(ImportField.volumeTitle),
           authors: authors,
           publisher: publisher,
           isbn13: isbn,

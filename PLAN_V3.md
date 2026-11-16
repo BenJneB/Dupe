@@ -495,9 +495,11 @@ Revue avec l'utilisateur le 2026-11-15 :
     obfusqués). **Seulement les Releases publiques** (décision de l'utilisateur) : les APK signés construits en local
     pour son propre téléphone, même en release, restent non obfusqués (journal lisible). Gain observé : ~1,7 Mo sur l'APK arm64 ; ne protège pas les
     textes (secrets) : `check-env` reste nécessaire.
-- **Toutes les autres idées sont reprises dans `PLAN_V4.md`** (brouillon) : mot de passe oublié et liens de
-  confirmation (phase 22) ; nombre de tomes, tomes suivants, titres des tomes (23) ; couvertures par recherche texte
-  et autre édition d'un livre hors série (24) ; livres numériques (25-26) ; recette v4 avec le mode rafale (27).
+- **Toutes les autres idées sont reprises dans `PLAN_V4.md`** (fusionné le 2026-11-16 avec le plan v4 de
+  l'utilisateur) : nombre de tomes et vue liste (23, faite) ; titres des tomes (24) ; qualité des données (22) ;
+  couvertures par recherche texte et autre édition d'un livre hors série (25) ; **fin de la recette de la v3 (26)** ;
+  livres numériques (27-28) ; photos, dédicaces, sources, alertes, recommandations (29-33) ; mot de passe oublié et
+  liens de confirmation (34) ; recette v4 avec le mode rafale (35).
 
 ## 5. Actions manuelles de l'utilisateur
 - **Phase 14** : créer le compte dans l'appli (fait). Le reste est reporté en phase 21.

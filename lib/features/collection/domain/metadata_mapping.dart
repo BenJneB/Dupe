@@ -6,8 +6,30 @@ import 'package:dupe/features/collection/domain/series_matching.dart';
 /// What the add form is prefilled with when coming from an online result.
 typedef ItemPrefill = ({MetadataResult metadata, Ownership ownership});
 
-/// Copies external metadata into a new item (empty values are kept).
-Item applyMetadata(Item item, ItemPrefill prefill) {
+/// The volume's own title in [m], for a volume of a series ([seriesTitle],
+/// else the series the record names): its title when it is not the series
+/// title (BnF: « Les renforts maléfiques » in « Kaamelott »), its subtitle
+/// (Comic Vine issue name, BnF 200 $e/$i, Google), or both. Null for a
+/// standalone book, or a volume known only by its number.
+String? volumeTitleOf(MetadataResult m, {String? seriesTitle}) {
+  final series = seriesTitle ?? m.seriesTitle;
+  if (series == null && m.volumeNumber == null) return null;
+  final title = m.title.trim();
+  final own =
+      series != null &&
+          title.isNotEmpty &&
+          normalizeTitle(title) != normalizeTitle(series)
+      ? title
+      : null;
+  final subtitle = m.subtitle?.trim();
+  final sub = subtitle == null || subtitle.isEmpty ? null : subtitle;
+  if (own != null && sub != null) return '$own : $sub';
+  return own ?? sub;
+}
+
+/// Copies external metadata into a new item (empty values are kept);
+/// [seriesTitle]: the series the item is filed in, if any.
+Item applyMetadata(Item item, ItemPrefill prefill, {String? seriesTitle}) {
   final m = prefill.metadata;
   final title = m.subtitle == null || m.volumeNumber != null
       ? m.title
@@ -15,6 +37,7 @@ Item applyMetadata(Item item, ItemPrefill prefill) {
   return item.copyWith(
     title: title,
     volumeNumber: m.volumeNumber ?? item.volumeNumber,
+    volumeTitle: volumeTitleOf(m, seriesTitle: seriesTitle),
     isbn13: m.isbn13,
     authors: m.authors.isEmpty ? item.authors : m.authors,
     publisher: m.publisher ?? item.publisher,
@@ -33,16 +56,13 @@ Item applyMetadata(Item item, ItemPrefill prefill) {
 
 /// A volume created empty (grid, "Ajouter des tomes", previous volumes)
 /// once its online record is known (store scan): fills only what is still
-/// empty, never what the user typed. The title is replaced only when it is
-/// the series title and the record has the volume's own title.
+/// empty, never what the user typed (the volume's own title included).
 Item fillBlanks(Item item, MetadataResult m, {required String seriesTitle}) {
   bool blank(String? v) => v == null || v.trim().isEmpty;
-  final ownTitle =
-      normalizeTitle(item.title) == normalizeTitle(seriesTitle) &&
-      normalizeTitle(m.title) != normalizeTitle(seriesTitle) &&
-      m.title.trim().isNotEmpty;
   return item.copyWith(
-    title: ownTitle ? m.title : item.title,
+    volumeTitle: blank(item.volumeTitle)
+        ? volumeTitleOf(m, seriesTitle: seriesTitle)
+        : item.volumeTitle,
     isbn13: item.isbn13 ?? m.isbn13,
     authors: item.authors.isEmpty ? m.authors : item.authors,
     publisher: blank(item.publisher) ? m.publisher : item.publisher,

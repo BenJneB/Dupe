@@ -23,6 +23,7 @@ typedef $$ItemsTableTableCreateCompanionBuilder =
       required i2.CollectionType type,
       required String title,
       i0.Value<String?> volumeNumber,
+      i0.Value<String?> volumeTitle,
       i0.Value<String?> isbn13,
       i0.Value<String?> upc,
       i0.Value<List<String>> authors,
@@ -66,6 +67,7 @@ typedef $$ItemsTableTableUpdateCompanionBuilder =
       i0.Value<i2.CollectionType> type,
       i0.Value<String> title,
       i0.Value<String?> volumeNumber,
+      i0.Value<String?> volumeTitle,
       i0.Value<String?> isbn13,
       i0.Value<String?> upc,
       i0.Value<List<String>> authors,
@@ -182,6 +184,11 @@ class $$ItemsTableTableFilterComposer
 
   i0.ColumnFilters<String> get volumeNumber => $composableBuilder(
     column: $table.volumeNumber,
+    builder: (column) => i0.ColumnFilters(column),
+  );
+
+  i0.ColumnFilters<String> get volumeTitle => $composableBuilder(
+    column: $table.volumeTitle,
     builder: (column) => i0.ColumnFilters(column),
   );
 
@@ -413,6 +420,11 @@ class $$ItemsTableTableOrderingComposer
     builder: (column) => i0.ColumnOrderings(column),
   );
 
+  i0.ColumnOrderings<String> get volumeTitle => $composableBuilder(
+    column: $table.volumeTitle,
+    builder: (column) => i0.ColumnOrderings(column),
+  );
+
   i0.ColumnOrderings<String> get isbn13 => $composableBuilder(
     column: $table.isbn13,
     builder: (column) => i0.ColumnOrderings(column),
@@ -624,6 +636,11 @@ class $$ItemsTableTableAnnotationComposer
     builder: (column) => column,
   );
 
+  i0.GeneratedColumn<String> get volumeTitle => $composableBuilder(
+    column: $table.volumeTitle,
+    builder: (column) => column,
+  );
+
   i0.GeneratedColumn<String> get isbn13 =>
       $composableBuilder(column: $table.isbn13, builder: (column) => column);
 
@@ -798,6 +815,7 @@ class $$ItemsTableTableTableManager
                 i0.Value<i2.CollectionType> type = const i0.Value.absent(),
                 i0.Value<String> title = const i0.Value.absent(),
                 i0.Value<String?> volumeNumber = const i0.Value.absent(),
+                i0.Value<String?> volumeTitle = const i0.Value.absent(),
                 i0.Value<String?> isbn13 = const i0.Value.absent(),
                 i0.Value<String?> upc = const i0.Value.absent(),
                 i0.Value<List<String>> authors = const i0.Value.absent(),
@@ -840,6 +858,7 @@ class $$ItemsTableTableTableManager
                 type: type,
                 title: title,
                 volumeNumber: volumeNumber,
+                volumeTitle: volumeTitle,
                 isbn13: isbn13,
                 upc: upc,
                 authors: authors,
@@ -883,6 +902,7 @@ class $$ItemsTableTableTableManager
                 required i2.CollectionType type,
                 required String title,
                 i0.Value<String?> volumeNumber = const i0.Value.absent(),
+                i0.Value<String?> volumeTitle = const i0.Value.absent(),
                 i0.Value<String?> isbn13 = const i0.Value.absent(),
                 i0.Value<String?> upc = const i0.Value.absent(),
                 i0.Value<List<String>> authors = const i0.Value.absent(),
@@ -925,6 +945,7 @@ class $$ItemsTableTableTableManager
                 type: type,
                 title: title,
                 volumeNumber: volumeNumber,
+                volumeTitle: volumeTitle,
                 isbn13: isbn13,
                 upc: upc,
                 authors: authors,
@@ -1143,6 +1164,18 @@ class $ItemsTableTable extends i5.ItemsTable
   late final i0.GeneratedColumn<String> volumeNumber =
       i0.GeneratedColumn<String>(
         'volume_number',
+        aliasedName,
+        true,
+        type: i0.DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const i0.VerificationMeta _volumeTitleMeta = const i0.VerificationMeta(
+    'volumeTitle',
+  );
+  @override
+  late final i0.GeneratedColumn<String> volumeTitle =
+      i0.GeneratedColumn<String>(
+        'volume_title',
         aliasedName,
         true,
         type: i0.DriftSqlType.string,
@@ -1487,6 +1520,7 @@ class $ItemsTableTable extends i5.ItemsTable
     type,
     title,
     volumeNumber,
+    volumeTitle,
     isbn13,
     upc,
     authors,
@@ -1591,6 +1625,15 @@ class $ItemsTableTable extends i5.ItemsTable
         volumeNumber.isAcceptableOrUnknown(
           data['volume_number']!,
           _volumeNumberMeta,
+        ),
+      );
+    }
+    if (data.containsKey('volume_title')) {
+      context.handle(
+        _volumeTitleMeta,
+        volumeTitle.isAcceptableOrUnknown(
+          data['volume_title']!,
+          _volumeTitleMeta,
         ),
       );
     }
@@ -1825,6 +1868,10 @@ class $ItemsTableTable extends i5.ItemsTable
         i0.DriftSqlType.string,
         data['${effectivePrefix}volume_number'],
       ),
+      volumeTitle: attachedDatabase.typeMapping.read(
+        i0.DriftSqlType.string,
+        data['${effectivePrefix}volume_title'],
+      ),
       isbn13: attachedDatabase.typeMapping.read(
         i0.DriftSqlType.string,
         data['${effectivePrefix}isbn13'],
@@ -1976,6 +2023,7 @@ class ItemsTableCompanion extends i0.UpdateCompanion<i1.Item> {
   final i0.Value<i2.CollectionType> type;
   final i0.Value<String> title;
   final i0.Value<String?> volumeNumber;
+  final i0.Value<String?> volumeTitle;
   final i0.Value<String?> isbn13;
   final i0.Value<String?> upc;
   final i0.Value<List<String>> authors;
@@ -2017,6 +2065,7 @@ class ItemsTableCompanion extends i0.UpdateCompanion<i1.Item> {
     this.type = const i0.Value.absent(),
     this.title = const i0.Value.absent(),
     this.volumeNumber = const i0.Value.absent(),
+    this.volumeTitle = const i0.Value.absent(),
     this.isbn13 = const i0.Value.absent(),
     this.upc = const i0.Value.absent(),
     this.authors = const i0.Value.absent(),
@@ -2059,6 +2108,7 @@ class ItemsTableCompanion extends i0.UpdateCompanion<i1.Item> {
     required i2.CollectionType type,
     required String title,
     this.volumeNumber = const i0.Value.absent(),
+    this.volumeTitle = const i0.Value.absent(),
     this.isbn13 = const i0.Value.absent(),
     this.upc = const i0.Value.absent(),
     this.authors = const i0.Value.absent(),
@@ -2105,6 +2155,7 @@ class ItemsTableCompanion extends i0.UpdateCompanion<i1.Item> {
     i0.Expression<String>? type,
     i0.Expression<String>? title,
     i0.Expression<String>? volumeNumber,
+    i0.Expression<String>? volumeTitle,
     i0.Expression<String>? isbn13,
     i0.Expression<String>? upc,
     i0.Expression<String>? authors,
@@ -2147,6 +2198,7 @@ class ItemsTableCompanion extends i0.UpdateCompanion<i1.Item> {
       if (type != null) 'type': type,
       if (title != null) 'title': title,
       if (volumeNumber != null) 'volume_number': volumeNumber,
+      if (volumeTitle != null) 'volume_title': volumeTitle,
       if (isbn13 != null) 'isbn13': isbn13,
       if (upc != null) 'upc': upc,
       if (authors != null) 'authors': authors,
@@ -2191,6 +2243,7 @@ class ItemsTableCompanion extends i0.UpdateCompanion<i1.Item> {
     i0.Value<i2.CollectionType>? type,
     i0.Value<String>? title,
     i0.Value<String?>? volumeNumber,
+    i0.Value<String?>? volumeTitle,
     i0.Value<String?>? isbn13,
     i0.Value<String?>? upc,
     i0.Value<List<String>>? authors,
@@ -2233,6 +2286,7 @@ class ItemsTableCompanion extends i0.UpdateCompanion<i1.Item> {
       type: type ?? this.type,
       title: title ?? this.title,
       volumeNumber: volumeNumber ?? this.volumeNumber,
+      volumeTitle: volumeTitle ?? this.volumeTitle,
       isbn13: isbn13 ?? this.isbn13,
       upc: upc ?? this.upc,
       authors: authors ?? this.authors,
@@ -2300,6 +2354,9 @@ class ItemsTableCompanion extends i0.UpdateCompanion<i1.Item> {
     }
     if (volumeNumber.present) {
       map['volume_number'] = i0.Variable<String>(volumeNumber.value);
+    }
+    if (volumeTitle.present) {
+      map['volume_title'] = i0.Variable<String>(volumeTitle.value);
     }
     if (isbn13.present) {
       map['isbn13'] = i0.Variable<String>(isbn13.value);
@@ -2413,6 +2470,7 @@ class ItemsTableCompanion extends i0.UpdateCompanion<i1.Item> {
           ..write('type: $type, ')
           ..write('title: $title, ')
           ..write('volumeNumber: $volumeNumber, ')
+          ..write('volumeTitle: $volumeTitle, ')
           ..write('isbn13: $isbn13, ')
           ..write('upc: $upc, ')
           ..write('authors: $authors, ')
@@ -2464,6 +2522,7 @@ class _$ItemInsertable implements i0.Insertable<i1.Item> {
       type: i0.Value(_object.type),
       title: i0.Value(_object.title),
       volumeNumber: i0.Value(_object.volumeNumber),
+      volumeTitle: i0.Value(_object.volumeTitle),
       isbn13: i0.Value(_object.isbn13),
       upc: i0.Value(_object.upc),
       authors: i0.Value(_object.authors),

@@ -730,6 +730,30 @@ abstract class AppLocalizations {
   /// **'« {title} » retiré des envies'**
   String wishRemoved(String title);
 
+  /// No description provided for @volumeTitlesTile.
+  ///
+  /// In fr, this message translates to:
+  /// **'Compléter les titres des tomes'**
+  String get volumeTitlesTile;
+
+  /// No description provided for @volumeTitlesHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cherche par ISBN le titre propre des tomes déjà dans ta collection (sans rien changer d’autre)'**
+  String get volumeTitlesHelp;
+
+  /// No description provided for @volumeTitlesProgress.
+  ///
+  /// In fr, this message translates to:
+  /// **'{done} / {total} tomes vérifiés · {found} titre(s) trouvé(s)'**
+  String volumeTitlesProgress(int done, int total, int found);
+
+  /// No description provided for @volumeTitlesDone.
+  ///
+  /// In fr, this message translates to:
+  /// **'{found} titre(s) ajouté(s) · {total} tomes vérifiés'**
+  String volumeTitlesDone(int found, int total);
+
   /// No description provided for @seeSeries.
   ///
   /// In fr, this message translates to:
@@ -903,6 +927,18 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Notes'**
   String get fieldNotes;
+
+  /// No description provided for @fieldVolumeTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Titre du tome'**
+  String get fieldVolumeTitle;
+
+  /// No description provided for @fieldVolumeTitleHelper.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le titre propre de ce tome, s’il en a un (vide sinon)'**
+  String get fieldVolumeTitleHelper;
 
   /// No description provided for @fieldVolumeNumber.
   ///

@@ -8,6 +8,7 @@ import 'package:material_ui/material_ui.dart';
 enum ItemTextField {
   title,
   volume,
+  volumeTitle,
   isbn,
   upc,
   authors,
@@ -61,6 +62,7 @@ class ItemFormControllers {
     final values = <ItemTextField, String>{
       ItemTextField.title: i.title,
       ItemTextField.volume: i.volumeNumber ?? '',
+      ItemTextField.volumeTitle: i.volumeTitle ?? '',
       ItemTextField.isbn: i.isbn13 ?? '',
       ItemTextField.upc: i.upc ?? '',
       ItemTextField.authors: i.authors.join(', '),
@@ -102,6 +104,7 @@ class ItemFormControllers {
     wishlistPriority: priority,
     title: _c[ItemTextField.title]!.text.trim(),
     volumeNumber: _t(ItemTextField.volume),
+    volumeTitle: _t(ItemTextField.volumeTitle),
     isbn13: _t(ItemTextField.isbn)?.replaceAll(RegExp(r'[\s-]'), ''),
     upc: _t(ItemTextField.upc),
     authors: Formatters.splitList(_c[ItemTextField.authors]!.text),

@@ -70,6 +70,7 @@ void main() {
         .newItem(CollectionType.bd, series: series, volumeNumber: '3')
         .copyWith(
           title: 'Naheulbeuk',
+          volumeTitle: 'La Couette de l’oubli',
           authors: ['John Lang', 'Marion Poinsot'],
           ownership: Ownership.envie,
           readingStatus: ReadingStatus.enCours,
@@ -94,6 +95,7 @@ void main() {
       (await other.repo.findSeries(CollectionType.bd, 'Naheulbeuk'))!.id,
     )).single;
     expect(copy.type, CollectionType.bd);
+    expect(copy.volumeTitle, 'La Couette de l’oubli');
     expect(copy.authors, item.authors);
     expect(copy.ownership, Ownership.envie);
     expect(copy.readingStatus, ReadingStatus.enCours);
