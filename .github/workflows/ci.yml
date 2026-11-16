@@ -35,14 +35,7 @@ jobs:
       # Catches a stale .g.dart / l10n file, e.g. after a Dependabot update of
       # freezed, drift or riverpod that needs a regeneration.
       - name: Generated code is up to date
-        run: |
-          dart run build_runner build -d
-          flutter gen-l10n
-          if [ -n "$(git status --porcelain)" ]; then
-            echo "Stale generated files: run 'dart run build_runner build -d' and 'flutter gen-l10n'" >&2
-            git status --porcelain >&2
-            exit 1
-          fi
+        run: tool/ci/check_generated.sh
       - run: flutter analyze
       - run: flutter test --coverage
       - name: Coverage summary
@@ -111,9 +104,8 @@ jobs:
       - run: xvfb-run -a flutter test integration_test -d linux
 
   # Sync tests against a local Supabase in Docker (PLAN_V3 phase 17): real
-  # PostgREST filter, triggers, RLS, auth, storage. Pull requests and `dev`.
+  # PostgREST filter, triggers, RLS, auth, storage. Every run.
   supabase-tests:
-    if: github.event_name == 'pull_request' || github.ref == 'refs/heads/dev'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7

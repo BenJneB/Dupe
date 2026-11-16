@@ -9,12 +9,26 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   final root = Directory.current.path;
 
-  Future<ProcessResult> checkMessage(String message) async {
+  Future<ProcessResult> checkMessage(
+    String message, {
+    Map<String, String>? environment,
+  }) async {
     final dir = await Directory.systemTemp.createTemp('dupe_msg');
     addTearDown(() => dir.delete(recursive: true));
     final file = File('${dir.path}/COMMIT_EDITMSG')..writeAsStringSync(message);
-    return await Process.run('$root/tool/check_commit_msg.sh', [file.path]);
+    return await Process.run('$root/tool/check_commit_msg.sh', [
+      file.path,
+    ], environment: environment);
   }
+
+  test('length in characters, even in the C locale (accents)', () async {
+    final message = 'fix: ${'é' * 90}'; // 95 characters, 185 bytes.
+    final result = await checkMessage(
+      message,
+      environment: {'LC_ALL': 'C', 'LANG': 'C'},
+    );
+    expect(result.exitCode, 0, reason: result.stderr as String);
+  });
 
   test('conventional commit messages are accepted, others refused', () async {
     for (final ok in [

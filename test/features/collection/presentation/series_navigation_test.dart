@@ -205,6 +205,29 @@ void main() {
     expect(find.byKey(const Key('volumeList')), findsOneWidget);
   });
 
+  testWidgets('volumes without number listed side by side', (tester) async {
+    await pumpApp(
+      tester,
+      seed: (db) async {
+        await seedKaamelott(db);
+        final repo = repoOf(db);
+        for (final title in ['Sans numéro A', 'Sans numéro B']) {
+          await repo.saveItem(
+            repo
+                .newItem(CollectionType.bd, series: kaamelott)
+                .copyWith(title: title),
+          );
+        }
+      },
+    );
+    await goTo(tester, AppRoutes.series(CollectionType.bd, kaamelott.id));
+    await tester.tap(find.byKey(const Key('toggleVolumeView')));
+    await tester.pumpAndSettle();
+
+    expect(tester.takeException(), isNull);
+    expect(find.byKey(const Key('volumeList')), findsOneWidget);
+  });
+
   testWidgets('volume titles under the pastilles and on the sheet', (
     tester,
   ) async {

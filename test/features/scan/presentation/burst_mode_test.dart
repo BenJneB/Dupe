@@ -1,4 +1,5 @@
 import 'package:dupe/core/database/app_database.dart';
+import 'package:dupe/features/collection/domain/collection_type.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -76,5 +77,46 @@ void main() {
     // Back on the review screen.
     expect(find.text('Déjà dans ta collection'), findsOneWidget);
     expect(find.text('Ajouter 1 ouvrage'), findsOneWidget);
+  }, variant: linux);
+
+  testWidgets('a volume added without ISBN is completed, not duplicated', (
+    tester,
+  ) async {
+    late String emptyId;
+    final db = await pumpApp(
+      tester,
+      size: desktopSize,
+      overrides: [
+        fakeMetadataSources(byIsbn: {onePieceT3Isbn: onePieceT3}),
+      ],
+      seed: (db) async {
+        final repo = repoOf(db);
+        final series = repo
+            .newSeries(CollectionType.manga)
+            .copyWith(title: 'One Piece');
+        await repo.saveSeries(series);
+        final empty = repo.newItem(
+          CollectionType.manga,
+          series: series,
+          volumeNumber: '3',
+        );
+        emptyId = empty.id;
+        await repo.saveItem(empty);
+      },
+    );
+    await openScan(tester);
+    await tester.tap(find.text('Rafale'));
+    await tester.pumpAndSettle();
+    await typeCode(tester, onePieceT3Isbn);
+    await tester.tap(find.byKey(const Key('burstReviewButton')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('burstAddAll')));
+    await tester.pumpAndSettle();
+
+    final items = await tester.runAsync(() => db.select(db.itemsTable).get());
+    final volume = items!.single;
+    expect(volume.id, emptyId);
+    expect(volume.isbn13, onePieceT3Isbn);
+    expect(volume.publisher, 'Glénat');
   }, variant: linux);
 }

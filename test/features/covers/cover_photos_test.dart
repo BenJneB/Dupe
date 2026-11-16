@@ -51,10 +51,15 @@ void main() {
           .copyWith(title: 'B', coverUrl: 'dupe-cover:other.jpg'),
     );
 
-    expect(await uploadPendingCovers(env.db, photos, store, settings), 1);
+    Future<int> upload(String userId) =>
+        uploadPendingCovers(env.db, photos, store, settings, userId: userId);
+    expect(await upload('u1'), 1);
     expect(store.files[CoverPhotos.nameOf(url)], jpeg);
-    expect(await uploadPendingCovers(env.db, photos, store, settings), 0);
+    expect(await upload('u1'), 0);
     expect(store.uploads, 1);
+    // Another account (sign-out, sign-in): its own folder gets the photo.
+    expect(await upload('u2'), 1);
+    expect(store.uploads, 2);
   });
 
   test('a photo missing locally is downloaded and kept', () async {

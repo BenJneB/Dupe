@@ -52,6 +52,8 @@ class VolumeTitleFill extends _$VolumeTitleFill {
 
   Future<void> run() async {
     if (state.running) return;
+    // Running from the first await on: a second tap meanwhile is ignored.
+    state = const TitleFillState(running: true);
     final repo = ref.read(collectionRepositoryProvider);
     final sources = ref.read(metadataAggregatorProvider);
     final items = await volumesWithoutTitle(ref.read(appDatabaseProvider));

@@ -105,4 +105,39 @@ void main() {
       expect(saved.coverUrl, 'https://c/fowl3.jpg');
     },
   );
+
+  test('scanned ISBN of another volume of the same series', () async {
+    final env = TestEnv();
+    addTearDown(env.dispose);
+    final repo = env.repo;
+    final third = repo
+        .newItem(CollectionType.livre, volumeNumber: '3')
+        .copyWith(title: 'Les jumeaux Fowl');
+    await repo.saveItem(third);
+    MetadataResult record(String? volume) => MetadataResult(
+      source: MetadataSource.bnf,
+      sourceId: 'f',
+      title: 'Les jumeaux Fowl',
+      volumeNumber: volume,
+    );
+    IsbnAssignment answering(MetadataResult found) => IsbnAssignment(
+      repo,
+      MetadataAggregator(
+        providers: [
+          FakeProvider(MetadataSource.bnf, byIsbn: {fowl: found}),
+        ],
+      ),
+    );
+
+    final fourth = await answering(record('4')).check(third, fowl);
+    expect(fourth.coherent, isFalse);
+    expect(fourth.otherVolume, '4');
+
+    final same = await answering(record('03')).check(third, fowl);
+    expect(same.coherent, isTrue);
+    expect(same.otherVolume, isNull);
+
+    final unknown = await answering(record(null)).check(third, fowl);
+    expect(unknown.coherent, isTrue);
+  });
 }

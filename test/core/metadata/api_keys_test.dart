@@ -42,6 +42,17 @@ void main() {
     expect(sourceHasKey(SourceId.bnf, keys), isTrue);
   });
 
+  test('one Comic Vine client (one rate limiter) for both lookups', () async {
+    final c = container();
+    await c.read(savedApiKeysProvider.future);
+    await c.read(savedApiKeysProvider.notifier).save(SourceId.comicVine, key);
+
+    final shared = c.read(comicVineSourceProvider);
+    expect(shared, isNotNull);
+    expect(identical(c.read(seriesLookupProvider).comicVine, shared), isTrue);
+    expect(c.read(metadataAggregatorProvider).uses(shared!), isTrue);
+  });
+
   test(
     'saving a key turns the source on without restart, and persists',
     () async {

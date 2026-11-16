@@ -482,6 +482,41 @@ Avant la reprise des tests : `check-env` refuse aussi `OPEN_LIBRARY_CONTACT` ; a
 - Écarts acceptés : manga scanné depuis l'onglet Comics rangé en Comics (l'onglet décide quand aucune
   série existante ne correspond) ; couvertures absentes quand aucune source n'a d'image (la BnF n'en
   fournit pas, Open Library rarement pour les éditions françaises).
+- **Revue de code complète (2026-11-16)** : 5 revues en lecture seule (bugs + `/simplify`) sur tout le projet ;
+  étape 1, les bugs, corrigée avec un test par bug (269 tests) :
+  - « Compléter par scan » vérifie aussi le numéro de tome (tome 4 sur la carte du tome 3 → avertissement) ;
+  - la rafale complète un tome créé vide au lieu d'en faire un 2ᵉ exemplaire (`same_volume.dart`, partagé avec le
+    mode magasin) ;
+  - liste des séries et fiche comptent les tomes pareil (hors-séries, tomes sans numéro, « 07 », éditions lues) ;
+  - synchro : une session révoquée pendant une synchro ne bloque plus la reprise ; écouteur local annulé ;
+  - vue liste : plus de clé en double avec deux tomes sans numéro ;
+  - renommer une série renomme les tomes qui portaient son titre ;
+  - prêts : retard notifié aussi sur Android (prêt synchronisé déjà en retard), rappel d'un tome supprimé annulé ;
+  - caméra arrêtée quand un autre écran la recouvre (`M-15`, manuel) ;
+  - photos envoyées suivies par compte (un autre compte les reçoit ; toutes renvoyées une fois après mise à jour) ;
+  - import CSV : erreur affichée, bouton rendu ; un enregistrement ne fait jamais revivre une ligne supprimée
+    (`upsert.dart`) ; code scanné pendant la vérification de « Compléter par scan » traité ensuite ;
+  - journal des couvertures : nouvelle entrée si le nombre d'échecs change, ordre stable.
+  Écarts acceptés : « Télécharger maintenant » et la réactivation ne rejournalisent pas un échec identique (choix
+  de la phase 20, testé).
+  Étape 2 (2026-11-16) : `Item.lacksIsbn` / `hasNoIsbn` (`item_checks.dart`) remplace 5 copies, le SQL de la liste
+  aligné (ISBN blanc = manquant) ; `CollectionRepository.inTransaction` pour les écritures en lot (marquer lus,
+  nombres de tomes, rafale, import CSV désormais tout ou rien) ; `tool/ci/check_generated.sh` partagé par la CI,
+  la Release (nouveau job `verify` : format, code généré, analyze, tests avant tout build) et le hook pré-commit
+  (refuse un fichier généré non stagé) ; tests Supabase de la CI à chaque exécution. Étape 3 (autres
+  factorisations, efficacité) : idées après la v3.
+  Bugs mineurs de la revue (2026-11-16, un test par bug, 284 tests) : CSV (deux exemplaires sans ISBN d'un tome
+  gardés, date 31/02 refusée) ; photo de couverture écrite à part puis renommée ; appui long sur une envie =
+  « acheté » (date d'achat, priorité retirée) ; recherche par ISBN-10 ; Statistiques (erreur affichée, barre 0/0
+  vide) ; double appui sans effet (« Ajouter les manquants », nombres de tomes, titres des tomes) ; formulaires
+  tome et série : erreur affichée, bouton rendu (série et tomes « possédés jusqu'à » en une transaction) ;
+  actions de sauvegarde, scan, recherche vocale, menu auteur : plus de `ref` / `context` après fermeture de
+  l'écran ; thème choisi pendant son chargement gardé ; widget d'accueil recalculé au retour dans l'appli, retard
+  compté comme sur l'écran Prêts (dès le lendemain de l'échéance) ; un seul client Comic Vine (1 requête/s) ;
+  `check_commit_msg.sh` compte les caractères quelle que soit la locale.
+  Écarts acceptés : au démarrage, une image dans le thème système avant le thème choisi (le lire avant
+  `runApp` demanderait d'ouvrir la base plus tôt) ; passer une envie à « Possédé » dans le formulaire ne remplit
+  pas la date d'achat (champ éditable à côté).
 
 ### Après la v3 — idées notées
 Revue avec l'utilisateur le 2026-11-15 :

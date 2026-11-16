@@ -1,5 +1,7 @@
 import 'package:dupe/app/router.dart';
 import 'package:dupe/core/database/app_database.dart';
+import 'package:dupe/core/metadata/metadata_aggregator.dart';
+import 'package:dupe/core/metadata/metadata_providers.dart';
 import 'package:dupe/core/metadata/metadata_result.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
 import 'package:dupe/features/collection/domain/item.dart';
@@ -9,12 +11,14 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../helpers/app_harness.dart';
+import '../../helpers/fake_metadata.dart';
 import '../../helpers/fake_sources.dart';
 import '../../helpers/scan_helpers.dart';
 import '../../helpers/screen_helpers.dart';
 
 const k1 = '9782203370166';
 const other = '9782070612758';
+const k4 = '9782203001343';
 late Series kaamelott;
 late List<Item> volumes;
 late Item duneBook;
@@ -48,6 +52,13 @@ final Override sources = fakeMetadataSources(
       seriesTitle: 'Kaamelott',
       volumeNumber: '1',
       publisher: 'Casterman',
+    ),
+    k4: const MetadataResult(
+      source: MetadataSource.bnf,
+      sourceId: 'k4',
+      title: 'Le duel',
+      seriesTitle: 'Kaamelott',
+      volumeNumber: '4',
     ),
     other: const MetadataResult(
       source: MetadataSource.bnf,
@@ -106,6 +117,18 @@ void main() {
     await tester.tap(find.byKey(const Key('isbnAssignAnyway')));
     await tester.pumpAndSettle();
 
+    // Volume 4 of the same series on volume 3: warned, then cancelled.
+    await typeCode(tester, k4);
+    expect(
+      find.text(
+        'Le livre trouvé en ligne est le tome 4, pas le tome 3. Garder quand '
+        'même cet ISBN ?',
+      ),
+      findsOneWidget,
+    );
+    await tester.tap(find.text('Annuler'));
+    await tester.pumpAndSettle();
+
     // Volume 3: skipped.
     await tester.tap(find.byKey(const Key('isbnSkip')));
     await tester.pumpAndSettle();
@@ -121,6 +144,51 @@ void main() {
 
     await goBack(tester);
     expect(countOf(tester, 'noIsbn').data, '1');
+  }, variant: linux);
+
+  testWidgets('a code scanned during the online check is not lost', (
+    tester,
+  ) async {
+    const k2 = '9782203001350';
+    MetadataResult volume(String n) => MetadataResult(
+      source: MetadataSource.bnf,
+      sourceId: 'k$n',
+      title: 'Kaamelott',
+      volumeNumber: n,
+    );
+    await pumpApp(
+      tester,
+      size: desktopSize,
+      seed: seedGaps,
+      overrides: [
+        metadataAggregatorProvider.overrideWithValue(
+          MetadataAggregator(
+            providers: [
+              FakeProvider(
+                MetadataSource.bnf,
+                byIsbn: {k1: volume('1'), k2: volume('2')},
+                delay: const Duration(seconds: 2),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+    await goTo(tester, AppRoutes.quality);
+    await tester.tap(find.byKey(const Key('startIsbnCompletion')));
+    await tester.pumpAndSettle();
+
+    final field = find.byKey(const Key('codeEntryField'));
+    await tester.enterText(field, k1);
+    await tester.testTextInput.receiveAction(TextInputAction.search);
+    await tester.pump(const Duration(milliseconds: 500));
+    // Next book scanned while the first one is still being checked.
+    await tester.enterText(field, k2);
+    await tester.testTextInput.receiveAction(TextInputAction.search);
+    await tester.pump(const Duration(seconds: 5));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Livre 3 sur 3'), findsOneWidget);
   }, variant: linux);
 
   testWidgets('item sheet: "ISBN manquant" opens the scan for that book', (

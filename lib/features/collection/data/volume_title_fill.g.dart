@@ -50,7 +50,7 @@ final class VolumeTitleFillProvider
   }
 }
 
-String _$volumeTitleFillHash() => r'ed49f94f9399e1a6877f26228daebb5020ce1bac';
+String _$volumeTitleFillHash() => r'04324130eab2098e948b55e78bcb4f3b6c48a533';
 
 /// Looks the volumes without own title up again by ISBN (answers are often
 /// already in the disk cache) and saves the title the sources give; nothing

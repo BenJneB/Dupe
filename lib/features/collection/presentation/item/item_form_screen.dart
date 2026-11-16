@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dupe/app/error_text.dart';
 import 'package:dupe/app/router.dart';
 import 'package:dupe/app/widgets/form_helpers.dart';
 import 'package:dupe/core/database/database_provider.dart';
@@ -107,8 +108,16 @@ class _ItemFormScreenState extends ConsumerState<ItemFormScreen> {
     if (original == null || !_formKey.currentState!.validate()) return;
     setState(() => _saving = true);
     final repo = ref.read(collectionRepositoryProvider);
-    final item = await applyAttachment(repo, _c.applyTo(original), _attachment);
-    await repo.saveItem(item);
+    final Item item;
+    try {
+      item = await applyAttachment(repo, _c.applyTo(original), _attachment);
+      await repo.saveItem(item);
+    } on Object catch (e, stack) {
+      if (!mounted) return;
+      showError(context, 'collection', e, stack);
+      setState(() => _saving = false);
+      return;
+    }
     if (!mounted) return;
     // First volume of a series without total: how many volumes? (not in
     // the burst review, which saves many volumes in a row).

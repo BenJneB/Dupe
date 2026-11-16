@@ -50,7 +50,7 @@ final class VolumeCountScanProvider
   }
 }
 
-String _$volumeCountScanHash() => r'484ec9dd7970657ef2bb48bad225c6f41e721ee0';
+String _$volumeCountScanHash() => r'c43f6961aedd39de92349e948398e62d3e317009';
 
 /// Checks, one by one (sources are rate limited), every series whose total
 /// is unknown and that has a series source; nothing is saved before the

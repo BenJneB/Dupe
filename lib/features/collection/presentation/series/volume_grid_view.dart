@@ -1,4 +1,5 @@
 import 'package:dupe/features/collection/domain/enums.dart';
+import 'package:dupe/features/collection/domain/item_checks.dart';
 import 'package:dupe/features/collection/domain/volume_grid.dart';
 import 'package:dupe/features/collection/presentation/labels.dart';
 import 'package:dupe/features/collection/presentation/series/volume_slot_colors.dart';
@@ -113,13 +114,7 @@ class VolumeGridView extends ConsumerWidget {
     final l10n = AppLocalizations.of(context);
     return _Pastille(
       slot: slot,
-      missingIsbn:
-          markIsbn &&
-          slot.copies.any(
-            (c) =>
-                c.ownership == Ownership.possede &&
-                (c.isbn13 ?? '').trim().isEmpty,
-          ),
+      missingIsbn: markIsbn && slot.copies.any((c) => c.lacksIsbn),
       semanticLabel: l10n.slotSemantics(
         slot.label,
         [

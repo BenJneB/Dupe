@@ -109,6 +109,27 @@ void main() {
     );
   });
 
+  test('more failures than listed: journalised again', () async {
+    // The journal lists 20 addresses: a 23rd failure changes only the count.
+    Future<void> addFailing(String url) async {
+      cache.failing.add(url);
+      await env.repo.saveItem(
+        env.repo.newItem(CollectionType.manga).copyWith(coverUrl: url),
+      );
+    }
+
+    for (var i = 0; i < 21; i++) {
+      await addFailing('https://c/f${i.toString().padLeft(2, '0')}.jpg');
+    }
+    await prefetch().start();
+    await addFailing('https://c/zz.jpg');
+    await prefetch().restart();
+
+    final logged = appLog.entries.where((e) => e.source == 'covers').toList();
+    expect(logged, hasLength(2));
+    expect(logged.last.message, startsWith('23 couverture(s)'));
+  });
+
   test('Wi-Fi only by default; mobile data once allowed', () async {
     network.kind = NetworkKind.metered;
     await prefetch().start();

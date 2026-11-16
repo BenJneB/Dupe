@@ -34,7 +34,7 @@ class _DupeAppState extends ConsumerState<DupeApp> {
     super.initState();
     // Starts the sync (restores the session, then syncs if signed in).
     ref.read(syncControllerProvider);
-    // Desktop: overdue loans reminder (Android schedules them instead).
+    // Overdue loans, once a day (on Android, for those no reminder covers).
     _inBackground(
       'loans',
       ref.read(loanActionsProvider).notifyOverdueOnStartup,

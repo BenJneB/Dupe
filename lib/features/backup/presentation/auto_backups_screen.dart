@@ -62,8 +62,7 @@ class _BackupTile extends ConsumerWidget {
       }),
       title: Text(when),
       subtitle: Text('$kind · ${l10n.autoBackupItems(backup.items)}'),
-      onTap: () =>
-          unawaited(BackupActions(context, ref).restoreAuto(backup, label)),
+      onTap: () => unawaited(BackupActions(context).restoreAuto(backup, label)),
     );
   }
 }

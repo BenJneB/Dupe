@@ -4,15 +4,17 @@ import 'package:dupe/core/database/app_database.dart';
 import 'package:dupe/core/database/local_stores.dart';
 import 'package:dupe/features/covers/data/cover_photos.dart';
 
-/// Uploads the photos referenced by items and not uploaded yet (part of the
-/// sync, after the rows). Returns the number of photos uploaded.
+/// Uploads the photos referenced by items and not uploaded yet to the
+/// account [userId] (part of the sync, after the rows): another account
+/// signed in on this device gets them too. Returns the number uploaded.
 Future<int> uploadPendingCovers(
   AppDatabase db,
   CoverPhotos photos,
   CoverStore store,
-  AppSettingsStore settings,
-) async {
-  const key = 'covers_uploaded';
+  AppSettingsStore settings, {
+  required String userId,
+}) async {
+  final key = 'covers_uploaded_$userId';
   final done = {
     ...(jsonDecode(await settings.get(key) ?? '[]') as List<dynamic>)
         .cast<String>(),

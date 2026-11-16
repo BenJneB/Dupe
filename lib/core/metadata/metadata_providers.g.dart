@@ -100,7 +100,65 @@ final class MetadataAggregatorProvider
 }
 
 String _$metadataAggregatorHash() =>
-    r'19d8967741f5d12e52b9e69ffd65db923b5729a5';
+    r'ad1762f2aba03336ffaf74e3e578d0b1ef134cc7';
+
+/// The one Comic Vine client, shared by the volume lookups and the series
+/// lookups: its rate limiter (1 request/s, or Comic Vine blocks the key)
+/// then covers both. Null when the source is off or has no key.
+
+@ProviderFor(comicVineSource)
+final comicVineSourceProvider = ComicVineSourceProvider._();
+
+/// The one Comic Vine client, shared by the volume lookups and the series
+/// lookups: its rate limiter (1 request/s, or Comic Vine blocks the key)
+/// then covers both. Null when the source is off or has no key.
+
+final class ComicVineSourceProvider
+    extends
+        $FunctionalProvider<
+          ComicVineProvider?,
+          ComicVineProvider?,
+          ComicVineProvider?
+        >
+    with $Provider<ComicVineProvider?> {
+  /// The one Comic Vine client, shared by the volume lookups and the series
+  /// lookups: its rate limiter (1 request/s, or Comic Vine blocks the key)
+  /// then covers both. Null when the source is off or has no key.
+  ComicVineSourceProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'comicVineSourceProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$comicVineSourceHash();
+
+  @$internal
+  @override
+  $ProviderElement<ComicVineProvider?> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  ComicVineProvider? create(Ref ref) {
+    return comicVineSource(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(ComicVineProvider? value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<ComicVineProvider?>(value),
+    );
+  }
+}
+
+String _$comicVineSourceHash() => r'c2803cd94b433f1f401ae97ded654510b7f7ce89';
 
 /// Enabled series-level sources (AniList, Comic Vine).
 
@@ -146,4 +204,4 @@ final class SeriesLookupProvider
   }
 }
 
-String _$seriesLookupHash() => r'df7b1fcd6d3fcfe44d418758b646a42dcd083074';
+String _$seriesLookupHash() => r'886c7bc5159ffe6b15b1248e5c4f6739e0ffac02';

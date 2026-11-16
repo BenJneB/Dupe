@@ -27,8 +27,11 @@ Future<void> dictateSearch(
 }) async {
   final l10n = AppLocalizations.of(context);
   final messenger = ScaffoldMessenger.of(context);
+  // Read before any await: the screen may be gone when listening ends.
   final voice = ref.read(voiceInputProvider);
   final settings = ref.read(appSettingsStoreProvider);
+  final search = ref.read(searchRepositoryProvider);
+  final collection = ref.read(collectionRepositoryProvider);
   if (await settings.get(_explainedKey) != '1') {
     if (!context.mounted) return;
     final ok = await showDialog<bool>(
@@ -74,8 +77,8 @@ Future<void> dictateSearch(
   }
 
   final lookup = await lookUpSpoken(
-    ref.read(searchRepositoryProvider),
-    ref.read(collectionRepositoryProvider),
+    search,
+    collection,
     parseSpokenQuery(phrase),
   );
   if (!context.mounted) return;

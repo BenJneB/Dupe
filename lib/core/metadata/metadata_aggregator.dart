@@ -8,6 +8,7 @@ import 'package:dupe/core/metadata/metadata_result.dart';
 import 'package:dupe/core/metadata/response_store.dart';
 import 'package:dupe/core/network/memory_cache.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
+import 'package:flutter/foundation.dart' show visibleForTesting;
 
 /// Result of an ISBN lookup across sources.
 typedef IsbnLookup = ({
@@ -56,6 +57,11 @@ class MetadataAggregator {
        _now = now ?? DateTime.now;
 
   final Map<MetadataSource, MetadataProvider> _providers;
+
+  /// Whether [provider] itself (not another instance) answers here.
+  @visibleForTesting
+  bool uses(MetadataProvider provider) =>
+      identical(_providers[provider.source], provider);
   final Map<CollectionType, List<MetadataSource>> priorities;
   final Duration timeout;
   final ResponseStore? store;

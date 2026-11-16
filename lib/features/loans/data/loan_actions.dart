@@ -38,9 +38,10 @@ class LoanActions {
       await _reminders.notificationsAllowed();
 
   /// At start-up (Android): reminders of the current loans scheduled again,
-  /// those of returned loans cancelled. Covers a reinstalled app (scheduled
-  /// reminders are lost) and loans created or returned on another device.
-  /// Scheduling a loan again replaces its reminder (same id).
+  /// those of returned loans and deleted volumes cancelled. Covers a
+  /// reinstalled app (scheduled reminders are lost) and loans created or
+  /// returned on another device. Scheduling a loan again replaces its
+  /// reminder (same id).
   Future<void> syncReminders() async {
     if (!_reminders.canSchedule) return;
     for (final (:loan, :item) in await _repo.allLoans()) {
@@ -51,6 +52,9 @@ class LoanActions {
         await _reminders.cancel(loan);
       }
     }
+    for (final (:loan, item: _) in await _repo.loansOfDeletedItems()) {
+      await _reminders.cancel(loan);
+    }
   }
 
   Future<void> markReturned(Loan loan) async {
@@ -58,10 +62,11 @@ class LoanActions {
     await _reminders.cancel(loan);
   }
 
-  /// At start-up where reminders cannot be scheduled: one notification per
-  /// day listing the overdue loans.
+  /// At start-up: one notification per day listing the overdue loans. The
+  /// only reminder on desktop; on Android, it covers loans whose reminder
+  /// could not be scheduled (synced already overdue; lent after the reminder
+  /// time of its due day, notified the next day).
   Future<void> notifyOverdueOnStartup() async {
-    if (_reminders.canSchedule) return;
     final now = _now();
     final today =
         '${now.year}-${now.month.toString().padLeft(2, '0')}-'

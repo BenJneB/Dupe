@@ -77,6 +77,8 @@ void main() {
     expect(ImportValues.date('2026-11-14'), DateTime(2026, 11, 14));
     expect(ImportValues.date('14/11/2026'), DateTime(2026, 11, 14));
     expect(ImportValues.date('31/13/2026'), isNull);
+    expect(ImportValues.date('31/02/2026'), isNull); // Not March 3.
+    expect(ImportValues.date('2026-02-30'), isNull);
     expect(ImportValues.people('Lang, Poinsot & Kim'), [
       'Lang',
       'Poinsot',

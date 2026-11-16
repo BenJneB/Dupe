@@ -2,6 +2,7 @@ import 'package:dupe/app/router.dart';
 import 'package:dupe/core/database/app_database.dart';
 import 'package:dupe/core/database/database_provider.dart';
 import 'package:dupe/core/database/local_stores.dart';
+import 'package:dupe/features/collection/data/collection_repository.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
 import 'package:dupe/features/collection/domain/item.dart';
 import 'package:dupe/features/loans/data/loan_actions.dart';
@@ -210,5 +211,56 @@ void main() {
       await actions(FakeLoanReminders(allowed: false)).reminderWillShow(due),
       isTrue,
     );
+  });
+
+  test('Android: a loan already overdue is notified at start-up', () async {
+    // A loan synced from a computer, or due today after the reminder time:
+    // no reminder can be scheduled any more.
+    final db = AppDatabase.memory();
+    addTearDown(db.close);
+    final reminders = FakeLoanReminders(canSchedule: true);
+    final container = ProviderContainer(
+      overrides: [
+        appDatabaseProvider.overrideWithValue(db),
+        clockProvider.overrideWithValue(() => DateTime(2026, 11, 14, 9)),
+        loanRemindersProvider.overrideWithValue(reminders),
+      ],
+    );
+    addTearDown(container.dispose);
+    await seedDune(db);
+    await container
+        .read(loansRepositoryProvider)
+        .lend(dune.id, borrower: 'Bob', dueAt: DateTime(2026, 11, 10));
+
+    await container.read(loanActionsProvider).notifyOverdueOnStartup();
+
+    expect(reminders.overdueShown.single.single.loan.borrowerName, 'Bob');
+  });
+
+  test('start-up: the reminder of a deleted volume is cancelled', () async {
+    final db = AppDatabase.memory();
+    addTearDown(db.close);
+    final reminders = FakeLoanReminders(canSchedule: true);
+    final container = ProviderContainer(
+      overrides: [
+        appDatabaseProvider.overrideWithValue(db),
+        loanRemindersProvider.overrideWithValue(reminders),
+      ],
+    );
+    addTearDown(container.dispose);
+    await seedDune(db);
+    final loan = await container
+        .read(loanActionsProvider)
+        .lend(
+          dune,
+          borrower: 'Bob',
+          dueAt: DateTime.now().add(const Duration(days: 3)),
+        );
+    expect(reminders.scheduled, {loan.id});
+
+    await container.read(collectionRepositoryProvider).deleteItem(dune.id);
+    await container.read(loanActionsProvider).syncReminders();
+
+    expect(reminders.scheduled, isEmpty);
   });
 }

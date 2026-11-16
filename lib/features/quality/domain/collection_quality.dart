@@ -1,6 +1,6 @@
 import 'package:dupe/core/metadata/metadata_merge.dart';
-import 'package:dupe/features/collection/domain/enums.dart';
 import 'package:dupe/features/collection/domain/item.dart';
+import 'package:dupe/features/collection/domain/item_checks.dart';
 import 'package:dupe/features/collection/domain/series.dart';
 import 'package:dupe/features/collection/domain/series_matching.dart';
 
@@ -43,7 +43,7 @@ CollectionQuality computeQuality(List<Item> items, List<Series> allSeries) {
       if (issue != QualityIssue.seriesWithoutTotal) issue: <Item>[],
   };
   for (final item in items) {
-    if (item.ownership == Ownership.possede && _blank(item.isbn13)) {
+    if (item.lacksIsbn) {
       byIssue[QualityIssue.noIsbn]!.add(item);
     }
     if (_blank(item.coverUrl)) byIssue[QualityIssue.noCover]!.add(item);

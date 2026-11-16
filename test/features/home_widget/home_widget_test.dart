@@ -93,4 +93,49 @@ void main() {
     await wait(settle);
     expect(widget.shown, hasLength(2));
   });
+
+  test('back in the app: a loan that became overdue is counted', () async {
+    TestWidgetsFlutterBinding.ensureInitialized();
+    final db = AppDatabase.memory();
+    addTearDown(db.close);
+    final repo = repoOf(db);
+    final dune = repo.newItem(CollectionType.livre).copyWith(title: 'Dune');
+    await repo.saveItem(dune);
+    await LoansRepository(
+      db,
+      now: () => DateTime(2026, 11),
+      newId: () => 'loan-1',
+    ).lend(dune.id, borrower: 'Alice', dueAt: DateTime(2026, 11, 14));
+    var now = DateTime(2026, 11, 14, 20);
+    final widget = FakeHomeScreenWidget();
+    final container = ProviderContainer(
+      overrides: [
+        appDatabaseProvider.overrideWithValue(db),
+        homeScreenWidgetProvider.overrideWithValue(widget),
+        clockProvider.overrideWithValue(() => now),
+      ],
+    );
+    addTearDown(container.dispose);
+    final settle = Duration(
+      milliseconds: HomeWidgetUpdater.delay.inMilliseconds + 500,
+    );
+    container.read(homeWidgetUpdaterProvider);
+    await Future<void>.delayed(settle);
+    expect(widget.shown, ['1 ouvrage']);
+
+    // The next morning, nothing changed in the data; the app is reopened.
+    now = DateTime(2026, 11, 15, 9);
+    var resumed = 0;
+    final probe = AppLifecycleListener(onResume: () => resumed++);
+    addTearDown(probe.dispose);
+    TestWidgetsFlutterBinding.instance
+      ..handleAppLifecycleStateChanged(AppLifecycleState.inactive)
+      ..handleAppLifecycleStateChanged(AppLifecycleState.hidden)
+      ..handleAppLifecycleStateChanged(AppLifecycleState.inactive)
+      ..handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+    expect(resumed, 1);
+    await Future<void>.delayed(settle);
+
+    expect(widget.shown.last, '1 ouvrage · 1 prêt en retard');
+  });
 }

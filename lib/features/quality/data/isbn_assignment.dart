@@ -6,6 +6,7 @@ import 'package:dupe/features/collection/data/collection_repository.dart';
 import 'package:dupe/features/collection/domain/item.dart';
 import 'package:dupe/features/collection/domain/metadata_mapping.dart';
 import 'package:dupe/features/collection/domain/series_matching.dart';
+import 'package:dupe/features/collection/domain/volume_number.dart';
 
 /// What checking a scanned ISBN for an item found (phase 22).
 typedef IsbnCheck = ({
@@ -15,8 +16,13 @@ typedef IsbnCheck = ({
   /// The online record, when the sources answered.
   MetadataResult? found,
 
-  /// The record's titles fit the item (or nothing to compare).
+  /// The record's titles and volume number fit the item (or nothing to
+  /// compare).
   bool coherent,
+
+  /// The record's volume number, when it differs from the item's (another
+  /// volume of the same series: its titles match, its number does not).
+  String? otherVolume,
 });
 
 /// The record [found] is plausibly [item]: one of its titles (title, series)
@@ -34,6 +40,14 @@ bool titlesFit(Item item, String? seriesTitle, MetadataResult found) {
   return mine.any(
     (a) => theirs.any((b) => a == b || a.contains(b) || b.contains(a)),
   );
+}
+
+/// Whether [found] is another volume than [item]: both numbers are plain
+/// integers and differ ("03" and "3" are the same volume).
+bool isOtherVolume(Item item, MetadataResult found) {
+  final mine = VolumeNumber.asInt(item.volumeNumber);
+  final theirs = VolumeNumber.asInt(found.volumeNumber);
+  return mine != null && theirs != null && mine != theirs;
 }
 
 /// Gives a scanned ISBN to an item that has none (the "ISBN mémorisé" of the
@@ -61,10 +75,14 @@ class IsbnAssignment {
     } on Object {
       found = null; // Offline or slow: no title check, the ISBN still counts.
     }
+    final otherVolume = found != null && isOtherVolume(item, found);
     return (
       duplicate: duplicate,
       found: found,
-      coherent: found == null || titlesFit(item, seriesTitle, found),
+      coherent:
+          found == null ||
+          (!otherVolume && titlesFit(item, seriesTitle, found)),
+      otherVolume: otherVolume ? found.volumeNumber!.trim() : null,
     );
   }
 

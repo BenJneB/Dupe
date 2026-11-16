@@ -3,12 +3,14 @@ import 'package:dupe/app/router.dart';
 import 'package:dupe/core/database/app_database.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
 import 'package:dupe/features/collection/domain/enums.dart';
+import 'package:dupe/features/wishlist/data/wishlist_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart' hide Column, Table;
 
 import '../../helpers/app_harness.dart';
 import '../../helpers/scan_helpers.dart';
 import '../../helpers/screen_helpers.dart';
+import '../../helpers/test_repositories.dart';
 
 Future<void> seedWishes(AppDatabase db) async {
   final repo = repoOf(db);
@@ -95,5 +97,23 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Dune'), findsOneWidget);
     expect(await wishCount(), 2);
+  });
+
+  test('missing volumes wished twice (double tap): added once', () async {
+    final env = TestEnv();
+    addTearDown(env.dispose);
+    final series = env.repo
+        .newSeries(CollectionType.manga)
+        .copyWith(title: 'Naruto');
+    await env.repo.saveSeries(series);
+    final wishlist = WishlistRepository(env.db, env.repo);
+
+    await Future.wait([
+      wishlist.wish(series, [2, 3]),
+      wishlist.wish(series, [2, 3]),
+    ]);
+
+    final items = await env.repo.listSeriesItems(series.id);
+    expect(items.map((i) => i.volumeNumber), unorderedEquals(['2', '3']));
   });
 }

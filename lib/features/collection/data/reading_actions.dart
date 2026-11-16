@@ -25,7 +25,7 @@ extension ReadingActions on CollectionRepository {
     String seriesId,
     int upTo, {
     required DateTime today,
-  }) async {
+  }) => inTransaction(() async {
     var changed = 0;
     for (final item in await listSeriesItems(seriesId)) {
       final n = VolumeNumber.asInt(item.volumeNumber);
@@ -39,7 +39,7 @@ extension ReadingActions on CollectionRepository {
       changed++;
     }
     return changed;
-  }
+  });
 
   /// Owned books of [items] not read yet: what "mark as read" would change.
   List<Item> unreadOwned(Iterable<Item> items) => [
@@ -51,14 +51,12 @@ extension ReadingActions on CollectionRepository {
 
   /// Marks the owned unread books of [items] as read (read date [today] when
   /// they have none). Returns the number of books changed.
-  Future<int> markOwnedRead(
-    Iterable<Item> items, {
-    required DateTime today,
-  }) async {
-    final toMark = unreadOwned(items);
-    for (final item in toMark) {
-      await setReadingStatus(item, ReadingStatus.lu, today: today);
-    }
-    return toMark.length;
-  }
+  Future<int> markOwnedRead(Iterable<Item> items, {required DateTime today}) =>
+      inTransaction(() async {
+        final toMark = unreadOwned(items);
+        for (final item in toMark) {
+          await setReadingStatus(item, ReadingStatus.lu, today: today);
+        }
+        return toMark.length;
+      });
 }

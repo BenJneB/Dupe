@@ -2,6 +2,8 @@ import 'package:dupe/app/router.dart';
 import 'package:dupe/core/database/database_provider.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
 import 'package:dupe/features/collection/domain/enums.dart';
+import 'package:dupe/features/stats/data/stats_providers.dart';
+import 'package:dupe/features/stats/presentation/stat_widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -23,6 +25,40 @@ void main() {
       find.text('Ajoute des ouvrages pour voir tes statistiques'),
       findsOneWidget,
     );
+  });
+
+  testWidgets('a loading error is shown, not an endless spinner', (
+    tester,
+  ) async {
+    await pumpApp(
+      tester,
+      overrides: [
+        collectionStatsProvider.overrideWith(
+          (ref) => Stream.error(StateError('broken')),
+        ),
+        readingStatsProvider.overrideWith(
+          (ref) => Stream.error(StateError('broken')),
+        ),
+      ],
+    );
+    await openStats(tester);
+    expect(find.byType(CircularProgressIndicator), findsNothing);
+    expect(find.textContaining('Erreur de chargement'), findsOneWidget);
+  });
+
+  testWidgets('books bought at 0: 0/0 draws an empty bar', (tester) async {
+    // Spending by type when every price paid is 0 (gifts): 0 / 0.
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: Scaffold(
+          body: BarRow(label: 'Livres', figure: '0 €', fraction: 0 / 0),
+        ),
+      ),
+    );
+    final bar = tester.widget<LinearProgressIndicator>(
+      find.byType(LinearProgressIndicator),
+    );
+    expect(bar.value, 0);
   });
 
   testWidgets('totals, monthly chart and its table view', (tester) async {

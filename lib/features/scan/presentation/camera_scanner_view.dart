@@ -35,13 +35,33 @@ class _CameraScannerViewState extends State<CameraScannerView> {
   /// background (recette M-14). Stopped when hidden, restarted when shown.
   late final AppLifecycleListener _lifecycle;
 
+  /// The scanner is the screen in front: not covered by another route
+  /// (review, search, sheet) nor in a hidden tab of the shell. Otherwise the
+  /// camera kept reporting codes under the other screen.
+  bool? _visible;
+
   @override
   void initState() {
     super.initState();
     _lifecycle = AppLifecycleListener(
       onHide: () => unawaited(_controller.stop()),
-      onShow: () => unawaited(_controller.start()),
+      onShow: () {
+        if (_visible ?? true) unawaited(_controller.start());
+      },
     );
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final visible =
+        (ModalRoute.isCurrentOf(context) ?? true) &&
+        TickerMode.valuesOf(context).enabled;
+    final previous = _visible;
+    _visible = visible;
+    // The first time, MobileScanner starts the camera itself.
+    if (previous == null || previous == visible) return;
+    unawaited(visible ? _controller.start() : _controller.stop());
   }
 
   @override
@@ -52,6 +72,7 @@ class _CameraScannerViewState extends State<CameraScannerView> {
   }
 
   void _onDetect(BarcodeCapture capture) {
+    if (_visible == false) return; // A frame analysed before the stop.
     final raw = pickScannedCode(
       capture.barcodes.map((b) => b.rawValue).nonNulls,
     );

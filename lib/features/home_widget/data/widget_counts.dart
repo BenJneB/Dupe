@@ -5,7 +5,10 @@ import 'package:dupe/features/collection/domain/enums.dart';
 typedef WidgetCounts = ({int owned, int overdueLoans});
 
 /// Owned copies and loans past their due date, for the home-screen widget.
+/// Overdue from the day after the due date, as on the loans screen
+/// (`Loan.isOverdue`).
 Future<WidgetCounts> readWidgetCounts(AppDatabase db, DateTime now) async {
+  final today = DateTime(now.year, now.month, now.day);
   final owned = await db
       .customSelect(
         'SELECT COUNT(*) AS n FROM items '
@@ -20,7 +23,7 @@ Future<WidgetCounts> readWidgetCounts(AppDatabase db, DateTime now) async {
             ..where(
               db.loansTable.deletedAt.isNull() &
                   db.loansTable.returnedAt.isNull() &
-                  db.loansTable.dueAt.isSmallerThanValue(now),
+                  db.loansTable.dueAt.isSmallerThanValue(today),
             ))
           .getSingle();
   return (

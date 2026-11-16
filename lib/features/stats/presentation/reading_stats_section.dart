@@ -1,6 +1,8 @@
+import 'package:dupe/app/error_text.dart';
 import 'package:dupe/core/utils/formatters.dart';
 import 'package:dupe/features/collection/presentation/labels.dart';
 import 'package:dupe/features/stats/data/stats_providers.dart';
+import 'package:dupe/features/stats/domain/reading_stats.dart';
 import 'package:dupe/features/stats/presentation/monthly_chart.dart';
 import 'package:dupe/features/stats/presentation/stat_widgets.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
@@ -20,9 +22,16 @@ class _State extends ConsumerState<ReadingStatsSection> {
 
   @override
   Widget build(BuildContext context) {
-    final s = ref.watch(readingStatsProvider).value;
-    if (s == null) return const SizedBox.shrink();
     final l10n = AppLocalizations.of(context);
+    final ReadingStats s;
+    switch (ref.watch(readingStatsProvider)) {
+      case AsyncError(:final error):
+        return Text(l10n.loadError(errorText(l10n, error)));
+      case AsyncValue(:final value?):
+        s = value;
+      case _:
+        return const SizedBox.shrink();
+    }
     final text = Theme.of(context).textTheme;
     final muted = text.bodySmall?.copyWith(
       color: Theme.of(context).colorScheme.onSurfaceVariant,

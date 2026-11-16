@@ -6,6 +6,7 @@ import 'package:dupe/features/collection/data/collection_repository.dart';
 import 'package:dupe/features/collection/domain/enums.dart';
 import 'package:dupe/features/collection/domain/item.dart';
 import 'package:dupe/features/collection/domain/series.dart';
+import 'package:dupe/features/collection/domain/volume_number.dart';
 import 'package:dupe/features/wishlist/domain/next_volumes.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -40,16 +41,23 @@ class WishlistRepository {
           ..sort((a, b) => a.series.title.compareTo(b.series.title)),
   );
 
-  /// Adds the volumes [numbers] of [series] to the wishlist.
-  Future<void> wish(Series series, List<int> numbers) async {
-    for (final n in numbers) {
-      await _collection.saveItem(
-        _collection
-            .newItem(series.type, series: series, volumeNumber: '$n')
-            .copyWith(ownership: Ownership.envie),
-      );
-    }
-  }
+  /// Adds the volumes [numbers] of [series] to the wishlist, except those
+  /// already there (a second tap adds nothing).
+  Future<void> wish(Series series, List<int> numbers) =>
+      _collection.inTransaction(() async {
+        final present = {
+          for (final i in await _collection.listSeriesItems(series.id))
+            ?VolumeNumber.asInt(i.volumeNumber),
+        };
+        for (final n in numbers) {
+          if (present.contains(n)) continue;
+          await _collection.saveItem(
+            _collection
+                .newItem(series.type, series: series, volumeNumber: '$n')
+                .copyWith(ownership: Ownership.envie),
+          );
+        }
+      });
 }
 
 @riverpod

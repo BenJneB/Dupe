@@ -7,7 +7,7 @@
 > finale. Les phases 15 à 20 ajoutent leurs tests ici et marquent « automatisé (phase N) » ceux que leurs tests
 > automatiques couvrent désormais.
 
-Ce fichier liste ce que les **257 tests automatiques (et 4 parcours d'intégration) ne couvrent pas** : matériel (caméra, vibrations,
+Ce fichier liste ce que les **284 tests automatiques (et 4 parcours d'intégration) ne couvrent pas** : matériel (caméra, vibrations,
 notifications, raccourci), services réels (Supabase, API GitHub, sources de métadonnées), plateformes non
 compilées ici (Windows) et workflows GitHub (jamais exécutés).
 
@@ -133,6 +133,9 @@ Tous les tests non faits en phase 14 et non marqués « automatisé ». Le but :
       Corrigé : caméra arrêtée quand l'appli passe en arrière-plan, relancée au retour (`camera_scanner_view.dart`) ;
       à revérifier (plugin caméra non testable automatiquement).
       — OK 2026-11-15 (nouveau build) : lampe éteinte en arrière-plan ; elle ne se rallume pas au retour (accepté).
+- [ ] **M-15** (phase 21, revue de code) Rafale : un livre devant la caméra, ouvrir la revue, retirer son entrée
+      d'un glissement : elle ne revient pas dans la file tant que la revue est ouverte ; au retour sur le scan, la
+      caméra repart. Même chose dans « Compléter par scan » avec une question affichée (caméra arrêtée dessous).
 
 ## 2. Scan — mode Rafale (téléphone)
 - [ ] **R-01** Plusieurs scans d'affilée : la file se remplit et se traite.

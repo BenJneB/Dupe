@@ -48,7 +48,11 @@ Future<File?> ensureUserCover(
   final bytes = await store?.download(name);
   if (bytes == null) return null;
   await file.parent.create(recursive: true);
-  return await file.writeAsBytes(bytes, flush: true);
+  // Written aside then renamed: an app killed while writing leaves a
+  // `.part`, never a truncated photo that would be kept for good.
+  final partial = File('${file.path}.part');
+  await partial.writeAsBytes(bytes, flush: true);
+  return await partial.rename(file.path);
 }
 
 typedef PickedImage = ({Uint8List bytes, String extension});

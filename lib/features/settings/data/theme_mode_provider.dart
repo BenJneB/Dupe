@@ -11,6 +11,9 @@ part 'theme_mode_provider.g.dart';
 class AppThemeMode extends _$AppThemeMode {
   static const _key = 'theme_mode';
 
+  /// A theme chosen before the saved one was read: the saved one is older.
+  var _chosen = false;
+
   @override
   ThemeMode build() {
     unawaited(_load());
@@ -20,10 +23,11 @@ class AppThemeMode extends _$AppThemeMode {
   Future<void> _load() async {
     final saved = await ref.read(appSettingsStoreProvider).get(_key);
     final mode = ThemeMode.values.where((m) => m.name == saved).firstOrNull;
-    if (mode != null) state = mode;
+    if (mode != null && !_chosen) state = mode;
   }
 
   Future<void> set(ThemeMode mode) async {
+    _chosen = true;
     state = mode;
     await ref.read(appSettingsStoreProvider).set(_key, mode.name);
   }

@@ -46,8 +46,27 @@ jobs:
             exit 1
           fi
 
+  # A tag can be pushed on a commit no pull request checked: same checks as
+  # the CI before anything is built or published.
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - name: Formatting
+        run: dart format --output=none --set-exit-if-changed .
+      - name: Generated code is up to date
+        run: tool/ci/check_generated.sh
+      - run: flutter analyze
+      - run: flutter test
+
   android:
-    needs: check-env
+    needs: [check-env, verify]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -99,7 +118,7 @@ jobs:
           path: dist/
 
   linux:
-    needs: check-env
+    needs: [check-env, verify]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -130,7 +149,7 @@ jobs:
           path: dist/
 
   windows:
-    needs: check-env
+    needs: [check-env, verify]
     runs-on: windows-latest
     defaults:
       run:

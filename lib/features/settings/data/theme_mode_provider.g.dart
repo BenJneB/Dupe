@@ -44,7 +44,7 @@ final class AppThemeModeProvider
   }
 }
 
-String _$appThemeModeHash() => r'4d23515dfda17cec5fa1dda977db1925161b02bf';
+String _$appThemeModeHash() => r'18a3cfdb87d4182244f753758e9f7d22694b76b5';
 
 /// Light / dark / system theme, persisted in `app_settings`.
 
