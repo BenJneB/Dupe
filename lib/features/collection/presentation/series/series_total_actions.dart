@@ -92,7 +92,7 @@ Future<void> offerSeriesTotal(
 
 Future<void> _saveTotal(WidgetRef ref, Series series, int total) async {
   final repo = ref.read(collectionRepositoryProvider);
-  // Re-read: the series may have changed meanwhile.
-  final fresh = await repo.getSeries(series.id) ?? series;
-  await repo.saveSeries(fresh.copyWith(totalVolumes: total));
+  // Re-read: the series may have changed (or been deleted) meanwhile.
+  final fresh = await repo.getSeries(series.id);
+  if (fresh != null) await repo.saveSeries(fresh.copyWith(totalVolumes: total));
 }

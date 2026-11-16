@@ -66,6 +66,7 @@ class SyncController extends _$SyncController {
   Timer? _periodic;
   Timer? _debounce;
   AppLifecycleListener? _lifecycle;
+  StreamSubscription<Object?>? _localChanges;
   Future<void>? _running;
   DateTime? _clockCheckedAt;
   ({SyncPhase? phase, String? text}) _lastFailure = (phase: null, text: null);
@@ -93,7 +94,9 @@ class SyncController extends _$SyncController {
       state = const SyncState(SyncPhase.signedOut);
       return;
     }
-    if (state.phase == SyncPhase.signedOut) {
+    // Triggers off: signed out until now (not the phase, which a sync
+    // finishing after a sign-out could have overwritten).
+    if (_lifecycle == null) {
       state = SyncState(SyncPhase.idle, email: auth.email);
       _startTriggers();
       unawaited(syncNow());
@@ -113,20 +116,18 @@ class SyncController extends _$SyncController {
       },
     );
     final db = ref.read(appDatabaseProvider);
-    _subscriptions.add(
-      db
-          .tableUpdates(
-            TableUpdateQuery.onAllTables([
-              db.seriesTable,
-              db.itemsTable,
-              db.loansTable,
-            ]),
-          )
-          .listen((_) {
-            _debounce?.cancel();
-            _debounce = Timer(debounce, () => unawaited(_syncIfPending()));
-          }),
-    );
+    _localChanges = db
+        .tableUpdates(
+          TableUpdateQuery.onAllTables([
+            db.seriesTable,
+            db.itemsTable,
+            db.loansTable,
+          ]),
+        )
+        .listen((_) {
+          _debounce?.cancel();
+          _debounce = Timer(debounce, () => unawaited(_syncIfPending()));
+        });
   }
 
   void _stopTriggers() {
@@ -135,6 +136,8 @@ class SyncController extends _$SyncController {
     _debounce?.cancel();
     _lifecycle?.dispose();
     _lifecycle = null;
+    unawaited(_localChanges?.cancel());
+    _localChanges = null;
   }
 
   Future<void> _syncIfPending() async {
@@ -150,6 +153,9 @@ class SyncController extends _$SyncController {
     final userId = ref.read(syncAuthProvider).userId;
     final engine = ref.read(syncEngineProvider);
     if (userId == null || engine == null) return;
+    // Signed out (or another account) meanwhile: the state is no longer
+    // this sync's to set.
+    bool ended() => ref.read(syncAuthProvider).userId != userId;
     state = state.to(SyncPhase.syncing);
     try {
       await engine.adoptUser(userId);
@@ -163,8 +169,10 @@ class SyncController extends _$SyncController {
           ref.read(coverPhotosProvider),
           store,
           ref.read(appSettingsStoreProvider),
+          userId: userId,
         );
       }
+      if (ended()) return;
       state = state.to(SyncPhase.idle, lastSync: ref.read(clockProvider)());
       await _checkClock();
     } on Object catch (e, stack) {
@@ -180,7 +188,7 @@ class SyncController extends _$SyncController {
         }
       }
       _lastFailure = (phase: phase, text: '$e');
-      state = state.to(phase, error: e);
+      if (!ended()) state = state.to(phase, error: e);
       return;
     }
     _lastFailure = (phase: null, text: null);

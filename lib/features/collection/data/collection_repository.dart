@@ -3,6 +3,7 @@ import 'package:dupe/core/database/app_database.dart';
 import 'package:dupe/core/database/database_provider.dart';
 import 'package:dupe/core/database/tables/items_table.drift.dart';
 import 'package:dupe/core/database/tables/series_table.drift.dart';
+import 'package:dupe/core/database/upsert.dart';
 import 'package:dupe/features/collection/data/collection_entries_query.dart';
 import 'package:dupe/features/collection/domain/collection_entry.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
@@ -60,17 +61,35 @@ class CollectionRepository {
 
   // ---- Writes -------------------------------------------------------------
 
-  Future<void> saveSeries(Series series) => _db
-      .into(_db.seriesTable)
-      .insertOnConflictUpdate(
-        series.copyWith(updatedAt: _now(), syncPending: true).toInsertable(),
-      );
+  /// Saves [series]; a new title also goes to the volumes that had the old
+  /// one (copied from the series when they were created).
+  Future<void> saveSeries(Series series) => _db.transaction(() async {
+    final now = _now();
+    final before = await getSeries(series.id);
+    await _db.upsertKeepingDeletion(
+      _db.seriesTable,
+      series.copyWith(updatedAt: now, syncPending: true).toInsertable(),
+    );
+    if (before == null || before.title == series.title) return;
+    await (_db.update(_db.itemsTable)..where(
+          (t) =>
+              t.seriesId.equals(series.id) &
+              t.title.equals(before.title) &
+              t.deletedAt.isNull(),
+        ))
+        .write(
+          ItemsTableCompanion(
+            title: Value(series.title),
+            updatedAt: Value(now),
+            syncPending: const Value(true),
+          ),
+        );
+  });
 
-  Future<void> saveItem(Item item) => _db
-      .into(_db.itemsTable)
-      .insertOnConflictUpdate(
-        item.copyWith(updatedAt: _now(), syncPending: true).toInsertable(),
-      );
+  Future<void> saveItem(Item item) => _db.upsertKeepingDeletion(
+    _db.itemsTable,
+    item.copyWith(updatedAt: _now(), syncPending: true).toInsertable(),
+  );
 
   /// Creates owned/wished volumes [from]..[to] of [series], skipping numbers
   /// that already exist. Returns the number of created items.

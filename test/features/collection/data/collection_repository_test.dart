@@ -1,6 +1,7 @@
 import 'package:dupe/features/collection/domain/collection_entry.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
 import 'package:dupe/features/collection/domain/enums.dart';
+import 'package:dupe/features/collection/domain/volume_grid.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../helpers/test_repositories.dart';
@@ -130,4 +131,88 @@ void main() {
       expect(entries.whereType<ItemEntry>().single.title, 'One-shot');
     },
   );
+
+  test('list counts are those of the series grid', () async {
+    final series = env.repo
+        .newSeries(CollectionType.manga)
+        .copyWith(title: 'Akira', totalVolumes: 10);
+    await env.repo.saveSeries(series);
+    Future<void> add(
+      String? number, {
+      ReadingStatus status = ReadingStatus.nonLu,
+      Ownership ownership = Ownership.possede,
+    }) => env.repo.saveItem(
+      env.repo
+          .newItem(CollectionType.manga, series: series, volumeNumber: number)
+          .copyWith(readingStatus: status, ownership: ownership),
+    );
+    await add('1', status: ReadingStatus.lu);
+    // Two editions of volume 2, one read: the volume is read.
+    await add('2', status: ReadingStatus.lu);
+    await add('2');
+    for (var n = 3; n <= 9; n++) {
+      await add('$n');
+    }
+    await add('07'); // Volume 7 again.
+    await add(' 8 '); // Volume 8 again.
+    await add('11'); // Beyond the total.
+    await add('HS 1');
+    await add(null);
+    await add('10', ownership: Ownership.envie);
+
+    final entry = (await env.repo.watchEntries(CollectionType.manga).first)
+        .whereType<SeriesEntry>()
+        .single;
+    final grid = VolumeGrid.compute(
+      items: await env.repo.listSeriesItems(series.id),
+      totalVolumes: 10,
+      followed: false,
+    );
+
+    expect(grid.ownedCount, 9);
+    expect(entry.ownedCount, grid.ownedCount);
+    expect(grid.isComplete, isFalse);
+    expect(entry.progress, lessThan(1));
+    // 3-9, 11, HS 1 and the unnumbered one.
+    expect(grid.toReadCount, 10);
+    expect(entry.unreadCount, grid.toReadCount);
+  });
+
+  test('renaming a series renames the volumes that had its title', () async {
+    final series = env.repo
+        .newSeries(CollectionType.manga)
+        .copyWith(title: 'One Pice');
+    await env.repo.saveSeries(series);
+    await env.repo.addVolumeRange(series, from: 1, to: 2);
+    final special = env.repo
+        .newItem(CollectionType.manga, series: series, volumeNumber: '3')
+        .copyWith(title: 'Romance Dawn');
+    await env.repo.saveItem(special);
+
+    await env.repo.saveSeries(series.copyWith(title: 'One Piece'));
+
+    final items = await env.repo.listSeriesItems(series.id);
+    expect(
+      items.map((i) => i.title),
+      unorderedEquals(['One Piece', 'One Piece', 'Romance Dawn']),
+    );
+    expect(items.every((i) => i.syncPending), isTrue);
+  });
+
+  test('saving an old copy never revives a deleted row', () async {
+    // A dialog or form open while the sync (or another screen) deleted it.
+    final series = env.repo
+        .newSeries(CollectionType.manga)
+        .copyWith(title: 'Akira');
+    await env.repo.saveSeries(series);
+    final item = env.repo.newItem(CollectionType.manga, series: series);
+    await env.repo.saveItem(item);
+    await env.repo.deleteSeries(series.id);
+
+    await env.repo.saveSeries(series.copyWith(totalVolumes: 6));
+    await env.repo.saveItem(item.copyWith(notes: 'edited'));
+
+    expect(await env.repo.getSeries(series.id), isNull);
+    expect(await env.repo.getItem(item.id), isNull);
+  });
 }

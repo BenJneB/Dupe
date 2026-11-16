@@ -233,6 +233,8 @@
   "isbnCompletionSeeDuplicate": "Voir ce livre",
   "isbnCompletionMismatch": "Le livre trouvé en ligne est « {found} ». Est-ce bien « {mine} » ?",
   "@isbnCompletionMismatch": {"placeholders": {"found": {"type": "String"}, "mine": {"type": "String"}}},
+  "isbnCompletionOtherVolume": "Le livre trouvé en ligne est le tome {found}, pas le tome {mine}. Garder quand même cet ISBN ?",
+  "@isbnCompletionOtherVolume": {"placeholders": {"found": {"type": "String"}, "mine": {"type": "String"}}},
   "isbnCompletionAssignAnyway": "Oui, garder cet ISBN",
   "isbnCompletionSaved": "ISBN enregistré pour « {title} »",
   "@isbnCompletionSaved": {"placeholders": {"title": {"type": "String"}}},
@@ -871,6 +873,8 @@
     }
   },
   "autoBackupExport": "Exporter ce fichier",
+  "csvImportFailed": "Import interrompu : {message} Les lignes déjà ajoutées restent ; la sauvegarde « Avant import CSV » permet de revenir en arrière.",
+  "@csvImportFailed": {"placeholders": {"message": {"type": "String"}}},
   "autoBackupFailed": "Sauvegarde automatique impossible : import annulé ({message})",
   "@autoBackupFailed": {
     "placeholders": {

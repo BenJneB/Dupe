@@ -561,6 +561,11 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String isbnCompletionOtherVolume(String found, String mine) {
+    return 'Le livre trouvé en ligne est le tome $found, pas le tome $mine. Garder quand même cet ISBN ?';
+  }
+
+  @override
   String get isbnCompletionAssignAnyway => 'Oui, garder cet ISBN';
 
   @override
@@ -1600,6 +1605,11 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get autoBackupExport => 'Exporter ce fichier';
+
+  @override
+  String csvImportFailed(String message) {
+    return 'Import interrompu : $message Les lignes déjà ajoutées restent ; la sauvegarde « Avant import CSV » permet de revenir en arrière.';
+  }
 
   @override
   String autoBackupFailed(String message) {

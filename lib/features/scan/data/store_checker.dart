@@ -6,6 +6,7 @@ import 'package:dupe/features/collection/domain/collection_type.dart';
 import 'package:dupe/features/collection/domain/enums.dart';
 import 'package:dupe/features/collection/domain/item.dart';
 import 'package:dupe/features/collection/domain/metadata_mapping.dart';
+import 'package:dupe/features/collection/domain/same_volume.dart';
 import 'package:dupe/features/collection/domain/series.dart';
 import 'package:dupe/features/collection/domain/series_matching.dart';
 import 'package:dupe/features/collection/domain/volume_number.dart';
@@ -63,7 +64,7 @@ class StoreChecker {
       return;
     }
     final items = await _repo.listSeriesItems(series.id);
-    final copy = _sameVolume(items, metadata.volumeNumber);
+    final copy = sameVolume(items, metadata.volumeNumber);
     if (copy != null) {
       // Volume added without ISBN (grid, range, previous volumes): remember
       // the ISBN and fill its empty fields (recette: WARP 1-2 left empty).
@@ -90,20 +91,6 @@ class StoreChecker {
       ownedNumbers: _ownedNumbers(items),
       metadata: metadata,
     );
-  }
-
-  /// Copy of volume [number] in [items]; an owned copy wins over a wish.
-  Item? _sameVolume(List<Item> items, String? number) {
-    if (number == null) return null;
-    final wanted = VolumeNumber.asInt(number)?.toString() ?? number.trim();
-    final copies = items.where(
-      (i) =>
-          (VolumeNumber.asInt(i.volumeNumber)?.toString() ??
-              i.volumeNumber?.trim()) ==
-          wanted,
-    );
-    return copies.where((i) => i.ownership == Ownership.possede).firstOrNull ??
-        copies.firstOrNull;
   }
 
   List<int> _ownedNumbers(List<Item> items) => {

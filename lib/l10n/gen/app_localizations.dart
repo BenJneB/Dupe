@@ -886,6 +886,12 @@ abstract class AppLocalizations {
   /// **'Le livre trouvé en ligne est « {found} ». Est-ce bien « {mine} » ?'**
   String isbnCompletionMismatch(String found, String mine);
 
+  /// No description provided for @isbnCompletionOtherVolume.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le livre trouvé en ligne est le tome {found}, pas le tome {mine}. Garder quand même cet ISBN ?'**
+  String isbnCompletionOtherVolume(String found, String mine);
+
   /// No description provided for @isbnCompletionAssignAnyway.
   ///
   /// In fr, this message translates to:
@@ -2553,6 +2559,12 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Exporter ce fichier'**
   String get autoBackupExport;
+
+  /// No description provided for @csvImportFailed.
+  ///
+  /// In fr, this message translates to:
+  /// **'Import interrompu : {message} Les lignes déjà ajoutées restent ; la sauvegarde « Avant import CSV » permet de revenir en arrière.'**
+  String csvImportFailed(String message);
 
   /// No description provided for @autoBackupFailed.
   ///

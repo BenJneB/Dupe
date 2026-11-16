@@ -70,7 +70,9 @@ Future<List<String>> coverUrls(AppDatabase db) async {
   final rows = await db
       .customSelect(
         'SELECT cover_url FROM items WHERE $live '
-        'UNION SELECT cover_url FROM series WHERE $live',
+        'UNION SELECT cover_url FROM series WHERE $live '
+        // A stable order: the same failures give the same journal entry.
+        'ORDER BY cover_url',
         readsFrom: {db.itemsTable, db.seriesTable},
       )
       .get();
@@ -87,8 +89,9 @@ class CoverPrefetch extends _$CoverPrefetch {
   var _run = 0;
   var _wifiOnly = true;
 
-  /// Failures last written to the journal: a run that fails on the same
-  /// covers (start-up, resume, connection changes) does not repeat them.
+  /// Failures last written to the journal (count and listed addresses): a
+  /// run that fails on the same covers (resume, connection changes) does not
+  /// repeat them during this execution of the app.
   String? _loggedFailures;
 
   @override
@@ -171,11 +174,11 @@ class CoverPrefetch extends _$CoverPrefetch {
         failed: failed,
       );
     }
-    final report = failures.join('\n');
+    final report = '$failed\n${failures.join('\n')}';
     if (failed > 0 && report != _loggedFailures) {
       appLog.info(
         'covers',
-        '$failed couverture(s) non téléchargée(s) :\n$report',
+        '$failed couverture(s) non téléchargée(s) :\n${failures.join('\n')}',
       );
     }
     _loggedFailures = failed > 0 ? report : null;

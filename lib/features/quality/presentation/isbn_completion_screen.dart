@@ -33,6 +33,7 @@ class _State extends ConsumerState<IsbnCompletionScreen> {
   var _assigned = 0;
   var _complete = true;
   var _busy = false;
+  String? _waiting;
 
   @override
   void initState() {
@@ -62,9 +63,15 @@ class _State extends ConsumerState<IsbnCompletionScreen> {
   void _next() => setState(() => _index++);
 
   Future<void> _onCode(String raw) async {
+    if (_busy) {
+      // Next book scanned during the check: handled right after it (the
+      // camera reports a code only once).
+      _waiting = raw;
+      return;
+    }
     final item = _current;
     final isbn = parseScannedCode(context, raw);
-    if (item == null || isbn == null || _busy) return;
+    if (item == null || isbn == null) return;
     final l10n = AppLocalizations.of(context);
     final messenger = ScaffoldMessenger.of(context);
     final assignment = ref.read(isbnAssignmentProvider);
@@ -91,7 +98,13 @@ class _State extends ConsumerState<IsbnCompletionScreen> {
       if (!check.coherent) {
         final ok = await askIsbnQuestion(
           context,
-          message: l10n.isbnCompletionMismatch(check.found!.title, item.title),
+          message: switch (check.otherVolume) {
+            final other? => l10n.isbnCompletionOtherVolume(
+              other,
+              item.volumeNumber ?? '',
+            ),
+            null => l10n.isbnCompletionMismatch(check.found!.title, item.title),
+          },
           yes: l10n.isbnCompletionAssignAnyway,
           yesKey: const Key('isbnAssignAnyway'),
         );
@@ -113,6 +126,9 @@ class _State extends ConsumerState<IsbnCompletionScreen> {
       if (mounted) _next();
     } finally {
       if (mounted) setState(() => _busy = false);
+      final next = _waiting;
+      _waiting = null;
+      if (next != null && mounted) unawaited(_onCode(next));
     }
   }
 

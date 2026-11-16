@@ -14,14 +14,22 @@ Stream<List<CollectionEntry>> watchCollectionEntries(
   final s = db.seriesTable;
   final i = db.itemsTable;
   final activeItem = i.deletedAt.isNull();
-  final owned = activeItem & i.ownership.equalsValue(Ownership.possede);
-  // Distinct volumes: several copies (editions) of a volume count once.
-  final volume = coalesce([i.volumeNumber, i.id]);
-  final ownedCount = volume.count(distinct: true, filter: owned);
-  final unreadCount = volume.count(
-    distinct: true,
-    filter: owned & i.readingStatus.isInValues(toReadStatuses),
-  );
+  // Same counts as the series grid (VolumeGrid): owned plain volumes from 1
+  // to the total ("07" is volume 7, several editions count once), and owned
+  // volumes (any number) none of whose owned copies is read.
+  final ownedCount = CustomExpression<int>('''
+    (SELECT COUNT(DISTINCT CAST(${_number('c')} AS INTEGER)) FROM items c
+     WHERE ${_ownedIn('c')} AND ${_isPlain('c')}
+       AND CAST(${_number('c')} AS INTEGER) >= 1
+       AND (series.total_volumes IS NULL
+         OR CAST(${_number('c')} AS INTEGER) <= series.total_volumes))''');
+  final toRead = toReadStatuses.map((r) => "'${r.dbValue}'").join(', ');
+  final unreadCount = CustomExpression<int>('''
+    (SELECT COUNT(DISTINCT ${_volumeKey('c')}) FROM items c
+     WHERE ${_ownedIn('c')} AND c.reading_status IN ($toRead)
+       AND NOT EXISTS (SELECT 1 FROM items r
+         WHERE ${_ownedIn('r')} AND r.reading_status NOT IN ($toRead)
+           AND ${_volumeKey('r')} = ${_volumeKey('c')}))''');
   final itemCount = i.id.count(filter: activeItem);
   // Cover of the first volume with one, numbered volumes first (as in the
   // series grid).
@@ -87,3 +95,22 @@ Stream<List<CollectionEntry>> watchCollectionEntries(
     return <CollectionEntry>[...series, ...items.map(ItemEntry.new)];
   });
 }
+
+/// Live owned copy [t] of the current series row.
+String _ownedIn(String t) =>
+    '$t.series_id = series.id AND $t.deleted_at IS NULL '
+    "AND $t.ownership = '${Ownership.possede.dbValue}'";
+
+String _number(String t) => "trim(coalesce($t.volume_number, ''))";
+
+/// Plain integer volume number ("12", " 07 "), as VolumeNumber.asInt.
+String _isPlain(String t) =>
+    "${_number(t)} <> '' AND ${_number(t)} NOT GLOB '*[^0-9]*'";
+
+/// Volume a copy belongs to, as VolumeGrid groups them: the integer value of
+/// a plain number, the trimmed text of another ("HS 1"), the copy itself
+/// when it has no number.
+String _volumeKey(String t) =>
+    'CASE WHEN ${_isPlain(t)} '
+    'THEN CAST(CAST(${_number(t)} AS INTEGER) AS TEXT) '
+    "WHEN ${_number(t)} = '' THEN $t.id ELSE ${_number(t)} END";

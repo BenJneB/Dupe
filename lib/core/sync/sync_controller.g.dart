@@ -53,7 +53,7 @@ final class SyncControllerProvider
   }
 }
 
-String _$syncControllerHash() => r'1766ee2199b7496e7c44c7c08d7deb3ef1df0e66';
+String _$syncControllerHash() => r'41c8a6b3f1b20cc1b96e84582d2f95bc5248cf14';
 
 /// Runs the sync when signed in (PLAN.md §6): at start-up, when the app
 /// comes back to the foreground, a few seconds after local changes, every

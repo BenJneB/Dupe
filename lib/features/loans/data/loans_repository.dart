@@ -94,11 +94,20 @@ class LoansRepository {
       if (entry.loan.isActive) entry,
   ];
 
-  JoinedSelectStatement<HasResultSet, dynamic> _loansQuery() {
+  /// Loans of deleted items: hidden everywhere, their reminders cancelled.
+  Future<List<LoanWithItem>> loansOfDeletedItems() async =>
+      _read(await _loansQuery(deletedItems: true).get());
+
+  JoinedSelectStatement<HasResultSet, dynamic> _loansQuery({
+    bool deletedItems = false,
+  }) {
     final l = _db.loansTable;
     final i = _db.itemsTable;
     return _db.select(l).join([innerJoin(i, i.id.equalsExp(l.itemId))])
-      ..where(l.deletedAt.isNull() & i.deletedAt.isNull())
+      ..where(
+        l.deletedAt.isNull() &
+            (deletedItems ? i.deletedAt.isNotNull() : i.deletedAt.isNull()),
+      )
       ..orderBy([
         OrderingTerm.desc(l.returnedAt.isNull()),
         OrderingTerm.asc(l.dueAt),

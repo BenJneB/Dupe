@@ -232,7 +232,8 @@ Description détaillée des choix techniques et de l'organisation du code (dépl
 - Phase 20 : **couvertures hors ligne** (`CoverPrefetch`, `cover_prefetch.dart` : URL distinctes des items et
   séries non supprimés, photos via `ensureUserCover`, démarrage + reprise + changement de connexion, Wi-Fi seulement
   par défaut `cover_prefetch_enabled` / `cover_prefetch_wifi_only`, annulé par compteur de passage ; les
-  adresses en échec sont journalisées avec leur cause, une seule fois tant que la liste ne change pas) ; connexion
+  adresses en échec sont journalisées avec leur cause, une seule fois par exécution de l'appli tant que leur nombre
+  et la liste ne changent pas) ; connexion
   `core/network/network_status.dart` (`connectivity_plus`, `NetworkKind` unmetered/metered/none) ; Paramètres
   `covers/presentation/offline_covers_section.dart`. `pumpApp` injecte `FakeNetworkStatus` (aucune connexion par
   défaut) et `FakeCoverCache` (`test/helpers/fake_covers.dart`). **Stats de lecture** :

@@ -482,6 +482,23 @@ Avant la reprise des tests : `check-env` refuse aussi `OPEN_LIBRARY_CONTACT` ; a
 - Écarts acceptés : manga scanné depuis l'onglet Comics rangé en Comics (l'onglet décide quand aucune
   série existante ne correspond) ; couvertures absentes quand aucune source n'a d'image (la BnF n'en
   fournit pas, Open Library rarement pour les éditions françaises).
+- **Revue de code complète (2026-11-16)** : 5 revues en lecture seule (bugs + `/simplify`) sur tout le projet ;
+  étape 1, les bugs, corrigée avec un test par bug (269 tests) :
+  - « Compléter par scan » vérifie aussi le numéro de tome (tome 4 sur la carte du tome 3 → avertissement) ;
+  - la rafale complète un tome créé vide au lieu d'en faire un 2ᵉ exemplaire (`same_volume.dart`, partagé avec le
+    mode magasin) ;
+  - liste des séries et fiche comptent les tomes pareil (hors-séries, tomes sans numéro, « 07 », éditions lues) ;
+  - synchro : une session révoquée pendant une synchro ne bloque plus la reprise ; écouteur local annulé ;
+  - vue liste : plus de clé en double avec deux tomes sans numéro ;
+  - renommer une série renomme les tomes qui portaient son titre ;
+  - prêts : retard notifié aussi sur Android (prêt synchronisé déjà en retard), rappel d'un tome supprimé annulé ;
+  - caméra arrêtée quand un autre écran la recouvre (`M-15`, manuel) ;
+  - photos envoyées suivies par compte (un autre compte les reçoit ; toutes renvoyées une fois après mise à jour) ;
+  - import CSV : erreur affichée, bouton rendu ; un enregistrement ne fait jamais revivre une ligne supprimée
+    (`upsert.dart`) ; code scanné pendant la vérification de « Compléter par scan » traité ensuite ;
+  - journal des couvertures : nouvelle entrée si le nombre d'échecs change, ordre stable.
+  Écarts acceptés : « Télécharger maintenant » et la réactivation ne rejournalisent pas un échec identique (choix
+  de la phase 20, testé). Étapes 2-3 de la revue (factorisations, efficacité, outillage) : à planifier.
 
 ### Après la v3 — idées notées
 Revue avec l'utilisateur le 2026-11-15 :

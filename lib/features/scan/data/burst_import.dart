@@ -1,6 +1,10 @@
+import 'package:dupe/core/metadata/metadata_result.dart';
 import 'package:dupe/features/collection/data/collection_repository.dart';
 import 'package:dupe/features/collection/data/item_drafts.dart';
 import 'package:dupe/features/collection/domain/enums.dart';
+import 'package:dupe/features/collection/domain/item.dart';
+import 'package:dupe/features/collection/domain/metadata_mapping.dart';
+import 'package:dupe/features/collection/domain/same_volume.dart';
 import 'package:dupe/features/scan/data/scan_queue_repository.dart';
 import 'package:dupe/features/scan/domain/scan_queue_entry.dart';
 
@@ -26,10 +30,38 @@ Future<int> importScanQueue(
       );
       if (draft == null) continue;
       final item = await applyAttachment(repo, draft.item, draft.attachment);
-      await repo.saveItem(item.copyWith(isbn13: item.isbn13 ?? entry.isbn13));
+      await repo.saveItem(
+        await _emptyCopy(repo, item, metadata, ownership, entry.isbn13) ??
+            item.copyWith(isbn13: item.isbn13 ?? entry.isbn13),
+      );
       added++;
     }
     await queue.remove(entry.id);
   }
   return added;
+}
+
+/// The copy of [item]'s volume added earlier without ISBN (grid, range),
+/// given [isbn13] and its empty fields filled from [metadata], as in the
+/// store mode; null when there is none (a new copy is created).
+Future<Item?> _emptyCopy(
+  CollectionRepository repo,
+  Item item,
+  MetadataResult metadata,
+  Ownership ownership,
+  String isbn13,
+) async {
+  final seriesId = item.seriesId;
+  if (seriesId == null) return null;
+  final empty = copiesOfVolume(
+    await repo.listSeriesItems(seriesId),
+    item.volumeNumber,
+  ).where((i) => i.isbn13 == null && i.ownership == ownership).firstOrNull;
+  if (empty == null) return null;
+  final series = await repo.getSeries(seriesId);
+  return fillBlanks(
+    empty.copyWith(isbn13: isbn13),
+    metadata,
+    seriesTitle: series?.title ?? item.title,
+  );
 }

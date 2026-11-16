@@ -32,7 +32,7 @@ class VolumeListView extends StatelessWidget {
       children: [
         for (final slot in grid.slots)
           ListTile(
-            key: ValueKey('volumeRow-${slot.label}'),
+            key: ValueKey('volumeRow-${slot.item?.id ?? slot.label}'),
             contentPadding: EdgeInsets.zero,
             leading: CoverImage(
               url: slot.item?.coverUrl,

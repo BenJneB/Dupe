@@ -4,7 +4,9 @@ import 'dart:typed_data';
 import 'package:dupe/app/router.dart';
 import 'package:dupe/core/database/database_provider.dart';
 import 'package:dupe/features/backup/data/file_io.dart';
+import 'package:dupe/features/collection/data/collection_repository.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
+import 'package:dupe/features/collection/domain/item.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -85,6 +87,39 @@ void main() {
     expect(result.items, hasLength(2));
   });
 
+  testWidgets('CSV import failing midway: reported, button usable again', (
+    tester,
+  ) async {
+    const csv = 'Title\nDune\n';
+    final files = FakeFileIo()
+      ..toOpen = (name: 'a.csv', bytes: Uint8List.fromList(utf8.encode(csv)));
+    await pumpApp(
+      tester,
+      size: desktopSize,
+      overrides: [
+        fileIoProvider.overrideWithValue(files),
+        collectionRepositoryProvider.overrideWith(
+          (ref) => _FailingRepository(
+            ref.watch(appDatabaseProvider),
+            now: ref.watch(clockProvider),
+            newId: ref.watch(idGeneratorProvider),
+          ),
+        ),
+      ],
+    );
+    await openSettings(tester);
+
+    await tapTile(tester, 'importCsv');
+    await tester.tap(find.byKey(const Key('csvImportButton')));
+    await tester.pumpAndSettle();
+
+    expect(find.textContaining('Import interrompu'), findsOneWidget);
+    final button = tester.widget<ButtonStyleButton>(
+      find.byKey(const Key('csvImportButton')),
+    );
+    expect(button.onPressed, isNotNull);
+  });
+
   testWidgets('dark mode can be forced and is remembered', (tester) async {
     final db = await pumpApp(tester, size: desktopSize);
     await openSettings(tester);
@@ -114,4 +149,12 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byType(LicensePage), findsOneWidget);
   });
+}
+
+class _FailingRepository extends CollectionRepository {
+  new(super._db, {required super.now, required super.newId});
+
+  /// A SQLite failure midway.
+  @override
+  Future<void> saveItem(Item item) async => throw StateError('disk full');
 }

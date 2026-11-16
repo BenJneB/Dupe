@@ -58,12 +58,22 @@ class _CsvImportScreenState extends ConsumerState<CsvImportScreen> {
       if (mounted) setState(() => _busy = false);
       return;
     }
-    final report = await importCsvRows(
-      ref.read(collectionRepositoryProvider),
-      _rows,
-      _mapping,
-      (type: _type, ownership: _ownership),
-    );
+    final ImportReport report;
+    try {
+      report = await importCsvRows(
+        ref.read(collectionRepositoryProvider),
+        _rows,
+        _mapping,
+        (type: _type, ownership: _ownership),
+      );
+    } on Object catch (e, stack) {
+      final text = reportError(l10n, 'backup', e, stack);
+      messenger.showSnackBar(
+        SnackBar(content: Text(l10n.csvImportFailed(text))),
+      );
+      if (mounted) setState(() => _busy = false);
+      return;
+    }
     messenger.showSnackBar(
       SnackBar(
         duration: const Duration(seconds: 6),
