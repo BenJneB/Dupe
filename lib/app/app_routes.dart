@@ -18,6 +18,16 @@ abstract final class AppRoutes {
   static const wishlistShare = '/plus/envies/partager';
   static const loans = '/plus/prets';
   static const stats = '/plus/statistiques';
+  static const quality = '/plus/qualite';
+
+  /// Items (or series) of one quality issue (`QualityIssue.name`).
+  static String qualityList(String issue) => '$quality/liste/$issue';
+
+  /// Scan to give ISBNs: every owned item without one, or only [itemId].
+  static String isbnCompletion({String? itemId}) => Uri(
+    path: '$quality/isbn',
+    queryParameters: {'ouvrage': ?itemId},
+  ).toString();
   static const settings = '/plus/parametres';
   static const csvImport = '/plus/parametres/import-csv';
   static const autoBackups = '/plus/parametres/sauvegardes';

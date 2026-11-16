@@ -31,6 +31,13 @@ class MoreScreen extends StatelessWidget {
             onTap: () => context.go(AppRoutes.stats),
           ),
           ListTile(
+            key: const Key('moreQuality'),
+            leading: const Icon(Icons.fact_check_outlined),
+            title: Text(l10n.qualityTitle),
+            subtitle: Text(l10n.qualitySubtitle),
+            onTap: () => context.go(AppRoutes.quality),
+          ),
+          ListTile(
             leading: const Icon(Icons.settings_outlined),
             title: Text(l10n.moreSettings),
             subtitle: Text(l10n.moreSettingsSubtitle),

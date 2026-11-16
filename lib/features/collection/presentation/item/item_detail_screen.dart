@@ -171,6 +171,16 @@ class _ItemDetailView extends ConsumerWidget {
                       ),
                       label: Text(item.ownership.label(l10n)),
                     ),
+                    if (item.ownership == Ownership.possede &&
+                        (item.isbn13 ?? '').trim().isEmpty)
+                      ActionChip(
+                        key: const Key('missingIsbnChip'),
+                        avatar: const Icon(Icons.qr_code_2, size: 18),
+                        label: Text(l10n.missingIsbn),
+                        onPressed: () => context.push(
+                          AppRoutes.isbnCompletion(itemId: item.id),
+                        ),
+                      ),
                     if (item.ownership == Ownership.envie)
                       TextButton.icon(
                         key: const Key('boughtButton'),

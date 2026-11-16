@@ -51,7 +51,7 @@ deux fonctions tournées vers la suite de la collection : être prévenu des nou
 |---|---|---|---|---|---|
 | 1 | 23 | Séries : nombre de tomes, tomes suivants, vue liste | ✅ fait (2026-11-15/16) | oui | en partie (`U-*`) |
 | 2 | 24 | Titres des tomes (champ dédié, vue pastilles) | ✅ fait (2026-11-16) | oui (+ Supabase local) | non (`I-*`) |
-| 3 | 22 | Qualité des données et ISBN manquants | à faire | — | — |
+| 3 | 22 | Qualité des données et ISBN manquants | ✅ fait (2026-11-16) | oui | non (`C-*`) |
 | 4 | 25 | Éditions et couvertures | à faire | — | — |
 | 5 | 29 | Photos : redressement et recadrage | à faire | — | — |
 | 6 | 30 | Dédicaces | à faire | — | — |
@@ -86,6 +86,29 @@ la recette de la v4, et la fin de la recette de la v3 (26) juste avant eux. L'or
 
 *Critère : depuis l'écran Qualité, j'attribue un ISBN à dix ouvrages à la suite en les scannant, et le compteur
 « sans ISBN » baisse d'autant.*
+
+**Bilan (2026-11-16)**
+- **Réalisé** :
+  - Feature `quality/` : `computeQuality` (`domain/collection_quality.dart`, `QualityIssue`) — possédés sans ISBN
+    (les envies n'en ont pas besoin), sans couverture, tomes de série sans numéro, livres isolés qui ressemblent à un
+    tome (marqueur « Tome N » via `titleHasVolume`, ou titre d'une série du même type), séries sans total ;
+    `collectionQualityProvider` en direct (flux drift items + séries).
+  - Plus → **« Qualité de la collection »** (`quality_screen.dart`) : compteurs, chaque ligne ouvre sa liste
+    (`quality_list_screen.dart`, chaque livre ou série ouvre sa fiche) ; « Compléter par scan » ; réglage
+    « Signaler les ISBN manquants dans les séries » (point sur la pastille, désactivé par défaut,
+    `MissingIsbnInGrid`) ; actions automatiques réunies : couvertures (`MissingCoversTile`, extrait des Paramètres),
+    titres des tomes, nombre de tomes.
+  - **Complétion par scan** (`isbn_completion_screen.dart`) : livres un par un (caméra sur Android, champ / douchette
+    sur PC), « Passer », progression ; `IsbnAssignment` : ISBN déjà porté par un autre livre → refus + « Voir ce
+    livre » ; titre trouvé en ligne incohérent (`titlesFit` : égalité ou inclusion de titres normalisés, série
+    comprise) → confirmation ; sources injoignables → ISBN gardé sans contrôle de titre ; option « Compléter aussi
+    les infos manquantes » (`fillBlanks`, comme « ISBN mémorisé » du mode Magasin, titre de tome compris).
+  - Fiche d'un livre possédé sans ISBN : puce « ISBN manquant · scanner » qui ouvre la complétion pour ce seul livre.
+  - Tests : `collection_quality_test.dart` (calcul, contrôles, attribution), `quality_screens_test.dart` (parcours
+    complet : 3 → 1 « sans ISBN », doublon, titre différent, « Passer » ; puce de la fiche ; point sur la pastille).
+- **Écarts** : écran placé dans Plus (pas dans Statistiques ni Paramètres) ; le contrôle de cohérence ne fait
+  qu'une comparaison de titres normalisés (pas d'auteur ni d'éditeur).
+- **Non vérifié** : critère des dix livres scannés à la suite sur le téléphone (`C-01` à `C-04`).
 
 ### Phase 23 — Séries : nombre de tomes, tomes suivants, titres des tomes
 - **« Vérifier le nombre de tomes »** (sur une série, ou en lot dans Paramètres) : recherche AniList (manga) /

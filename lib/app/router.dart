@@ -16,6 +16,10 @@ import 'package:dupe/features/collection/presentation/series/series_form_screen.
 import 'package:dupe/features/collection/presentation/volume_counts/volume_counts_screen.dart';
 import 'package:dupe/features/loans/presentation/loans_screen.dart';
 import 'package:dupe/features/more/presentation/more_screen.dart';
+import 'package:dupe/features/quality/domain/collection_quality.dart';
+import 'package:dupe/features/quality/presentation/isbn_completion_screen.dart';
+import 'package:dupe/features/quality/presentation/quality_list_screen.dart';
+import 'package:dupe/features/quality/presentation/quality_screen.dart';
 import 'package:dupe/features/scan/presentation/burst/scan_review_screen.dart';
 import 'package:dupe/features/scan/presentation/scan_screen.dart';
 import 'package:dupe/features/search/presentation/online_search/online_search_screen.dart';
@@ -68,6 +72,26 @@ GoRouter appRouter(Ref ref) {
                   GoRoute(
                     path: 'statistiques',
                     builder: (context, state) => const StatsScreen(),
+                  ),
+                  GoRoute(
+                    path: 'qualite',
+                    builder: (context, state) => const QualityScreen(),
+                    routes: [
+                      GoRoute(
+                        path: 'liste/:issue',
+                        builder: (context, state) => QualityListScreen(
+                          issue: QualityIssue.values.byName(
+                            state.pathParameters['issue']!,
+                          ),
+                        ),
+                      ),
+                      GoRoute(
+                        path: 'isbn',
+                        builder: (context, state) => IsbnCompletionScreen(
+                          itemId: state.uri.queryParameters['ouvrage'],
+                        ),
+                      ),
+                    ],
                   ),
                   GoRoute(
                     path: 'parametres',

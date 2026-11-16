@@ -477,6 +477,99 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String get qualityTitle => 'Qualité de la collection';
+
+  @override
+  String get qualitySubtitle => 'ISBN, couvertures, numéros de tome manquants…';
+
+  @override
+  String get qualityHelp =>
+      'Ce qui manque dans ta collection. Touche une ligne pour voir les livres concernés et les corriger.';
+
+  @override
+  String get qualityNoIsbn => 'Livres possédés sans ISBN';
+
+  @override
+  String get qualityNoCover => 'Livres sans couverture';
+
+  @override
+  String get qualityNoVolumeNumber => 'Tomes sans numéro dans une série';
+
+  @override
+  String get qualityLooksLikeVolume =>
+      'Livres isolés qui ressemblent à un tome de série';
+
+  @override
+  String get qualitySeriesWithoutTotal => 'Séries sans nombre total de tomes';
+
+  @override
+  String get qualityAutomatic => 'Compléter automatiquement';
+
+  @override
+  String get missingIsbnInGrid => 'Signaler les ISBN manquants dans les séries';
+
+  @override
+  String get missingIsbnInGridHelp =>
+      'Un point sur la pastille des tomes possédés sans ISBN';
+
+  @override
+  String get missingIsbn => 'ISBN manquant · scanner';
+
+  @override
+  String get isbnCompletionTitle => 'Compléter les ISBN';
+
+  @override
+  String get isbnCompletionStart => 'Compléter par scan';
+
+  @override
+  String isbnCompletionProgress(int position, int total) {
+    return 'Livre $position sur $total';
+  }
+
+  @override
+  String get isbnCompletionScanThis =>
+      'Scanne le code-barres de ce livre (ou tape son ISBN).';
+
+  @override
+  String get isbnCompletionAlsoFill => 'Compléter aussi les infos manquantes';
+
+  @override
+  String get isbnCompletionSkip => 'Passer';
+
+  @override
+  String isbnCompletionDuplicate(String title) {
+    return 'Cet ISBN est déjà celui de « $title ».';
+  }
+
+  @override
+  String get isbnCompletionSeeDuplicate => 'Voir ce livre';
+
+  @override
+  String isbnCompletionMismatch(String found, String mine) {
+    return 'Le livre trouvé en ligne est « $found ». Est-ce bien « $mine » ?';
+  }
+
+  @override
+  String get isbnCompletionAssignAnyway => 'Oui, garder cet ISBN';
+
+  @override
+  String isbnCompletionSaved(String title) {
+    return 'ISBN enregistré pour « $title »';
+  }
+
+  @override
+  String isbnCompletionDone(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Terminé : $count ISBN enregistrés.',
+      one: 'Terminé : 1 ISBN enregistré.',
+      zero: 'Terminé : aucun ISBN enregistré.',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get seeSeries => 'Voir la série';
 
   @override

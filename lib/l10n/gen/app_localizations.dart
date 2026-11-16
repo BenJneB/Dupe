@@ -754,6 +754,150 @@ abstract class AppLocalizations {
   /// **'{found} titre(s) ajouté(s) · {total} tomes vérifiés'**
   String volumeTitlesDone(int found, int total);
 
+  /// No description provided for @qualityTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Qualité de la collection'**
+  String get qualityTitle;
+
+  /// No description provided for @qualitySubtitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'ISBN, couvertures, numéros de tome manquants…'**
+  String get qualitySubtitle;
+
+  /// No description provided for @qualityHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce qui manque dans ta collection. Touche une ligne pour voir les livres concernés et les corriger.'**
+  String get qualityHelp;
+
+  /// No description provided for @qualityNoIsbn.
+  ///
+  /// In fr, this message translates to:
+  /// **'Livres possédés sans ISBN'**
+  String get qualityNoIsbn;
+
+  /// No description provided for @qualityNoCover.
+  ///
+  /// In fr, this message translates to:
+  /// **'Livres sans couverture'**
+  String get qualityNoCover;
+
+  /// No description provided for @qualityNoVolumeNumber.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tomes sans numéro dans une série'**
+  String get qualityNoVolumeNumber;
+
+  /// No description provided for @qualityLooksLikeVolume.
+  ///
+  /// In fr, this message translates to:
+  /// **'Livres isolés qui ressemblent à un tome de série'**
+  String get qualityLooksLikeVolume;
+
+  /// No description provided for @qualitySeriesWithoutTotal.
+  ///
+  /// In fr, this message translates to:
+  /// **'Séries sans nombre total de tomes'**
+  String get qualitySeriesWithoutTotal;
+
+  /// No description provided for @qualityAutomatic.
+  ///
+  /// In fr, this message translates to:
+  /// **'Compléter automatiquement'**
+  String get qualityAutomatic;
+
+  /// No description provided for @missingIsbnInGrid.
+  ///
+  /// In fr, this message translates to:
+  /// **'Signaler les ISBN manquants dans les séries'**
+  String get missingIsbnInGrid;
+
+  /// No description provided for @missingIsbnInGridHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Un point sur la pastille des tomes possédés sans ISBN'**
+  String get missingIsbnInGridHelp;
+
+  /// No description provided for @missingIsbn.
+  ///
+  /// In fr, this message translates to:
+  /// **'ISBN manquant · scanner'**
+  String get missingIsbn;
+
+  /// No description provided for @isbnCompletionTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Compléter les ISBN'**
+  String get isbnCompletionTitle;
+
+  /// No description provided for @isbnCompletionStart.
+  ///
+  /// In fr, this message translates to:
+  /// **'Compléter par scan'**
+  String get isbnCompletionStart;
+
+  /// No description provided for @isbnCompletionProgress.
+  ///
+  /// In fr, this message translates to:
+  /// **'Livre {position} sur {total}'**
+  String isbnCompletionProgress(int position, int total);
+
+  /// No description provided for @isbnCompletionScanThis.
+  ///
+  /// In fr, this message translates to:
+  /// **'Scanne le code-barres de ce livre (ou tape son ISBN).'**
+  String get isbnCompletionScanThis;
+
+  /// No description provided for @isbnCompletionAlsoFill.
+  ///
+  /// In fr, this message translates to:
+  /// **'Compléter aussi les infos manquantes'**
+  String get isbnCompletionAlsoFill;
+
+  /// No description provided for @isbnCompletionSkip.
+  ///
+  /// In fr, this message translates to:
+  /// **'Passer'**
+  String get isbnCompletionSkip;
+
+  /// No description provided for @isbnCompletionDuplicate.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cet ISBN est déjà celui de « {title} ».'**
+  String isbnCompletionDuplicate(String title);
+
+  /// No description provided for @isbnCompletionSeeDuplicate.
+  ///
+  /// In fr, this message translates to:
+  /// **'Voir ce livre'**
+  String get isbnCompletionSeeDuplicate;
+
+  /// No description provided for @isbnCompletionMismatch.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le livre trouvé en ligne est « {found} ». Est-ce bien « {mine} » ?'**
+  String isbnCompletionMismatch(String found, String mine);
+
+  /// No description provided for @isbnCompletionAssignAnyway.
+  ///
+  /// In fr, this message translates to:
+  /// **'Oui, garder cet ISBN'**
+  String get isbnCompletionAssignAnyway;
+
+  /// No description provided for @isbnCompletionSaved.
+  ///
+  /// In fr, this message translates to:
+  /// **'ISBN enregistré pour « {title} »'**
+  String isbnCompletionSaved(String title);
+
+  /// No description provided for @isbnCompletionDone.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =0{Terminé : aucun ISBN enregistré.} =1{Terminé : 1 ISBN enregistré.} other{Terminé : {count} ISBN enregistrés.}}'**
+  String isbnCompletionDone(int count);
+
   /// No description provided for @seeSeries.
   ///
   /// In fr, this message translates to:
