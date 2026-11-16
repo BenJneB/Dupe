@@ -6,6 +6,7 @@ extension ImportFieldLabel on ImportField {
     ImportField.title => l10n.importFieldTitle,
     ImportField.series => l10n.importFieldSeries,
     ImportField.volume => l10n.importFieldVolume,
+    ImportField.volumeTitle => l10n.fieldVolumeTitle,
     ImportField.type => l10n.importFieldType,
     ImportField.authors => l10n.importFieldAuthors,
     ImportField.publisher => l10n.importFieldPublisher,

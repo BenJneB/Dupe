@@ -20,6 +20,9 @@ class ItemsTable extends Table with SyncedColumns {
 
   /// Text to handle "1.5", "HS 2", "Annual 1".
   TextColumn get volumeNumber => text().nullable()();
+
+  /// The volume's own title (schema v3).
+  TextColumn get volumeTitle => text().nullable()();
   TextColumn get isbn13 => text().nullable()();
   TextColumn get upc => text().nullable()();
   TextColumn get authors => text()

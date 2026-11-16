@@ -1,5 +1,6 @@
 import 'package:dupe/features/collection/domain/enums.dart';
 import 'package:dupe/features/collection/domain/item.dart';
+import 'package:dupe/features/collection/domain/series_matching.dart';
 import 'package:dupe/features/collection/domain/volume_number.dart';
 
 /// Status of one slot (pastille) in the series volume grid.
@@ -197,5 +198,19 @@ extension VolumeGridCover on VolumeGrid {
       }
     }
     return null;
+  }
+}
+
+extension VolumeSlotTitle on VolumeSlot {
+  /// The volume's own title: its `volumeTitle`, else (volumes added before
+  /// that field) its title when it is not the series title.
+  String? ownTitle(String seriesTitle) {
+    for (final copy in copies) {
+      final own = copy.volumeTitle?.trim();
+      if (own != null && own.isNotEmpty) return own;
+    }
+    final title = item?.title.trim();
+    if (title == null || title.isEmpty) return null;
+    return normalizeTitle(title) == normalizeTitle(seriesTitle) ? null : title;
   }
 }

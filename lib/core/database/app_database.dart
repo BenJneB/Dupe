@@ -45,7 +45,7 @@ class AppDatabase extends $AppDatabase {
       AppDatabase(NativeDatabase.memory(setup: setupConnection));
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -56,6 +56,10 @@ class AppDatabase extends $AppDatabase {
         await m.createTable(appSettingsTable);
         await m.createTable(metadataCacheTable);
         await m.createTable(scanQueueTable);
+      }
+      if (from < 3) {
+        // v3: the volume's own title (PLAN_V4 phase 24).
+        await m.addColumn(itemsTable, itemsTable.volumeTitle);
       }
     },
     beforeOpen: (details) async {

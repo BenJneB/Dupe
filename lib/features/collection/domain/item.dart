@@ -18,6 +18,10 @@ abstract class Item with _$Item {
     @Default(true) bool syncPending,
     String? seriesId,
     String? volumeNumber,
+
+    /// The volume's own title (« Les renforts maléfiques »), when the sources
+    /// give one besides the series title (PLAN_V4 phase 24).
+    String? volumeTitle,
     String? isbn13,
     String? upc,
     @Default(<String>[]) List<String> authors,

@@ -1,6 +1,7 @@
 import 'package:dupe/app/router.dart';
 import 'package:dupe/core/metadata/api_keys.dart';
 import 'package:dupe/core/metadata/source_settings.dart';
+import 'package:dupe/features/collection/presentation/volume_titles/volume_titles_tile.dart';
 import 'package:dupe/features/settings/presentation/api_key_dialog.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -64,6 +65,7 @@ class SourcesSection extends ConsumerWidget {
           subtitle: Text(l10n.volumeCountsTileHelp),
           onTap: () => context.push(AppRoutes.volumeCounts),
         ),
+        const VolumeTitlesTile(),
       ],
     );
   }

@@ -153,6 +153,13 @@ class _ItemDetailView extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(title, style: theme.textTheme.titleLarge),
+                    if (item.volumeTitle case final own?
+                        when own.trim().isNotEmpty)
+                      Text(
+                        own,
+                        key: const Key('itemVolumeTitle'),
+                        style: theme.textTheme.titleMedium,
+                      ),
                     AuthorLinks(type: item.type, authors: item.authors),
                     const SizedBox(height: 8),
                     Chip(

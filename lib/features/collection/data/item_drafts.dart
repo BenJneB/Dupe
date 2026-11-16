@@ -62,7 +62,13 @@ Future<ItemDraft?> loadItemDraft(
     volumeNumber: volumeNumber,
   );
   return (
-    item: prefill == null ? draft : applyMetadata(draft, prefill),
+    item: prefill == null
+        ? draft
+        : applyMetadata(
+            draft,
+            prefill,
+            seriesTitle: series?.title ?? attachment.newSeriesTitle,
+          ),
     attachment: attachment,
   );
 }

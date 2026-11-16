@@ -12,10 +12,14 @@ class VolumeGridView extends StatelessWidget {
     required this.grid,
     required this.onTap,
     required this.onLongPress,
+    this.seriesTitle,
     super.key,
   });
 
   final VolumeGrid grid;
+
+  /// To show each volume's own title under its pastille (phase 24).
+  final String? seriesTitle;
   final ValueChanged<VolumeSlot> onTap;
   final ValueChanged<VolumeSlot> onLongPress;
 
@@ -23,6 +27,13 @@ class VolumeGridView extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final scheme = Theme.of(context).colorScheme;
+    final series = seriesTitle;
+    final titles = {
+      for (final slot in grid.slots)
+        if (series != null) slot: slot.ownTitle(series),
+    };
+    // Same column width for every volume once one has a title.
+    final titled = titles.values.any((t) => t != null);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -61,21 +72,48 @@ class VolumeGridView extends StatelessWidget {
           runSpacing: 8,
           children: [
             for (final slot in grid.slots)
-              _Pastille(
-                slot: slot,
-                semanticLabel: l10n.slotSemantics(
-                  slot.label,
-                  [
-                    slot.status.label(l10n),
-                    if (slot.isRead) ReadingStatus.lu.label(l10n),
-                  ].join(', '),
+              if (!titled)
+                _pastille(context, slot)
+              else
+                SizedBox(
+                  width: 76,
+                  child: Column(
+                    children: [
+                      _pastille(context, slot),
+                      if (titles[slot] case final title?)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 2),
+                          child: Text(
+                            title,
+                            key: ValueKey('volumeTitle-${slot.label}'),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context).textTheme.labelSmall,
+                          ),
+                        ),
+                    ],
+                  ),
                 ),
-                onTap: () => onTap(slot),
-                onLongPress: () => onLongPress(slot),
-              ),
           ],
         ),
       ],
+    );
+  }
+
+  Widget _pastille(BuildContext context, VolumeSlot slot) {
+    final l10n = AppLocalizations.of(context);
+    return _Pastille(
+      slot: slot,
+      semanticLabel: l10n.slotSemantics(
+        slot.label,
+        [
+          slot.status.label(l10n),
+          if (slot.isRead) ReadingStatus.lu.label(l10n),
+        ].join(', '),
+      ),
+      onTap: () => onTap(slot),
+      onLongPress: () => onLongPress(slot),
     );
   }
 }

@@ -83,6 +83,12 @@ class ItemGeneralFields extends StatelessWidget {
         ),
         ItemTextInput(
           c,
+          ItemTextField.volumeTitle,
+          l10n.fieldVolumeTitle,
+          helper: l10n.fieldVolumeTitleHelper,
+        ),
+        ItemTextInput(
+          c,
           ItemTextField.authors,
           l10n.fieldAuthors,
           helper: l10n.commaSeparated,
