@@ -54,19 +54,22 @@ deux fonctions tournées vers la suite de la collection : être prévenu des nou
 | 3 | 22 | Qualité des données et ISBN manquants | ✅ fait (2026-11-16) | oui | non (`C-*`) |
 | 4 | 25 | Éditions et couvertures | ✅ fait (2026-11-16) | oui | non (`X-*`) |
 | 5 | 29 | Photos : redressement et recadrage | ✅ fait (2026-11-16) | oui | non (`P-*`) |
-| 6 | 30 | Dédicaces | à faire | — | — |
-| 7 | 31 | Nouvelles sources de métadonnées | à faire | — | — |
-| 8 | 32 | Alertes de nouveautés | à faire | — | — |
-| 9 | 33 | Recommandations | à faire | — | — |
+| 6 | 30 | Recommandations | ✅ fait (2026-11-16) | oui | non (`G-*`) |
+| 7 | 31 | Dédicaces | à faire | — | — |
+| 8 | 32 | Nouvelles sources de métadonnées | à faire | — | — |
+| 9 | 33 | Alertes de nouveautés | à faire | — | — |
 | 10 | 34 | Compte : mot de passe oublié, liens de confirmation | à faire | — | — |
 | 11 | 26 | Fin de la recette de la v3 (reprise de la phase 21) | à faire, juste avant les livres numériques | — | — |
 | 12 | 27 | Livres numériques (1/2) : support numérique, import Calibre | à faire | — | — |
 | 13 | 28 | Livres numériques (2/2) : dossier EPUB/CBZ, Kobo | à faire | — | — |
 | 14 | 35 | Recette de la v4 (dont mode rafale) | à faire | — | — |
 
-L'ordre compte : 22 est rapide et utile tout de suite ; 29 sert à 30 ; 31 fournit les données dont 32 et 33 ont
-besoin. **Décision de l'utilisateur (2026-11-16)** : les livres numériques (27-28) passent à la fin, juste avant
-la recette de la v4, et la fin de la recette de la v3 (26) juste avant eux. L'ordre reste ajustable.
+L'ordre compte : 22 est rapide et utile tout de suite ; 29 sert à 31 ; 32 fournit les données dont 33 a besoin.
+**Décisions de l'utilisateur (2026-11-16)** : les livres numériques (27-28) passent à la fin, juste avant la recette
+de la v4, et la fin de la recette de la v3 (26) juste avant eux ; les **recommandations remontent en phase 30**
+(avant les dédicaces, renumérotées 31, les sources 32 et les alertes 33). Conséquence : elles partent des sources
+actuelles (AniList, BnF, Google Books, Open Library) ; Wikidata et MangaUpdates (phase 32) les enrichiront
+ensuite. L'ordre reste ajustable.
 
 ## 4. Phases
 
@@ -322,7 +325,45 @@ en moins de trois appuis ; l'image envoyée ne contient aucune donnée EXIF.*
   isolé hors de la série. `ScanQueueWorker` : si une source a échoué et que le résultat n'a **ni série ni numéro**,
   l'entrée passe « échec » (bouton Réessayer de la revue) au lieu d'être importée (`scan_queue_worker_test.dart`).
 
-### Phase 30 — Dédicaces
+### Phase 30 — Recommandations
+Calcul local et explicable, sans apprentissage automatique ni service externe d'IA.
+
+- **Profil** déduit de la collection : auteurs, éditeurs/collections, genres et tags (AniList, sujets Open
+  Library ; MangaUpdates après la phase 32), pondérés par le nombre d'ouvrages, le statut lu et la note.
+- **Familles de suggestions**, chacune avec sa raison affichée (« Parce que tu as 12 albums de Larcenet ») :
+  - du même auteur (par nom d'auteur avec les sources actuelles ; enrichi par les identifiants d'auteur de la
+    phase 32 une fois celle-ci faite) ;
+  - recommandations communautaires d'AniList pour les mangas bien notés (MangaUpdates ajouté en phase 32) ;
+  - même collection d'éditeur ;
+  - suites et séries liées (AniList ; Wikidata après la phase 32).
+- **Classement** : score simple et documenté (poids du profil, popularité modérée, diversité des familles),
+  exclusion de ce qui est possédé, en envie ou déjà écarté.
+- **Retour utilisateur** : « Pas intéressé » (table synchronisée `recommendation_feedback`) qui écarte la
+  suggestion et réduit le poids de sa raison ; « Ajouter aux envies » en un appui.
+- **Calcul** en arrière-plan, résultats mis en cache une semaine, rafraîchissement manuel ; écran
+  « Suggestions » (Plus) avec filtre par type.
+- Tests : scoring et exclusions sur un jeu de données construit à la main, raisons affichées.
+
+*Critère : sur la vraie collection, au moins la moitié des dix premières suggestions paraissent pertinentes à
+l'utilisateur, et chacune affiche une raison compréhensible.*
+
+
+**Bilan (2026-11-16)**
+- **Réalisé** : `features/recommendations/` — profil local (`taste_profile.dart` : poids lu/note/envie), familles
+  « même auteur » (BnF `searchByAuthor`, 6 auteurs les plus lourds), « communauté » et « liée » (AniList
+  `neighbours`, 6 séries manga ; homonyme écarté si ni titre ni auteur commun), score documenté dans
+  `suggestion_ranking.dart` (famille, popularité modérée, ×0,5 par « Pas intéressé » de même raison, diversité),
+  exclusions (possédé, envie, synonymes AniList, écarté). Table synchronisée `recommendation_feedback` (schéma
+  **v4** + migration Supabase `20261116180000_recommendation_feedback.sql`). Écran Plus → Suggestions (raison,
+  filtre par type, « Ajouter aux envies » = tome 1 d'une série non suivie ou livre, « Pas intéressé »,
+  Recalculer), cache local 7 jours. Clients BnF/AniList partagés (`bnfSourceProvider`, `anilistSourceProvider`).
+  Tests : fixtures réelles (`anilist/neighbours_*.json`, `bnf/author_larcenet.xml`), classement, moteur, écran.
+- **Écarts** : famille « même collection d'éditeur » non faite (la collection n'est pas stockée sur les ouvrages) ;
+  titres AniList en anglais/rōmaji ; Wikidata/MangaUpdates en phase 32.
+- **Non vérifié** : pertinence sur la vraie collection (`G-01`), synchro des refus (`G-02`) ; migration Supabase
+  **à appliquer avant d'installer**.
+
+### Phase 31 — Dédicaces
 - **Schéma** : sur `items`, `is_signed` (bool), `signed_by` (texte, pré-rempli avec les auteurs de l'ouvrage),
   `signed_on` (date), `signed_place` (festival, librairie…), `signing_note` (texte de la dédicace, à qui).
 - **Photos multiples** : nouvelle table synchronisée `item_photos` (`item_id`, `kind` : dédicace | autre,
@@ -339,7 +380,8 @@ en moins de trois appuis ; l'image envoyée ne contient aucune donnée EXIF.*
 *Critère : je coche un tome comme dédicacé, j'ajoute deux photos sur le téléphone, et je les retrouve sur le PC
 après synchro ; l'archive complète restaure les photos sur un appareil vierge.*
 
-### Phase 31 — Nouvelles sources de métadonnées
+
+### Phase 32 — Nouvelles sources de métadonnées
 **Avant de coder** : produire un bilan à partir du journal et de la base (par type : part des ouvrages sans
 couverture, sans numéro, sans série, sans ISBN, sources en échec) et le présenter à l'utilisateur pour
 prioriser.
@@ -347,7 +389,7 @@ prioriser.
 Sources candidates (vérifier documentation et conditions d'utilisation actuelles) :
 - **Wikidata** (SPARQL, sans clé, User-Agent identifiant l'appli exigé) : ISBN → œuvre, série et numéro
   d'ordre, suite/précédent, auteurs avec identifiants stables. Sert le rattachement aux séries et prépare les
-  phases 32-33 (œuvres d'un auteur).
+  alertes (phase 33) et enrichit les recommandations (phase 30) : œuvres d'un auteur.
 - **MangaDex** (sans clé) : couvertures par tome, parfois de l'édition française ; recherche par titre de
   série puis numéro, avec préférence pour la langue `fr`.
 - **MangaUpdates** (API publique v1, sans clé) : nombre de tomes, statut, recommandations ; complète AniList
@@ -363,7 +405,8 @@ jour dans `defaultPriorities`, fusion sans écraser une donnée plus fiable (BnF
 *Critère : sur un échantillon fixé des ouvrages sans couverture ou sans numéro (fixtures), le taux de
 complétion mesuré avant/après progresse, chiffres notés dans le bilan de phase.*
 
-### Phase 32 — Alertes de nouveautés
+
+### Phase 33 — Alertes de nouveautés
 **Limite assumée** : aucune source fiable ne liste les sorties françaises *à venir*. L'alerte signale une
 nouveauté **dès qu'elle apparaît** dans une source (souvent à la parution, parfois un peu avant via Google
 Books), pas des mois à l'avance. Exception : les comics US, dont Metron connaît les dates de sortie.
@@ -387,27 +430,6 @@ Books), pas des mois à l'avance. Exception : les comics US, dont Metron connaî
 *Critère : avec une série dont je possède les tomes 1 à N-1 et dont le tome N existe à la BnF (fixtures), une
 alerte apparaît une seule fois, sur les deux appareils, et part en envie en un appui.*
 
-### Phase 33 — Recommandations
-Calcul local et explicable, sans apprentissage automatique ni service externe d'IA.
-
-- **Profil** déduit de la collection : auteurs, éditeurs/collections, genres et tags (AniList, MangaUpdates,
-  sujets Open Library), pondérés par le nombre d'ouvrages, le statut lu et la note.
-- **Familles de suggestions**, chacune avec sa raison affichée (« Parce que tu as 12 albums de Larcenet ») :
-  - du même auteur (via les identifiants d'auteur de la phase 31) ;
-  - recommandations communautaires d'AniList et MangaUpdates pour les mangas bien notés ;
-  - même collection d'éditeur ;
-  - suites et séries liées (Wikidata).
-- **Classement** : score simple et documenté (poids du profil, popularité modérée, diversité des familles),
-  exclusion de ce qui est possédé, en envie ou déjà écarté.
-- **Retour utilisateur** : « Pas intéressé » (table synchronisée `recommendation_feedback`) qui écarte la
-  suggestion et réduit le poids de sa raison ; « Ajouter aux envies » en un appui.
-- **Calcul** en arrière-plan, résultats mis en cache une semaine, rafraîchissement manuel ; écran
-  « Suggestions » (Plus) avec filtre par type.
-- Tests : scoring et exclusions sur un jeu de données construit à la main, raisons affichées.
-
-*Critère : sur la vraie collection, au moins la moitié des dix premières suggestions paraissent pertinentes à
-l'utilisateur, et chacune affiche une raison compréhensible.*
-
 ### Phase 34 — Compte : mot de passe oublié, liens de confirmation
 - **Mot de passe oublié sans être connecté** : lien « Mot de passe oublié ? » sur l'écran de connexion
   (email de réinitialisation Supabase), au lieu de passer par Paramètres → Mot de passe une fois connecté.
@@ -423,10 +445,10 @@ Pilotée par l'utilisateur, comme la phase 21 : tests manuels ajoutés par les p
 ## 5. Actions manuelles de l'utilisateur
 - **Phase 24** : appliquer la migration Supabase du titre de tome **avant** d'installer la version qui l'utilise.
 - **Phase 29** : tester sur téléphone plusieurs prises de vue (biais, faible lumière, couverture brillante).
-- **Phase 30** : tester l'archive complète sur un appareil vierge (ou une installation propre).
-- **Phase 31** : créer un compte Metron et générer un jeton ; relire le bilan avant priorisation.
-- **Phase 32** : vérifier sur Android que la tâche de fond n'est pas tuée par l'économiseur de batterie.
-- **Phase 33** : juger la pertinence des suggestions sur la vraie collection.
+- **Phase 30** : juger la pertinence des suggestions sur la vraie collection.
+- **Phase 31** : tester l'archive complète sur un appareil vierge (ou une installation propre).
+- **Phase 32** : créer un compte Metron et générer un jeton ; relire le bilan avant priorisation.
+- **Phase 33** : vérifier sur Android que la tâche de fond n'est pas tuée par l'économiseur de batterie.
 - **Phase 34** : régler *Site URL* / *Redirect URLs* du projet Supabase.
 
 ## 6. Hors périmètre

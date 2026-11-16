@@ -24,6 +24,25 @@ query ($search: String) {
   }
 }''';
 
+  static const _fields = '''
+id type format title { romaji english native } synonyms volumes status
+coverImage { large } startDate { year } siteUrl
+staff(perPage: 6, sort: RELEVANCE) { edges { role node { name { full } } } }''';
+
+  /// One manga (by id, else by title) with its community recommendations
+  /// and related works (PLAN_V4 phase 30).
+  static const neighboursQuery =
+      '''
+query (\$id: Int, \$search: String) {
+  Media(id: \$id, search: \$search, type: MANGA) {
+    $_fields
+    recommendations(sort: RATING_DESC, perPage: 15) {
+      nodes { rating mediaRecommendation { $_fields } }
+    }
+    relations { edges { relationType node { $_fields } } }
+  }
+}''';
+
   final Dio _dio;
   final RateLimiter _limiter;
 
@@ -31,19 +50,34 @@ query ($search: String) {
   SeriesSource get seriesSource => SeriesSource.anilist;
 
   @override
-  Future<List<SeriesMetadata>> searchSeries(String query) async {
+  Future<List<SeriesMetadata>> searchSeries(String query) async =>
+      parseAniListSearch(await _post(searchQuery, {'search': query}));
+
+  /// Null when AniList does not know the manga (HTTP 404).
+  Future<AniListNeighbours?> neighbours({int? id, String? title}) async {
+    try {
+      return parseAniListNeighbours(
+        await _post(neighboursQuery, {'id': ?id, 'search': ?title}),
+      );
+    } on SeriesLookupException catch (e) {
+      if (e.message == 'HTTP 404') return null;
+      rethrow;
+    }
+  }
+
+  Future<Map<String, dynamic>> _post(
+    String query,
+    Map<String, Object> variables,
+  ) async {
     try {
       final response = await _limiter.run(
         () => _dio.post<Map<String, dynamic>>(
           _endpoint,
-          data: {
-            'query': searchQuery,
-            'variables': {'search': query},
-          },
+          data: {'query': query, 'variables': variables},
           options: Options(headers: {'Accept': 'application/json'}),
         ),
       );
-      return parseAniListSearch(response.data ?? const {});
+      return response.data ?? const {};
     } on DioException catch (e) {
       final status = e.response?.statusCode;
       throw SeriesLookupException(

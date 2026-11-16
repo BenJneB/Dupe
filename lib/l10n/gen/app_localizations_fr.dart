@@ -1515,6 +1515,79 @@ class AppLocalizationsFr extends AppLocalizations {
   String get invalidEmail => 'Adresse email invalide';
 
   @override
+  String get moreSuggestions => 'Suggestions';
+
+  @override
+  String get moreSuggestionsSubtitle =>
+      'Des livres à découvrir, d’après ta collection';
+
+  @override
+  String get suggestionsTitle => 'Suggestions';
+
+  @override
+  String get suggestionsRefresh => 'Recalculer';
+
+  @override
+  String suggestionsProgress(int done, int total) {
+    return 'Recherche des suggestions… $done/$total';
+  }
+
+  @override
+  String suggestionsComputedAt(String date) {
+    return 'Calculées le $date (d’après ta collection, tes lectures et tes notes)';
+  }
+
+  @override
+  String get suggestionsFailed =>
+      'Calcul impossible (hors ligne ?) : les suggestions précédentes restent affichées.';
+
+  @override
+  String get suggestionsEmpty =>
+      'Aucune suggestion pour l’instant. Plus ta collection est riche (lus, notes), plus elles sont précises.';
+
+  @override
+  String reasonSameAuthor(int count, String author) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count livres',
+      one: '1 livre',
+    );
+    return 'Parce que tu as $_temp0 de $author';
+  }
+
+  @override
+  String reasonCommunity(String series, int votes) {
+    String _temp0 = intl.Intl.pluralLogic(
+      votes,
+      locale: localeName,
+      other: '$votes avis',
+      one: '1 avis',
+    );
+    return 'Les lecteurs de $series l’apprécient aussi ($_temp0 AniList)';
+  }
+
+  @override
+  String reasonRelated(String series) {
+    return 'Suite ou histoire liée de $series';
+  }
+
+  @override
+  String get suggestionAddWish => 'Ajouter aux envies';
+
+  @override
+  String get suggestionDismiss => 'Pas intéressé';
+
+  @override
+  String suggestionWished(String title) {
+    return '« $title » ajouté aux envies';
+  }
+
+  @override
+  String get suggestionDismissed =>
+      'Suggestion écartée : ce type de suggestion comptera moins';
+
+  @override
   String get coverPhoto => 'Photographier la couverture';
 
   @override

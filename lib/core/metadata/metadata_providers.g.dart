@@ -100,7 +100,7 @@ final class MetadataAggregatorProvider
 }
 
 String _$metadataAggregatorHash() =>
-    r'ad1762f2aba03336ffaf74e3e578d0b1ef134cc7';
+    r'0b3237d06c24241e8a14a2e70f4744fab1273119';
 
 /// The one Comic Vine client, shared by the volume lookups and the series
 /// lookups: its rate limiter (1 request/s, or Comic Vine blocks the key)
@@ -160,6 +160,106 @@ final class ComicVineSourceProvider
 
 String _$comicVineSourceHash() => r'c2803cd94b433f1f401ae97ded654510b7f7ce89';
 
+/// The one BnF client (lookups and suggestions share its rate limiter);
+/// null when the source is off.
+
+@ProviderFor(bnfSource)
+final bnfSourceProvider = BnfSourceProvider._();
+
+/// The one BnF client (lookups and suggestions share its rate limiter);
+/// null when the source is off.
+
+final class BnfSourceProvider
+    extends $FunctionalProvider<BnfProvider?, BnfProvider?, BnfProvider?>
+    with $Provider<BnfProvider?> {
+  /// The one BnF client (lookups and suggestions share its rate limiter);
+  /// null when the source is off.
+  BnfSourceProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'bnfSourceProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$bnfSourceHash();
+
+  @$internal
+  @override
+  $ProviderElement<BnfProvider?> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  BnfProvider? create(Ref ref) {
+    return bnfSource(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(BnfProvider? value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<BnfProvider?>(value),
+    );
+  }
+}
+
+String _$bnfSourceHash() => r'750cf7ced2f43e1d029607237b268e48ca328db7';
+
+/// The one AniList client (series lookups and suggestions); null when off.
+
+@ProviderFor(anilistSource)
+final anilistSourceProvider = AnilistSourceProvider._();
+
+/// The one AniList client (series lookups and suggestions); null when off.
+
+final class AnilistSourceProvider
+    extends
+        $FunctionalProvider<
+          AniListProvider?,
+          AniListProvider?,
+          AniListProvider?
+        >
+    with $Provider<AniListProvider?> {
+  /// The one AniList client (series lookups and suggestions); null when off.
+  AnilistSourceProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'anilistSourceProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$anilistSourceHash();
+
+  @$internal
+  @override
+  $ProviderElement<AniListProvider?> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  AniListProvider? create(Ref ref) {
+    return anilistSource(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(AniListProvider? value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<AniListProvider?>(value),
+    );
+  }
+}
+
+String _$anilistSourceHash() => r'930b1af7a053f1cdfad192bfb95f806bed6fb667';
+
 /// Enabled series-level sources (AniList, Comic Vine).
 
 @ProviderFor(seriesLookup)
@@ -204,4 +304,4 @@ final class SeriesLookupProvider
   }
 }
 
-String _$seriesLookupHash() => r'886c7bc5159ffe6b15b1248e5c4f6739e0ffac02';
+String _$seriesLookupHash() => r'5b7a0df9ec9ea1b66dc7be4c86347b2355ed35cf';

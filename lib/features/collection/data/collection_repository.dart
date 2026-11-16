@@ -232,6 +232,10 @@ class CollectionRepository {
             ..limit(1))
           .getSingleOrNull();
 
+  /// Every non-deleted item (owned and wished), every type.
+  Future<List<Item>> listItems() =>
+      (_db.select(_db.itemsTable)..where((t) => t.deletedAt.isNull())).get();
+
   /// Non-deleted standalone items (no series), every type.
   Future<List<Item>> listStandaloneItems() => (_db.select(
     _db.itemsTable,

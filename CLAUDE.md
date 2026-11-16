@@ -64,7 +64,7 @@ sources de métadonnées, scan, synchro, sauvegardes, couvertures, CI…). Le me
 - Schéma versionné : après changement de tables, incrémenter `schemaVersion`, écrire la migration, puis
   `dart run drift_dev schema dump lib/core/database/app_database.dart drift_schemas/` puis
   `dart run drift_dev schema generate drift_schemas/ test/core/database/generated/` et compléter
-  `test/core/database/migration_test.dart` (schéma actuel : v3, `volume_title` sur `items`). Toute nouvelle colonne
+  `test/core/database/migration_test.dart` (schéma actuel : v4, table `recommendation_feedback`). Toute nouvelle colonne
   synchronisée exige sa migration Supabase, appliquée par l'utilisateur **avant** d'installer la version.
 - Lecture ponctuelle : méthodes `get*` du repository, jamais `watch*().first` (bloque en test widget).
 
@@ -77,7 +77,7 @@ sources de métadonnées, scan, synchro, sauvegardes, couvertures, CI…). Le me
 - `flutter test` doit passer à chaque fin de phase.
 - `pumpApp` injecte des faux pour tout ce qui touche le matériel ou le réseau : `FakeLoanReminders`,
   `FakeAppShortcuts`, `FakeHomeScreenWidget`, `FakeVoiceInput`, `FakeNetworkStatus` (aucune connexion par défaut),
-  `FakeCoverCache`, `MemoryBackupStore`, un `SeriesLookup` sans source (param `seriesLookup:`) ; jamais les vrais
+  `FakeCoverCache`, `FakeCoverScanner`, `FakeSuggestionSources`, `MemoryBackupStore`, un `SeriesLookup` sans source (param `seriesLookup:`) ; jamais les vrais
   plugins ni le réseau.
 - Journal en test : `appLog.clear()` en début de test.
 - Tests de Paramètres : la liste est longue ; une tuile peut être construite (cache) mais hors écran →
@@ -110,7 +110,7 @@ sources de métadonnées, scan, synchro, sauvegardes, couvertures, CI…). Le me
   en mémoire, `goBack` car `tester.pageBack()` ne connaît pas le BackButton de material_ui),
   `test_repositories.dart` (repo + horloge contrôlable).
 - En test widget, la base se ferme via `tester.runAsync` (sinon blocage en temps simulé).
-  `dart_test.yaml` : timeout 30 s par test. Suite complète ~40 s (301 tests, 2026-11-16) : le temps vient surtout
+  `dart_test.yaml` : timeout 30 s par test. Suite complète ~40 s (319 tests, 2026-11-16) : le temps vient surtout
   de la compilation de chaque fichier de test widget. Helpers de navigation : `test/helpers/screen_helpers.dart`
   (`goTo`, `openSettings`, `tapTile`, `fillSignIn`) ; ne jamais importer un fichier `_test.dart` depuis un autre.
 

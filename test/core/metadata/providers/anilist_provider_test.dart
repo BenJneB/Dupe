@@ -68,4 +68,44 @@ void main() {
     http.on((u) => true, '{"errors":[]}', status: 429);
     expect(provider.searchSeries('x'), throwsA(isA<SeriesLookupException>()));
   });
+
+  test(
+    'neighbours: recommendations and related manga (real response)',
+    () async {
+      http.on((u) => true, fixture('anilist/neighbours_vinland.json'));
+
+      final n = (await provider.neighbours(title: 'Vinland Saga'))!;
+
+      final body = jsonDecode(jsonEncode(sentBody)) as Map<String, dynamic>;
+      expect(body['variables'], {'search': 'Vinland Saga'});
+      expect(n.media.title, 'Vinland Saga');
+      expect(n.synonyms, contains('Saga Winlandzka'));
+      final berserk = n.recommendations.first;
+      expect((berserk.media.title, berserk.votes), ('Berserk', 1621));
+      expect(berserk.media.authors, contains('Kentarou Miura'));
+      // Anime adaptations are left out; manga spin-offs and one-shots kept.
+      expect(n.related.map((r) => r.relation), isNot(contains('ADAPTATION')));
+      expect(
+        n.related.map((r) => (r.relation, r.format)),
+        containsAll([('SPIN_OFF', 'MANGA'), ('OTHER', 'ONE_SHOT')]),
+      );
+    },
+  );
+
+  test('neighbours by id; an unknown manga gives null (HTTP 404)', () async {
+    http.on(
+      (u) => true,
+      jsonEncode({
+        'errors': [
+          {'message': 'Not Found.', 'status': 404},
+        ],
+        'data': {'Media': null},
+      }),
+      status: 404,
+    );
+
+    expect(await provider.neighbours(id: 42), isNull);
+    final body = jsonDecode(jsonEncode(sentBody)) as Map<String, dynamic>;
+    expect(body['variables'], {'id': 42});
+  });
 }

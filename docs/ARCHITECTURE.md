@@ -260,3 +260,7 @@ Description détaillée des choix techniques et de l'organisation du code (dépl
   `scrollUntilVisible` puis `ensureVisible` avant `tap` (`tapTile` de `backup_screens_test.dart`).
 - `l10n/app_fr.arb` (template) → code généré dans `l10n/gen/`.
 - `supabase/migrations/` : SQL du schéma + RLS.
+- Suggestions (v4 phase 30, `features/recommendations/`) : profil local → BnF (`BnfProvider.searchByAuthor`) et
+  AniList (`AniListProvider.neighbours`) via `SuggestionSources` (faux en test) → `rankSuggestions` (règles en tête
+  du fichier) ; état `suggestionsProvider` (cache `suggestions_cache` 7 jours) ; refus synchronisés
+  (`recommendation_feedback`, schéma v4).

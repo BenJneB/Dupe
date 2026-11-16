@@ -14,12 +14,12 @@ void main() {
       "VALUES ('s1', '2026-01-01T00:00:00.000Z', '2026-01-01T00:00:00.000Z', "
       "'manga', 'One Piece')";
 
-  test('v1 -> v3 creates the local tables and keeps the collection', () async {
+  test('v1 -> v4 creates the local tables and keeps the collection', () async {
     final schema = await verifier.schemaAt(1);
     schema.rawDatabase.execute(series);
     final db = AppDatabase(schema.newConnection());
 
-    await verifier.migrateAndValidate(db, 3);
+    await verifier.migrateAndValidate(db, 4);
 
     final rows = await db.select(db.seriesTable).getSingle();
     expect(rows.title, 'One Piece');
@@ -27,7 +27,7 @@ void main() {
     await db.close();
   });
 
-  test('v2 -> v3 adds the volume title, items kept without one', () async {
+  test('v2 -> v4 adds the volume title, items kept without one', () async {
     final schema = await verifier.schemaAt(2);
     schema.rawDatabase
       ..execute(series)
@@ -38,13 +38,25 @@ void main() {
       );
     final db = AppDatabase(schema.newConnection());
 
-    await verifier.migrateAndValidate(db, 3);
+    await verifier.migrateAndValidate(db, 4);
 
     final item = await db.select(db.itemsTable).getSingle();
     expect(
       (item.title, item.volumeNumber, item.volumeTitle),
       ('One Piece', '3', null),
     );
+    await db.close();
+  });
+
+  test('v3 -> v4 adds the dismissed suggestions, collection kept', () async {
+    final schema = await verifier.schemaAt(3);
+    schema.rawDatabase.execute(series);
+    final db = AppDatabase(schema.newConnection());
+
+    await verifier.migrateAndValidate(db, 4);
+
+    expect((await db.select(db.seriesTable).getSingle()).title, 'One Piece');
+    expect(await db.select(db.recommendationFeedbackTable).get(), isEmpty);
     await db.close();
   });
 }
