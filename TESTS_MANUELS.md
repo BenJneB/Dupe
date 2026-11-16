@@ -7,7 +7,7 @@
 > finale. Les phases 15 à 20 ajoutent leurs tests ici et marquent « automatisé (phase N) » ceux que leurs tests
 > automatiques couvrent désormais.
 
-Ce fichier liste ce que les **252 tests automatiques (et 4 parcours d'intégration) ne couvrent pas** : matériel (caméra, vibrations,
+Ce fichier liste ce que les **257 tests automatiques (et 4 parcours d'intégration) ne couvrent pas** : matériel (caméra, vibrations,
 notifications, raccourci), services réels (Supabase, API GitHub, sources de métadonnées), plateformes non
 compilées ici (Windows) et workflows GitHub (jamais exécutés).
 
@@ -436,7 +436,7 @@ remplacées, photos gardées), vue et page par auteur. Simulés : les sources et
       propose de créer la bonne série (pas « Folio junior ») avec le bon numéro.
 - [ ] **Q-03** Ajouter le tome 9 possédé d'une série qui n'a que le 1 : « Il te manque 7 tomes avant le 9 » →
       Ajouter → les tomes 2 à 8 apparaissent en vert.
-- [ ] **Q-04** Paramètres → « Compléter les couvertures manquantes » sur la vraie collection : progression,
+- [ ] **Q-04** Plus → Qualité → « Compléter les couvertures manquantes » (déplacé des Paramètres le 2026-11-16) sur la vraie collection : progression,
       couvertures ajoutées visibles dans les listes ; le journal liste les livres restés sans couverture et les
       sources qui ont répondu ; « Télécharger maintenant » liste les adresses en échec avec leur cause.
 - [ ] **Q-05** Scan ouvert depuis Plus / le journal : choisir « BD » dans le menu de type ; au scan suivant
@@ -469,7 +469,7 @@ lot (propositions décochables, rien d'enregistré avant « Appliquer ») ; ques
       BD et livres : pas d'action (pas de source) — l'utilisateur attendait au moins une saisie manuelle.
       Corrigé : « Nombre total de tomes… » dans le menu de toutes les séries, saisie manuelle si rien n'est trouvé ;
       à revoir sur Kaamelott (BD) et Free Quest (manga introuvable).
-- [x] **U-02** Paramètres → Sources → « Vérifier le nombre de tomes des séries » sur la vraie collection :
+- [x] **U-02** Plus → Qualité (anciennement Paramètres → Sources) → « Vérifier le nombre de tomes des séries » sur la vraie collection :
       propositions plausibles (titres identiques), décocher une erreur éventuelle, Appliquer.
       — OK 2026-11-16 : seul I hate Fairyland trouvé (mêmes limites que `U-01`).
 - [ ] **U-03** Scanner le tome 1 d'une nouvelle série : « Combien de tomes compte la série ? » (pré-rempli pour un
@@ -484,7 +484,7 @@ Automatisé (phase 24) : règle de remplissage (titre propre, sous-titre, vide),
 complété au scan, remplissage en lot par ISBN, CSV, migrations locale (v3) et Supabase (local), affichage.
 - [ ] **I-00** **Avant d'installer cette version** : appliquer `supabase/migrations/20261116120000_volume_title.sql`
       dans le SQL Editor du projet Supabase (sinon la synchro est refusée).
-- [ ] **I-01** Paramètres → Sources → « Compléter les titres des tomes » : progression, puis des titres apparaissent
+- [ ] **I-01** Plus → Qualité → « Compléter les titres des tomes » : progression, puis des titres apparaissent
       sous les pastilles et dans la vue liste (Kaamelott, Jumeaux Fowl…).
 - [ ] **I-02** Scanner le tome d'une série dont la notice a un titre propre : « Titre du tome » pré-rempli dans le
       formulaire, affiché sur la fiche et sous la pastille ; modifiable.
@@ -501,6 +501,17 @@ point sur les pastilles. Simulées : les sources.
       le compteur « sans ISBN » baisse de dix, les livres gagnent couverture et infos manquantes.
 - [ ] **C-03** Scanner un livre déjà dans la collection → « Cet ISBN est déjà celui de … » ; un autre livre que celui
       affiché → demande de confirmation.
-- [ ] **C-04** Fiche d'un livre possédé sans ISBN → « ISBN manquant · scanner » ; réglage « Signaler les ISBN
-      manquants dans les séries » → point sur les pastilles concernées.
+- [ ] **C-04** Fiche d'un livre possédé sans ISBN → « ISBN manquant · scanner ». Par défaut : point sur les
+      pastilles concernées, icône sur les séries, livres et auteurs qui ont des livres sans ISBN (nombre en appui long) ;
+      Qualité → « Signaler les ISBN manquants » décoché → plus aucun indicateur.
+
+## 19. Éditions et couvertures (v4, phase 25)
+Automatisé (phase 25) : correspondance d'une autre édition (titre, auteur, numéro), couverture proposée puis gardée,
+refus non reproposé, « autre édition » d'un livre hors série en magasin et homonyme ignoré. Simulées : les sources.
+- [ ] **X-01** Plus → Qualité → « Compléter les couvertures manquantes » sur la vraie collection, puis
+      Qualité → « Couvertures proposées » : les images proposées sont bien celles des bons livres (autre édition).
+- [ ] **X-02** Garder une proposition → la couverture apparaît dans les listes ; en refuser une → elle n'est plus
+      proposée au passage suivant (sur cet appareil).
+- [ ] **X-03** En magasin, scanner un roman que tu possèdes dans une autre édition (poche / grand format) : bandeau
+      vert « Tu as ce livre dans une autre édition ».
 

@@ -52,7 +52,7 @@ deux fonctions tournées vers la suite de la collection : être prévenu des nou
 | 1 | 23 | Séries : nombre de tomes, tomes suivants, vue liste | ✅ fait (2026-11-15/16) | oui | en partie (`U-*`) |
 | 2 | 24 | Titres des tomes (champ dédié, vue pastilles) | ✅ fait (2026-11-16) | oui (+ Supabase local) | non (`I-*`) |
 | 3 | 22 | Qualité des données et ISBN manquants | ✅ fait (2026-11-16) | oui | non (`C-*`) |
-| 4 | 25 | Éditions et couvertures | à faire | — | — |
+| 4 | 25 | Éditions et couvertures | ✅ fait (2026-11-16) | oui | non (`X-*`) |
 | 5 | 29 | Photos : redressement et recadrage | à faire | — | — |
 | 6 | 30 | Dédicaces | à faire | — | — |
 | 7 | 31 | Nouvelles sources de métadonnées | à faire | — | — |
@@ -109,6 +109,10 @@ la recette de la v4, et la fin de la recette de la v3 (26) juste avant eux. L'or
 - **Écarts** : écran placé dans Plus (pas dans Statistiques ni Paramètres) ; le contrôle de cohérence ne fait
   qu'une comparaison de titres normalisés (pas d'auteur ni d'éditeur).
 - **Non vérifié** : critère des dix livres scannés à la suite sur le téléphone (`C-01` à `C-04`).
+- **Ajustements (2026-11-16, demandes de l'utilisateur)** : indicateur d'ISBN manquant **activé par défaut** ; en plus
+  du point sur les pastilles, une **icône** (QR) sur la ligne d'une série, d'un livre isolé et d'un auteur qui ont des
+  livres possédés sans ISBN, avec leur nombre en infobulle (`MissingIsbnMark`, `SeriesEntry.missingIsbnCount` en SQL,
+  `AuthorGroup.missingIsbnCount`), en liste comme en grille ; un seul réglage les coupe tous.
 
 ### Phase 23 — Séries : nombre de tomes, tomes suivants, titres des tomes
 - **« Vérifier le nombre de tomes »** (sur une série, ou en lot dans Paramètres) : recherche AniList (manga) /
@@ -192,7 +196,9 @@ Demande de l'utilisateur (`U-04`, 2026-11-16) : un tome n'affiche souvent que «
 
 ### Phase 25 — Éditions et couvertures
 - **« Compléter les couvertures » par recherche texte** : aujourd'hui recherche **par ISBN** seulement (Google Books
-  avec clé, devinette Open Library ; la BnF n'est plus interrogée) et livres sans ISBN ignorés. La recherche en ligne
+  avec clé, devinette Open Library ; la BnF n'est plus interrogée) et livres sans ISBN ignorés. **Décision de
+  l'utilisateur (2026-11-16)** : les livres **sans ISBN restent ignorés** (rien n'est cherché pour eux) ; on leur
+  attribue d'abord un ISBN par la complétion par scan de la phase 22, puis ils entrent dans la recherche. La recherche en ligne
   est une recherche **texte** : Google Books et Open Library y renvoient d'autres éditions, souvent illustrées
   (Open Library `cover_i`). Si l'ISBN ne donne rien : recherche texte (titre + auteur, ou série + numéro) et
   couverture d'un résultat **concordant** (titre normalisé, auteur, numéro ; même ISBN de préférence), marquée
@@ -202,6 +208,35 @@ Demande de l'utilisateur (`U-04`, 2026-11-16) : un tome n'affiche souvent que «
   (poche / grand format, réédition) donne « pas dans ta collection ». Après la recherche en ligne, comparer titre
   normalisé + auteur (`normalizeTitle`, `authorKey`) aux livres possédés sans série ; bandeau vert « autre
   édition ». Limite : il faut le réseau (l'ISBN seul ne relie pas deux éditions).
+
+**Décisions (2026-11-16)** : validation dans Qualité ; refus mémorisés sur l'appareil seulement (pas de migration) ;
+« autre édition » en magasin seulement si titre **et** auteur correspondent ; livres sans ISBN ignorés.
+
+**Ajustement (2026-11-16, demande de l'utilisateur)** : « Compléter les couvertures manquantes », « Compléter les
+titres des tomes » et « Vérifier le nombre de tomes des séries » **retirés des Paramètres** : ils ne vivent plus que
+dans Plus → Qualité de la collection (actions sur les données, pas des réglages). « Nombre total de tomes… » reste
+dans le menu de chaque série (une série précise, saisie manuelle).
+
+**Bilan (2026-11-16)**
+- **Réalisé** :
+  - `covers/domain/edition_match.dart` : `mainTitle` (titre normalisé sans sous-titre), `sameWork` (même titre ou
+    série, même numéro de tome, un auteur commun quand les deux en ont), `sameStandaloneBook` (titre **et** auteur
+    exigés).
+  - « Compléter les couvertures manquantes » : quand l'ISBN ne donne aucune image, recherche texte (série + numéro
+    pour un tome, titre + auteur sinon ; sans la BnF, `searchText(except:)`) → `proposeCover` : résultat concordant
+    dont l'image se télécharge, même ISBN en premier → **proposition** (`CoverProposals`), jamais appliquée d'office.
+  - Qualité → « Couvertures proposées » (`cover_proposals_screen.dart`) : image, source et titre de l'autre édition,
+    **Garder** / **Refuser**, « Tout garder » ; une proposition laissée de côté reste. Refus mémorisés localement
+    (`RefusedCovers`, `cover_refused`).
+  - Mode Magasin : un livre hors série possédé dans une autre édition → bandeau vert « Tu as ce livre dans une autre
+    édition » (`StoreChecker`, `listStandaloneItems`) ; un homonyme d'un autre auteur reste inconnu.
+  - Tests : `edition_match_test.dart`, `cover_proposals_test.dart` (proposé puis gardé ; refus non reproposé),
+    `store_mode_test.dart` (autre édition, homonyme).
+- **Écarts** : propositions gardées en mémoire (pas en base) : elles disparaissent au redémarrage de l'appli et
+  reviennent au prochain passage de « Compléter les couvertures » ; pas de bouton « Passer » (une proposition non
+  traitée reste simplement dans la liste).
+- **Non vérifié** : pertinence des propositions sur la vraie collection, et l'autre édition en magasin (`X-01` à
+  `X-03`).
 
 ### Phase 26 — Fin de la recette de la v3
 Décision de l'utilisateur (2026-11-16) : terminer la recette de la v3 (phase 21, `TESTS_MANUELS.md`) avant les

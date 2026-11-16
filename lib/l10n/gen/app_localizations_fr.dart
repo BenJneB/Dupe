@@ -506,11 +506,22 @@ class AppLocalizationsFr extends AppLocalizations {
   String get qualityAutomatic => 'Compléter automatiquement';
 
   @override
-  String get missingIsbnInGrid => 'Signaler les ISBN manquants dans les séries';
+  String get missingIsbnInGrid => 'Signaler les ISBN manquants';
 
   @override
   String get missingIsbnInGridHelp =>
-      'Un point sur la pastille des tomes possédés sans ISBN';
+      'Un point sur la pastille des tomes possédés sans ISBN, et une icône sur les séries, livres et auteurs concernés';
+
+  @override
+  String missingIsbnCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count livres possédés sans ISBN',
+      one: '1 livre possédé sans ISBN',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get missingIsbn => 'ISBN manquant · scanner';
@@ -568,6 +579,37 @@ class AppLocalizationsFr extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get coverProposalsTitle => 'Couvertures proposées';
+
+  @override
+  String get coverProposalsTileHelp =>
+      'Trouvées pour d’autres éditions : à garder ou refuser';
+
+  @override
+  String get coverProposalsHelp =>
+      'Ces couvertures viennent d’une autre édition du même livre (recherche par titre et auteur). Garde celles qui conviennent ; une couverture refusée n’est plus proposée sur cet appareil.';
+
+  @override
+  String get coverProposalsNone => 'Aucune couverture à valider.';
+
+  @override
+  String get coverProposalsKeepAll => 'Tout garder';
+
+  @override
+  String get coverProposalKeep => 'Garder';
+
+  @override
+  String get coverProposalRefuse => 'Refuser';
+
+  @override
+  String coverProposalFrom(String source, String title) {
+    return 'Trouvée via $source : « $title »';
+  }
+
+  @override
+  String get storeOtherEditionBook => 'Tu as ce livre dans une autre édition';
 
   @override
   String get seeSeries => 'Voir la série';

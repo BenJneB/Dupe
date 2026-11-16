@@ -1,11 +1,8 @@
-import 'package:dupe/app/router.dart';
 import 'package:dupe/core/metadata/api_keys.dart';
 import 'package:dupe/core/metadata/source_settings.dart';
-import 'package:dupe/features/collection/presentation/volume_titles/volume_titles_tile.dart';
 import 'package:dupe/features/settings/presentation/api_key_dialog.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 
 /// Switches to turn each metadata source on or off, and the API keys of the
@@ -58,14 +55,6 @@ class SourcesSection extends ConsumerWidget {
               onTap: () => _editKey(context, id),
             ),
         ],
-        ListTile(
-          key: const Key('volumeCountsTile'),
-          leading: const Icon(Icons.fact_check_outlined),
-          title: Text(l10n.volumeCountsTile),
-          subtitle: Text(l10n.volumeCountsTileHelp),
-          onTap: () => context.push(AppRoutes.volumeCounts),
-        ),
-        const VolumeTitlesTile(),
       ],
     );
   }

@@ -3,6 +3,7 @@ import 'package:dupe/app/router.dart';
 import 'package:dupe/features/authors/data/author_providers.dart';
 import 'package:dupe/features/authors/domain/author_groups.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
+import 'package:dupe/features/quality/presentation/missing_isbn_mark.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -56,6 +57,7 @@ class AuthorTile extends StatelessWidget {
           group.volumes,
         ),
       ),
+      trailing: MissingIsbnMark(count: group.missingIsbnCount),
       onTap: () => context.push(AppRoutes.author(type, group.name)),
     );
   }

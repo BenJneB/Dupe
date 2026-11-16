@@ -23,6 +23,9 @@ abstract final class AppRoutes {
   /// Items (or series) of one quality issue (`QualityIssue.name`).
   static String qualityList(String issue) => '$quality/liste/$issue';
 
+  /// Covers of other editions waiting for approval (phase 25).
+  static const coverProposals = '$quality/couvertures';
+
   /// Scan to give ISBNs: every owned item without one, or only [itemId].
   static String isbnCompletion({String? itemId}) => Uri(
     path: '$quality/isbn',

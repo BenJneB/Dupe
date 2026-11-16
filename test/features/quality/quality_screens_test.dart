@@ -137,18 +137,28 @@ void main() {
     expect(find.text('Kaamelott – tome 3'), findsOneWidget);
   }, variant: linux);
 
-  testWidgets('grid: a dot on owned volumes without ISBN, once enabled', (
+  testWidgets('missing ISBNs marked by default: dot on volumes, icon above', (
     tester,
   ) async {
     await pumpApp(tester, seed: seedGaps);
+    // Series row: one icon for its 3 owned volumes without ISBN.
+    await goTo(tester, AppRoutes.base(CollectionType.bd));
+    expect(find.byKey(const Key('missingIsbnMark')), findsOneWidget);
+    expect(find.byTooltip('3 livres possédés sans ISBN'), findsOneWidget);
+    // Dune has its ISBN: no icon in Livres.
+    await goTo(tester, AppRoutes.base(CollectionType.livre));
+    expect(find.byKey(const Key('missingIsbnMark')), findsNothing);
+    // Volumes: a dot on each pastille.
     await goTo(tester, AppRoutes.series(CollectionType.bd, kaamelott.id));
-    expect(find.byKey(const ValueKey('noIsbn-1')), findsNothing);
+    expect(find.byKey(const ValueKey('noIsbn-1')), findsOneWidget);
 
+    // Turned off in Qualité: no marker anywhere.
     await goTo(tester, AppRoutes.quality);
     await tester.tap(find.byKey(const Key('missingIsbnGridSwitch')));
     await tester.pumpAndSettle();
     await goTo(tester, AppRoutes.series(CollectionType.bd, kaamelott.id));
-
-    expect(find.byKey(const ValueKey('noIsbn-1')), findsOneWidget);
+    expect(find.byKey(const ValueKey('noIsbn-1')), findsNothing);
+    await goTo(tester, AppRoutes.base(CollectionType.bd));
+    expect(find.byKey(const Key('missingIsbnMark')), findsNothing);
   });
 }

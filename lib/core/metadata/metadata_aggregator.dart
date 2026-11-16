@@ -122,8 +122,12 @@ class MetadataAggregator {
   }
 
   /// Results grouped by source priority, deduplicated by ISBN.
-  Future<TextSearch> searchText(String query, CollectionType type) async {
-    final providers = _providersFor(type);
+  Future<TextSearch> searchText(
+    String query,
+    CollectionType type, {
+    Set<MetadataSource> except = const {},
+  }) async {
+    final providers = _providersFor(type, except: except);
     final key = query.trim().toLowerCase();
     final outcomes = await Future.wait([
       for (final p in providers)

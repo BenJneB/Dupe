@@ -9,6 +9,7 @@ import 'package:dupe/features/collection/domain/metadata_mapping.dart';
 import 'package:dupe/features/collection/domain/series.dart';
 import 'package:dupe/features/collection/domain/series_matching.dart';
 import 'package:dupe/features/collection/domain/volume_number.dart';
+import 'package:dupe/features/covers/domain/edition_match.dart';
 import 'package:dupe/features/scan/domain/store_check.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -45,7 +46,20 @@ class StoreChecker {
       preferredType: type,
     );
     if (series == null) {
-      yield StoreCheck(verdict: StoreVerdict.unknown, metadata: metadata);
+      // A standalone book owned in another edition (phase 25): same main
+      // title and a common author, both required.
+      final other = (await _repo.listStandaloneItems())
+          .where(
+            (i) => sameStandaloneBook(
+              metadata,
+              title: i.title,
+              authors: i.authors,
+            ),
+          )
+          .firstOrNull;
+      yield other == null
+          ? StoreCheck(verdict: StoreVerdict.unknown, metadata: metadata)
+          : await _fromItem(other, otherEdition: metadata);
       return;
     }
     final items = await _repo.listSeriesItems(series.id);
