@@ -61,6 +61,11 @@ class CollectionRepository {
 
   // ---- Writes -------------------------------------------------------------
 
+  /// Runs several writes in one transaction: all or nothing, and the open
+  /// lists (collection, stats, sync) are refreshed once instead of per row.
+  Future<T> inTransaction<T>(Future<T> Function() writes) =>
+      _db.transaction(writes);
+
   /// Saves [series]; a new title also goes to the volumes that had the old
   /// one (copied from the series when they were created).
   Future<void> saveSeries(Series series) => _db.transaction(() async {

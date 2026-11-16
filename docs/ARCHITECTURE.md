@@ -192,12 +192,14 @@ Description détaillée des choix techniques et de l'organisation du code (dépl
   `linux/runner/my_application.cc`. Pillow est cassé sur ce poste (pas de `_imaging`).
 - Packaging : `android/key.properties` (ignoré) → signature release, sinon clé debug ; `packaging/windows/dupe.iss`
   (Inno Setup, `/DAppVersion=`) ; `packaging/linux/build_appimage.sh` (appimagetool 1.9.1 épinglé).
-- CI (phases 12 et 16, `.github/workflows/`) : `ci.yml` (déclenché par les pull requests et à la main, plus
-  par les push depuis le 2026-11-15 ; badge du README filtré `?event=pull_request`) (format `--set-exit-if-changed`, code généré à jour —
-  build_runner + gen-l10n puis `git status --porcelain` vide —, analyze, `test --coverage` + récapitulatif
+- CI (phases 12 et 16, `.github/workflows/`) : `ci.yml` (déclenché par les pull requests et à la main, mais plus
+  par les push depuis le 2026-11-15, choix de l'utilisateur ; badge du README filtré `?event=pull_request`) (format `--set-exit-if-changed`, code généré à jour —
+  `tool/ci/check_generated.sh` : build_runner + gen-l10n, aucun fichier généré modifié ; aussi lancé par le hook
+  pré-commit —, analyze, `test --coverage` + récapitulatif
   `tool/ci/coverage_summary.sh` hors code généré, builds Linux/Android/Windows + Inno Setup 6.7.1 via choco) ;
   **toujours `dart format .` avant de stager** ; `.github/dependabot.yml` (pub + actions, vers `dev`, lu sur
-  la branche par défaut, `dev` depuis 2026-11-15) ; `release.yml` (tag `vX.Y.Z`, ou `vX.Y.Z-suffixe` → *pre-release* jamais proposée en mise à jour ; pubspec reçoit
+  la branche par défaut, `dev` depuis 2026-11-15) ; `release.yml` (job `verify` d'abord : format, code généré,
+  analyze, tests, car un tag peut viser un commit qu'aucune PR n'a vérifié ; tag `vX.Y.Z`, ou `vX.Y.Z-suffixe` → *pre-release* jamais proposée en mise à jour ; pubspec reçoit
   toujours `X.Y.Z+code`, le suffixe ne va que dans les noms de fichiers ; → `tool/ci/set_version.sh` → APK `--split-per-abi` signés, AppImage,
   installateur → Release ; refuse de publier sans les secrets ; binaires **obfusqués** + zips de symboles par
   plateforme dans la Release, `FLUTTER_BUILD_ARGS` pour `build_appimage.sh` ; jamais de `runtimeType` dans les

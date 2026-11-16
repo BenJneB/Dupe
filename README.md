@@ -129,8 +129,10 @@ curl -fLO https://github.com/evilmartians/lefthook/releases/download/v2.2.2/left
 sudo dpkg -i lefthook_2.2.2_amd64.deb
 lefthook install
 ```
-- avant un commit : `dart format` des fichiers `.dart` stagés (re-stagés automatiquement) et `flutter analyze`,
-  en parallèle et seulement si le commit contient du Dart (un commit de documentation est immédiat) ;
+- avant un commit : `dart format` des fichiers `.dart` stagés (re-stagés automatiquement) ; en parallèle,
+  `tool/ci/check_generated.sh` (régénère le code et refuse le commit si un fichier généré à jour n'est pas
+  stagé, ce que la CI refuserait) puis `flutter analyze` ; seulement si le commit contient du Dart ou de l'ARB
+  (un commit de documentation est immédiat) ;
 - avant un push : `flutter test` ;
 - message de commit : `tool/check_commit_msg.sh` (refuse un message non conventionnel).
 

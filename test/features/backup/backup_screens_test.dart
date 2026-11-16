@@ -90,10 +90,10 @@ void main() {
   testWidgets('CSV import failing midway: reported, button usable again', (
     tester,
   ) async {
-    const csv = 'Title\nDune\n';
+    const csv = 'Series;Title\nDune;Dune 1\n';
     final files = FakeFileIo()
       ..toOpen = (name: 'a.csv', bytes: Uint8List.fromList(utf8.encode(csv)));
-    await pumpApp(
+    final db = await pumpApp(
       tester,
       size: desktopSize,
       overrides: [
@@ -114,6 +114,9 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.textContaining('Import interrompu'), findsOneWidget);
+    // One transaction: the series created before the failure is undone.
+    final series = await tester.runAsync(() => db.select(db.seriesTable).get());
+    expect(series, isEmpty);
     final button = tester.widget<ButtonStyleButton>(
       find.byKey(const Key('csvImportButton')),
     );

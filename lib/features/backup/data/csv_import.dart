@@ -23,8 +23,15 @@ class ImportReport {
 
 /// Imports CSV [rows] (header excluded) with the column [mapping]. Series
 /// are found by type + title, or created. Existing items are skipped, so an
-/// import can be run again safely.
+/// import can be run again safely. All or nothing: one transaction.
 Future<ImportReport> importCsvRows(
+  CollectionRepository repo,
+  List<List<String>> rows,
+  Map<ImportField, int?> mapping,
+  ImportDefaults defaults,
+) => repo.inTransaction(() => _importRows(repo, rows, mapping, defaults));
+
+Future<ImportReport> _importRows(
   CollectionRepository repo,
   List<List<String>> rows,
   Map<ImportField, int?> mapping,

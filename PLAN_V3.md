@@ -498,7 +498,13 @@ Avant la reprise des tests : `check-env` refuse aussi `OPEN_LIBRARY_CONTACT` ; a
     (`upsert.dart`) ; code scanné pendant la vérification de « Compléter par scan » traité ensuite ;
   - journal des couvertures : nouvelle entrée si le nombre d'échecs change, ordre stable.
   Écarts acceptés : « Télécharger maintenant » et la réactivation ne rejournalisent pas un échec identique (choix
-  de la phase 20, testé). Étapes 2-3 de la revue (factorisations, efficacité, outillage) : à planifier.
+  de la phase 20, testé).
+  Étape 2 (2026-11-16) : `Item.lacksIsbn` / `hasNoIsbn` (`item_checks.dart`) remplace 5 copies, le SQL de la liste
+  aligné (ISBN blanc = manquant) ; `CollectionRepository.inTransaction` pour les écritures en lot (marquer lus,
+  nombres de tomes, rafale, import CSV désormais tout ou rien) ; `tool/ci/check_generated.sh` partagé par la CI,
+  la Release (nouveau job `verify` : format, code généré, analyze, tests avant tout build) et le hook pré-commit
+  (refuse un fichier généré non stagé) ; tests Supabase de la CI à chaque exécution. Étape 3 (autres
+  factorisations, efficacité) : idées après la v3.
 
 ### Après la v3 — idées notées
 Revue avec l'utilisateur le 2026-11-15 :

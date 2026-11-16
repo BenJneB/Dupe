@@ -76,13 +76,16 @@ class VolumeCountScan extends _$VolumeCountScan {
   /// Saves the totals of [selected]; returns how many series changed.
   Future<int> apply(Iterable<VolumeCountProposal> selected) async {
     final repo = ref.read(collectionRepositoryProvider);
-    var changed = 0;
-    for (final p in selected) {
-      final fresh = await repo.getSeries(p.series.id);
-      if (fresh == null || fresh.totalVolumes != null) continue;
-      await repo.saveSeries(fresh.copyWith(totalVolumes: p.total));
-      changed++;
-    }
+    final changed = await repo.inTransaction(() async {
+      var changed = 0;
+      for (final p in selected) {
+        final fresh = await repo.getSeries(p.series.id);
+        if (fresh == null || fresh.totalVolumes != null) continue;
+        await repo.saveSeries(fresh.copyWith(totalVolumes: p.total));
+        changed++;
+      }
+      return changed;
+    });
     state = const VolumeCountScanState();
     return changed;
   }

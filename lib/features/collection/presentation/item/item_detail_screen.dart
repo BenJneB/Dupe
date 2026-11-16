@@ -7,6 +7,7 @@ import 'package:dupe/features/authors/presentation/author_links.dart';
 import 'package:dupe/features/collection/data/collection_repository.dart';
 import 'package:dupe/features/collection/domain/enums.dart';
 import 'package:dupe/features/collection/domain/item.dart';
+import 'package:dupe/features/collection/domain/item_checks.dart';
 import 'package:dupe/features/collection/presentation/confirm_delete_dialog.dart';
 import 'package:dupe/features/collection/presentation/item/bought_action.dart';
 import 'package:dupe/features/collection/presentation/item/item_reading_bar.dart';
@@ -171,8 +172,7 @@ class _ItemDetailView extends ConsumerWidget {
                       ),
                       label: Text(item.ownership.label(l10n)),
                     ),
-                    if (item.ownership == Ownership.possede &&
-                        (item.isbn13 ?? '').trim().isEmpty)
+                    if (item.lacksIsbn)
                       ActionChip(
                         key: const Key('missingIsbnChip'),
                         avatar: const Icon(Icons.qr_code_2, size: 18),

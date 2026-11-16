@@ -1,6 +1,7 @@
 import 'package:dupe/features/collection/domain/collection_entry.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
 import 'package:dupe/features/collection/domain/enums.dart';
+import 'package:dupe/features/collection/domain/item_checks.dart';
 import 'package:dupe/features/collection/domain/volume_grid.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -214,5 +215,22 @@ void main() {
 
     expect(await env.repo.getSeries(series.id), isNull);
     expect(await env.repo.getItem(item.id), isNull);
+  });
+
+  test('a blank ISBN counts as missing, in the list as on the item', () async {
+    final series = env.repo
+        .newSeries(CollectionType.manga)
+        .copyWith(title: 'Akira');
+    await env.repo.saveSeries(series);
+    final blank = env.repo
+        .newItem(CollectionType.manga, series: series, volumeNumber: '1')
+        .copyWith(isbn13: ' ');
+    await env.repo.saveItem(blank);
+
+    final entry = (await env.repo.watchEntries(CollectionType.manga).first)
+        .whereType<SeriesEntry>()
+        .single;
+    expect(blank.lacksIsbn, isTrue);
+    expect(entry.missingIsbnCount, 1);
   });
 }

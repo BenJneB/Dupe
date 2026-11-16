@@ -1,5 +1,6 @@
 import 'package:dupe/features/collection/domain/enums.dart';
 import 'package:dupe/features/collection/domain/item.dart';
+import 'package:dupe/features/collection/domain/item_checks.dart';
 import 'package:dupe/features/collection/domain/series.dart';
 
 /// One row of a collection tab: a series or a standalone item.
@@ -96,9 +97,6 @@ extension EntryMissingIsbn on CollectionEntry {
   /// Owned books without ISBN in this row: a series' volumes, or the book.
   int get missingIsbnCount => switch (this) {
     SeriesEntry(:final missingIsbnCount) => missingIsbnCount,
-    ItemEntry(:final item) =>
-      item.ownership == Ownership.possede && (item.isbn13 ?? '').trim().isEmpty
-          ? 1
-          : 0,
+    ItemEntry(:final item) => item.lacksIsbn ? 1 : 0,
   };
 }

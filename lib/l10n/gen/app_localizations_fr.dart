@@ -1608,7 +1608,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String csvImportFailed(String message) {
-    return 'Import interrompu : $message Les lignes déjà ajoutées restent ; la sauvegarde « Avant import CSV » permet de revenir en arrière.';
+    return 'Import interrompu : $message Rien n\'a été ajouté.';
   }
 
   @override

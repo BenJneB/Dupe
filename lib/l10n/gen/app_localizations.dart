@@ -2563,7 +2563,7 @@ abstract class AppLocalizations {
   /// No description provided for @csvImportFailed.
   ///
   /// In fr, this message translates to:
-  /// **'Import interrompu : {message} Les lignes déjà ajoutées restent ; la sauvegarde « Avant import CSV » permet de revenir en arrière.'**
+  /// **'Import interrompu : {message} Rien n\'a été ajouté.'**
   String csvImportFailed(String message);
 
   /// No description provided for @autoBackupFailed.

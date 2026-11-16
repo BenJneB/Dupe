@@ -873,7 +873,7 @@
     }
   },
   "autoBackupExport": "Exporter ce fichier",
-  "csvImportFailed": "Import interrompu : {message} Les lignes déjà ajoutées restent ; la sauvegarde « Avant import CSV » permet de revenir en arrière.",
+  "csvImportFailed": "Import interrompu : {message} Rien n'a été ajouté.",
   "@csvImportFailed": {"placeholders": {"message": {"type": "String"}}},
   "autoBackupFailed": "Sauvegarde automatique impossible : import annulé ({message})",
   "@autoBackupFailed": {

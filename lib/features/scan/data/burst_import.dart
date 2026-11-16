@@ -3,6 +3,7 @@ import 'package:dupe/features/collection/data/collection_repository.dart';
 import 'package:dupe/features/collection/data/item_drafts.dart';
 import 'package:dupe/features/collection/domain/enums.dart';
 import 'package:dupe/features/collection/domain/item.dart';
+import 'package:dupe/features/collection/domain/item_checks.dart';
 import 'package:dupe/features/collection/domain/metadata_mapping.dart';
 import 'package:dupe/features/collection/domain/same_volume.dart';
 import 'package:dupe/features/scan/data/scan_queue_repository.dart';
@@ -16,9 +17,10 @@ Future<int> importScanQueue(
   ScanQueueRepository queue,
   List<ScanQueueEntry> entries, {
   Ownership ownership = Ownership.possede,
-}) async {
+}) => repo.inTransaction(() async {
   var added = 0;
   // Sequential: a series created for one volume is matched by the next ones.
+  // One transaction: the review list is recomputed once, not per volume.
   for (final entry in entries) {
     final metadata = entry.result;
     if (entry.status != ScanStatus.found || metadata == null) continue;
@@ -39,7 +41,7 @@ Future<int> importScanQueue(
     await queue.remove(entry.id);
   }
   return added;
-}
+});
 
 /// The copy of [item]'s volume added earlier without ISBN (grid, range),
 /// given [isbn13] and its empty fields filled from [metadata], as in the
@@ -56,7 +58,7 @@ Future<Item?> _emptyCopy(
   final empty = copiesOfVolume(
     await repo.listSeriesItems(seriesId),
     item.volumeNumber,
-  ).where((i) => i.isbn13 == null && i.ownership == ownership).firstOrNull;
+  ).where((i) => i.hasNoIsbn && i.ownership == ownership).firstOrNull;
   if (empty == null) return null;
   final series = await repo.getSeries(seriesId);
   return fillBlanks(

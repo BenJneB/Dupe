@@ -5,6 +5,7 @@ import 'package:dupe/features/collection/data/collection_repository.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
 import 'package:dupe/features/collection/domain/enums.dart';
 import 'package:dupe/features/collection/domain/item.dart';
+import 'package:dupe/features/collection/domain/item_checks.dart';
 import 'package:dupe/features/collection/domain/metadata_mapping.dart';
 import 'package:dupe/features/collection/domain/same_volume.dart';
 import 'package:dupe/features/collection/domain/series.dart';
@@ -68,7 +69,7 @@ class StoreChecker {
     if (copy != null) {
       // Volume added without ISBN (grid, range, previous volumes): remember
       // the ISBN and fill its empty fields (recette: WARP 1-2 left empty).
-      final remember = copy.isbn13 == null;
+      final remember = copy.hasNoIsbn;
       final item = remember
           ? fillBlanks(
               copy.copyWith(isbn13: isbn13),

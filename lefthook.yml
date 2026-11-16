@@ -3,17 +3,25 @@
 glob_matcher: doublestar
 
 pre-commit:
-  # Format and analysis run side by side; both skip commits without Dart
-  # files (documentation-only commits are instant).
+  # Formatting runs beside the generated-code check, which runs before the
+  # analysis; all skip commits without Dart or ARB files (documentation-only
+  # commits are instant).
   parallel: true
   jobs:
     - name: format
       glob: "**/*.dart"
       run: dart format {staged_files}
       stage_fixed: true
-    - name: analyze
-      glob: "**/*.dart"
-      run: flutter analyze
+    - group:
+        piped: true
+        jobs:
+          # The CI refuses stale generated code: caught here instead.
+          - name: generated code
+            glob: "**/*.{dart,arb}"
+            run: tool/ci/check_generated.sh
+          - name: analyze
+            glob: "**/*.dart"
+            run: flutter analyze
 
 pre-push:
   jobs:
