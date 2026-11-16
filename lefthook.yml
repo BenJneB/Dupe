@@ -3,12 +3,16 @@
 glob_matcher: doublestar
 
 pre-commit:
+  # Format and analysis run side by side; both skip commits without Dart
+  # files (documentation-only commits are instant).
+  parallel: true
   jobs:
     - name: format
       glob: "**/*.dart"
       run: dart format {staged_files}
       stage_fixed: true
     - name: analyze
+      glob: "**/*.dart"
       run: flutter analyze
 
 pre-push:

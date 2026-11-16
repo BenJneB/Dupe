@@ -103,7 +103,10 @@ void main() {
     // Same failure again: written to the journal once, with its cause.
     final logged = appLog.entries.where((e) => e.source == 'covers').toList();
     expect(logged, hasLength(1));
-    expect(logged.single.message, contains('https://c/bad.jpg (StateError)'));
+    expect(
+      logged.single.message,
+      contains('https://c/bad.jpg (Bad state: 404 https://c/bad.jpg)'),
+    );
   });
 
   test('Wi-Fi only by default; mobile data once allowed', () async {

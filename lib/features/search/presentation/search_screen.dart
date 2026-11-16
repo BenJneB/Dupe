@@ -135,7 +135,11 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                       : l10n.volumeTitle(i.title, i.volumeNumber!),
                 ),
                 subtitle: Text(
-                  '${i.type.label(l10n)} · ${i.ownership.label(l10n)}',
+                  [
+                    i.type.label(l10n),
+                    i.ownership.label(l10n),
+                    ?i.isbn13,
+                  ].join(' · '),
                 ),
                 trailing: i.ownership == Ownership.possede
                     ? Icon(Icons.check_circle, color: Colors.green.shade600)

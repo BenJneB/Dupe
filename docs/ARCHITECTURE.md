@@ -81,6 +81,15 @@ Description détaillée des choix techniques et de l'organisation du code (dépl
     limitées), relancé à l'ouverture du scan et de la revue ; `importScanQueue` ajoute en lot (séries créées au
     fil de l'eau) ; revue `/scan/revue`, correction via `/scan/revue/ouvrage` (`ItemFormScreen(popOnSave)`).
   - `loadItemDraft` / `applyAttachment` : `features/collection/data/item_drafts.dart` (partagés formulaire/rafale).
+- Nombre de tomes (v4 phase 23) : `matchSeriesTotal` (titre identique seulement) + `checkVolumeCount` ;
+  `series_total_actions.dart` (menu « Vérifier le nombre de tomes », question au premier tome numéroté d'une série
+  sans total, pré-remplie, délai 5 s) ; `VolumeCountScan` + `volume_counts_screen.dart` (Paramètres → Sources, en
+  lot, propositions à valider). Vue liste des tomes : `volume_list_view.dart`, bascule `VolumesAsList`.
+- Progression des séries (`collection_tab/series_progress_bar.dart`) : barre réelle si `totalVolumes` est connu,
+  sinon barre **indicative** grise (`SeriesEntry.indicativeProgress` = possédés / `highestVolume`, plus haut numéro
+  simple calculé en SQL dans `collection_entries_query.dart`).
+- Recherche : l'ISBN est ajouté au sous-titre des résultats texte (`resultSubtitle(withIsbn: true)`) et des livres
+  de la recherche locale ; pas dans le bandeau du magasin ni la revue de rafale (code qu'on vient de scanner).
 - Lecture (`collection/data/reading_actions.dart`, extension du repository) : statut en un appui
   (`ItemReadingBar`, puces qui passent à la ligne : un SegmentedButton déborde sur téléphone), « Marquer comme
   lus jusqu'au tome N » (`series_menu.dart`), filtre « À lire » (`ViewSettings.toReadOnly`, `unreadCount` de
@@ -90,6 +99,7 @@ Description détaillée des choix techniques et de l'organisation du code (dépl
 - Auteurs (`features/authors/`) : `groupByAuthor` (`authorKey` : « Nom, Prénom » remis dans l'ordre, sans accents ni
   casse ; une série prend aussi les auteurs de ses tomes via `seriesItemAuthorsProvider`), vue « Par auteur » de
   l'onglet (`ViewSettings.byAuthor`, suit les filtres), `AuthorScreen` (`AppRoutes.author`, non filtrée),
+  `AuthorMenu` (page auteur : « Marquer comme lus », `markOwnedRead` de `reading_actions.dart`),
   `AuthorLinks` sur les fiches livre/série (`context.go`, comme « Voir la série »). `EntryTile` (`entries_list.dart`) partagé par l'onglet et la page auteur.
 - Prêts (`features/loans/`) : `LoansRepository` (lend/markReturned/borrowerNames), `LoanActions` (prêt + rappel),
   `ItemLoanSection` sur la fiche, `LoansScreen` (en cours/historique, retards surlignés).
@@ -164,13 +174,16 @@ Description détaillée des choix techniques et de l'organisation du code (dépl
   `linux/runner/my_application.cc`. Pillow est cassé sur ce poste (pas de `_imaging`).
 - Packaging : `android/key.properties` (ignoré) → signature release, sinon clé debug ; `packaging/windows/dupe.iss`
   (Inno Setup, `/DAppVersion=`) ; `packaging/linux/build_appimage.sh` (appimagetool 1.9.1 épinglé).
-- CI (phases 12 et 16, `.github/workflows/`) : `ci.yml` (format `--set-exit-if-changed`, code généré à jour —
+- CI (phases 12 et 16, `.github/workflows/`) : `ci.yml` (déclenché par les pull requests et à la main, plus
+  par les push depuis le 2026-11-15 ; badge du README filtré `?event=pull_request`) (format `--set-exit-if-changed`, code généré à jour —
   build_runner + gen-l10n puis `git status --porcelain` vide —, analyze, `test --coverage` + récapitulatif
   `tool/ci/coverage_summary.sh` hors code généré, builds Linux/Android/Windows + Inno Setup 6.7.1 via choco) ;
   **toujours `dart format .` avant de stager** ; `.github/dependabot.yml` (pub + actions, vers `dev`, lu sur
   la branche par défaut, `dev` depuis 2026-11-15) ; `release.yml` (tag `vX.Y.Z`, ou `vX.Y.Z-suffixe` → *pre-release* jamais proposée en mise à jour ; pubspec reçoit
   toujours `X.Y.Z+code`, le suffixe ne va que dans les noms de fichiers ; → `tool/ci/set_version.sh` → APK `--split-per-abi` signés, AppImage,
-  installateur → Release ; refuse de publier sans les secrets), `keep-alive.yml` (cron quotidien : RPC `keep_alive()` de la
+  installateur → Release ; refuse de publier sans les secrets ; binaires **obfusqués** + zips de symboles par
+  plateforme dans la Release, `FLUTTER_BUILD_ARGS` pour `build_appimage.sh` ; jamais de `runtimeType` dans les
+  messages : illisible une fois obfusqué, `Enum.name` reste intact), `keep-alive.yml` (cron quotidien : RPC `keep_alive()` de la
   migration `20261115090000_keep_alive.sql`, échec si ≠ 200 ; se réactive via `PUT …/enable`). Actions épinglées : checkout v7, flutter-action v2 (Flutter 3.50.0), setup-java v6
   (Temurin 21), upload v7 / download v8, action-gh-release v3. Secrets : `ENV_JSON`, `ANDROID_KEYSTORE_BASE64`,
   `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS`, `ANDROID_KEY_PASSWORD` — jamais lus ni affichés par Claude.

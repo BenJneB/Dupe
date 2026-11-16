@@ -32,12 +32,24 @@ Stream<List<CollectionEntry>> watchCollectionEntries(
      ORDER BY c.volume_number GLOB '[0-9]*' DESC,
        CAST(c.volume_number AS REAL), c.volume_number, c.created_at
      LIMIT 1)''');
+  // Highest plain volume number ("12", not "HS 2").
+  const highestVolume = CustomExpression<int>('''
+    (SELECT MAX(CAST(c.volume_number AS INTEGER)) FROM items c
+     WHERE c.series_id = series.id AND c.deleted_at IS NULL
+       AND c.volume_number GLOB '[0-9]*'
+       AND c.volume_number NOT GLOB '*[^0-9]*')''');
 
   final seriesQuery =
       db.select(s).join([leftOuterJoin(i, i.seriesId.equalsExp(s.id))])
         ..where(s.type.equalsValue(type) & s.deletedAt.isNull())
         ..groupBy([s.id])
-        ..addColumns([ownedCount, unreadCount, itemCount, firstCover]);
+        ..addColumns([
+          ownedCount,
+          unreadCount,
+          itemCount,
+          firstCover,
+          highestVolume,
+        ]);
 
   final seriesStream = seriesQuery.watch().map(
     (rows) => [
@@ -48,6 +60,7 @@ Stream<List<CollectionEntry>> watchCollectionEntries(
           unreadCount: row.read(unreadCount) ?? 0,
           itemCount: row.read(itemCount) ?? 0,
           firstVolumeCover: row.read(firstCover),
+          highestVolume: row.read(highestVolume),
         ),
     ],
   );

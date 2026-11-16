@@ -40,4 +40,25 @@ extension ReadingActions on CollectionRepository {
     }
     return changed;
   }
+
+  /// Owned books of [items] not read yet: what "mark as read" would change.
+  List<Item> unreadOwned(Iterable<Item> items) => [
+    for (final item in items)
+      if (item.ownership == Ownership.possede &&
+          item.readingStatus != ReadingStatus.lu)
+        item,
+  ];
+
+  /// Marks the owned unread books of [items] as read (read date [today] when
+  /// they have none). Returns the number of books changed.
+  Future<int> markOwnedRead(
+    Iterable<Item> items, {
+    required DateTime today,
+  }) async {
+    final toMark = unreadOwned(items);
+    for (final item in toMark) {
+      await setReadingStatus(item, ReadingStatus.lu, today: today);
+    }
+    return toMark.length;
+  }
 }

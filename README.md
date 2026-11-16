@@ -1,6 +1,6 @@
 # Dupe
 
-[![CI](https://github.com/BenJneB/Dupe/actions/workflows/ci.yml/badge.svg)](https://github.com/BenJneB/Dupe/actions/workflows/ci.yml)
+[![CI](https://github.com/BenJneB/Dupe/actions/workflows/ci.yml/badge.svg?event=pull_request)](https://github.com/BenJneB/Dupe/actions/workflows/ci.yml)
 
 Application personnelle pour cataloguer une collection de mangas, BD, comics et livres
 (Android, Windows, Linux). Spécification : [PLAN.md](PLAN.md).
@@ -129,7 +129,8 @@ curl -fLO https://github.com/evilmartians/lefthook/releases/download/v2.2.2/left
 sudo dpkg -i lefthook_2.2.2_amd64.deb
 lefthook install
 ```
-- avant un commit : `dart format` des fichiers `.dart` stagés (re-stagés automatiquement) et `flutter analyze` ;
+- avant un commit : `dart format` des fichiers `.dart` stagés (re-stagés automatiquement) et `flutter analyze`,
+  en parallèle et seulement si le commit contient du Dart (un commit de documentation est immédiat) ;
 - avant un push : `flutter test` ;
 - message de commit : `tool/check_commit_msg.sh` (refuse un message non conventionnel).
 
@@ -184,7 +185,8 @@ flutter run -d windows --dart-define-from-file=env.json
 ## Installer / distribuer
 ### Publier une version (GitHub Actions)
 `.github/workflows/` :
-- `ci.yml` : à chaque push, analyse, tests et compilation Linux, Android et **Windows** (seule vérification
+- `ci.yml` : à chaque pull request (et à la demande, *Run workflow*), analyse, tests et compilation Linux,
+  Android et **Windows** (seule vérification
   Windows sans PC Windows) ;
 - `release.yml` : pousser un tag `vX.Y.Z` construit les APK signés (un par architecture), l'AppImage et
   l'installateur Windows, puis les publie dans une Release GitHub. La version vient du tag
@@ -203,6 +205,11 @@ le récapitulatif du job, `lcov.info` en artefact), builds.
 ```sh
 git tag v1.0.0 && git push origin v1.0.0
 ```
+Les binaires des Releases sont **obfusqués** (`--obfuscate --split-debug-info`) ; chaque Release contient aussi
+`dupe-<version>-symbols-<android|linux|windows>.zip`. Pour lire une trace d'erreur copiée du journal d'une version
+publiée : `flutter symbolize -i trace.txt -d app.android-arm64.symbols` (fichier du zip de la bonne plateforme et de
+la bonne version). Les builds locaux (`flutter build …` sans ces options) ne sont pas obfusqués.
+
 Un tag avec suffixe (`v0.0.1-test`, `v1.2.0-rc.1`) publie une **pre-release** : mêmes fichiers, mais jamais
 proposée comme mise à jour par l'appli. Pour la supprimer : supprimer la Release sur GitHub, puis
 `git push --delete origin v0.0.1-test && git tag -d v0.0.1-test`.
@@ -274,6 +281,27 @@ Version : `ISCC.exe /DAppVersion=1.2.3 …` (la CI passe celle du tag), sinon 1.
 packaging/linux/build_appimage.sh            # utilise env.json
 # -> build/Dupe-1.0.0-x86_64.AppImage (appimagetool téléchargé une fois dans build/tools/)
 ```
+
+Une AppImage n'installe rien : sans entrée de menu, GNOME n'affiche pas son icône dans le dock. Pour l'intégrer
+une fois (adapter le chemin de l'AppImage ; un outil comme *Gear Lever* le fait aussi) :
+```sh
+APPIMAGE=$HOME/Applications/Dupe-x86_64.AppImage
+cd /tmp && "$APPIMAGE" --appimage-extract dupe.png >/dev/null \
+  && mkdir -p ~/.local/share/icons ~/.local/share/applications \
+  && mv squashfs-root/dupe.png ~/.local/share/icons/dupe.png && rmdir squashfs-root
+cat > ~/.local/share/applications/dev.dupe.dupe.desktop <<EOF
+[Desktop Entry]
+Type=Application
+Name=Dupe
+Exec=$APPIMAGE
+Icon=$HOME/.local/share/icons/dupe.png
+Categories=Office;Utility;
+StartupWMClass=dupe
+Terminal=false
+EOF
+```
+Le fichier s'appelle comme l'identifiant de l'appli (`dev.dupe.dupe`, utilisé sous Wayland) et `StartupWMClass`
+couvre X11. Lancer ensuite Dupe depuis la liste des applications.
 
 ### Icône
 Dessinée en code (`lib/app/widgets/dupe_logo.dart`). Après modification :

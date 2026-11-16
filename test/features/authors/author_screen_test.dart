@@ -1,6 +1,7 @@
 import 'package:dupe/app/router.dart';
 import 'package:dupe/core/database/app_database.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
+import 'package:dupe/features/collection/domain/enums.dart';
 import 'package:dupe/features/collection/domain/item.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
@@ -88,5 +89,36 @@ void main() {
 
     expect(find.byKey(const Key('authorPage')), findsNothing);
     expect(find.byKey(const Key('authorsList')), findsOneWidget);
+  });
+
+  testWidgets('author page: mark books read, then everything', (tester) async {
+    final db = await pumpApp(tester, seed: seedBooks);
+    await goTo(tester, AppRoutes.author(CollectionType.livre, 'Eoin Colfer'));
+    Future<List<ReadingStatus>> statuses() async => [
+      for (final i in (await tester.runAsync(
+        () => db.select(db.itemsTable).get(),
+      ))!)
+        if (i.authors.contains('Eoin Colfer')) i.readingStatus,
+    ];
+
+    // No standalone book: only "everything" is offered.
+    await tester.tap(find.byKey(const Key('authorMenu')));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('authorMarkBooksRead')), findsNothing);
+    await tester.tap(find.byKey(const Key('authorMarkAllRead')));
+    await tester.pumpAndSettle();
+    expect(find.text('Marquer 3 livres comme lus ?'), findsOneWidget);
+    await tester.tap(find.byKey(const Key('confirmAuthorMarkRead')));
+    await tester.pumpAndSettle();
+
+    expect(find.text('3 livres marqués comme lus'), findsOneWidget);
+    expect(await statuses(), everyElement(ReadingStatus.lu));
+
+    // Again: nothing left, no question asked.
+    await tester.tap(find.byKey(const Key('authorMenu')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('authorMarkAllRead')));
+    await tester.pumpAndSettle();
+    expect(find.text('Rien à marquer : tout est déjà lu'), findsOneWidget);
   });
 }

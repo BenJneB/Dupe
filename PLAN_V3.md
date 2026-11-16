@@ -371,6 +371,47 @@ Avant la reprise des tests : `check-env` refuse aussi `OPEN_LIBRARY_CONTACT` ; a
 - Exception au gel demandée par l'utilisateur (2026-11-15) : « Compléter les couvertures manquantes » n'interroge
   plus la BnF (jamais d'image ; source souvent la plus lente) : `lookupIsbn(…, except: {bnf})`. Tests dans
   `missing_covers_test.dart` et `metadata_aggregator_test.dart`.
+- Exception au gel validée par l'utilisateur (2026-11-15, revue des idées) : ISBN affiché dans les résultats de
+  recherche (`resultSubtitle(withIsbn:)`, tuiles de la recherche locale), barre indicative
+  (`SeriesEntry.highestVolume` / `indicativeProgress`, `series_progress_bar.dart`), menu « Marquer comme lus » de la
+  page auteur (`author_menu.dart`, `markOwnedRead`). Tests : `search_screen_test.dart`, `online_search_test.dart`,
+  `series_navigation_test.dart`, `author_screen_test.dart`. `PLAN_V4.md` commencé (brouillon).
+- Recette mise au second plan par l'utilisateur (2026-11-15) pour les améliorations. **Obfuscation des Releases
+  publiques** : `release.yml` (APK, AppImage via `FLUTTER_BUILD_ARGS`, Windows) avec `--obfuscate
+  --split-debug-info`, zips de symboles joints à la Release ; vérifié par expérience que l'obfuscation garde
+  `Enum.name` (clés API, sources désactivées, sauvegardes compatibles entre builds) mais pas `runtimeType` →
+  `coverError` et `LogObserver` n'en dépendent plus (`cover_cache_test.dart`). AppImage obfusquée construite en
+  local avec ses symboles. À vérifier à la prochaine Release (`Y-16`).
+- `P-03` OK (cinq *repository secrets* ; un premier essai avec tout dans un seul secret donnait « Missing secret
+  ENV_JSON »). `Y-02` OK : premier passage de `release.yml` (tag `v0.0.1-test` sur `Phase21`), *pre-release*
+  complète, APK signé avec la clé de l'utilisateur, aucune donnée personnelle dans le binaire.
+- `A-01`, `M-01`, `M-02` OK (téléphone, APK de la Release). **Tests reportés de la phase 14 : tous faits.**
+- `P-05` (migration `keep_alive`) et `Y-05` (veille lancée à la main) OK. Release de test supprimée.
+  **Première version stable `v0.1.0`** publiée le 2026-11-15 (tag sur `main`, fusion Phase21 → `dev` → `main`).
+  `N-01` lancé le 2026-11-15 (retour le lendemain) ; date proposée par défaut J+30 (`lend_dialog.dart`, prévu).
+- CI : déclencheur `push` retiré de `ci.yml` (décision de l'utilisateur : une branche avec une PR passait deux
+  fois) ; restent `pull_request` et `workflow_dispatch` ; badge du README sur `?event=pull_request` (`Y-12`).
+- Compte : `S-11`, `S-12` OK ; `S-10` (changement de mot de passe) reporté par l'utilisateur.
+- Synchro : `S-09` OK ; `S-04`/`S-05` déjà validés ; `S-06` à `S-08` reportés par l'utilisateur.
+- Journal : `J-01`, `J-03`, `J-04` OK ; `J-05` partiel (fichier invalide reporté).
+- Téléphone : `M-03` à `M-05`, `M-07`, `M-11`, `M-12` OK. **`M-14` en échec** : avec l'appli en arrière-plan
+  sur l'écran de scan, caméra et lampe restaient allumées (contrôleur `MobileScannerController` créé par nous : le
+  widget ne suit alors pas le cycle de vie) → `AppLifecycleListener` qui arrête la caméra quand l'appli est cachée
+  et la relance au retour. Non testable automatiquement (plugin caméra Android) : à revérifier sur le téléphone.
+  `M-09`/`M-10` (vibrations) : rien ne vibre, réglages haptiques du téléphone à vérifier. **Mode rafale (`R-01` à
+  `R-04`) reporté après la v4** (décision de l'utilisateur) : écart accepté pour la recette de la v3.
+- `M-14` OK après correction (lampe non rallumée au retour : accepté), `M-06` OK, `M-13` OK. Écart corrigé : le
+  message « Code UPC » apparaissait souvent en scannant des livres (deux codes-barres dans la même image, le premier
+  lu n'étant pas toujours l'ISBN) → `pickScannedCode` préfère l'ISBN (`parse_scanned_code_test.dart`).
+- Fichiers et filets de sécurité : `F-01`, `F-02`, `B-01` à `B-03`, `B-05` à `B-08` OK ; `F-03` à `F-05`, `B-04`
+  reportés. Code-barres très petit et plat (livre ActuSF) non lu à distance : conseils donnés (se rapprocher,
+  « Saisir l'ISBN ») ; résolution d'analyse de la caméra à augmenter seulement si le problème persiste de près.
+- Données réelles : `D-04`, `D-05` OK ; `D-01` à `D-03` à confirmer.
+- Plateformes : `A-03`, `L-01` OK (icône absente du dock GNOME sans entrée `.desktop` : intégration documentée
+  dans le README) ; Windows (`W-*`) reporté.
+- Hooks : le pré-commit lance format et analyse en parallèle, et seulement si le commit contient du Dart (commits
+  de documentation instantanés) ; pré-push inchangé (tests).
+- Clés des sources : `K-01` à `K-04` OK sur la v0.1.0 (AppImage + téléphone) ; `K-05` vérifié en local.
 
 **Retours déjà traités (2026-11-15, APK release sur Android)** :
 - Free Quest tome 1 scanné en magasin : aucune série proposée. La BnF n'a pas ce tome ; l'autre source
@@ -421,64 +462,20 @@ Avant la reprise des tests : `check-env` refuse aussi `OPEN_LIBRARY_CONTACT` ; a
   fournit pas, Open Library rarement pour les éditions françaises).
 
 ### Après la v3 — idées notées
-- **Compléter une série à la création** (en partie fait : proposition des tomes *précédents*) : à l'ajout du tome 1 (ou du premier tome d'une nouvelle série),
-  proposer d'ajouter les tomes suivants jusqu'au tome N (non possédés), N pré-rempli par AniList / Comic Vine
-  quand c'est possible, saisi sinon (BD, livres). Demande de l'utilisateur (Kaamelott tome 1, 2026-11-15).
-  Existe déjà à la main : bouton « Ajouter des tomes » de l'écran de série (`addVolumes`).
-- **Mot de passe oublié sans être connecté** : lien « Mot de passe oublié ? » sur l'écran de connexion
-  (email de réinitialisation Supabase), au lieu de passer par Paramètres → Mot de passe une fois connecté.
-- **Lien de confirmation d'inscription** : il ouvre `localhost` (404). *Site URL* / *Redirect URLs* du projet
-  Supabase à régler, et page d'arrivée (ou lien profond `dupe://`) qui confirme puis renvoie dans l'appli.
-- **Progression des séries sans total connu** (demande de l'utilisateur, 2026-11-15) : aujourd'hui la barre n'apparaît
-  que si `totalVolumes` est renseigné (séries créées par un scan ou importées : aucune). Deux pistes, combinables :
-  - barre indicative basée sur le plus haut tome connu (possédés / plus haut numéro), visuellement distincte d'une
-    vraie progression ;
-  - « Vérifier le nombre de tomes » (sur une série, ou en lot dans Paramètres) : recherche AniList (manga) /
-    Comic Vine (comics) et proposition du total trouvé, à confirmer (AniList donne les tomes japonais) ; rien pour
-    BD et livres (pas de source).
-- **Marquer comme lus depuis la page d'un auteur** (demande de l'utilisateur, 2026-11-15) : actions « Marquer tous
-  les livres hors série comme lus » et « Tout marquer comme lu » (livres hors série + tomes possédés de ses séries),
-  avec confirmation et date de lecture du jour (comme « lus jusqu'au tome N ») ; idéalement aussi une sélection
-  multiple dans la liste.
-- **Obfuscation des Releases publiques** (discuté le 2026-11-15) : `release.yml` avec `--obfuscate
-  --split-debug-info`, symboles joints à chaque Release (pour `flutter symbolize` des traces du journal) ; avant cela,
-  ne plus journaliser `runtimeType` (`coverError` dans `cover_cache.dart` : noms de classes illisibles une fois
-  obfusqués). **Seulement les Releases publiques** (décision de l'utilisateur) : les APK signés construits en local
-  pour son propre téléphone, même en release, restent non obfusqués (journal lisible). Gain observé : ~1,7 Mo sur l'APK arm64 ; ne protège pas les
-  textes (secrets) : `check-env` reste nécessaire.
-- **Titres des tomes dans l'écran d'une série** (demande de l'utilisateur, 2026-11-15) : la grille de pastilles
-  (numéros seuls) est jugée pauvre. Ajouter une vue liste des tomes (couverture, numéro, titre du tome, statut
-  lu/prêté/envie), en bascule avec la grille, ou le titre sous chaque pastille.
-- **« Compléter les couvertures » par recherche texte** (constat de l'utilisateur, 2026-11-15 : la recherche en ligne
-  montre des couvertures que le bouton ne trouve pas). Aujourd'hui : recherche **par ISBN** seulement (BnF sans
-  image, Google Books par ISBN avec clé, devinette Open Library) et livres sans ISBN ignorés. La recherche en ligne
-  est une recherche **texte** : Google Books et Open Library y renvoient d'autres éditions, souvent illustrées
-  (Open Library `cover_i`). Piste : si l'ISBN ne donne rien, recherche texte (titre + auteur, ou série + numéro)
-  et couverture d'un résultat **concordant** (titre normalisé, auteur, numéro ; même ISBN de préférence), marquée
-  comme « autre édition » et proposée à valider plutôt qu'appliquée d'office (risque de mauvaise image).
-- **Autre édition d'un livre hors série** (question de l'utilisateur, 2026-11-15) : en magasin, « Tu as ce tome dans
-  une autre édition » ne marche que pour un tome de série (série reconnue + même numéro, éditeur compatible). Un
-  livre hors série scanné dans une autre édition (autre ISBN : poche / grand format, réédition) donne « pas dans ta
-  collection ». Piste : après la recherche en ligne, comparer titre normalisé + auteur (`normalizeTitle`,
-  `authorKey`) aux livres possédés sans série ; bandeau vert « autre édition » comme pour les séries. Limite : il
-  faut le réseau (l'ISBN seul ne relie pas deux éditions).
-- **Livres numériques** (demande de l'utilisateur, 2026-11-15) : ebooks du téléphone/PC, Kindle ou Kobo, rangés
-  dans la collection. Pistes (métadonnées seulement, jamais de contournement de DRM ni de copie des fichiers) :
-  1. Modèle : support « papier / numérique » sur l'item (champ dédié plutôt que le texte libre `format`), affiché
-     sur la fiche et la grille ; le mode magasin dit « tu l'as en numérique » ; stats séparables.
-  2. Import **Calibre** (`metadata.db`, SQLite : titres, auteurs, séries + `series_index`, identifiants ISBN,
-     couvertures) : le meilleur pivot, Calibre gérant déjà Kindle et Kobo.
-  3. **Dossier de fichiers** (EPUB : OPF `dc:title`/`dc:creator`/`dc:identifier`, série `calibre:series` ou
-     `belongs-to-collection` + `group-position` ; CBZ : `ComicInfo.xml` Series/Number ; PDF : titre seulement).
-     Android : dossier choisi via le Storage Access Framework (accès persistant) ; desktop : file_selector.
-  4. **Kobo branchée en USB** (desktop) : `.kobo/KoboReader.sqlite`, table `content` (titre, auteur, série,
-     numéro, ISBN, `ReadStatus`, pourcentage, dernière lecture) → importe aussi le statut de lecture.
-  5. **Kindle** : pas d'API publique ; livres achetés seulement via Calibre ou l'import CSV existant
-     (export Goodreads…), fichiers personnels via le dossier `documents` en USB (métadonnées pauvres).
-  Classement : recherche par ISBN puis rattachement aux séries existantes (`series_matching.dart`), doublons
-  par ISBN, revue avant import (comme la rafale) ; chemins/URI des fichiers en table **locale** (propres à
-  l'appareil, non synchronisés), bouton « Ouvrir » vers la liseuse système. Ordre conseillé : 1, 2, 3, 4.
-
+Revue avec l'utilisateur le 2026-11-15 :
+- **Faites en phase 21** (exception au gel) : ISBN dans les résultats de recherche texte et locale ; barre de
+  progression **indicative** (grise : possédés / plus haut tome connu) pour les séries sans total ; « Marquer
+  comme lus » depuis la page d'un auteur (livres hors série, ou tout avec les séries ; confirmation, date du jour).
+- **Fait le 2026-11-15** (avant la Release `v0.1.1`) :
+  - **Obfuscation des Releases publiques** (discuté le 2026-11-15) : `release.yml` avec `--obfuscate
+    --split-debug-info`, symboles joints à chaque Release (pour `flutter symbolize` des traces du journal) ; avant cela,
+    ne plus journaliser `runtimeType` (`coverError` dans `cover_cache.dart` : noms de classes illisibles une fois
+    obfusqués). **Seulement les Releases publiques** (décision de l'utilisateur) : les APK signés construits en local
+    pour son propre téléphone, même en release, restent non obfusqués (journal lisible). Gain observé : ~1,7 Mo sur l'APK arm64 ; ne protège pas les
+    textes (secrets) : `check-env` reste nécessaire.
+- **Toutes les autres idées sont reprises dans `PLAN_V4.md`** (brouillon) : mot de passe oublié et liens de
+  confirmation (phase 22) ; nombre de tomes, tomes suivants, titres des tomes (23) ; couvertures par recherche texte
+  et autre édition d'un livre hors série (24) ; livres numériques (25-26) ; recette v4 avec le mode rafale (27).
 
 ## 5. Actions manuelles de l'utilisateur
 - **Phase 14** : créer le compte dans l'appli (fait). Le reste est reporté en phase 21.
