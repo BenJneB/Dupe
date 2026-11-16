@@ -67,24 +67,23 @@ MetadataResult? parseUnimarcRecord(UnimarcRecord r) {
 }
 
 /// The 225 field that names the series, if any. 225 is often a publisher's
-/// collection instead ("Folio junior" n° 1987, "J'ai lu" n° 13320):
-/// - without a number ($v) it is always a collection;
-/// - with a linked series (461), only the 225 of that series counts;
-/// - when the record has its own volume (200 $h), the title is the series;
-/// - collection numbers are large: from 1000, not a volume.
+/// collection instead ("Folio junior" n° 1987, "Tracts Gallimard" n° 50,
+/// "Poches Jouvence" n° 1). In the BnF records, a real series always comes
+/// with its 461 link; a numbered 225 alone is a collection (recette
+/// 2026-11-16). So only the 225 of the linked series counts, and only when
+/// the record has no own volume number (200 $h); numbers from 1000 are
+/// collection numbers whatever the title.
 ({String title, String number})? _seriesCollection(
   UnimarcRecord r, {
   required String? linkedSeries,
   required bool hasOwnVolume,
 }) {
-  if (hasOwnVolume && linkedSeries == null) return null;
+  if (linkedSeries == null || hasOwnVolume) return null;
   for (final f in r.fields('225')) {
     final title = UnimarcRecord.subfields(f, 'a').firstOrNull;
     final number = UnimarcRecord.subfields(f, 'v').firstOrNull;
     if (title == null || number == null) continue;
-    if (linkedSeries != null && _fold(title) != _fold(linkedSeries)) {
-      continue;
-    }
+    if (_fold(title) != _fold(linkedSeries)) continue;
     if ((int.tryParse(number.trim()) ?? 0) >= 1000) continue;
     return (title: title, number: number);
   }

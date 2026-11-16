@@ -97,6 +97,17 @@ void main() {
     expect(t2.volumeNumber, '2');
   });
 
+  test('a numbered collection without series link is not a series', () async {
+    // Real record: 225 "Tracts Gallimard" $v 50, 410 collection, no 461.
+    http.on((u) => true, fixture('bnf/isbn_9782073047342.xml'));
+
+    final r = (await provider.searchByIsbn('9782073047342'))!;
+
+    expect(r.title, 'Antidote au culte de la performance');
+    expect(r.seriesTitle, isNull);
+    expect(r.volumeNumber, isNull);
+  });
+
   test('volume labels are cleaned', () {
     expect(cleanVolumeNumber('Tome 2'), '2');
     expect(cleanVolumeNumber('T. 12'), '12');

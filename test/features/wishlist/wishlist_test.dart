@@ -1,8 +1,10 @@
+import 'package:drift/drift.dart' hide isNotNull, isNull;
 import 'package:dupe/app/router.dart';
 import 'package:dupe/core/database/app_database.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
 import 'package:dupe/features/collection/domain/enums.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart' hide Column, Table;
 
 import '../../helpers/app_harness.dart';
 import '../../helpers/scan_helpers.dart';
@@ -67,5 +69,31 @@ void main() {
       find.text('Aucun tome manquant dans tes séries suivies'),
       findsOneWidget,
     );
+  });
+
+  testWidgets('swipe a wish away, then undo', (tester) async {
+    final db = await pumpApp(tester, seed: seedWishes);
+    await goTo(tester, AppRoutes.wishlist);
+    Future<int> wishCount() async => (await tester.runAsync(
+      () =>
+          (db.select(db.itemsTable)..where(
+                (t) =>
+                    t.ownership.equalsValue(Ownership.envie) &
+                    t.deletedAt.isNull(),
+              ))
+              .get(),
+    ))!.length;
+
+    await tester.drag(find.text('Dune'), const Offset(-600, 0));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Dune'), findsNothing);
+    expect(find.text('« Dune » retiré des envies'), findsOneWidget);
+    expect(await wishCount(), 1);
+
+    await tester.tap(find.byKey(const Key('undoDelete')));
+    await tester.pumpAndSettle();
+    expect(find.text('Dune'), findsOneWidget);
+    expect(await wishCount(), 2);
   });
 }

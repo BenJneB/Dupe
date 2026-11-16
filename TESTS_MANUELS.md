@@ -7,7 +7,7 @@
 > finale. Les phases 15 à 20 ajoutent leurs tests ici et marquent « automatisé (phase N) » ceux que leurs tests
 > automatiques couvrent désormais.
 
-Ce fichier liste ce que les **239 tests automatiques (et 4 parcours d'intégration) ne couvrent pas** : matériel (caméra, vibrations,
+Ce fichier liste ce que les **242 tests automatiques (et 4 parcours d'intégration) ne couvrent pas** : matériel (caméra, vibrations,
 notifications, raccourci), services réels (Supabase, API GitHub, sources de métadonnées), plateformes non
 compilées ici (Windows) et workflows GitHub (jamais exécutés).
 
@@ -63,7 +63,7 @@ Tous les tests non faits en phase 14 et non marqués « automatisé ». Le but :
 7f. **Widget et dictée** (phase 19, téléphone) : `G-01` à `G-04`, `V-01` à `V-04`.
 7g. **Couvertures, stats, envies** (phase 20) : `O-01` à `O-04` (`O-02` en mode avion), `T-01`, `T-02`,
    `E-01` à `E-03`.
-7h. **Retours de recette Android** (2026-11-15, téléphone + vraie collection) : `Q-01` à `Q-09`.
+7h. **Retours de recette Android** (2026-11-15, téléphone + vraie collection) : `Q-01` à `Q-11`.
 8. **Le lendemain / plus tard** : `N-01` à `N-04` ; `M-12` chronométré en magasin ; `Y-06` (observation sur
    plusieurs semaines) ; `J-06` (facultatif, met le projet en pause).
 
@@ -365,19 +365,26 @@ Automatisé (phase 19) : ouverture du scan depuis le widget (au lancement et app
 et non renvoyés s'ils n'ont pas changé, découpage des phrases (« One Piece tome 107 », « tome 3 de Blacksad »,
 nombres en lettres jusqu'à 999 999), ouverture du tome dicté / absence / recherche normale, explication du micro
 une seule fois. Simulés : le plugin du widget et le micro.
-- [ ] **G-01** Ajouter le widget « Dupe » sur l'écran d'accueil : bouton « Scanner » et « N ouvrages » (puis
+- [x] **G-01** Ajouter le widget « Dupe » sur l'écran d'accueil : bouton « Scanner » et « N ouvrages » (puis
       « · N prêts en retard » s'il y en a).
-- [ ] **G-02** « Scanner » depuis l'écran d'accueil ouvre le scan en mode Magasin, appli fermée comme ouverte.
-- [ ] **G-03** Les compteurs suivent un ajout, une suppression, une synchro venant de l'autre appareil (en
+      — OK 2026-11-16 (Xiaomi, Android 14).
+- [x] **G-02** « Scanner » depuis l'écran d'accueil ouvre le scan en mode Magasin, appli fermée comme ouverte.
+      — OK 2026-11-16 (Xiaomi, Android 14).
+- [x] **G-03** Les compteurs suivent un ajout, une suppression, une synchro venant de l'autre appareil (en
       quelques secondes, appli ouverte).
-- [ ] **G-04** Chrono à froid (appli fermée, balayée des applis récentes) : du toucher sur « Scanner » à la
+      — OK 2026-11-16 (Xiaomi, Android 14).
+- [x] **G-04** Chrono à froid (appli fermée, balayée des applis récentes) : du toucher sur « Scanner » à la
       caméra prête, **objectif < 2 s**. Noter la mesure et le modèle de téléphone.
-- [ ] **V-01** Android : micro de la barre de recherche → explication (une seule fois) → autorisation du micro
+      — OK 2026-11-16 (Xiaomi, Android 14) : caméra prête en moins de 2 s (mesure non chiffrée).
+- [x] **V-01** Android : micro de la barre de recherche → explication (une seule fois) → autorisation du micro
       demandée par Android → « J'écoute… ».
-- [ ] **V-02** « One Piece tome 107 » (ou un tome possédé) : la fiche du tome s'ouvre ; un tome absent ouvre la
+      — OK 2026-11-16 (Xiaomi, Android 14).
+- [x] **V-02** « One Piece tome 107 » (ou un tome possédé) : la fiche du tome s'ouvre ; un tome absent ouvre la
       série avec « Tome N de … : absent de ta collection » ; « Dune » lance une recherche normale.
-- [ ] **V-03** Nombres dits en lettres (« Naruto volume douze »), et « Arrêter » / glisser le panneau vers le bas
+      — OK 2026-11-16 (Xiaomi, Android 14).
+- [x] **V-03** Nombres dits en lettres (« Naruto volume douze »), et « Arrêter » / glisser le panneau vers le bas
       arrête l'écoute.
+      — OK 2026-11-16 (Xiaomi, Android 14).
 - [ ] **V-04** Windows : la dictée fonctionne (reconnaissance vocale de Windows) ; Linux : pas de bouton micro.
 
 
@@ -387,25 +394,34 @@ supprimées ignorées, échecs comptés et retentés au passage suivant), Wi-Fi 
 perte de connexion puis reprise, désactivation, section Paramètres (état, taille, « Vider ») ; statistiques de
 lecture sur un jeu calculé à la main ; date de lecture remplie en choisissant « Lu » dans le formulaire ;
 filtres et texte partagés, image PNG produite. Simulés : la connexion (`connectivity_plus`) et le cache disque.
-- [ ] **O-01** Téléphone en Wi-Fi : Paramètres → Couvertures hors ligne passe à « Téléchargement : n / N » puis
+- [x] **O-01** Téléphone en Wi-Fi : Paramètres → Couvertures hors ligne passe à « Téléchargement : n / N » puis
       « N couvertures disponibles hors ligne », avec la place utilisée.
-- [ ] **O-02** **Critère de la phase** : mode avion, appli relancée : la collection (onglets, séries, fiches) et
+      — OK 2026-11-16 (« a l'air ok » : rien d'anormal constaté).
+- [x] **O-02** **Critère de la phase** : mode avion, appli relancée : la collection (onglets, séries, fiches) et
       les envies s'affichent **avec leurs couvertures**. Pareil sur Linux sans réseau, **après un redémarrage
       du PC** (les couvertures ne sont plus dans `/tmp`).
-- [ ] **O-03** Sur données mobiles (Wi-Fi coupé) : « En attente du Wi-Fi », rien n'est téléchargé ; couper le
+      — OK 2026-11-16 (« a l'air ok » : rien d'anormal constaté).
+- [x] **O-03** Sur données mobiles (Wi-Fi coupé) : « En attente du Wi-Fi », rien n'est téléchargé ; couper le
       Wi-Fi pendant un téléchargement l'interrompt ; « Wi-Fi seulement » décoché : le téléchargement reprend.
-- [ ] **O-04** « Vider » : la place retombe à ~0 Mo, les photos prises soi-même restent visibles ; toucher la
+      — OK 2026-11-16 (« a l'air ok » : rien d'anormal constaté).
+- [x] **O-04** « Vider » : la place retombe à ~0 Mo, les photos prises soi-même restent visibles ; toucher la
       ligne d'état relance le téléchargement.
-- [ ] **T-01** Statistiques → « Tomes lus par mois » : marquer un tome « Lu » (puce de la fiche, menu « lus
+      — OK 2026-11-16 (« a l'air ok » : rien d'anormal constaté).
+- [x] **T-01** Statistiques → « Tomes lus par mois » : marquer un tome « Lu » (puce de la fiche, menu « lus
       jusqu'au tome N », ou formulaire) l'ajoute au mois courant ; la vue tableau donne les mêmes chiffres.
-- [ ] **T-02** Pile à lire, plus ancien tome, délai achat → lecture et séries abandonnées correspondent à ce
+      — OK 2026-11-16 (« a l'air ok » : rien d'anormal constaté).
+- [x] **T-02** Pile à lire, plus ancien tome, délai achat → lecture et séries abandonnées correspondent à ce
       qu'on sait de sa collection (les tomes lus avant la v3, sans date, sont seulement signalés).
-- [ ] **E-01** Envies → Partager : filtres par type et priorité, aperçu avec couvertures (vignette grise pour une
+      — OK 2026-11-16 (« a l'air ok » : rien d'anormal constaté).
+- [x] **E-01** Envies → Partager : filtres par type et priorité, aperçu avec couvertures (vignette grise pour une
       couverture introuvable), « Afficher le prix max ».
-- [ ] **E-02** **Critère de la phase** : Android, « Partager l'image » → l'envoyer par message (WhatsApp,
+      — OK 2026-11-16 (« a l'air ok » : rien d'anormal constaté).
+- [x] **E-02** **Critère de la phase** : Android, « Partager l'image » → l'envoyer par message (WhatsApp,
       SMS…) : l'image est nette et lisible sur le téléphone du destinataire ; « Partager le texte » idem.
-- [ ] **E-03** Linux / Windows : « Partager l'image » ouvre « Enregistrer sous » (fichier PNG correct) ;
+      — OK 2026-11-16 (« a l'air ok » : rien d'anormal constaté).
+- [x] **E-03** Linux / Windows : « Partager l'image » ouvre « Enregistrer sous » (fichier PNG correct) ;
       « Partager le texte » copie la liste dans le presse-papiers.
+      — OK 2026-11-16 (« a l'air ok » : rien d'anormal constaté).
 
 ## 15. Retours de recette Android (2026-11-15)
 Automatisé (recette) : tome lu dans le titre (« Free Quest Tome 1 », « T01 »), collection d'éditeur numérotée
@@ -437,6 +453,10 @@ remplacées, photos gardées), vue et page par auteur. Simulés : les sources et
 - [x] **Q-09** Page d'un auteur → menu ⋮ → « Marquer les livres hors série comme lus » / « Tout marquer comme lu » :
       confirmation avec le nombre de livres, puis livres marqués « Lu » avec la date du jour.
       — OK 2026-11-16.
+- [ ] **Q-10** Tome créé vide (« Ajouter des tomes », ou « Il te manque … → Ajouter ») puis scanné en mode Magasin :
+      « ISBN mémorisé », et la fiche du tome a maintenant couverture, auteurs, éditeur, prix (ce que tu avais saisi
+      reste inchangé).
+- [ ] **Q-11** Envies : glisser un livre vers la gauche le retire, « Annuler » le remet.
 
 ## 16. Séries : nombre de tomes et vue liste (v4, phase 23)
 Automatisé (phase 23) : seul un titre identique propose un total ; vérification depuis le menu d'une série et en

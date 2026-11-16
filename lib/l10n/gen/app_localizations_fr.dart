@@ -455,6 +455,11 @@ class AppLocalizationsFr extends AppLocalizations {
       'Aucune source ne donne le nombre de tomes des BD et des livres : saisis-le.';
 
   @override
+  String wishRemoved(String title) {
+    return '« $title » retiré des envies';
+  }
+
+  @override
   String get seeSeries => 'Voir la série';
 
   @override

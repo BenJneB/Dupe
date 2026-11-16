@@ -199,6 +199,8 @@
   "showVolumesAsGrid": "Afficher les tomes en pastilles",
   "loanReminderNotificationsOff": "Prêt enregistré, mais le rappel ne s’affichera pas : les notifications de Dupe sont désactivées (Paramètres Android → Applications → Dupe → Notifications).",
   "totalNoSource": "Aucune source ne donne le nombre de tomes des BD et des livres : saisis-le.",
+  "wishRemoved": "« {title} » retiré des envies",
+  "@wishRemoved": {"placeholders": {"title": {"type": "String"}}},
   "seeSeries": "Voir la série",
   "ownershipOwned": "Possédé",
   "ownershipWished": "Envie",

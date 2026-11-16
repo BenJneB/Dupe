@@ -5,6 +5,7 @@ import 'package:dupe/features/collection/data/collection_repository.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
 import 'package:dupe/features/collection/domain/enums.dart';
 import 'package:dupe/features/collection/domain/item.dart';
+import 'package:dupe/features/collection/domain/metadata_mapping.dart';
 import 'package:dupe/features/collection/domain/series.dart';
 import 'package:dupe/features/collection/domain/series_matching.dart';
 import 'package:dupe/features/collection/domain/volume_number.dart';
@@ -50,9 +51,16 @@ class StoreChecker {
     final items = await _repo.listSeriesItems(series.id);
     final copy = _sameVolume(items, metadata.volumeNumber);
     if (copy != null) {
-      // Owned volume added without ISBN (grid, range): remember it.
+      // Volume added without ISBN (grid, range, previous volumes): remember
+      // the ISBN and fill its empty fields (recette: WARP 1-2 left empty).
       final remember = copy.isbn13 == null;
-      final item = remember ? copy.copyWith(isbn13: isbn13) : copy;
+      final item = remember
+          ? fillBlanks(
+              copy.copyWith(isbn13: isbn13),
+              metadata,
+              seriesTitle: series.title,
+            )
+          : copy;
       if (remember) await _repo.saveItem(item);
       yield await _fromItem(
         item,

@@ -724,6 +724,12 @@ abstract class AppLocalizations {
   /// **'Aucune source ne donne le nombre de tomes des BD et des livres : saisis-le.'**
   String get totalNoSource;
 
+  /// No description provided for @wishRemoved.
+  ///
+  /// In fr, this message translates to:
+  /// **'« {title} » retiré des envies'**
+  String wishRemoved(String title);
+
   /// No description provided for @seeSeries.
   ///
   /// In fr, this message translates to:
