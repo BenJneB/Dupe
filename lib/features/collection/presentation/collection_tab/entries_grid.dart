@@ -2,6 +2,7 @@ import 'package:dupe/app/widgets/cover_image.dart';
 import 'package:dupe/features/collection/domain/collection_entry.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
 import 'package:dupe/features/collection/presentation/collection_tab/entry_display.dart';
+import 'package:dupe/features/collection/presentation/collection_tab/series_progress_bar.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
@@ -26,7 +27,6 @@ class EntriesGrid extends StatelessWidget {
       itemCount: entries.length,
       itemBuilder: (context, index) {
         final entry = entries[index];
-        final progress = entry is SeriesEntry ? entry.progress : null;
         return InkWell(
           borderRadius: BorderRadius.circular(8),
           onTap: () => context.push(entryRoute(type, entry)),
@@ -42,7 +42,8 @@ class EntriesGrid extends StatelessWidget {
                   ),
                 ),
               ),
-              if (progress != null) LinearProgressIndicator(value: progress),
+              if (SeriesProgressBar.shows(entry))
+                SeriesProgressBar(entry: entry),
               const SizedBox(height: 4),
               Text(
                 entry.title,

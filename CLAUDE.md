@@ -5,6 +5,7 @@ Windows, avec synchro Supabase optionnelle.
 **État courant et suite du projet : `PLAN_V3.md`** (à relire avant chaque phase ; tenir à jour son tableau §3 et
 ajouter un bilan « Réalisé / Écarts / Non vérifié » sous chaque phase terminée).
 Historique : `PLAN.md` (spécification v1, phases 0-8) et `PLAN_V2.md` (phases 9-13, état au 2026-11-14).
+Suite : `PLAN_V4.md` (brouillon, phases 22-27), à démarrer seulement après la clôture de la phase 21.
 `PLAN_V3.md` prime en cas de contradiction (ex. Supabase **local** autorisé pour les tests, projet distant
 toujours interdit). Phases 14 (vérifications de base, courte) et 21 (recette finale) pilotées par l'utilisateur : il rapporte les
 échecs de `TESTS_MANUELS.md` et des workflows ; pour chaque échec, le reproduire par un test automatisé si
@@ -74,7 +75,8 @@ sources de métadonnées, scan, synchro, sauvegardes, couvertures, CI…). Le me
 - `flutter test` doit passer à chaque fin de phase.
 - `pumpApp` injecte des faux pour tout ce qui touche le matériel ou le réseau : `FakeLoanReminders`,
   `FakeAppShortcuts`, `FakeHomeScreenWidget`, `FakeVoiceInput`, `FakeNetworkStatus` (aucune connexion par défaut),
-  `FakeCoverCache`, `MemoryBackupStore` ; jamais les vrais plugins.
+  `FakeCoverCache`, `MemoryBackupStore`, un `SeriesLookup` sans source (param `seriesLookup:`) ; jamais les vrais
+  plugins ni le réseau.
 - Journal en test : `appLog.clear()` en début de test.
 - Tests de Paramètres : la liste est longue ; une tuile peut être construite (cache) mais hors écran →
   `scrollUntilVisible` puis `ensureVisible` avant `tap` (`tapTile` de `screen_helpers.dart`).
@@ -106,7 +108,7 @@ sources de métadonnées, scan, synchro, sauvegardes, couvertures, CI…). Le me
   en mémoire, `goBack` car `tester.pageBack()` ne connaît pas le BackButton de material_ui),
   `test_repositories.dart` (repo + horloge contrôlable).
 - En test widget, la base se ferme via `tester.runAsync` (sinon blocage en temps simulé).
-  `dart_test.yaml` : timeout 30 s par test. Suite complète ~30 s (224 tests, 2026-11-15) : le temps vient surtout
+  `dart_test.yaml` : timeout 30 s par test. Suite complète ~30 s (236 tests, 2026-11-15) : le temps vient surtout
   de la compilation de chaque fichier de test widget. Helpers de navigation : `test/helpers/screen_helpers.dart`
   (`goTo`, `openSettings`, `tapTile`, `fillSignIn`) ; ne jamais importer un fichier `_test.dart` depuis un autre.
 
@@ -135,7 +137,8 @@ Windows ne se compile pas depuis Linux (à vérifier sur un PC Windows).
 - **En fin de phase, proposer un message de commit conventionnel** (`type(portée): description`, types `feat`,
   `fix`, `chore`, `docs`, `test`, `refactor`, `ci`, première ligne ≤ 100 caractères, en français) : il passe le hook
   `commit-msg` (`tool/check_commit_msg.sh`) et alimente les notes de Release (`tool/ci/release_notes.sh`).
-- Hooks lefthook (`lefthook.yml`, phase 18) : pré-commit format + analyze, pré-push tests.
+- Hooks lefthook (`lefthook.yml`, phase 18) : pré-commit format + analyze (en parallèle, seulement si des `.dart`
+  sont stagés), pré-push tests.
 - Tests d'intégration : `integration_test/` (helpers de `test/helpers/` importés en relatif), `flutter test
   integration_test -d linux` (ouvre une fenêtre) ; CI : `xvfb-run -a`.
 - `CLAUDE.md` est versionné par l'utilisateur (retiré de `.git/info/exclude` le 2026-11-15) ; comme tout

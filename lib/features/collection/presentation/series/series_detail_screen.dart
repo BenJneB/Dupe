@@ -12,9 +12,11 @@ import 'package:dupe/features/collection/domain/series.dart';
 import 'package:dupe/features/collection/domain/volume_grid.dart';
 import 'package:dupe/features/collection/presentation/labels.dart';
 import 'package:dupe/features/collection/presentation/providers/detail_providers.dart';
+import 'package:dupe/features/collection/presentation/providers/volume_view_provider.dart';
 import 'package:dupe/features/collection/presentation/series/series_menu.dart';
 import 'package:dupe/features/collection/presentation/series/volume_copies_sheet.dart';
 import 'package:dupe/features/collection/presentation/series/volume_grid_view.dart';
+import 'package:dupe/features/collection/presentation/series/volume_list_view.dart';
 import 'package:dupe/features/collection/presentation/series/volume_range_dialog.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -137,10 +139,18 @@ class _SeriesDetailView extends ConsumerWidget {
           }.toList();
     final subtitleParts = [?series.publisher, ?series.collection];
 
+    final asList = ref.watch(volumesAsListProvider).value ?? false;
     return Scaffold(
       appBar: AppBar(
         title: Text(series.title),
         actions: [
+          IconButton(
+            key: const Key('toggleVolumeView'),
+            tooltip: asList ? l10n.showVolumesAsGrid : l10n.showVolumesAsList,
+            icon: Icon(asList ? Icons.grid_view : Icons.view_list),
+            onPressed: () =>
+                unawaited(ref.read(volumesAsListProvider.notifier).toggle()),
+          ),
           IconButton(
             key: const Key('addVolumes'),
             tooltip: l10n.addVolumes,
@@ -197,6 +207,13 @@ class _SeriesDetailView extends ConsumerWidget {
           const SizedBox(height: 12),
           if (grid.slots.isEmpty)
             Text(l10n.noVolumesYet)
+          else if (asList)
+            VolumeListView(
+              series: series,
+              grid: grid,
+              onTap: (slot) => _onTap(context, slot),
+              onLongPress: (slot) => _onLongPress(context, ref, slot),
+            )
           else
             VolumeGridView(
               grid: grid,

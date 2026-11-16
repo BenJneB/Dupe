@@ -1,11 +1,11 @@
-# Checks every push and pull request: formatting, generated code, analysis,
-# tests with coverage, and builds of the three targets (Windows is only ever
-# compiled here).
+# Checks every pull request (and manual runs): formatting, generated code,
+# analysis, tests with coverage, and builds of the three targets (Windows is
+# only ever compiled here). No push trigger (user's choice, 2026-11-15): a
+# branch with an open pull request was checked twice; dev and main only
+# receive merged pull requests.
 name: CI
 
 on:
-  push:
-    branches: ['**']
   pull_request:
   workflow_dispatch:
 

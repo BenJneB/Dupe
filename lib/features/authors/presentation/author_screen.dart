@@ -1,6 +1,7 @@
 import 'package:dupe/app/error_text.dart';
 import 'package:dupe/app/widgets/placeholder_body.dart';
 import 'package:dupe/features/authors/data/author_providers.dart';
+import 'package:dupe/features/authors/presentation/author_menu.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
 import 'package:dupe/features/collection/presentation/collection_tab/entries_list.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
@@ -24,9 +25,15 @@ class AuthorScreen extends ConsumerWidget {
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
       child: Text(title, style: text.titleSmall),
     );
+    final group = ref.watch(authorGroupProvider(type, name));
     return Scaffold(
-      appBar: AppBar(title: Text(name.isEmpty ? l10n.unknownAuthor : name)),
-      body: switch (ref.watch(authorGroupProvider(type, name))) {
+      appBar: AppBar(
+        title: Text(name.isEmpty ? l10n.unknownAuthor : name),
+        actions: [
+          if (group case AsyncData(value: final g?)) AuthorMenu(group: g),
+        ],
+      ),
+      body: switch (group) {
         AsyncData(value: final group?) => ListView(
           key: const Key('authorPage'),
           children: [

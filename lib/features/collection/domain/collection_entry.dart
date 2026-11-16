@@ -17,12 +17,16 @@ class SeriesEntry extends CollectionEntry {
     required this.itemCount,
     this.unreadCount = 0,
     this.firstVolumeCover,
+    this.highestVolume,
   });
 
   final Series series;
 
   /// Cover of the first volume that has one (series without own cover).
   final String? firstVolumeCover;
+
+  /// Highest plain volume number among the items (owned or wished).
+  final int? highestVolume;
 
   /// Owned volumes (distinct numbers) not deleted.
   final int ownedCount;
@@ -47,6 +51,15 @@ class SeriesEntry extends CollectionEntry {
   }
 
   bool get isComplete => progress != null && progress! >= 1;
+
+  /// Only when the total is unknown (series created by a scan or an
+  /// import): owned volumes over the highest known number. A hint, shown
+  /// differently from [progress].
+  double? get indicativeProgress {
+    final highest = highestVolume;
+    if (progress != null || highest == null || highest <= 0) return null;
+    return (ownedCount / highest).clamp(0, 1).toDouble();
+  }
 }
 
 extension EntryReading on CollectionEntry {

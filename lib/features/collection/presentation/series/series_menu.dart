@@ -2,19 +2,21 @@ import 'dart:async';
 
 import 'package:dupe/app/router.dart';
 import 'package:dupe/core/database/database_provider.dart';
+import 'package:dupe/core/metadata/metadata_providers.dart';
 import 'package:dupe/features/collection/data/collection_repository.dart';
 import 'package:dupe/features/collection/data/reading_actions.dart';
 import 'package:dupe/features/collection/domain/series.dart';
 import 'package:dupe/features/collection/domain/volume_grid.dart';
 import 'package:dupe/features/collection/presentation/confirm_delete_dialog.dart';
 import 'package:dupe/features/collection/presentation/series/mark_read_dialog.dart';
+import 'package:dupe/features/collection/presentation/series/series_total_actions.dart';
 import 'package:dupe/features/collection/presentation/undo_delete.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 
-enum _Action { markRead, edit, delete }
+enum _Action { markRead, checkTotal, edit, delete }
 
 /// Overflow menu of the series sheet.
 class SeriesMenu extends ConsumerWidget {
@@ -52,6 +54,8 @@ class SeriesMenu extends ConsumerWidget {
     switch (action) {
       case _Action.markRead:
         await _markRead(context, ref);
+      case _Action.checkTotal:
+        await checkSeriesTotal(context, ref, series);
       case _Action.edit:
         await context.push(AppRoutes.seriesEdit(series.type, series.id));
       case _Action.delete:
@@ -85,6 +89,13 @@ class SeriesMenu extends ConsumerWidget {
           value: _Action.markRead,
           child: Text(l10n.markReadTitle),
         ),
+        // Only manga (AniList) and comics (Comic Vine) have a source.
+        if (ref.read(seriesLookupProvider).providerFor(series.type) != null)
+          PopupMenuItem(
+            key: const Key('checkTotalAction'),
+            value: _Action.checkTotal,
+            child: Text(l10n.checkTotalAction),
+          ),
         PopupMenuItem(value: _Action.edit, child: Text(l10n.edit)),
         PopupMenuItem(value: _Action.delete, child: Text(l10n.delete)),
       ],

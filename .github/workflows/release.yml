@@ -81,13 +81,18 @@ jobs:
             echo "keyAlias=$KEY_ALIAS"
             echo "keyPassword=$KEY_PASSWORD"
           } > android/key.properties
-      - run: flutter build apk --release --split-per-abi --dart-define-from-file=env.json
+      # Public Releases only are obfuscated (local builds stay readable);
+      # the symbols decode journal stack traces (`flutter symbolize`).
+      - run: >-
+          flutter build apk --release --split-per-abi --dart-define-from-file=env.json
+          --obfuscate --split-debug-info=build/symbols/android
       - name: Rename
         run: |
           mkdir dist
           for abi in arm64-v8a armeabi-v7a x86_64; do
             cp "build/app/outputs/flutter-apk/app-$abi-release.apk" "dist/dupe-$VERSION-$abi.apk"
           done
+          (cd build/symbols/android && zip -q -r "../../../dist/dupe-$VERSION-symbols-android.zip" .)
       - uses: actions/upload-artifact@v7
         with:
           name: android
@@ -112,10 +117,13 @@ jobs:
           echo "VERSION=$(tool/ci/set_version.sh "$GITHUB_REF_NAME")" >> "$GITHUB_ENV"
           printf '%s' "$ENV_JSON" > env.json
       - run: packaging/linux/build_appimage.sh env.json
+        env:
+          FLUTTER_BUILD_ARGS: --obfuscate --split-debug-info=build/symbols/linux
       - name: Name after the tag
         run: |
           mkdir dist
           mv build/Dupe-*-x86_64.AppImage "dist/Dupe-$VERSION-x86_64.AppImage"
+          (cd build/symbols/linux && zip -q -r "../../../dist/dupe-$VERSION-symbols-linux.zip" .)
       - uses: actions/upload-artifact@v7
         with:
           name: linux
@@ -141,15 +149,20 @@ jobs:
           [ -n "$ENV_JSON" ] || { echo "Missing secret ENV_JSON" >&2; exit 1; }
           echo "VERSION=$(tool/ci/set_version.sh "$GITHUB_REF_NAME")" >> "$GITHUB_ENV"
           printf '%s' "$ENV_JSON" > env.json
-      - run: flutter build windows --release --dart-define-from-file=env.json
-      - name: Installer (Inno Setup)
+      - run: >-
+          flutter build windows --release --dart-define-from-file=env.json
+          --obfuscate --split-debug-info=build/symbols/windows
+      - name: Installer (Inno Setup) and symbols
         run: |
           choco install innosetup --version 6.7.1 --no-progress -y
           "/c/Program Files (x86)/Inno Setup 6/ISCC.exe" "//DAppVersion=$VERSION" packaging/windows/dupe.iss
+          7z a -tzip "build/installer/dupe-$VERSION-symbols-windows.zip" ./build/symbols/windows/*
       - uses: actions/upload-artifact@v7
         with:
           name: windows
-          path: build/installer/Dupe-*-setup.exe
+          path: |
+            build/installer/Dupe-*-setup.exe
+            build/installer/dupe-*-symbols-windows.zip
 
   publish:
     needs: [android, linux, windows]

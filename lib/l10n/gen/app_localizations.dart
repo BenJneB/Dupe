@@ -544,6 +544,174 @@ abstract class AppLocalizations {
   /// **'Plus rien de cet auteur dans cet onglet'**
   String get authorNotFound;
 
+  /// No description provided for @indicativeProgress.
+  ///
+  /// In fr, this message translates to:
+  /// **'Progression estimée : nombre total de tomes inconnu'**
+  String get indicativeProgress;
+
+  /// No description provided for @authorMarkBooksRead.
+  ///
+  /// In fr, this message translates to:
+  /// **'Marquer les livres hors série comme lus'**
+  String get authorMarkBooksRead;
+
+  /// No description provided for @authorMarkAllRead.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tout marquer comme lu (séries comprises)'**
+  String get authorMarkAllRead;
+
+  /// No description provided for @authorMarkReadQuestion.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{Marquer 1 livre comme lu ?} other{Marquer {count} livres comme lus ?}}'**
+  String authorMarkReadQuestion(int count);
+
+  /// No description provided for @authorMarkReadHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Seuls les livres possédés et pas encore lus changent ; la date de lecture du jour est mise sur ceux qui n’en ont pas.'**
+  String get authorMarkReadHelp;
+
+  /// No description provided for @booksMarkedRead.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =0{Rien à marquer : tout est déjà lu} =1{1 livre marqué comme lu} other{{count} livres marqués comme lus}}'**
+  String booksMarkedRead(int count);
+
+  /// No description provided for @later.
+  ///
+  /// In fr, this message translates to:
+  /// **'Plus tard'**
+  String get later;
+
+  /// No description provided for @totalFromAniList.
+  ///
+  /// In fr, this message translates to:
+  /// **'AniList : « {title} », {count} tomes (nombre de l’édition japonaise)'**
+  String totalFromAniList(String title, int count);
+
+  /// No description provided for @totalFromComicVine.
+  ///
+  /// In fr, this message translates to:
+  /// **'Comic Vine : « {title} », {count} numéros (édition américaine)'**
+  String totalFromComicVine(String title, int count);
+
+  /// No description provided for @seriesTotalHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les tomes que tu n’as pas apparaîtront en gris dans la série.'**
+  String get seriesTotalHelp;
+
+  /// No description provided for @checkTotalAction.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vérifier le nombre de tomes'**
+  String get checkTotalAction;
+
+  /// No description provided for @checkTotalTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nombre total de tomes'**
+  String get checkTotalTitle;
+
+  /// No description provided for @checkTotalNone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun nombre de tomes trouvé pour « {title} »'**
+  String checkTotalNone(String title);
+
+  /// No description provided for @checkTotalSaved.
+  ///
+  /// In fr, this message translates to:
+  /// **'{title} : {count} tomes'**
+  String checkTotalSaved(String title, int count);
+
+  /// No description provided for @nextVolumesTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Combien de tomes compte la série ?'**
+  String get nextVolumesTitle;
+
+  /// No description provided for @volumeCountsTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nombre de tomes des séries'**
+  String get volumeCountsTitle;
+
+  /// No description provided for @volumeCountsTile.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vérifier le nombre de tomes des séries'**
+  String get volumeCountsTile;
+
+  /// No description provided for @volumeCountsTileHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mangas (AniList) et comics (Comic Vine) sans nombre total : propositions à valider'**
+  String get volumeCountsTileHelp;
+
+  /// No description provided for @volumeCountsHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cherche le nombre total de tomes des séries qui n’en ont pas (mangas et comics). Rien n’est modifié avant ta validation.'**
+  String get volumeCountsHelp;
+
+  /// No description provided for @volumeCountsRun.
+  ///
+  /// In fr, this message translates to:
+  /// **'Lancer'**
+  String get volumeCountsRun;
+
+  /// No description provided for @volumeCountsProgress.
+  ///
+  /// In fr, this message translates to:
+  /// **'{done} / {total} séries vérifiées'**
+  String volumeCountsProgress(int done, int total);
+
+  /// No description provided for @volumeCountsDone.
+  ///
+  /// In fr, this message translates to:
+  /// **'{total} séries vérifiées · {found} nombre(s) de tomes trouvé(s)'**
+  String volumeCountsDone(int total, int found);
+
+  /// No description provided for @volumeCountsFailed.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count} série(s) non vérifiée(s) : source indisponible (détails dans le journal)'**
+  String volumeCountsFailed(int count);
+
+  /// No description provided for @volumeCountsApply.
+  ///
+  /// In fr, this message translates to:
+  /// **'Appliquer ({count})'**
+  String volumeCountsApply(int count);
+
+  /// No description provided for @volumeCountsApplied.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =0{Aucune série modifiée} =1{1 série mise à jour} other{{count} séries mises à jour}}'**
+  String volumeCountsApplied(int count);
+
+  /// No description provided for @volumeLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tome {label}'**
+  String volumeLabel(String label);
+
+  /// No description provided for @showVolumesAsList.
+  ///
+  /// In fr, this message translates to:
+  /// **'Afficher les tomes en liste'**
+  String get showVolumesAsList;
+
+  /// No description provided for @showVolumesAsGrid.
+  ///
+  /// In fr, this message translates to:
+  /// **'Afficher les tomes en pastilles'**
+  String get showVolumesAsGrid;
+
   /// No description provided for @seeSeries.
   ///
   /// In fr, this message translates to:

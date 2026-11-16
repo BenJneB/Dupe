@@ -2,6 +2,7 @@ import 'package:dupe/app/widgets/cover_image.dart';
 import 'package:dupe/features/collection/domain/collection_entry.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
 import 'package:dupe/features/collection/presentation/collection_tab/entry_display.dart';
+import 'package:dupe/features/collection/presentation/collection_tab/series_progress_bar.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
@@ -31,7 +32,6 @@ class EntryTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final entry = this.entry;
-    final progress = entry is SeriesEntry ? entry.progress : null;
     return ListTile(
       leading: CoverImage(url: entryCover(entry), width: 40, height: 60),
       title: Text(entry.title),
@@ -39,10 +39,10 @@ class EntryTile extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(entrySubtitle(l10n, entry)),
-          if (progress != null)
+          if (SeriesProgressBar.shows(entry))
             Padding(
               padding: const EdgeInsets.only(top: 4),
-              child: LinearProgressIndicator(value: progress),
+              child: SeriesProgressBar(entry: entry),
             ),
         ],
       ),

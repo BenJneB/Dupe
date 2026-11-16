@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dupe/features/scan/presentation/code_entry_field.dart';
+import 'package:dupe/features/scan/presentation/parse_scanned_code.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
@@ -29,14 +30,31 @@ class _CameraScannerViewState extends State<CameraScannerView> {
     ],
   );
 
+  /// The controller is ours, so the widget does not follow the app
+  /// lifecycle: the camera (and the torch) kept running with the app in the
+  /// background (recette M-14). Stopped when hidden, restarted when shown.
+  late final AppLifecycleListener _lifecycle;
+
+  @override
+  void initState() {
+    super.initState();
+    _lifecycle = AppLifecycleListener(
+      onHide: () => unawaited(_controller.stop()),
+      onShow: () => unawaited(_controller.start()),
+    );
+  }
+
   @override
   void dispose() {
+    _lifecycle.dispose();
     unawaited(_controller.dispose());
     super.dispose();
   }
 
   void _onDetect(BarcodeCapture capture) {
-    final raw = capture.barcodes.map((b) => b.rawValue).nonNulls.firstOrNull;
+    final raw = pickScannedCode(
+      capture.barcodes.map((b) => b.rawValue).nonNulls,
+    );
     if (raw != null) widget.onCode(raw);
   }
 

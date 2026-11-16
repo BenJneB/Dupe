@@ -47,7 +47,7 @@ class TextResultsView extends ConsumerWidget {
           return ListTile(
             leading: CoverImage(url: r.coverUrl, width: 40, height: 60),
             title: Text(resultTitle(l10n, r)),
-            subtitle: Text(resultSubtitle(r)),
+            subtitle: Text(resultSubtitle(r, withIsbn: true)),
             trailing: const Icon(Icons.add),
             onTap: () => addFromResult(context, r, type),
           );

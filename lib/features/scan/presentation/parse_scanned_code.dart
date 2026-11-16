@@ -17,3 +17,9 @@ String? parseScannedCode(BuildContext context, String raw) {
     ..showSnackBar(SnackBar(content: Text(message)));
   return null;
 }
+
+/// The code to use among those seen in one camera frame: an ISBN when there
+/// is one (books often carry a second barcode, read as UPC: recette M-13),
+/// otherwise the first code.
+String? pickScannedCode(Iterable<String> raws) =>
+    raws.where((r) => Isbn.toIsbn13(r) != null).firstOrNull ?? raws.firstOrNull;

@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # Builds build/Dupe-<version>-x86_64.AppImage from the Linux release bundle.
 # Usage (project root): packaging/linux/build_appimage.sh [env.json]
+# Extra `flutter build` options in FLUTTER_BUILD_ARGS (public Releases:
+# "--obfuscate --split-debug-info=build/symbols/linux"); none by default.
 # appimagetool is downloaded once into build/tools/ (pinned release).
 set -euo pipefail
 
@@ -13,7 +15,8 @@ TOOL="$TOOL_DIR/appimagetool-x86_64.AppImage"
 TOOL_URL="https://github.com/AppImage/appimagetool/releases/download/1.9.1/appimagetool-x86_64.AppImage"
 
 cd "$ROOT"
-flutter build linux --release --dart-define-from-file="$ENV_FILE"
+# shellcheck disable=SC2086 # word splitting of the options is intended.
+flutter build linux --release --dart-define-from-file="$ENV_FILE" ${FLUTTER_BUILD_ARGS:-}
 
 # Fresh AppDir: bundle in usr/bin, desktop entry and icon at the root.
 rm -rf "$ROOT/build/appimage"
