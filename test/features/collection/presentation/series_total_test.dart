@@ -111,8 +111,8 @@ void main() {
     expect(find.text('One Piece : 107 tomes'), findsOneWidget);
   });
 
-  testWidgets('no series source for BD: no "check" action', (tester) async {
-    await pumpApp(
+  testWidgets('BD (no source): the total is typed by hand', (tester) async {
+    final db = await pumpApp(
       tester,
       seed: seedSeries,
       seriesLookup: SeriesLookup(anilist: FakeAniList()),
@@ -120,8 +120,59 @@ void main() {
     await goTo(tester, AppRoutes.series(CollectionType.bd, kaamelott.id));
     await tester.tap(find.byKey(const Key('seriesMenu')));
     await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('checkTotalAction')));
+    await tester.pumpAndSettle();
 
-    expect(find.byKey(const Key('checkTotalAction')), findsNothing);
+    expect(
+      find.text(
+        'Aucune source ne donne le nombre de tomes des BD et des livres : '
+        'saisis-le.',
+      ),
+      findsOneWidget,
+    );
+    await tester.enterText(find.byKey(const Key('seriesTotalField')), '10');
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('saveSeriesTotal')));
+    await tester.pumpAndSettle();
+
+    final saved = await tester.runAsync(
+      () => (db.select(
+        db.seriesTable,
+      )..where((t) => t.id.equals(kaamelott.id))).getSingle(),
+    );
+    expect(saved!.totalVolumes, 10);
+  });
+
+  testWidgets('manga unknown to AniList: asked by hand, with the reason', (
+    tester,
+  ) async {
+    final anilist = FakeAniList();
+    await pumpApp(
+      tester,
+      seed: (db) async {
+        final repo = repoOf(db);
+        onePiece = repo
+            .newSeries(CollectionType.manga)
+            .copyWith(title: 'Free Quest');
+        await repo.saveSeries(onePiece);
+      },
+      seriesLookup: SeriesLookup(anilist: anilist),
+    );
+    await goTo(tester, AppRoutes.series(CollectionType.manga, onePiece.id));
+    await tester.tap(find.byKey(const Key('seriesMenu')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('checkTotalAction')));
+    await tester.pumpAndSettle();
+
+    expect(anilist.calls, 1);
+    expect(
+      find.text(
+        'Aucun nombre de tomes trouvé en ligne pour « Free Quest » : '
+        'saisis-le.',
+      ),
+      findsOneWidget,
+    );
+    expect(find.byKey(const Key('seriesTotalField')), findsOneWidget);
   });
 
   testWidgets('first volume: the total is asked, prefilled by AniList', (

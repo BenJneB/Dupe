@@ -414,6 +414,7 @@ Avant la reprise des tests : `check-env` refuse aussi `OPEN_LIBRARY_CONTACT` ; a
 - Clés des sources : `K-01` à `K-04` OK sur la v0.1.0 (AppImage + téléphone) ; `K-05` vérifié en local.
 - **Release `v0.1.1`** publiée le 2026-11-16 (fusion Phase21 → `dev` → `main`) : premier passage obfusqué, 3 zips
   de symboles présents, APK ~2 Mo plus légers.
+  Mise à jour vérifiée : `A-02`, `Y-03`, `Y-04`, `Y-16` OK.
 - `N-01` en échec : notifications de Dupe désactivées sur le téléphone (autorisation perdue avec une
   désinstallation), sans que l'utilisateur le sache ; et une réinstallation perdait tous les rappels. Corrigé :
   `LoanActions.reminderWillShow` (message au prêt si les notifications sont coupées, `areNotificationsEnabled`) et

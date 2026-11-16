@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:dupe/app/router.dart';
 import 'package:dupe/core/database/database_provider.dart';
-import 'package:dupe/core/metadata/metadata_providers.dart';
 import 'package:dupe/features/collection/data/collection_repository.dart';
 import 'package:dupe/features/collection/data/reading_actions.dart';
 import 'package:dupe/features/collection/domain/series.dart';
@@ -89,13 +88,11 @@ class SeriesMenu extends ConsumerWidget {
           value: _Action.markRead,
           child: Text(l10n.markReadTitle),
         ),
-        // Only manga (AniList) and comics (Comic Vine) have a source.
-        if (ref.read(seriesLookupProvider).providerFor(series.type) != null)
-          PopupMenuItem(
-            key: const Key('checkTotalAction'),
-            value: _Action.checkTotal,
-            child: Text(l10n.checkTotalAction),
-          ),
+        PopupMenuItem(
+          key: const Key('checkTotalAction'),
+          value: _Action.checkTotal,
+          child: Text(l10n.checkTotalAction),
+        ),
         PopupMenuItem(value: _Action.edit, child: Text(l10n.edit)),
         PopupMenuItem(value: _Action.delete, child: Text(l10n.delete)),
       ],

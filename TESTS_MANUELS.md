@@ -7,7 +7,7 @@
 > finale. Les phases 15 à 20 ajoutent leurs tests ici et marquent « automatisé (phase N) » ceux que leurs tests
 > automatiques couvrent désormais.
 
-Ce fichier liste ce que les **238 tests automatiques (et 4 parcours d'intégration) ne couvrent pas** : matériel (caméra, vibrations,
+Ce fichier liste ce que les **239 tests automatiques (et 4 parcours d'intégration) ne couvrent pas** : matériel (caméra, vibrations,
 notifications, raccourci), services réels (Supabase, API GitHub, sources de métadonnées), plateformes non
 compilées ici (Windows) et workflows GitHub (jamais exécutés).
 
@@ -260,7 +260,8 @@ appareils (reportés de la phase 14).
       — REPORTÉ (2026-11-15, pas de PC Windows sous la main).
 - [x] **A-01** *(reporté de la phase 14)* APK signé (clé `keytool` + `android/key.properties`, README) : installation OK.
       — OK 2026-11-15 (téléphone, version 0.0.1 de la Release) : APK arm64 de la Release `v0.0.1-test` installé par-dessus la version locale, données et connexion conservées.
-- [ ] **A-02** Une version plus récente s'installe par-dessus sans perte de données.
+- [x] **A-02** Une version plus récente s'installe par-dessus sans perte de données.
+      — OK 2026-11-16 : v0.1.1 installée par-dessus la v0.1.0 (Releases), données et connexion conservées.
 - [x] **A-03** Icône adaptative correcte sur l'écran d'accueil.
       — OK 2026-11-15 (téléphone).
 
@@ -275,16 +276,20 @@ appareils (reportés de la phase 14).
       signé avec la clé de l'utilisateur (même SHA-256 que les builds locaux), sans email ni clé API dans `libapp.so`.
       Release et tag à supprimer après `A-01`. Notes : « Première version », les anciens commits « Phase N » (non
       conventionnels) sont rangés dans « Autres changements ».
-- [ ] **Y-03** Installé en v1.0.0 alors que v1.0.1 existe : « Version 1.0.1 disponible — Télécharger » au
+- [x] **Y-03** Installé en v1.0.0 alors que v1.0.1 existe : « Version 1.0.1 disponible — Télécharger » au
       démarrage ; le bouton ouvre le bon fichier (APK de l'architecture du téléphone, AppImage, installateur).
-- [ ] **Y-04** Paramètres → Mises à jour → « Rechercher une mise à jour » ; désactiver le signalement.
+      — OK 2026-11-16 : v0.1.0 → « Version 0.1.1 disponible — Télécharger », APK arm64 proposé.
+- [x] **Y-04** Paramètres → Mises à jour → « Rechercher une mise à jour » ; désactiver le signalement.
+      — OK 2026-11-16 (v0.1.1).
 - [x] **Y-05** Workflow `Keep Supabase awake` lancé à la main (*Run workflow*) → vert : l'étape *Call
       keep_alive()* affiche `HTTP 200` et l'étape *Keep this scheduled workflow enabled* réussit.
       — OK 2026-11-15 : *Run workflow* vert : `HTTP 200` et workflow maintenu actif.
 - [ ] **Y-06** Pas d'email d'avertissement de pause de Supabase dans les semaines suivantes (depuis la phase 16,
       la veille appelle une vraie fonction SQL plutôt qu'une requête refusée par la RLS).
-- [ ] **Y-07** À propos : la version affichée est celle du tag de la Release installée.
-- [ ] **Y-08** « Rechercher une mise à jour » sur la dernière version → « Dupe est à jour ».
+- [x] **Y-07** À propos : la version affichée est celle du tag de la Release installée.
+      — OK 2026-11-16 : « 0.1.1+2101 » (2101 = numéro 101 du tag + 2000 ajouté par `--split-per-abi` pour arm64).
+- [x] **Y-08** « Rechercher une mise à jour » sur la dernière version → « Dupe est à jour ».
+      — OK 2026-11-16 (v0.1.1, vu avec `Y-04`).
 - [ ] **Y-09** (phase 16) Sur une branche de test : un fichier `.dart` mal formaté fait échouer l'étape
       *Formatting* de la CI ; un `.g.dart` modifié à la main fait échouer *Generated code is up to date*.
 - [x] **Y-10** (phase 16) Le récapitulatif du job `test` affiche « Couverture des tests » et l'artefact
@@ -299,10 +304,11 @@ appareils (reportés de la phase 14).
       — OK 2026-11-15 : badge filtré `?event=pull_request` → « CI - passing » (dernier run de PR vert).
 - [x] **Y-14** (phase 17) Le job `supabase-tests` de la CI passe sur une pull request.
       — OK 2026-11-15 : `supabase-tests` vert sur la PR `dev` → `main` (run 43746943865), comme les 5 autres jobs.
-- [ ] **Y-16** (recette, obfuscation) Prochaine Release (`v0.1.1`) : elle contient aussi
+- [x] **Y-16** (recette, obfuscation) Prochaine Release (`v0.1.1`) : elle contient aussi
       `dupe-0.1.1-symbols-android.zip`, `…-linux.zip`, `…-windows.zip` ; l'APK et l'AppImage obfusqués démarrent
       et fonctionnent normalement (clés saisies et sources désactivées conservées après la mise à jour) ; le journal
       reste en français et lisible (causes des couvertures : « HTTP 404 », « pas de réseau »).
+      — OK 2026-11-16 : zips de symboles présents ; APK obfusqué fonctionnel, clés et réglages conservés, journal lisible.
 - [ ] **Y-13** (au bout de 60 jours sans push, si l'occasion se présente) `Keep Supabase awake` est toujours
       actif dans l'onglet *Actions* (efficacité non documentée de la réactivation par l'API).
 
@@ -422,11 +428,15 @@ remplacées, photos gardées), vue et page par auteur. Simulés : les sources et
 - [ ] **Q-06** Livres → « Par auteur » sur la vraie collection : un auteur écrit de deux façons selon la source
       n'apparaît qu'une fois ; sa page liste toutes ses séries et livres ; toucher un nom d'auteur sur une fiche
       ouvre la même page.
-- [ ] **Q-07** Recherche (locale, et en ligne par texte) : l'ISBN apparaît dans le sous-titre des livres.
-- [ ] **Q-08** Séries sans nombre total de tomes : barre **grise** (possédés / plus haut tome), distincte de la barre
+- [x] **Q-07** Recherche (locale, et en ligne par texte) : l'ISBN apparaît dans le sous-titre des livres.
+      — OK 2026-11-16 : ISBN affiché quand la source en donne un (pas toujours en recherche en ligne : Open
+      Library ou Comic Vine n'en fournissent pas pour tous les résultats).
+- [x] **Q-08** Séries sans nombre total de tomes : barre **grise** (possédés / plus haut tome), distincte de la barre
       normale des séries dont le total est connu ; un appui long sur la barre grise explique « Progression estimée ».
-- [ ] **Q-09** Page d'un auteur → menu ⋮ → « Marquer les livres hors série comme lus » / « Tout marquer comme lu » :
+      — OK 2026-11-16 : barre grise visible ; l'appui long sur la barre fine est difficile mais fonctionne.
+- [x] **Q-09** Page d'un auteur → menu ⋮ → « Marquer les livres hors série comme lus » / « Tout marquer comme lu » :
       confirmation avec le nombre de livres, puis livres marqués « Lu » avec la date du jour.
+      — OK 2026-11-16.
 
 ## 16. Séries : nombre de tomes et vue liste (v4, phase 23)
 Automatisé (phase 23) : seul un titre identique propose un total ; vérification depuis le menu d'une série et en
@@ -434,10 +444,18 @@ lot (propositions décochables, rien d'enregistré avant « Appliquer ») ; ques
 « Plus tard ») ; vue liste avec titres propres, statut et choix mémorisé. Simulés : AniList et Comic Vine.
 - [ ] **U-01** Manga suivi sans total (ex. One Piece) : ⋮ → « Vérifier le nombre de tomes » → total AniList
       proposé (nombre japonais) → Enregistrer → les tomes manquants apparaissent en gris, la barre devient normale.
-- [ ] **U-02** Paramètres → Sources → « Vérifier le nombre de tomes des séries » sur la vraie collection :
+      — PARTIEL 2026-11-16 : mangas français (Free Quest, Everdark, Oneira) introuvables sur AniList (œuvres non
+      japonaises, comme Dreamland) ; comics : I hate Fairyland trouvé, nombre de l'édition américaine (annoncé) ;
+      BD et livres : pas d'action (pas de source) — l'utilisateur attendait au moins une saisie manuelle.
+      Corrigé : « Nombre total de tomes… » dans le menu de toutes les séries, saisie manuelle si rien n'est trouvé ;
+      à revoir sur Kaamelott (BD) et Free Quest (manga introuvable).
+- [x] **U-02** Paramètres → Sources → « Vérifier le nombre de tomes des séries » sur la vraie collection :
       propositions plausibles (titres identiques), décocher une erreur éventuelle, Appliquer.
+      — OK 2026-11-16 : seul I hate Fairyland trouvé (mêmes limites que `U-01`).
 - [ ] **U-03** Scanner le tome 1 d'une nouvelle série : « Combien de tomes compte la série ? » (pré-rempli pour un
       manga ou un comic si la source connaît la série, vide pour une BD) ; « Plus tard » ne change rien.
-- [ ] **U-04** Écran d'une série → icône liste : couvertures, « Tome N », titres propres des tomes (BnF), statut
+- [x] **U-04** Écran d'une série → icône liste : couvertures, « Tome N », titres propres des tomes (BnF), statut
       et « Lu » ; le choix liste/pastilles est conservé après redémarrage.
+      — OK 2026-11-16 pour la vue liste ; souhaits : titres aussi dans la vue pastilles, et un vrai titre de tome
+      (souvent seulement « Tome 1 » : le titre propre n'est connu que si la BnF le donne en titre principal).
 
