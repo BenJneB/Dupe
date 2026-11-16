@@ -219,6 +219,12 @@ void main() {
     // Volumes: a dot on each pastille.
     await goTo(tester, AppRoutes.series(CollectionType.bd, kaamelott.id));
     expect(find.byKey(const ValueKey('noIsbn-1')), findsOneWidget);
+    // List view of the volumes: an icon on each row too.
+    await tester.tap(find.byKey(const Key('toggleVolumeView')));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('missingIsbnMark')), findsNWidgets(3));
+    await tester.tap(find.byKey(const Key('toggleVolumeView')));
+    await tester.pumpAndSettle();
 
     // Turned off in Qualité: no marker anywhere.
     await goTo(tester, AppRoutes.quality);

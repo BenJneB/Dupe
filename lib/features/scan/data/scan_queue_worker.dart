@@ -1,5 +1,6 @@
 import 'package:dupe/core/metadata/metadata_aggregator.dart';
 import 'package:dupe/core/metadata/metadata_providers.dart';
+import 'package:dupe/core/metadata/metadata_result.dart';
 import 'package:dupe/features/scan/data/scan_queue_repository.dart';
 import 'package:dupe/features/scan/domain/scan_queue_entry.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -26,11 +27,17 @@ class ScanQueueWorker {
       if (entry == null) return;
       final lookup = await _aggregator.lookupIsbn(entry.isbn13, entry.type);
       final merged = lookup.merged;
-      final status = merged != null
-          ? ScanStatus.found
-          : lookup.failed.isEmpty
-          ? ScanStatus.notFound
-          : ScanStatus.failed;
+      final status = switch (merged) {
+        null when lookup.failed.isEmpty => ScanStatus.notFound,
+        null => ScanStatus.failed,
+        // A source failed (BnF slow or rate limited) and the others give
+        // neither series nor volume number: imported as is, the volume
+        // would land outside its series (recette: Everdark). Retried.
+        MetadataResult(seriesTitle: null, volumeNumber: null)
+            when lookup.failed.isNotEmpty =>
+          ScanStatus.failed,
+        _ => ScanStatus.found,
+      };
       await _queue.setResult(entry.id, status, merged);
     }
   }

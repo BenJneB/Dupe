@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:dupe/core/network/network_status.dart';
 import 'package:dupe/features/covers/data/cover_cache.dart';
+import 'package:dupe/features/covers/data/cover_scanner.dart';
 
 /// Connection controlled by the test (no connection by default: the
 /// prefetch does nothing unless a test asks for it).
@@ -48,4 +50,21 @@ class FakeCoverCache implements CoverCache {
 
   @override
   Future<void> clear() async => cached.clear();
+}
+
+/// Document scanner: unavailable by default (manual editor), or answers
+/// [result] (null = cancelled).
+class FakeCoverScanner implements CoverScanner {
+  new({this.available = false, this.result});
+
+  final bool available;
+  final Uint8List? result;
+  int scans = 0;
+
+  @override
+  Future<Uint8List?> scan() async {
+    scans++;
+    if (!available) throw const ScannerUnavailable('test');
+    return result;
+  }
 }

@@ -1518,6 +1518,48 @@ class AppLocalizationsFr extends AppLocalizations {
   String get coverPhoto => 'Photographier la couverture';
 
   @override
+  String get coverRecrop => 'Recadrer la couverture';
+
+  @override
+  String get cropTitle => 'Recadrer';
+
+  @override
+  String get cropHelp =>
+      'Place les quatre coins sur ceux de la couverture (pince pour zoomer).';
+
+  @override
+  String get cropRotate => 'Pivoter d’un quart de tour';
+
+  @override
+  String get cropReset => 'Réinitialiser le cadre';
+
+  @override
+  String get cropDone => 'Valider';
+
+  @override
+  String get cropAspectFree => 'Libre';
+
+  @override
+  String get cropAspectPocket => 'Manga / poche';
+
+  @override
+  String get cropAspectAlbum => 'Album BD';
+
+  @override
+  String get cropAspectComics => 'Comics';
+
+  @override
+  String get coverOriginals => 'Photos originales';
+
+  @override
+  String get coverOriginalsHelp =>
+      'gardées sur cet appareil pour recadrer à nouveau';
+
+  @override
+  String get coverOriginalsPurged =>
+      'Photos originales supprimées (les couvertures restent)';
+
+  @override
   String coverPhotoError(String message) {
     return 'Photo impossible : $message';
   }

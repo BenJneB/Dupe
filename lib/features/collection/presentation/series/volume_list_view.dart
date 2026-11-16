@@ -1,9 +1,11 @@
 import 'package:dupe/app/widgets/cover_image.dart';
 import 'package:dupe/features/collection/domain/enums.dart';
+import 'package:dupe/features/collection/domain/item_checks.dart';
 import 'package:dupe/features/collection/domain/series.dart';
 import 'package:dupe/features/collection/domain/volume_grid.dart';
 import 'package:dupe/features/collection/presentation/labels.dart';
 import 'package:dupe/features/collection/presentation/series/volume_slot_colors.dart';
+import 'package:dupe/features/quality/presentation/missing_isbn_mark.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -50,17 +52,30 @@ class VolumeListView extends StatelessWidget {
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
-            trailing: Container(
-              width: 14,
-              height: 14,
-              decoration: BoxDecoration(
-                color: volumeSlotColors(slot.status, scheme).background,
-                shape: BoxShape.circle,
-                border: switch (volumeSlotColors(slot.status, scheme).border) {
-                  final color? => Border.all(color: color),
-                  null => null,
-                },
-              ),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Same marker as the tab lists (quality setting, phase 22).
+                MissingIsbnMark(
+                  count: slot.copies.where((c) => c.lacksIsbn).length,
+                ),
+                const SizedBox(width: 8),
+                Container(
+                  width: 14,
+                  height: 14,
+                  decoration: BoxDecoration(
+                    color: volumeSlotColors(slot.status, scheme).background,
+                    shape: BoxShape.circle,
+                    border: switch (volumeSlotColors(
+                      slot.status,
+                      scheme,
+                    ).border) {
+                      final color? => Border.all(color: color),
+                      null => null,
+                    },
+                  ),
+                ),
+              ],
             ),
             onTap: () => onTap(slot),
             onLongPress: () => onLongPress(slot),

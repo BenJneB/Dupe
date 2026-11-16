@@ -7,6 +7,8 @@ import 'package:dupe/core/network/network_status.dart';
 import 'package:dupe/features/backup/data/auto_backups.dart';
 import 'package:dupe/features/backup/data/backup_store.dart';
 import 'package:dupe/features/covers/data/cover_cache.dart';
+import 'package:dupe/features/covers/data/cover_providers.dart';
+import 'package:dupe/features/covers/data/cover_scanner.dart';
 import 'package:dupe/features/home_widget/data/home_screen_widget.dart';
 import 'package:dupe/features/loans/data/loan_reminders.dart';
 import 'package:dupe/features/scan/data/app_shortcuts.dart';
@@ -48,6 +50,7 @@ Future<AppDatabase> pumpApp(
   /// Connection (none by default) and downloaded covers (memory).
   FakeNetworkStatus? network,
   FakeCoverCache? coverCache,
+  CoverScanner? coverScanner,
 
   /// Series sources (AniList, Comic Vine): none by default, never the network.
   SeriesLookup? seriesLookup,
@@ -75,6 +78,10 @@ Future<AppDatabase> pumpApp(
         voiceInputProvider.overrideWithValue(voice ?? FakeVoiceInput()),
         networkStatusProvider.overrideWithValue(network ?? FakeNetworkStatus()),
         coverCacheProvider.overrideWithValue(coverCache ?? FakeCoverCache()),
+        // No ML Kit in tests: the manual editor is used unless overridden.
+        coverScannerProvider.overrideWithValue(
+          coverScanner ?? FakeCoverScanner(),
+        ),
         seriesLookupProvider.overrideWithValue(seriesLookup ?? SeriesLookup()),
         ...overrides,
       ],

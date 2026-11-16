@@ -1,9 +1,10 @@
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:dupe/core/sync/sync_providers.dart';
 import 'package:dupe/features/covers/data/cover_photos.dart';
+import 'package:dupe/features/covers/data/cover_scanner.dart';
 import 'package:dupe/features/covers/data/supabase_cover_store.dart';
+import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
@@ -64,8 +65,10 @@ Future<PickedImage?> Function({required bool camera}) pickImage(Ref ref) =>
     ({required camera}) async {
       final file = await ImagePicker().pickImage(
         source: camera ? ImageSource.camera : ImageSource.gallery,
-        maxWidth: 1600,
-        imageQuality: 85,
+        // Room to crop: the cover is often a part of the photo.
+        maxWidth: 2400,
+        maxHeight: 2400,
+        imageQuality: 92,
       );
       if (file == null) return null;
       return (
@@ -73,3 +76,11 @@ Future<PickedImage?> Function({required bool camera}) pickImage(Ref ref) =>
         extension: p.extension(file.path),
       );
     };
+
+/// Automatic capture on Android (ML Kit), null elsewhere. Overridden in
+/// tests (`pumpApp`).
+@Riverpod(keepAlive: true)
+CoverScanner? coverScanner(Ref ref) =>
+    defaultTargetPlatform == TargetPlatform.android
+    ? MlKitCoverScanner()
+    : null;
