@@ -2,12 +2,14 @@ import 'package:dupe/features/collection/domain/enums.dart';
 import 'package:dupe/features/collection/domain/volume_grid.dart';
 import 'package:dupe/features/collection/presentation/labels.dart';
 import 'package:dupe/features/collection/presentation/series/volume_slot_colors.dart';
+import 'package:dupe/features/quality/data/quality_providers.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
 /// Grid of colored pastilles, one per volume, under its legend (visible
 /// without scrolling through a long series).
-class VolumeGridView extends StatelessWidget {
+class VolumeGridView extends ConsumerWidget {
   const new({
     required this.grid,
     required this.onTap,
@@ -24,9 +26,11 @@ class VolumeGridView extends StatelessWidget {
   final ValueChanged<VolumeSlot> onLongPress;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
     final scheme = Theme.of(context).colorScheme;
+    // Quality setting (phase 22): dot on owned volumes without ISBN.
+    final markIsbn = ref.watch(missingIsbnInGridProvider).value ?? false;
     final series = seriesTitle;
     final titles = {
       for (final slot in grid.slots)
@@ -73,13 +77,13 @@ class VolumeGridView extends StatelessWidget {
           children: [
             for (final slot in grid.slots)
               if (!titled)
-                _pastille(context, slot)
+                _pastille(context, slot, markIsbn: markIsbn)
               else
                 SizedBox(
                   width: 76,
                   child: Column(
                     children: [
-                      _pastille(context, slot),
+                      _pastille(context, slot, markIsbn: markIsbn),
                       if (titles[slot] case final title?)
                         Padding(
                           padding: const EdgeInsets.only(top: 2),
@@ -101,10 +105,21 @@ class VolumeGridView extends StatelessWidget {
     );
   }
 
-  Widget _pastille(BuildContext context, VolumeSlot slot) {
+  Widget _pastille(
+    BuildContext context,
+    VolumeSlot slot, {
+    required bool markIsbn,
+  }) {
     final l10n = AppLocalizations.of(context);
     return _Pastille(
       slot: slot,
+      missingIsbn:
+          markIsbn &&
+          slot.copies.any(
+            (c) =>
+                c.ownership == Ownership.possede &&
+                (c.isbn13 ?? '').trim().isEmpty,
+          ),
       semanticLabel: l10n.slotSemantics(
         slot.label,
         [
@@ -124,9 +139,13 @@ class _Pastille extends StatelessWidget {
     required this.semanticLabel,
     required this.onTap,
     required this.onLongPress,
+    this.missingIsbn = false,
   });
 
   final VolumeSlot slot;
+
+  /// Owned without ISBN (quality setting): small dot at the bottom.
+  final bool missingIsbn;
   final String semanticLabel;
   final VoidCallback onTap;
   final VoidCallback onLongPress;
@@ -148,39 +167,46 @@ class _Pastille extends StatelessWidget {
         // Several copies of this volume (editions).
         isLabelVisible: slot.copies.length > 1,
         label: Text('×${slot.copies.length}'),
-        child: Material(
-          key: ValueKey('slot-${slot.label}'),
-          color: colors.background,
-          shape: shape,
-          child: InkWell(
-            customBorder: shape,
-            onTap: onTap,
-            onLongPress: onLongPress,
-            child: Container(
-              constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              alignment: Alignment.center,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (slot.isRead)
-                    Padding(
-                      padding: const EdgeInsets.only(right: 2),
-                      child: Icon(
-                        Icons.check,
-                        key: ValueKey('read-${slot.label}'),
-                        size: 14,
+        child: Badge(
+          key: missingIsbn ? ValueKey('noIsbn-${slot.label}') : null,
+          isLabelVisible: missingIsbn,
+          smallSize: 9,
+          alignment: AlignmentDirectional.bottomEnd,
+          backgroundColor: Theme.of(context).colorScheme.tertiary,
+          child: Material(
+            key: ValueKey('slot-${slot.label}'),
+            color: colors.background,
+            shape: shape,
+            child: InkWell(
+              customBorder: shape,
+              onTap: onTap,
+              onLongPress: onLongPress,
+              child: Container(
+                constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                alignment: Alignment.center,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (slot.isRead)
+                      Padding(
+                        padding: const EdgeInsets.only(right: 2),
+                        child: Icon(
+                          Icons.check,
+                          key: ValueKey('read-${slot.label}'),
+                          size: 14,
+                          color: colors.foreground,
+                        ),
+                      ),
+                    Text(
+                      slot.label,
+                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
                         color: colors.foreground,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
-                  Text(
-                    slot.label,
-                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                      color: colors.foreground,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),

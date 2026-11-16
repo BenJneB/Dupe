@@ -45,6 +45,9 @@ final _volumeInTitle = RegExp(
   caseSensitive: false,
 );
 
+/// "Free Quest Tome 1": the title carries a volume marker and number.
+bool titleHasVolume(String title) => _volumeInTitle.hasMatch(title.trim());
+
 /// Sources without a volume field (Google Books, Open Library) put it in the
 /// title: split it so the volume can be filed in its series.
 MetadataResult withVolumeFromTitle(MetadataResult r) {

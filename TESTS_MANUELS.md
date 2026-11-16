@@ -7,7 +7,7 @@
 > finale. Les phases 15 à 20 ajoutent leurs tests ici et marquent « automatisé (phase N) » ceux que leurs tests
 > automatiques couvrent désormais.
 
-Ce fichier liste ce que les **247 tests automatiques (et 4 parcours d'intégration) ne couvrent pas** : matériel (caméra, vibrations,
+Ce fichier liste ce que les **252 tests automatiques (et 4 parcours d'intégration) ne couvrent pas** : matériel (caméra, vibrations,
 notifications, raccourci), services réels (Supabase, API GitHub, sources de métadonnées), plateformes non
 compilées ici (Windows) et workflows GitHub (jamais exécutés).
 
@@ -490,4 +490,17 @@ complété au scan, remplissage en lot par ISBN, CSV, migrations locale (v3) et 
       formulaire, affiché sur la fiche et sous la pastille ; modifiable.
 - [ ] **I-03** Synchro : un titre de tome saisi sur le téléphone arrive sur le PC ; l'export CSV a la colonne
       « Titre du tome ».
+
+## 18. Qualité de la collection et ISBN manquants (v4, phase 22)
+Automatisé (phase 22) : compteurs (sans ISBN, sans couverture, sans numéro, ressemble à un tome, série sans total),
+complétion par scan avec ses contrôles (doublon, titre différent, passer), compteur qui baisse, puce de la fiche,
+point sur les pastilles. Simulées : les sources.
+- [ ] **C-01** Plus → Qualité de la collection : les compteurs correspondent à ce que tu sais de ta collection ;
+      chaque ligne ouvre la liste des livres (ou séries) concernés.
+- [ ] **C-02** **Critère de la phase** : « Compléter par scan » sur le téléphone, scanner **dix** livres à la suite ;
+      le compteur « sans ISBN » baisse de dix, les livres gagnent couverture et infos manquantes.
+- [ ] **C-03** Scanner un livre déjà dans la collection → « Cet ISBN est déjà celui de … » ; un autre livre que celui
+      affiché → demande de confirmation.
+- [ ] **C-04** Fiche d'un livre possédé sans ISBN → « ISBN manquant · scanner » ; réglage « Signaler les ISBN
+      manquants dans les séries » → point sur les pastilles concernées.
 
