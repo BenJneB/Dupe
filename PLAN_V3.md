@@ -412,6 +412,28 @@ Avant la reprise des tests : `check-env` refuse aussi `OPEN_LIBRARY_CONTACT` ; a
 - Hooks : le pré-commit lance format et analyse en parallèle, et seulement si le commit contient du Dart (commits
   de documentation instantanés) ; pré-push inchangé (tests).
 - Clés des sources : `K-01` à `K-04` OK sur la v0.1.0 (AppImage + téléphone) ; `K-05` vérifié en local.
+- **Release `v0.1.1`** publiée le 2026-11-16 (fusion Phase21 → `dev` → `main`) : premier passage obfusqué, 3 zips
+  de symboles présents, APK ~2 Mo plus légers.
+  Mise à jour vérifiée : `A-02`, `Y-03`, `Y-04`, `Y-16` OK.
+- Widget et dictée (`G-01` à `G-04`, `V-01` à `V-03`) OK sur Xiaomi / Android 14 ; `V-04` (Windows) reporté.
+- Couvertures hors ligne, stats de lecture, partage des envies (`O-*`, `T-*`, `E-*`) : rien d'anormal.
+- Écart : « Les quatre accords toltèques » et « Antidote au culte de la performance » créaient les séries « Poches
+  Jouvence » (n° 1) et « Tracts Gallimard » (n° 50) : collections d'éditeur numérotées en 225, sans 461. Dans les
+  notices BnF, une vraie série a toujours son 461 → `_seriesCollection` ignore un 225 sans 461 (fixture réelle
+  `bnf/isbn_9782073047342.xml`).
+- WARP 1 et 2 (Eoin Colfer) restés vides : tomes créés par « Il te manque … → Ajouter » (titre et numéro seuls). Au
+  scan d'un tome sans ISBN, l'ISBN était mémorisé mais le reste jamais complété → `fillBlanks`
+  (`metadata_mapping.dart`) remplit les champs vides depuis la source, sans écraser une saisie (titre remplacé
+  seulement s'il est celui de la série). Tests `fill_blanks_test.dart`, `store_mode_test.dart`.
+- Envies : glisser une envie vers la gauche la retire, avec « Annuler » (demande de l'utilisateur ; avant, seulement
+  via la fiche → *Supprimer*). Test `wishlist_test.dart`.
+- Test de rapidité du mode magasin (`store_mode_test.dart`) : chronométré du code saisi au verdict, sans le
+  démarrage de l'appli de test (échouait quand la machine était chargée).
+- `N-01` en échec : notifications de Dupe désactivées sur le téléphone (autorisation perdue avec une
+  désinstallation), sans que l'utilisateur le sache ; et une réinstallation perdait tous les rappels. Corrigé :
+  `LoanActions.reminderWillShow` (message au prêt si les notifications sont coupées, `areNotificationsEnabled`) et
+  `syncReminders` au démarrage (rappels des prêts en cours reprogrammés, ceux des prêts rendus annulés).
+  Tests dans `loans_flow_test.dart`.
 
 **Retours déjà traités (2026-11-15, APK release sur Android)** :
 - Free Quest tome 1 scanné en magasin : aucune série proposée. La BnF n'a pas ce tome ; l'autre source

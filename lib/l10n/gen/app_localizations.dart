@@ -607,7 +607,7 @@ abstract class AppLocalizations {
   /// No description provided for @checkTotalAction.
   ///
   /// In fr, this message translates to:
-  /// **'Vérifier le nombre de tomes'**
+  /// **'Nombre total de tomes…'**
   String get checkTotalAction;
 
   /// No description provided for @checkTotalTitle.
@@ -619,7 +619,7 @@ abstract class AppLocalizations {
   /// No description provided for @checkTotalNone.
   ///
   /// In fr, this message translates to:
-  /// **'Aucun nombre de tomes trouvé pour « {title} »'**
+  /// **'Aucun nombre de tomes trouvé en ligne pour « {title} » : saisis-le.'**
   String checkTotalNone(String title);
 
   /// No description provided for @checkTotalSaved.
@@ -711,6 +711,24 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Afficher les tomes en pastilles'**
   String get showVolumesAsGrid;
+
+  /// No description provided for @loanReminderNotificationsOff.
+  ///
+  /// In fr, this message translates to:
+  /// **'Prêt enregistré, mais le rappel ne s’affichera pas : les notifications de Dupe sont désactivées (Paramètres Android → Applications → Dupe → Notifications).'**
+  String get loanReminderNotificationsOff;
+
+  /// No description provided for @totalNoSource.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune source ne donne le nombre de tomes des BD et des livres : saisis-le.'**
+  String get totalNoSource;
+
+  /// No description provided for @wishRemoved.
+  ///
+  /// In fr, this message translates to:
+  /// **'« {title} » retiré des envies'**
+  String wishRemoved(String title);
 
   /// No description provided for @seeSeries.
   ///

@@ -1,6 +1,7 @@
 import 'package:dupe/core/metadata/metadata_result.dart';
 import 'package:dupe/features/collection/domain/enums.dart';
 import 'package:dupe/features/collection/domain/item.dart';
+import 'package:dupe/features/collection/domain/series_matching.dart';
 
 /// What the add form is prefilled with when coming from an online result.
 typedef ItemPrefill = ({MetadataResult metadata, Ownership ownership});
@@ -27,5 +28,32 @@ Item applyMetadata(Item item, ItemPrefill prefill) {
     ownership: prefill.ownership,
     source: m.source.name,
     sourceId: m.sourceId,
+  );
+}
+
+/// A volume created empty (grid, "Ajouter des tomes", previous volumes)
+/// once its online record is known (store scan): fills only what is still
+/// empty, never what the user typed. The title is replaced only when it is
+/// the series title and the record has the volume's own title.
+Item fillBlanks(Item item, MetadataResult m, {required String seriesTitle}) {
+  bool blank(String? v) => v == null || v.trim().isEmpty;
+  final ownTitle =
+      normalizeTitle(item.title) == normalizeTitle(seriesTitle) &&
+      normalizeTitle(m.title) != normalizeTitle(seriesTitle) &&
+      m.title.trim().isNotEmpty;
+  return item.copyWith(
+    title: ownTitle ? m.title : item.title,
+    isbn13: item.isbn13 ?? m.isbn13,
+    authors: item.authors.isEmpty ? m.authors : item.authors,
+    publisher: blank(item.publisher) ? m.publisher : item.publisher,
+    publishDate: blank(item.publishDate) ? m.publishDate : item.publishDate,
+    pageCount: item.pageCount ?? m.pageCount,
+    language: blank(item.language) ? m.language : item.language,
+    coverUrl: blank(item.coverUrl) ? m.coverUrl : item.coverUrl,
+    description: blank(item.description) ? m.description : item.description,
+    coverPrice: item.coverPrice ?? m.coverPrice,
+    currency: item.coverPrice == null && m.coverPrice != null
+        ? m.currency ?? item.currency
+        : item.currency,
   );
 }

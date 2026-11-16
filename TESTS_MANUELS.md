@@ -7,7 +7,7 @@
 > finale. Les phases 15 à 20 ajoutent leurs tests ici et marquent « automatisé (phase N) » ceux que leurs tests
 > automatiques couvrent désormais.
 
-Ce fichier liste ce que les **236 tests automatiques (et 4 parcours d'intégration) ne couvrent pas** : matériel (caméra, vibrations,
+Ce fichier liste ce que les **242 tests automatiques (et 4 parcours d'intégration) ne couvrent pas** : matériel (caméra, vibrations,
 notifications, raccourci), services réels (Supabase, API GitHub, sources de métadonnées), plateformes non
 compilées ici (Windows) et workflows GitHub (jamais exécutés).
 
@@ -63,7 +63,7 @@ Tous les tests non faits en phase 14 et non marqués « automatisé ». Le but :
 7f. **Widget et dictée** (phase 19, téléphone) : `G-01` à `G-04`, `V-01` à `V-04`.
 7g. **Couvertures, stats, envies** (phase 20) : `O-01` à `O-04` (`O-02` en mode avion), `T-01`, `T-02`,
    `E-01` à `E-03`.
-7h. **Retours de recette Android** (2026-11-15, téléphone + vraie collection) : `Q-01` à `Q-09`.
+7h. **Retours de recette Android** (2026-11-15, téléphone + vraie collection) : `Q-01` à `Q-11`.
 8. **Le lendemain / plus tard** : `N-01` à `N-04` ; `M-12` chronométré en magasin ; `Y-06` (observation sur
    plusieurs semaines) ; `J-06` (facultatif, met le projet en pause).
 
@@ -146,6 +146,13 @@ Tous les tests non faits en phase 14 et non marqués « automatisé ». Le but :
 
 ## 3. Prêts et notifications
 - [ ] **N-01** Prêter un tome avec retour aujourd'hui ou demain → notification vers 10 h (inexacte, peut tarder).
+      — À REFAIRE 2026-11-16 : pas de notification (prêt créé le 15 en v0.1.0, retour le 16 ; appli réinstallée
+      plusieurs fois entre-temps). Pistes : autorisation de notifier refusée, restrictions de batterie / démarrage
+      automatique du fabricant, alarme inexacte retardée. Refaire sans réinstaller l'appli avant l'échéance.
+      — Cause trouvée 2026-11-16 : notifications de Dupe **désactivées** (autorisation perdue avec une
+      désinstallation). Corrigé : message au prêt si le rappel ne peut pas s'afficher ; rappels des prêts en cours
+      reprogrammés au démarrage (réinstallation, prêt créé sur un autre appareil), ceux des prêts rendus annulés.
+      À refaire avec les notifications autorisées.
 - [ ] **N-02** Marquer rendu avant la date → pas de notification.
 - [ ] **N-03** Redémarrer le téléphone avant la date → la notification vient quand même.
 - [ ] **N-04** PC (Linux/Windows) : notification « prêts en retard » au démarrage, une fois par jour.
@@ -253,7 +260,8 @@ appareils (reportés de la phase 14).
       — REPORTÉ (2026-11-15, pas de PC Windows sous la main).
 - [x] **A-01** *(reporté de la phase 14)* APK signé (clé `keytool` + `android/key.properties`, README) : installation OK.
       — OK 2026-11-15 (téléphone, version 0.0.1 de la Release) : APK arm64 de la Release `v0.0.1-test` installé par-dessus la version locale, données et connexion conservées.
-- [ ] **A-02** Une version plus récente s'installe par-dessus sans perte de données.
+- [x] **A-02** Une version plus récente s'installe par-dessus sans perte de données.
+      — OK 2026-11-16 : v0.1.1 installée par-dessus la v0.1.0 (Releases), données et connexion conservées.
 - [x] **A-03** Icône adaptative correcte sur l'écran d'accueil.
       — OK 2026-11-15 (téléphone).
 
@@ -268,16 +276,20 @@ appareils (reportés de la phase 14).
       signé avec la clé de l'utilisateur (même SHA-256 que les builds locaux), sans email ni clé API dans `libapp.so`.
       Release et tag à supprimer après `A-01`. Notes : « Première version », les anciens commits « Phase N » (non
       conventionnels) sont rangés dans « Autres changements ».
-- [ ] **Y-03** Installé en v1.0.0 alors que v1.0.1 existe : « Version 1.0.1 disponible — Télécharger » au
+- [x] **Y-03** Installé en v1.0.0 alors que v1.0.1 existe : « Version 1.0.1 disponible — Télécharger » au
       démarrage ; le bouton ouvre le bon fichier (APK de l'architecture du téléphone, AppImage, installateur).
-- [ ] **Y-04** Paramètres → Mises à jour → « Rechercher une mise à jour » ; désactiver le signalement.
+      — OK 2026-11-16 : v0.1.0 → « Version 0.1.1 disponible — Télécharger », APK arm64 proposé.
+- [x] **Y-04** Paramètres → Mises à jour → « Rechercher une mise à jour » ; désactiver le signalement.
+      — OK 2026-11-16 (v0.1.1).
 - [x] **Y-05** Workflow `Keep Supabase awake` lancé à la main (*Run workflow*) → vert : l'étape *Call
       keep_alive()* affiche `HTTP 200` et l'étape *Keep this scheduled workflow enabled* réussit.
       — OK 2026-11-15 : *Run workflow* vert : `HTTP 200` et workflow maintenu actif.
 - [ ] **Y-06** Pas d'email d'avertissement de pause de Supabase dans les semaines suivantes (depuis la phase 16,
       la veille appelle une vraie fonction SQL plutôt qu'une requête refusée par la RLS).
-- [ ] **Y-07** À propos : la version affichée est celle du tag de la Release installée.
-- [ ] **Y-08** « Rechercher une mise à jour » sur la dernière version → « Dupe est à jour ».
+- [x] **Y-07** À propos : la version affichée est celle du tag de la Release installée.
+      — OK 2026-11-16 : « 0.1.1+2101 » (2101 = numéro 101 du tag + 2000 ajouté par `--split-per-abi` pour arm64).
+- [x] **Y-08** « Rechercher une mise à jour » sur la dernière version → « Dupe est à jour ».
+      — OK 2026-11-16 (v0.1.1, vu avec `Y-04`).
 - [ ] **Y-09** (phase 16) Sur une branche de test : un fichier `.dart` mal formaté fait échouer l'étape
       *Formatting* de la CI ; un `.g.dart` modifié à la main fait échouer *Generated code is up to date*.
 - [x] **Y-10** (phase 16) Le récapitulatif du job `test` affiche « Couverture des tests » et l'artefact
@@ -292,10 +304,11 @@ appareils (reportés de la phase 14).
       — OK 2026-11-15 : badge filtré `?event=pull_request` → « CI - passing » (dernier run de PR vert).
 - [x] **Y-14** (phase 17) Le job `supabase-tests` de la CI passe sur une pull request.
       — OK 2026-11-15 : `supabase-tests` vert sur la PR `dev` → `main` (run 43746943865), comme les 5 autres jobs.
-- [ ] **Y-16** (recette, obfuscation) Prochaine Release (`v0.1.1`) : elle contient aussi
+- [x] **Y-16** (recette, obfuscation) Prochaine Release (`v0.1.1`) : elle contient aussi
       `dupe-0.1.1-symbols-android.zip`, `…-linux.zip`, `…-windows.zip` ; l'APK et l'AppImage obfusqués démarrent
       et fonctionnent normalement (clés saisies et sources désactivées conservées après la mise à jour) ; le journal
       reste en français et lisible (causes des couvertures : « HTTP 404 », « pas de réseau »).
+      — OK 2026-11-16 : zips de symboles présents ; APK obfusqué fonctionnel, clés et réglages conservés, journal lisible.
 - [ ] **Y-13** (au bout de 60 jours sans push, si l'occasion se présente) `Keep Supabase awake` est toujours
       actif dans l'onglet *Actions* (efficacité non documentée de la réactivation par l'API).
 
@@ -352,19 +365,26 @@ Automatisé (phase 19) : ouverture du scan depuis le widget (au lancement et app
 et non renvoyés s'ils n'ont pas changé, découpage des phrases (« One Piece tome 107 », « tome 3 de Blacksad »,
 nombres en lettres jusqu'à 999 999), ouverture du tome dicté / absence / recherche normale, explication du micro
 une seule fois. Simulés : le plugin du widget et le micro.
-- [ ] **G-01** Ajouter le widget « Dupe » sur l'écran d'accueil : bouton « Scanner » et « N ouvrages » (puis
+- [x] **G-01** Ajouter le widget « Dupe » sur l'écran d'accueil : bouton « Scanner » et « N ouvrages » (puis
       « · N prêts en retard » s'il y en a).
-- [ ] **G-02** « Scanner » depuis l'écran d'accueil ouvre le scan en mode Magasin, appli fermée comme ouverte.
-- [ ] **G-03** Les compteurs suivent un ajout, une suppression, une synchro venant de l'autre appareil (en
+      — OK 2026-11-16 (Xiaomi, Android 14).
+- [x] **G-02** « Scanner » depuis l'écran d'accueil ouvre le scan en mode Magasin, appli fermée comme ouverte.
+      — OK 2026-11-16 (Xiaomi, Android 14).
+- [x] **G-03** Les compteurs suivent un ajout, une suppression, une synchro venant de l'autre appareil (en
       quelques secondes, appli ouverte).
-- [ ] **G-04** Chrono à froid (appli fermée, balayée des applis récentes) : du toucher sur « Scanner » à la
+      — OK 2026-11-16 (Xiaomi, Android 14).
+- [x] **G-04** Chrono à froid (appli fermée, balayée des applis récentes) : du toucher sur « Scanner » à la
       caméra prête, **objectif < 2 s**. Noter la mesure et le modèle de téléphone.
-- [ ] **V-01** Android : micro de la barre de recherche → explication (une seule fois) → autorisation du micro
+      — OK 2026-11-16 (Xiaomi, Android 14) : caméra prête en moins de 2 s (mesure non chiffrée).
+- [x] **V-01** Android : micro de la barre de recherche → explication (une seule fois) → autorisation du micro
       demandée par Android → « J'écoute… ».
-- [ ] **V-02** « One Piece tome 107 » (ou un tome possédé) : la fiche du tome s'ouvre ; un tome absent ouvre la
+      — OK 2026-11-16 (Xiaomi, Android 14).
+- [x] **V-02** « One Piece tome 107 » (ou un tome possédé) : la fiche du tome s'ouvre ; un tome absent ouvre la
       série avec « Tome N de … : absent de ta collection » ; « Dune » lance une recherche normale.
-- [ ] **V-03** Nombres dits en lettres (« Naruto volume douze »), et « Arrêter » / glisser le panneau vers le bas
+      — OK 2026-11-16 (Xiaomi, Android 14).
+- [x] **V-03** Nombres dits en lettres (« Naruto volume douze »), et « Arrêter » / glisser le panneau vers le bas
       arrête l'écoute.
+      — OK 2026-11-16 (Xiaomi, Android 14).
 - [ ] **V-04** Windows : la dictée fonctionne (reconnaissance vocale de Windows) ; Linux : pas de bouton micro.
 
 
@@ -374,25 +394,34 @@ supprimées ignorées, échecs comptés et retentés au passage suivant), Wi-Fi 
 perte de connexion puis reprise, désactivation, section Paramètres (état, taille, « Vider ») ; statistiques de
 lecture sur un jeu calculé à la main ; date de lecture remplie en choisissant « Lu » dans le formulaire ;
 filtres et texte partagés, image PNG produite. Simulés : la connexion (`connectivity_plus`) et le cache disque.
-- [ ] **O-01** Téléphone en Wi-Fi : Paramètres → Couvertures hors ligne passe à « Téléchargement : n / N » puis
+- [x] **O-01** Téléphone en Wi-Fi : Paramètres → Couvertures hors ligne passe à « Téléchargement : n / N » puis
       « N couvertures disponibles hors ligne », avec la place utilisée.
-- [ ] **O-02** **Critère de la phase** : mode avion, appli relancée : la collection (onglets, séries, fiches) et
+      — OK 2026-11-16 (« a l'air ok » : rien d'anormal constaté).
+- [x] **O-02** **Critère de la phase** : mode avion, appli relancée : la collection (onglets, séries, fiches) et
       les envies s'affichent **avec leurs couvertures**. Pareil sur Linux sans réseau, **après un redémarrage
       du PC** (les couvertures ne sont plus dans `/tmp`).
-- [ ] **O-03** Sur données mobiles (Wi-Fi coupé) : « En attente du Wi-Fi », rien n'est téléchargé ; couper le
+      — OK 2026-11-16 (« a l'air ok » : rien d'anormal constaté).
+- [x] **O-03** Sur données mobiles (Wi-Fi coupé) : « En attente du Wi-Fi », rien n'est téléchargé ; couper le
       Wi-Fi pendant un téléchargement l'interrompt ; « Wi-Fi seulement » décoché : le téléchargement reprend.
-- [ ] **O-04** « Vider » : la place retombe à ~0 Mo, les photos prises soi-même restent visibles ; toucher la
+      — OK 2026-11-16 (« a l'air ok » : rien d'anormal constaté).
+- [x] **O-04** « Vider » : la place retombe à ~0 Mo, les photos prises soi-même restent visibles ; toucher la
       ligne d'état relance le téléchargement.
-- [ ] **T-01** Statistiques → « Tomes lus par mois » : marquer un tome « Lu » (puce de la fiche, menu « lus
+      — OK 2026-11-16 (« a l'air ok » : rien d'anormal constaté).
+- [x] **T-01** Statistiques → « Tomes lus par mois » : marquer un tome « Lu » (puce de la fiche, menu « lus
       jusqu'au tome N », ou formulaire) l'ajoute au mois courant ; la vue tableau donne les mêmes chiffres.
-- [ ] **T-02** Pile à lire, plus ancien tome, délai achat → lecture et séries abandonnées correspondent à ce
+      — OK 2026-11-16 (« a l'air ok » : rien d'anormal constaté).
+- [x] **T-02** Pile à lire, plus ancien tome, délai achat → lecture et séries abandonnées correspondent à ce
       qu'on sait de sa collection (les tomes lus avant la v3, sans date, sont seulement signalés).
-- [ ] **E-01** Envies → Partager : filtres par type et priorité, aperçu avec couvertures (vignette grise pour une
+      — OK 2026-11-16 (« a l'air ok » : rien d'anormal constaté).
+- [x] **E-01** Envies → Partager : filtres par type et priorité, aperçu avec couvertures (vignette grise pour une
       couverture introuvable), « Afficher le prix max ».
-- [ ] **E-02** **Critère de la phase** : Android, « Partager l'image » → l'envoyer par message (WhatsApp,
+      — OK 2026-11-16 (« a l'air ok » : rien d'anormal constaté).
+- [x] **E-02** **Critère de la phase** : Android, « Partager l'image » → l'envoyer par message (WhatsApp,
       SMS…) : l'image est nette et lisible sur le téléphone du destinataire ; « Partager le texte » idem.
-- [ ] **E-03** Linux / Windows : « Partager l'image » ouvre « Enregistrer sous » (fichier PNG correct) ;
+      — OK 2026-11-16 (« a l'air ok » : rien d'anormal constaté).
+- [x] **E-03** Linux / Windows : « Partager l'image » ouvre « Enregistrer sous » (fichier PNG correct) ;
       « Partager le texte » copie la liste dans le presse-papiers.
+      — OK 2026-11-16 (« a l'air ok » : rien d'anormal constaté).
 
 ## 15. Retours de recette Android (2026-11-15)
 Automatisé (recette) : tome lu dans le titre (« Free Quest Tome 1 », « T01 »), collection d'éditeur numérotée
@@ -415,11 +444,19 @@ remplacées, photos gardées), vue et page par auteur. Simulés : les sources et
 - [ ] **Q-06** Livres → « Par auteur » sur la vraie collection : un auteur écrit de deux façons selon la source
       n'apparaît qu'une fois ; sa page liste toutes ses séries et livres ; toucher un nom d'auteur sur une fiche
       ouvre la même page.
-- [ ] **Q-07** Recherche (locale, et en ligne par texte) : l'ISBN apparaît dans le sous-titre des livres.
-- [ ] **Q-08** Séries sans nombre total de tomes : barre **grise** (possédés / plus haut tome), distincte de la barre
+- [x] **Q-07** Recherche (locale, et en ligne par texte) : l'ISBN apparaît dans le sous-titre des livres.
+      — OK 2026-11-16 : ISBN affiché quand la source en donne un (pas toujours en recherche en ligne : Open
+      Library ou Comic Vine n'en fournissent pas pour tous les résultats).
+- [x] **Q-08** Séries sans nombre total de tomes : barre **grise** (possédés / plus haut tome), distincte de la barre
       normale des séries dont le total est connu ; un appui long sur la barre grise explique « Progression estimée ».
-- [ ] **Q-09** Page d'un auteur → menu ⋮ → « Marquer les livres hors série comme lus » / « Tout marquer comme lu » :
+      — OK 2026-11-16 : barre grise visible ; l'appui long sur la barre fine est difficile mais fonctionne.
+- [x] **Q-09** Page d'un auteur → menu ⋮ → « Marquer les livres hors série comme lus » / « Tout marquer comme lu » :
       confirmation avec le nombre de livres, puis livres marqués « Lu » avec la date du jour.
+      — OK 2026-11-16.
+- [ ] **Q-10** Tome créé vide (« Ajouter des tomes », ou « Il te manque … → Ajouter ») puis scanné en mode Magasin :
+      « ISBN mémorisé », et la fiche du tome a maintenant couverture, auteurs, éditeur, prix (ce que tu avais saisi
+      reste inchangé).
+- [ ] **Q-11** Envies : glisser un livre vers la gauche le retire, « Annuler » le remet.
 
 ## 16. Séries : nombre de tomes et vue liste (v4, phase 23)
 Automatisé (phase 23) : seul un titre identique propose un total ; vérification depuis le menu d'une série et en
@@ -427,10 +464,18 @@ lot (propositions décochables, rien d'enregistré avant « Appliquer ») ; ques
 « Plus tard ») ; vue liste avec titres propres, statut et choix mémorisé. Simulés : AniList et Comic Vine.
 - [ ] **U-01** Manga suivi sans total (ex. One Piece) : ⋮ → « Vérifier le nombre de tomes » → total AniList
       proposé (nombre japonais) → Enregistrer → les tomes manquants apparaissent en gris, la barre devient normale.
-- [ ] **U-02** Paramètres → Sources → « Vérifier le nombre de tomes des séries » sur la vraie collection :
+      — PARTIEL 2026-11-16 : mangas français (Free Quest, Everdark, Oneira) introuvables sur AniList (œuvres non
+      japonaises, comme Dreamland) ; comics : I hate Fairyland trouvé, nombre de l'édition américaine (annoncé) ;
+      BD et livres : pas d'action (pas de source) — l'utilisateur attendait au moins une saisie manuelle.
+      Corrigé : « Nombre total de tomes… » dans le menu de toutes les séries, saisie manuelle si rien n'est trouvé ;
+      à revoir sur Kaamelott (BD) et Free Quest (manga introuvable).
+- [x] **U-02** Paramètres → Sources → « Vérifier le nombre de tomes des séries » sur la vraie collection :
       propositions plausibles (titres identiques), décocher une erreur éventuelle, Appliquer.
+      — OK 2026-11-16 : seul I hate Fairyland trouvé (mêmes limites que `U-01`).
 - [ ] **U-03** Scanner le tome 1 d'une nouvelle série : « Combien de tomes compte la série ? » (pré-rempli pour un
       manga ou un comic si la source connaît la série, vide pour une BD) ; « Plus tard » ne change rien.
-- [ ] **U-04** Écran d'une série → icône liste : couvertures, « Tome N », titres propres des tomes (BnF), statut
+- [x] **U-04** Écran d'une série → icône liste : couvertures, « Tome N », titres propres des tomes (BnF), statut
       et « Lu » ; le choix liste/pastilles est conservé après redémarrage.
+      — OK 2026-11-16 pour la vue liste ; souhaits : titres aussi dans la vue pastilles, et un vrai titre de tome
+      (souvent seulement « Tome 1 » : le titre propre n'est connu que si la BnF le donne en titre principal).
 

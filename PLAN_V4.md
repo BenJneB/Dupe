@@ -72,6 +72,17 @@ texte d'origine est dans les phases ci-dessous.
   numéros d'édition américaine (le dialogue le dit). Fichier `series_detail_screen.dart` à 249 lignes.
 - **Non vérifié** : avec les vrais AniList et Comic Vine (`U-01` à `U-04`) ; titres propres des tomes de la vraie
   collection.
+- **Retours de l'utilisateur (2026-11-16, `U-01`, `U-02`, `U-04`)** :
+  - AniList ne connaît pas les mangas **français** (Free Quest, Everdark, Oneira, Dreamland…) : rien n'est proposé
+    (écart accepté : pas d'autre source sans scraping). Comic Vine donne le nombre de l'édition américaine (annoncé
+    dans le dialogue).
+  - **Fait (2026-11-16)** : action « Nombre total de tomes… » dans le menu de **toutes** les séries ; pour BD,
+    livres et séries introuvables (ou source en échec), le dialogue s'ouvre avec la raison et le total actuel, pour
+    une saisie manuelle (`checkSeriesTotal`, tests `series_total_test.dart`).
+  - **À faire** : titres des tomes aussi dans la vue pastilles, et un vrai **titre de tome** : aujourd'hui un tome
+    n'a pas de champ « titre propre » (`applyMetadata` jette le sous-titre d'un tome numéroté ; le titre propre n'est
+    connu que si la BnF le met en titre principal, ex. Kaamelott) → champ `volume_title` sur l'item (migration de
+    schéma locale v3 + Supabase), rempli depuis BnF 200$a/$e/$i, Google Books `subtitle`, Comic Vine `name`.
 
 ### Phase 24 — Éditions et couvertures
 - **« Compléter les couvertures » par recherche texte** : aujourd'hui recherche **par ISBN** seulement (Google Books

@@ -84,6 +84,10 @@ class LoansRepository {
   /// returned ones by return date (most recent first).
   Stream<List<LoanWithItem>> watchLoans() => _loansQuery().watch().map(_read);
 
+  /// Every loan, returned ones included (reminders to cancel).
+  Future<List<LoanWithItem>> allLoans() async =>
+      _read(await _loansQuery().get());
+
   /// Current loans (for reminders).
   Future<List<LoanWithItem>> activeLoans() async => [
     for (final entry in _read(await _loansQuery().get()))

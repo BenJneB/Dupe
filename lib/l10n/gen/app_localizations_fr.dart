@@ -368,14 +368,14 @@ class AppLocalizationsFr extends AppLocalizations {
       'Les tomes que tu n’as pas apparaîtront en gris dans la série.';
 
   @override
-  String get checkTotalAction => 'Vérifier le nombre de tomes';
+  String get checkTotalAction => 'Nombre total de tomes…';
 
   @override
   String get checkTotalTitle => 'Nombre total de tomes';
 
   @override
   String checkTotalNone(String title) {
-    return 'Aucun nombre de tomes trouvé pour « $title »';
+    return 'Aucun nombre de tomes trouvé en ligne pour « $title » : saisis-le.';
   }
 
   @override
@@ -445,6 +445,19 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get showVolumesAsGrid => 'Afficher les tomes en pastilles';
+
+  @override
+  String get loanReminderNotificationsOff =>
+      'Prêt enregistré, mais le rappel ne s’affichera pas : les notifications de Dupe sont désactivées (Paramètres Android → Applications → Dupe → Notifications).';
+
+  @override
+  String get totalNoSource =>
+      'Aucune source ne donne le nombre de tomes des BD et des livres : saisis-le.';
+
+  @override
+  String wishRemoved(String title) {
+    return '« $title » retiré des envies';
+  }
 
   @override
   String get seeSeries => 'Voir la série';

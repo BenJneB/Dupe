@@ -13,7 +13,9 @@ import 'package:dupe/l10n/gen/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
-/// Series menu → "Vérifier le nombre de tomes" (manga, comics).
+/// Series menu → "Nombre total de tomes…", for every series: manga and
+/// comics are looked up first (AniList, Comic Vine); otherwise, or when
+/// nothing is found, the total is typed by hand (recette U-01).
 Future<void> checkSeriesTotal(
   BuildContext context,
   WidgetRef ref,
@@ -21,27 +23,27 @@ Future<void> checkSeriesTotal(
 ) async {
   final l10n = AppLocalizations.of(context);
   final messenger = ScaffoldMessenger.of(context);
-  final VolumeCountProposal? proposal;
-  try {
-    proposal = await checkVolumeCount(ref.read(seriesLookupProvider), series);
-  } on Object catch (e, stack) {
-    messenger.showSnackBar(
-      SnackBar(content: Text(reportError(l10n, 'series', e, stack))),
-    );
-    return;
-  }
-  if (proposal == null) {
-    messenger.showSnackBar(
-      SnackBar(content: Text(l10n.checkTotalNone(series.title))),
-    );
-    return;
+  final lookup = ref.read(seriesLookupProvider);
+  VolumeCountProposal? proposal;
+  String? hint;
+  if (lookup.providerFor(series.type) == null) {
+    hint = l10n.totalNoSource;
+  } else {
+    try {
+      proposal = await checkVolumeCount(lookup, series);
+      hint = proposal == null
+          ? l10n.checkTotalNone(series.title)
+          : volumeCountHint(l10n, proposal);
+    } on Object catch (e, stack) {
+      hint = reportError(l10n, 'series', e, stack);
+    }
   }
   if (!context.mounted) return;
   final total = await askSeriesTotal(
     context,
     title: l10n.checkTotalTitle,
-    suggested: proposal.total,
-    hint: volumeCountHint(l10n, proposal),
+    suggested: proposal?.total ?? series.totalVolumes,
+    hint: hint,
   );
   if (total == null) return;
   await _saveTotal(ref, series, total);

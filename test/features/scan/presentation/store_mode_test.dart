@@ -26,7 +26,6 @@ Future<void> seedOnePiece(AppDatabase db) async {
 void main() {
   testWidgets('an owned ISBN is recognised offline, with purchase details '
       '(phase 4 criterion)', (tester) async {
-    final stopwatch = Stopwatch()..start();
     await pumpApp(
       tester,
       size: desktopSize,
@@ -47,6 +46,9 @@ void main() {
     );
 
     await openScan(tester);
+    // From the scanned code to the verdict: the start of the test app
+    // depends on the machine load, not on the store check.
+    final stopwatch = Stopwatch()..start();
     await typeCode(tester, duneIsbn);
 
     expect(find.byKey(const Key('store_owned')), findsOneWidget);
@@ -55,7 +57,7 @@ void main() {
     expect(find.text('Acheté le 12 mars 2024'), findsOneWidget);
     expect(find.text('Emplacement : Salon, étagère 2'), findsOneWidget);
     // Simulated time does not measure real speed; this bounds the real
-    // time of start + local query in the test environment.
+    // time of the local lookup in the test environment.
     expect(stopwatch.elapsed, lessThan(const Duration(seconds: 3)));
   }, variant: linux);
 
@@ -130,6 +132,9 @@ void main() {
       )..where((t) => t.volumeNumber.equals('2'))).getSingle(),
     );
     expect(volume2!.isbn13, onePieceT3Isbn);
+    // Its empty fields are completed (recette: WARP 1-2 left empty).
+    expect(volume2.authors, ['Eiichirō Oda']);
+    expect(volume2.publisher, 'Glénat');
   }, variant: linux);
 
   testWidgets('unknown ISBN offline: grey banner and online search button', (

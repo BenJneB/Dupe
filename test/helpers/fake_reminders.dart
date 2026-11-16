@@ -4,10 +4,13 @@ import 'package:dupe/features/loans/domain/loan.dart';
 
 /// Records reminder calls instead of using system notifications.
 class FakeLoanReminders implements LoanReminders {
-  new({this.canSchedule = false});
+  new({this.canSchedule = false, this.allowed = true});
 
   @override
   final bool canSchedule;
+
+  /// Notifications allowed by the user (Android setting).
+  bool allowed;
 
   final scheduled = <String>{};
   final overdueShown = <List<LoanWithItem>>[];
@@ -18,6 +21,9 @@ class FakeLoanReminders implements LoanReminders {
 
   @override
   Future<void> cancel(Loan loan) async => scheduled.remove(loan.id);
+
+  @override
+  Future<bool> notificationsAllowed() async => allowed;
 
   @override
   Future<void> showOverdue(List<LoanWithItem> overdue) async =>

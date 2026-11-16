@@ -25,10 +25,20 @@ class ItemLoanSection extends ConsumerWidget {
       knownNames: names,
       today: ref.read(clockProvider)(),
     );
-    if (request == null) return;
-    await ref
-        .read(loanActionsProvider)
-        .lend(item, borrower: request.borrower, dueAt: request.dueAt);
+    if (request == null || !context.mounted) return;
+    final l10n = AppLocalizations.of(context);
+    final messenger = ScaffoldMessenger.of(context);
+    final actions = ref.read(loanActionsProvider);
+    await actions.lend(item, borrower: request.borrower, dueAt: request.dueAt);
+    if (!await actions.reminderWillShow(request.dueAt)) {
+      messenger.showSnackBar(
+        SnackBar(
+          key: const Key('remindersOff'),
+          content: Text(l10n.loanReminderNotificationsOff),
+          duration: const Duration(seconds: 8),
+        ),
+      );
+    }
   }
 
   @override

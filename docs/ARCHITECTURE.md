@@ -27,6 +27,8 @@ Description détaillée des choix techniques et de l'organisation du code (dépl
   de fuseaux) ; Linux n'a pas de planificateur et Windows hors MSIX ne sait pas annuler → sur desktop,
   notification « prêts en retard » au démarrage, une fois par jour (`loans_overdue_notified_on`).
   Android : compileSdk 37 + core library desugaring (`android/app/build.gradle.kts`), receivers dans le manifest.
+  Au démarrage, `LoanActions.syncReminders` reprogramme les rappels des prêts en cours et annule ceux des prêts
+  rendus (réinstallation, autre appareil) ; au prêt, `reminderWillShow` prévient si les notifications sont coupées.
   Tests : `pumpApp` injecte `FakeLoanReminders` (`test/helpers/fake_reminders.dart`), jamais le vrai plugin.
 - Graphiques : fl_chart 1.3 pour la seule courbe temporelle (`stats/presentation/monthly_chart.dart` : `MonthlyChart` /
   `MonthlyTable` génériques — dépenses et tomes lus —, infobulle au toucher + vue tableau) ; le reste en widgets simples (tuiles, barres classées `BarRow`).
@@ -75,7 +77,8 @@ Description détaillée des choix techniques et de l'organisation du code (dépl
   de type de la barre (`scan_last_type`), Livres au départ.
   - Magasin : `StoreChecker` (data) → `StoreCheck` (domain). Recherche locale par ISBN d'abord (instantané,
     hors ligne), puis en ligne seulement pour reconnaître un tome d'une série de la collection (série + numéro) ;
-    un tome possédé sans ISBN reçoit l'ISBN scanné (« ISBN mémorisé ») pour les scans suivants.
+    un tome possédé sans ISBN reçoit l'ISBN scanné (« ISBN mémorisé ») pour les scans suivants, et ses champs vides
+    sont complétés depuis la source (`fillBlanks`, jamais une saisie écrasée).
     Bandeau `store/` (couleurs fixes vert/jaune/bleu, gris = thème).
   - Rafale : file persistée `scan_queue` (`ScanQueueRepository`), `ScanQueueWorker` séquentiel (sources
     limitées), relancé à l'ouverture du scan et de la revue ; `importScanQueue` ajoute en lot (séries créées au
@@ -94,7 +97,7 @@ Description détaillée des choix techniques et de l'organisation du code (dépl
   (`ItemReadingBar`, puces qui passent à la ligne : un SegmentedButton déborde sur téléphone), « Marquer comme
   lus jusqu'au tome N » (`series_menu.dart`), filtre « À lire » (`ViewSettings.toReadOnly`, `unreadCount` de
   `collection_entries_query.dart`, statuts `toReadStatuses`).
-- Envies (`features/wishlist/`) : items `envie` triés par priorité ; « Prochains tomes à acheter » =
+- Envies (`features/wishlist/`) : items `envie` triés par priorité, retirés d'un glissement (avec « Annuler ») ; « Prochains tomes à acheter » =
   `nextVolumesToBuy` (séries suivies, manquants non déjà en envie), ajout en un appui.
 - Auteurs (`features/authors/`) : `groupByAuthor` (`authorKey` : « Nom, Prénom » remis dans l'ordre, sans accents ni
   casse ; une série prend aussi les auteurs de ses tomes via `seriesItemAuthorsProvider`), vue « Par auteur » de
@@ -195,7 +198,8 @@ Description détaillée des choix techniques et de l'organisation du code (dépl
   « projet Supabase peut-être en pause ».
 - Rattachement auto d'un tome scanné (`features/collection/domain/series_matching.dart`) : titre de série
   normalisé (accents, ponctuation, qualificatifs entre parenthèses ignorés) + éditeur compatible (inclusion).
-  Candidats : BnF 461$t, 225$a **seulement si numéroté ($v)** (sinon collection d'éditeur), titre du volume
+  Candidats : BnF 461$t, 225$a **seulement si numéroté ($v) et confirmé par le 461** (un 225 sans 461 est une
+  collection d'éditeur : Folio junior, Tracts Gallimard, Poches Jouvence), titre du volume
   s'il est numéroté. Sans correspondance → proposition de créer la série (`SeriesAttachment`). Le type de la
   série trouvée prime sur le type de l'onglet.
 - Confort magasin (phase 13) : vibrations par verdict (`scan/presentation/store/store_haptics.dart`, retour
