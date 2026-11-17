@@ -135,4 +135,23 @@ void main() {
       throwsA(isA<MetadataException>()),
     );
   });
+
+  test('author search: printed works of the author (real response)', () async {
+    http.on((u) => true, fixture('bnf/author_larcenet.xml'));
+
+    final results = await provider.searchByAuthor('Manu Larcenet');
+
+    final query = http.requests.single.queryParameters;
+    expect(
+      query['query'],
+      'bib.author all "Manu Larcenet" and bib.doctype any "a"',
+    );
+    expect(query['maximumRecords'], '50');
+    expect(results, hasLength(50));
+    expect(results.every((r) => r.authors.isNotEmpty), isTrue);
+    expect(
+      results.where((r) => r.seriesTitle == 'Le combat ordinaire'),
+      isNotEmpty,
+    );
+  });
 }

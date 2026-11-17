@@ -39,6 +39,16 @@ class BnfProvider implements MetadataProvider {
     return _query('bib.anywhere all "$cleaned" and bib.doctype any "a"');
   }
 
+  /// Printed works of [author] ("Manu Larcenet"), at most [max] records
+  /// (suggestions, PLAN_V4 phase 30).
+  Future<List<MetadataResult>> searchByAuthor(String author, {int max = 50}) {
+    final cleaned = author.replaceAll('"', ' ').trim();
+    return _query(
+      'bib.author all "$cleaned" and bib.doctype any "a"',
+      max: max,
+    );
+  }
+
   Future<List<MetadataResult>> _query(String cql, {int max = 20}) async {
     try {
       final response = await _limiter.run(

@@ -6,6 +6,7 @@ import 'package:dupe/core/database/app_database.drift.dart';
 import 'package:dupe/core/database/tables/items_table.dart';
 import 'package:dupe/core/database/tables/loans_table.dart';
 import 'package:dupe/core/database/tables/local_tables.dart';
+import 'package:dupe/core/database/tables/recommendation_feedback_table.dart';
 import 'package:dupe/core/database/tables/series_table.dart';
 import 'package:dupe/core/utils/text_fold.dart';
 import 'package:path/path.dart' as p;
@@ -17,6 +18,7 @@ import 'package:sqlite3/sqlite3.dart' as sqlite;
     SeriesTable,
     ItemsTable,
     LoansTable,
+    RecommendationFeedbackTable,
     AppSettingsTable,
     MetadataCacheTable,
     ScanQueueTable,
@@ -45,7 +47,7 @@ class AppDatabase extends $AppDatabase {
       AppDatabase(NativeDatabase.memory(setup: setupConnection));
 
   @override
-  int get schemaVersion => 3;
+  int get schemaVersion => 4;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -60,6 +62,10 @@ class AppDatabase extends $AppDatabase {
       if (from < 3) {
         // v3: the volume's own title (PLAN_V4 phase 24).
         await m.addColumn(itemsTable, itemsTable.volumeTitle);
+      }
+      if (from < 4) {
+        // v4: dismissed suggestions (PLAN_V4 phase 30).
+        await m.createTable(recommendationFeedbackTable);
       }
     },
     beforeOpen: (details) async {

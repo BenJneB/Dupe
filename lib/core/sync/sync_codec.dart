@@ -18,6 +18,7 @@ class SyncCodec {
     _db.seriesTable,
     _db.itemsTable,
     _db.loansTable,
+    _db.recommendationFeedbackTable,
   ];
 
   static const _localOnly = {'sync_pending'};

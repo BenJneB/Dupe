@@ -2410,6 +2410,96 @@ abstract class AppLocalizations {
   /// **'Adresse email invalide'**
   String get invalidEmail;
 
+  /// No description provided for @moreSuggestions.
+  ///
+  /// In fr, this message translates to:
+  /// **'Suggestions'**
+  String get moreSuggestions;
+
+  /// No description provided for @moreSuggestionsSubtitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Des livres à découvrir, d’après ta collection'**
+  String get moreSuggestionsSubtitle;
+
+  /// No description provided for @suggestionsTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Suggestions'**
+  String get suggestionsTitle;
+
+  /// No description provided for @suggestionsRefresh.
+  ///
+  /// In fr, this message translates to:
+  /// **'Recalculer'**
+  String get suggestionsRefresh;
+
+  /// No description provided for @suggestionsProgress.
+  ///
+  /// In fr, this message translates to:
+  /// **'Recherche des suggestions… {done}/{total}'**
+  String suggestionsProgress(int done, int total);
+
+  /// No description provided for @suggestionsComputedAt.
+  ///
+  /// In fr, this message translates to:
+  /// **'Calculées le {date} (d’après ta collection, tes lectures et tes notes)'**
+  String suggestionsComputedAt(String date);
+
+  /// No description provided for @suggestionsFailed.
+  ///
+  /// In fr, this message translates to:
+  /// **'Calcul impossible (hors ligne ?) : les suggestions précédentes restent affichées.'**
+  String get suggestionsFailed;
+
+  /// No description provided for @suggestionsEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune suggestion pour l’instant. Plus ta collection est riche (lus, notes), plus elles sont précises.'**
+  String get suggestionsEmpty;
+
+  /// No description provided for @reasonSameAuthor.
+  ///
+  /// In fr, this message translates to:
+  /// **'Parce que tu as {count, plural, =1{1 livre} other{{count} livres}} de {author}'**
+  String reasonSameAuthor(int count, String author);
+
+  /// No description provided for @reasonCommunity.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les lecteurs de {series} l’apprécient aussi ({votes, plural, =1{1 avis} other{{votes} avis}} AniList)'**
+  String reasonCommunity(String series, int votes);
+
+  /// No description provided for @reasonRelated.
+  ///
+  /// In fr, this message translates to:
+  /// **'Suite ou histoire liée de {series}'**
+  String reasonRelated(String series);
+
+  /// No description provided for @suggestionAddWish.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter aux envies'**
+  String get suggestionAddWish;
+
+  /// No description provided for @suggestionDismiss.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pas intéressé'**
+  String get suggestionDismiss;
+
+  /// No description provided for @suggestionWished.
+  ///
+  /// In fr, this message translates to:
+  /// **'« {title} » ajouté aux envies'**
+  String suggestionWished(String title);
+
+  /// No description provided for @suggestionDismissed.
+  ///
+  /// In fr, this message translates to:
+  /// **'Suggestion écartée : ce type de suggestion comptera moins'**
+  String get suggestionDismissed;
+
   /// No description provided for @coverPhoto.
   ///
   /// In fr, this message translates to:

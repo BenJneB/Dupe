@@ -7,7 +7,7 @@
 > finale. Les phases 15 à 20 ajoutent leurs tests ici et marquent « automatisé (phase N) » ceux que leurs tests
 > automatiques couvrent désormais.
 
-Ce fichier liste ce que les **301 tests automatiques (et 4 parcours d'intégration) ne couvrent pas** : matériel (caméra, vibrations,
+Ce fichier liste ce que les **319 tests automatiques (et 4 parcours d'intégration) ne couvrent pas** : matériel (caméra, vibrations,
 notifications, raccourci), services réels (Supabase, API GitHub, sources de métadonnées), plateformes non
 compilées ici (Windows) et workflows GitHub (jamais exécutés).
 
@@ -536,3 +536,11 @@ Automatisé (phase 29) : calcul de la perspective, orientation EXIF, suppression
 - [ ] **P-04** La couverture envoyée sur Supabase (téléchargée sur l'autre appareil) ne contient aucune donnée EXIF
       (`exiftool` ou propriétés du fichier : ni position, ni appareil) ; Paramètres → « Photos originales » → Vider :
       les couvertures restent affichées.
+
+## 21. Suggestions (v4, phase 30)
+**Avant d'installer** : appliquer `supabase/migrations/20261116180000_recommendation_feedback.sql` (sinon la synchro
+échoue). Automatisé : profil, classement, exclusions, moteur (réponses réelles), écran.
+- [ ] **G-01** Plus → Suggestions sur la vraie collection : au moins 5 des 10 premières paraissent pertinentes,
+      chacune avec une raison compréhensible.
+- [ ] **G-02** « Pas intéressé » sur le téléphone → après synchro, la suggestion n'apparaît plus sur le PC
+      (« Recalculer »). « Ajouter aux envies » → l'ouvrage est dans les envies.

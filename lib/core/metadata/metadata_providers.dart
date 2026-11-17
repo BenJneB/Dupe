@@ -39,7 +39,7 @@ MetadataAggregator metadataAggregator(Ref ref) {
   return MetadataAggregator(
     store: ref.watch(responseStoreProvider),
     providers: [
-      if (on(SourceId.bnf)) BnfProvider(dio),
+      ?ref.watch(bnfSourceProvider),
       if (on(SourceId.openLibrary))
         OpenLibraryProvider(dio, contact: Env.openLibraryContact),
       if (on(SourceId.googleBooks))
@@ -60,13 +60,23 @@ ComicVineProvider? comicVineSource(Ref ref) {
       : null;
 }
 
+/// The one BnF client (lookups and suggestions share its rate limiter);
+/// null when the source is off.
+@Riverpod(keepAlive: true)
+BnfProvider? bnfSource(Ref ref) => _enabledSources(ref)(SourceId.bnf)
+    ? BnfProvider(ref.watch(httpClientProvider))
+    : null;
+
+/// The one AniList client (series lookups and suggestions); null when off.
+@Riverpod(keepAlive: true)
+AniListProvider? anilistSource(Ref ref) =>
+    _enabledSources(ref)(SourceId.anilist)
+    ? AniListProvider(ref.watch(httpClientProvider))
+    : null;
+
 /// Enabled series-level sources (AniList, Comic Vine).
 @Riverpod(keepAlive: true)
-SeriesLookup seriesLookup(Ref ref) {
-  final dio = ref.watch(httpClientProvider);
-  final on = _enabledSources(ref);
-  return SeriesLookup(
-    anilist: on(SourceId.anilist) ? AniListProvider(dio) : null,
-    comicVine: ref.watch(comicVineSourceProvider),
-  );
-}
+SeriesLookup seriesLookup(Ref ref) => SeriesLookup(
+  anilist: ref.watch(anilistSourceProvider),
+  comicVine: ref.watch(comicVineSourceProvider),
+);
