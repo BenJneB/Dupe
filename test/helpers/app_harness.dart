@@ -6,6 +6,7 @@ import 'package:dupe/core/metadata/series_lookup.dart';
 import 'package:dupe/core/network/network_status.dart';
 import 'package:dupe/features/backup/data/auto_backups.dart';
 import 'package:dupe/features/backup/data/backup_store.dart';
+import 'package:dupe/features/collection/data/series_completion_service.dart';
 import 'package:dupe/features/covers/data/cover_cache.dart';
 import 'package:dupe/features/covers/data/cover_providers.dart';
 import 'package:dupe/features/covers/data/cover_scanner.dart';
@@ -23,6 +24,7 @@ import 'fake_app_shortcuts.dart';
 import 'fake_covers.dart';
 import 'fake_home_widget.dart';
 import 'fake_reminders.dart';
+import 'fake_series_catalog.dart';
 import 'fake_suggestion_sources.dart';
 import 'fake_voice_input.dart';
 import 'memory_backup_store.dart';
@@ -54,6 +56,7 @@ Future<AppDatabase> pumpApp(
   FakeCoverCache? coverCache,
   CoverScanner? coverScanner,
   SuggestionSources? suggestionSources,
+  SeriesCatalogSource? seriesCatalog,
 
   /// Series sources (AniList, Comic Vine): none by default, never the network.
   SeriesLookup? seriesLookup,
@@ -87,6 +90,9 @@ Future<AppDatabase> pumpApp(
         ),
         suggestionSourcesProvider.overrideWithValue(
           suggestionSources ?? FakeSuggestionSources(),
+        ),
+        seriesCatalogSourceProvider.overrideWithValue(
+          seriesCatalog ?? FakeSeriesCatalogSource(),
         ),
         seriesLookupProvider.overrideWithValue(seriesLookup ?? SeriesLookup()),
         ...overrides,

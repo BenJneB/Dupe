@@ -68,6 +68,17 @@ abstract final class AppRoutes {
   static String newSeries(CollectionType type) =>
       '${base(type)}/nouvelle-serie';
 
+  /// Whole series from the BnF (phase 37): searched by [title], or
+  /// completing the series [seriesId].
+  static String seriesCompletion(
+    CollectionType type, {
+    String? title,
+    String? seriesId,
+  }) => Uri(
+    path: '${base(type)}/serie-complete',
+    queryParameters: {'titre': ?title, 'serie': ?seriesId},
+  ).toString();
+
   static String series(CollectionType type, String id) =>
       '${base(type)}/serie/$id';
 

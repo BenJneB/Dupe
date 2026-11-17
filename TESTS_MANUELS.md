@@ -7,7 +7,7 @@
 > finale. Les phases 15 à 20 ajoutent leurs tests ici et marquent « automatisé (phase N) » ceux que leurs tests
 > automatiques couvrent désormais.
 
-Ce fichier liste ce que les **319 tests automatiques (et 4 parcours d'intégration) ne couvrent pas** : matériel (caméra, vibrations,
+Ce fichier liste ce que les **328 tests automatiques (et 4 parcours d'intégration) ne couvrent pas** : matériel (caméra, vibrations,
 notifications, raccourci), services réels (Supabase, API GitHub, sources de métadonnées), plateformes non
 compilées ici (Windows) et workflows GitHub (jamais exécutés).
 
@@ -544,3 +544,14 @@ Automatisé (phase 29) : calcul de la perspective, orientation EXIF, suppression
       chacune avec une raison compréhensible.
 - [ ] **G-02** « Pas intéressé » sur le téléphone → après synchro, la suggestion n'apparaît plus sur le PC
       (« Recalculer »). « Ajouter aux envies » → l'ouvrage est dans les envies.
+
+## 22. Série complète depuis la BnF (v4, phase 37)
+Automatisé : numéros BnF, regroupement par éditeur, choix de l'ISBN, plan sans doublon ni écrasement, écrans,
+bouton du mode Magasin. Simulée : la BnF.
+- [ ] **Z-01** Menu d'une série possédée sans ISBN (ex. Everdark) → « Compléter depuis la BnF » → Enregistrer : chaque
+      tome a son ISBN ; un scan en magasin les reconnaît ensuite tout de suite.
+- [ ] **Z-02** Onglet → « + » → « Série complète (BnF) » → une série de 20 tomes, « Possédés jusqu'au tome 12 »,
+      Enregistrer : 12 tomes possédés avec ISBN, en moins de cinq appuis.
+- [ ] **Z-03** Plus → Qualité → « Compléter les ISBN des séries (BnF) » sur la vraie collection : nombre d'ISBN
+      ajoutés plausible ; les séries « à faire depuis leur menu » ont bien plusieurs éditions. En magasin, scanner
+      un tome d'une série inconnue → « Ajouter la série complète » ouvre l'écran pré-rempli.

@@ -13,6 +13,7 @@ import 'package:dupe/features/collection/presentation/item/item_detail_screen.da
 import 'package:dupe/features/collection/presentation/item/item_form_screen.dart';
 import 'package:dupe/features/collection/presentation/series/series_detail_screen.dart';
 import 'package:dupe/features/collection/presentation/series/series_form_screen.dart';
+import 'package:dupe/features/collection/presentation/series_completion/series_completion_screen.dart';
 import 'package:dupe/features/collection/presentation/volume_counts/volume_counts_screen.dart';
 import 'package:dupe/features/loans/presentation/loans_screen.dart';
 import 'package:dupe/features/more/presentation/more_screen.dart';
@@ -205,6 +206,14 @@ StatefulShellBranch _collectionBranch(CollectionType type) =>
             GoRoute(
               path: 'nouvelle-serie',
               builder: (context, state) => SeriesFormScreen(type: type),
+            ),
+            GoRoute(
+              path: 'serie-complete',
+              builder: (context, state) => SeriesCompletionScreen(
+                type: type,
+                title: state.uri.queryParameters['titre'],
+                seriesId: state.uri.queryParameters['serie'],
+              ),
             ),
             GoRoute(
               path: 'serie/:seriesId',

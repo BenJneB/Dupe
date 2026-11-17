@@ -264,3 +264,8 @@ Description détaillée des choix techniques et de l'organisation du code (dépl
   AniList (`AniListProvider.neighbours`) via `SuggestionSources` (faux en test) → `rankSuggestions` (règles en tête
   du fichier) ; état `suggestionsProvider` (cache `suggestions_cache` 7 jours) ; refus synchronisés
   (`recommendation_feedback`, schéma v4).
+- Série complète (v4 phase 37) : `BnfProvider.searchSeriesVolumes` (pages SRU) via `SeriesCatalogSource`
+  (`series_completion_service.dart`, faux en test) → `buildCatalog` (éditions par éditeur, ISBN le plus bas par
+  défaut) → `planCompletion` (complète / crée, jamais de doublon ni d'écrasement) → `completeSeries` (transaction).
+  Écran `presentation/series_completion/` (route `<onglet>/serie-complete?titre=&serie=`), action groupée Qualité
+  `SeriesIsbnFill` (`series_isbn_tile.dart`).

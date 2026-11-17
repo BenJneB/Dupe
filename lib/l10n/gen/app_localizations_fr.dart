@@ -1588,6 +1588,100 @@ class AppLocalizationsFr extends AppLocalizations {
       'Suggestion écartée : ce type de suggestion comptera moins';
 
   @override
+  String get catalogTitle => 'Série complète';
+
+  @override
+  String get catalogQuery => 'Titre de la série';
+
+  @override
+  String get catalogHelp =>
+      'Les tomes et leurs ISBN viennent de la BnF : plus besoin de les scanner.';
+
+  @override
+  String get catalogBnfOff => 'La BnF est désactivée (Paramètres → Sources).';
+
+  @override
+  String get catalogNone =>
+      'Aucun tome numéroté trouvé à la BnF pour ce titre.';
+
+  @override
+  String catalogEdition(String publisher, int count) {
+    return '$publisher ($count tomes)';
+  }
+
+  @override
+  String get catalogUpTo => 'Possédés jusqu’au tome (vide : tous)';
+
+  @override
+  String get catalogMarkOwned => 'Marquer possédés';
+
+  @override
+  String catalogSave(int count) {
+    return 'Enregistrer ($count)';
+  }
+
+  @override
+  String catalogSaved(int created, int updated) {
+    String _temp0 = intl.Intl.pluralLogic(
+      created,
+      locale: localeName,
+      other: '$created tomes ajoutés',
+      one: '1 tome ajouté',
+      zero: 'Aucun tome ajouté',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      updated,
+      locale: localeName,
+      other: '$updated ISBN complétés',
+      one: '1 ISBN complété',
+      zero: 'aucun ISBN complété',
+    );
+    return '$_temp0, $_temp1';
+  }
+
+  @override
+  String get catalogComplete => 'Déjà dans la collection';
+
+  @override
+  String catalogIsbnAdded(String isbn) {
+    return 'Dans la collection sans ISBN → $isbn';
+  }
+
+  @override
+  String catalogOtherIsbns(int count) {
+    return '$count ISBN (réimpressions, éditions)';
+  }
+
+  @override
+  String get catalogSkip => 'Ignorer';
+
+  @override
+  String get addWholeSeries => 'Série complète (BnF)';
+
+  @override
+  String get completeFromBnf => 'Compléter depuis la BnF';
+
+  @override
+  String get storeWholeSeries => 'Ajouter la série complète';
+
+  @override
+  String get seriesIsbnTile => 'Compléter les ISBN des séries (BnF)';
+
+  @override
+  String get seriesIsbnHelp =>
+      'Les tomes possédés sans ISBN reçoivent celui de la BnF (première impression), sans rien rescanner';
+
+  @override
+  String seriesIsbnProgress(int done, int total, int found) {
+    return 'Série $done/$total · $found ISBN ajoutés';
+  }
+
+  @override
+  String seriesIsbnDone(int found, int ambiguous) {
+    return '$found ISBN ajoutés · $ambiguous séries à faire depuis leur menu (plusieurs éditions)';
+  }
+
+  @override
   String get coverPhoto => 'Photographier la couverture';
 
   @override

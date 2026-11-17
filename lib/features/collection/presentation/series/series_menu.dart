@@ -15,7 +15,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 
-enum _Action { markRead, checkTotal, edit, delete }
+enum _Action { markRead, checkTotal, completeFromBnf, edit, delete }
 
 /// Overflow menu of the series sheet.
 class SeriesMenu extends ConsumerWidget {
@@ -55,6 +55,10 @@ class SeriesMenu extends ConsumerWidget {
         await _markRead(context, ref);
       case _Action.checkTotal:
         await checkSeriesTotal(context, ref, series);
+      case _Action.completeFromBnf:
+        await context.push(
+          AppRoutes.seriesCompletion(series.type, seriesId: series.id),
+        );
       case _Action.edit:
         await context.push(AppRoutes.seriesEdit(series.type, series.id));
       case _Action.delete:
@@ -92,6 +96,11 @@ class SeriesMenu extends ConsumerWidget {
           key: const Key('checkTotalAction'),
           value: _Action.checkTotal,
           child: Text(l10n.checkTotalAction),
+        ),
+        PopupMenuItem(
+          key: const Key('completeFromBnfAction'),
+          value: _Action.completeFromBnf,
+          child: Text(l10n.completeFromBnf),
         ),
         PopupMenuItem(value: _Action.edit, child: Text(l10n.edit)),
         PopupMenuItem(value: _Action.delete, child: Text(l10n.delete)),

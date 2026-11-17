@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dupe/app/router.dart';
+import 'package:dupe/features/collection/presentation/series_completion/series_isbn_tile.dart';
 import 'package:dupe/features/collection/presentation/volume_titles/volume_titles_tile.dart';
 import 'package:dupe/features/covers/data/cover_proposals.dart';
 import 'package:dupe/features/covers/presentation/missing_covers_tile.dart';
@@ -81,6 +82,7 @@ class QualityScreen extends ConsumerWidget {
           header(l10n.qualityAutomatic),
           const MissingCoversTile(),
           const VolumeTitlesTile(),
+          const SeriesIsbnTile(),
           ListTile(
             leading: const Icon(Icons.functions),
             title: Text(l10n.volumeCountsTile),

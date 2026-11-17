@@ -2500,6 +2500,132 @@ abstract class AppLocalizations {
   /// **'Suggestion écartée : ce type de suggestion comptera moins'**
   String get suggestionDismissed;
 
+  /// No description provided for @catalogTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Série complète'**
+  String get catalogTitle;
+
+  /// No description provided for @catalogQuery.
+  ///
+  /// In fr, this message translates to:
+  /// **'Titre de la série'**
+  String get catalogQuery;
+
+  /// No description provided for @catalogHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les tomes et leurs ISBN viennent de la BnF : plus besoin de les scanner.'**
+  String get catalogHelp;
+
+  /// No description provided for @catalogBnfOff.
+  ///
+  /// In fr, this message translates to:
+  /// **'La BnF est désactivée (Paramètres → Sources).'**
+  String get catalogBnfOff;
+
+  /// No description provided for @catalogNone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun tome numéroté trouvé à la BnF pour ce titre.'**
+  String get catalogNone;
+
+  /// No description provided for @catalogEdition.
+  ///
+  /// In fr, this message translates to:
+  /// **'{publisher} ({count} tomes)'**
+  String catalogEdition(String publisher, int count);
+
+  /// No description provided for @catalogUpTo.
+  ///
+  /// In fr, this message translates to:
+  /// **'Possédés jusqu’au tome (vide : tous)'**
+  String get catalogUpTo;
+
+  /// No description provided for @catalogMarkOwned.
+  ///
+  /// In fr, this message translates to:
+  /// **'Marquer possédés'**
+  String get catalogMarkOwned;
+
+  /// No description provided for @catalogSave.
+  ///
+  /// In fr, this message translates to:
+  /// **'Enregistrer ({count})'**
+  String catalogSave(int count);
+
+  /// No description provided for @catalogSaved.
+  ///
+  /// In fr, this message translates to:
+  /// **'{created, plural, =0{Aucun tome ajouté} =1{1 tome ajouté} other{{created} tomes ajoutés}}, {updated, plural, =0{aucun ISBN complété} =1{1 ISBN complété} other{{updated} ISBN complétés}}'**
+  String catalogSaved(int created, int updated);
+
+  /// No description provided for @catalogComplete.
+  ///
+  /// In fr, this message translates to:
+  /// **'Déjà dans la collection'**
+  String get catalogComplete;
+
+  /// No description provided for @catalogIsbnAdded.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dans la collection sans ISBN → {isbn}'**
+  String catalogIsbnAdded(String isbn);
+
+  /// No description provided for @catalogOtherIsbns.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count} ISBN (réimpressions, éditions)'**
+  String catalogOtherIsbns(int count);
+
+  /// No description provided for @catalogSkip.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ignorer'**
+  String get catalogSkip;
+
+  /// No description provided for @addWholeSeries.
+  ///
+  /// In fr, this message translates to:
+  /// **'Série complète (BnF)'**
+  String get addWholeSeries;
+
+  /// No description provided for @completeFromBnf.
+  ///
+  /// In fr, this message translates to:
+  /// **'Compléter depuis la BnF'**
+  String get completeFromBnf;
+
+  /// No description provided for @storeWholeSeries.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter la série complète'**
+  String get storeWholeSeries;
+
+  /// No description provided for @seriesIsbnTile.
+  ///
+  /// In fr, this message translates to:
+  /// **'Compléter les ISBN des séries (BnF)'**
+  String get seriesIsbnTile;
+
+  /// No description provided for @seriesIsbnHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les tomes possédés sans ISBN reçoivent celui de la BnF (première impression), sans rien rescanner'**
+  String get seriesIsbnHelp;
+
+  /// No description provided for @seriesIsbnProgress.
+  ///
+  /// In fr, this message translates to:
+  /// **'Série {done}/{total} · {found} ISBN ajoutés'**
+  String seriesIsbnProgress(int done, int total, int found);
+
+  /// No description provided for @seriesIsbnDone.
+  ///
+  /// In fr, this message translates to:
+  /// **'{found} ISBN ajoutés · {ambiguous} séries à faire depuis leur menu (plusieurs éditions)'**
+  String seriesIsbnDone(int found, int ambiguous);
+
   /// No description provided for @coverPhoto.
   ///
   /// In fr, this message translates to:

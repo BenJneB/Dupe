@@ -154,4 +154,26 @@ void main() {
       isNotEmpty,
     );
   });
+
+  test('series volumes: every page of the title search', () async {
+    http
+      ..on(
+        (u) => u.queryParameters['startRecord'] == '51',
+        fixture('bnf/series_blue_lock_p2.xml'),
+      )
+      ..on((u) => true, fixture('bnf/series_blue_lock_p1.xml'));
+
+    final results = await provider.searchSeriesVolumes('Blue lock');
+
+    expect(http.requests.map((u) => u.queryParameters['startRecord']), [
+      null,
+      '51',
+    ]);
+    expect(
+      http.requests.first.queryParameters['query'],
+      'bib.title all "Blue lock" and bib.doctype any "a"',
+    );
+    // 58 records: the second page has no next position.
+    expect(results, hasLength(58));
+  });
 }

@@ -5,7 +5,7 @@ Windows, avec synchro Supabase optionnelle.
 **État courant et suite du projet : `PLAN_V3.md`** (à relire avant chaque phase ; tenir à jour son tableau §3 et
 ajouter un bilan « Réalisé / Écarts / Non vérifié » sous chaque phase terminée).
 Historique : `PLAN.md` (spécification v1, phases 0-8) et `PLAN_V2.md` (phases 9-13, état au 2026-11-14).
-Suite : `PLAN_V4.md` (phases 22-35, ordre d'exécution dans son §3), commencée pendant la recette v3 ; la fin de
+Suite : `PLAN_V4.md` (phases 22-37, ordre d'exécution dans son §3), commencée pendant la recette v3 ; la fin de
 cette recette (phase 26) vient juste avant les livres numériques (27-28), placés en fin de v4.
 `PLAN_V3.md` prime en cas de contradiction (ex. Supabase **local** autorisé pour les tests, projet distant
 toujours interdit). Phases 14 (vérifications de base, courte) et 21 (recette finale) pilotées par l'utilisateur : il rapporte les
@@ -77,7 +77,7 @@ sources de métadonnées, scan, synchro, sauvegardes, couvertures, CI…). Le me
 - `flutter test` doit passer à chaque fin de phase.
 - `pumpApp` injecte des faux pour tout ce qui touche le matériel ou le réseau : `FakeLoanReminders`,
   `FakeAppShortcuts`, `FakeHomeScreenWidget`, `FakeVoiceInput`, `FakeNetworkStatus` (aucune connexion par défaut),
-  `FakeCoverCache`, `FakeCoverScanner`, `FakeSuggestionSources`, `MemoryBackupStore`, un `SeriesLookup` sans source (param `seriesLookup:`) ; jamais les vrais
+  `FakeCoverCache`, `FakeCoverScanner`, `FakeSuggestionSources`, `FakeSeriesCatalogSource`, `MemoryBackupStore`, un `SeriesLookup` sans source (param `seriesLookup:`) ; jamais les vrais
   plugins ni le réseau.
 - Journal en test : `appLog.clear()` en début de test.
 - Tests de Paramètres : la liste est longue ; une tuile peut être construite (cache) mais hors écran →
@@ -110,7 +110,7 @@ sources de métadonnées, scan, synchro, sauvegardes, couvertures, CI…). Le me
   en mémoire, `goBack` car `tester.pageBack()` ne connaît pas le BackButton de material_ui),
   `test_repositories.dart` (repo + horloge contrôlable).
 - En test widget, la base se ferme via `tester.runAsync` (sinon blocage en temps simulé).
-  `dart_test.yaml` : timeout 30 s par test. Suite complète ~40 s (319 tests, 2026-11-16) : le temps vient surtout
+  `dart_test.yaml` : timeout 30 s par test. Suite complète ~60 s (328 tests, 2026-11-17) : le temps vient surtout
   de la compilation de chaque fichier de test widget. Helpers de navigation : `test/helpers/screen_helpers.dart`
   (`goTo`, `openSettings`, `tapTile`, `fillSignIn`) ; ne jamais importer un fichier `_test.dart` depuis un autre.
 

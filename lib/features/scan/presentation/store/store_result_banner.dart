@@ -143,6 +143,11 @@ class _Actions extends ConsumerWidget {
     final item = check.item;
     final metadata = check.metadata;
     final targetType = check.series?.type ?? type;
+    // A volume of a series (phase 37): offer the whole series at once.
+    final seriesTitle =
+        check.series?.title ??
+        metadata?.seriesTitle ??
+        (metadata?.volumeNumber != null ? metadata?.title : null);
     final outlined = OutlinedButton.styleFrom(
       foregroundColor: color,
       side: BorderSide(color: color),
@@ -200,7 +205,23 @@ class _Actions extends ConsumerWidget {
               ownership: Ownership.envie,
             ),
           ),
-        ] else if (!check.searching)
+        ],
+        if (seriesTitle != null)
+          OutlinedButton.icon(
+            key: const Key('storeWholeSeries'),
+            style: outlined,
+            icon: const Icon(Icons.library_books_outlined),
+            label: Text(l10n.storeWholeSeries),
+            // `go`: a tab route pushed over the scan clashes (CLAUDE.md).
+            onPressed: () => context.go(
+              AppRoutes.seriesCompletion(
+                targetType,
+                title: seriesTitle,
+                seriesId: check.series?.id,
+              ),
+            ),
+          ),
+        if (item == null && metadata == null && !check.searching)
           OutlinedButton.icon(
             key: const Key('storeOnlineSearch'),
             style: outlined,
