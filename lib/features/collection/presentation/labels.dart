@@ -67,5 +67,6 @@ extension CompletionFilterLabel on CompletionFilter {
     CompletionFilter.all => l10n.filterAll,
     CompletionFilter.complete => l10n.filterComplete,
     CompletionFilter.incomplete => l10n.filterIncomplete,
+    CompletionFilter.signed => l10n.filterSigned,
   };
 }

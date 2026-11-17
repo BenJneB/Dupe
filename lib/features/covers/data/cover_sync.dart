@@ -4,7 +4,8 @@ import 'package:dupe/core/database/app_database.dart';
 import 'package:dupe/core/database/local_stores.dart';
 import 'package:dupe/features/covers/data/cover_photos.dart';
 
-/// Uploads the photos referenced by items and not uploaded yet to the
+/// Uploads the photos referenced by items (covers, other photos) and not
+/// uploaded yet to the
 /// account [userId] (part of the sync, after the rows): another account
 /// signed in on this device gets them too. Returns the number uploaded.
 Future<int> uploadPendingCovers(
@@ -21,14 +22,17 @@ Future<int> uploadPendingCovers(
   };
   final rows = await db
       .customSelect(
-        'SELECT DISTINCT cover_url FROM items '
-        "WHERE cover_url LIKE '${CoverPhotos.scheme}%' AND deleted_at IS NULL",
-        readsFrom: {db.itemsTable},
+        // Covers and the other photos of the items (signatures, phase 31).
+        'SELECT cover_url AS url FROM items '
+        "WHERE cover_url LIKE '${CoverPhotos.scheme}%' AND deleted_at IS NULL "
+        'UNION SELECT url FROM item_photos '
+        "WHERE url LIKE '${CoverPhotos.scheme}%' AND deleted_at IS NULL",
+        readsFrom: {db.itemsTable, db.itemPhotosTable},
       )
       .get();
   var uploaded = 0;
   for (final row in rows) {
-    final name = CoverPhotos.nameOf(row.read<String>('cover_url'))!;
+    final name = CoverPhotos.nameOf(row.read<String>('url'))!;
     if (done.contains(name)) continue;
     final file = await photos.fileOf(name);
     if (!file.existsSync()) continue; // Taken on another device.

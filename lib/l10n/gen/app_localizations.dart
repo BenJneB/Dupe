@@ -2626,6 +2626,132 @@ abstract class AppLocalizations {
   /// **'{found} ISBN ajoutés · {ambiguous} séries à faire depuis leur menu (plusieurs éditions)'**
   String seriesIsbnDone(int found, int ambiguous);
 
+  /// No description provided for @sectionSigning.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dédicace'**
+  String get sectionSigning;
+
+  /// No description provided for @fieldSigned.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dédicacé'**
+  String get fieldSigned;
+
+  /// No description provided for @fieldSignedBy.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dédicacé par'**
+  String get fieldSignedBy;
+
+  /// No description provided for @fieldSignedOn.
+  ///
+  /// In fr, this message translates to:
+  /// **'Date de la dédicace'**
+  String get fieldSignedOn;
+
+  /// No description provided for @fieldSignedPlace.
+  ///
+  /// In fr, this message translates to:
+  /// **'Lieu'**
+  String get fieldSignedPlace;
+
+  /// No description provided for @fieldSignedPlaceHelper.
+  ///
+  /// In fr, this message translates to:
+  /// **'Festival, librairie, salon…'**
+  String get fieldSignedPlaceHelper;
+
+  /// No description provided for @fieldSigningNote.
+  ///
+  /// In fr, this message translates to:
+  /// **'Texte de la dédicace (à qui…)'**
+  String get fieldSigningNote;
+
+  /// No description provided for @signedTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dédicacé'**
+  String get signedTitle;
+
+  /// No description provided for @itemPhotosTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Photos'**
+  String get itemPhotosTitle;
+
+  /// No description provided for @addItemPhoto.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter une photo'**
+  String get addItemPhoto;
+
+  /// No description provided for @deletePhotoMessage.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cette photo sera supprimée.'**
+  String get deletePhotoMessage;
+
+  /// No description provided for @filterSigned.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dédicacés'**
+  String get filterSigned;
+
+  /// No description provided for @statsSigned.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dédicacés'**
+  String get statsSigned;
+
+  /// No description provided for @csvSigned.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dédicacé'**
+  String get csvSigned;
+
+  /// No description provided for @fullArchiveExport.
+  ///
+  /// In fr, this message translates to:
+  /// **'Archive complète (avec photos)'**
+  String get fullArchiveExport;
+
+  /// No description provided for @fullArchiveExportHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Un fichier .zip : la sauvegarde JSON et toutes tes photos (couvertures, dédicaces)'**
+  String get fullArchiveExportHelp;
+
+  /// No description provided for @fullArchiveImport.
+  ///
+  /// In fr, this message translates to:
+  /// **'Restaurer une archive complète'**
+  String get fullArchiveImport;
+
+  /// No description provided for @fullArchiveImportHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fusionne la collection et remet les photos (rien n\'est effacé)'**
+  String get fullArchiveImportHelp;
+
+  /// No description provided for @fullArchiveRestored.
+  ///
+  /// In fr, this message translates to:
+  /// **'{rows} lignes et {photos} photos restaurées'**
+  String fullArchiveRestored(int rows, int photos);
+
+  /// No description provided for @fullArchiveSaved.
+  ///
+  /// In fr, this message translates to:
+  /// **'Archive enregistrée : {photos} photos'**
+  String fullArchiveSaved(int photos);
+
+  /// No description provided for @signedCount.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{1 livre dédicacé} other{{count} livres dédicacés}}'**
+  String signedCount(int count);
+
   /// No description provided for @coverPhoto.
   ///
   /// In fr, this message translates to:

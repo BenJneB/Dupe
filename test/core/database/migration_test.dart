@@ -14,12 +14,12 @@ void main() {
       "VALUES ('s1', '2026-01-01T00:00:00.000Z', '2026-01-01T00:00:00.000Z', "
       "'manga', 'One Piece')";
 
-  test('v1 -> v4 creates the local tables and keeps the collection', () async {
+  test('v1 -> v5 creates the local tables and keeps the collection', () async {
     final schema = await verifier.schemaAt(1);
     schema.rawDatabase.execute(series);
     final db = AppDatabase(schema.newConnection());
 
-    await verifier.migrateAndValidate(db, 4);
+    await verifier.migrateAndValidate(db, 5);
 
     final rows = await db.select(db.seriesTable).getSingle();
     expect(rows.title, 'One Piece');
@@ -27,7 +27,7 @@ void main() {
     await db.close();
   });
 
-  test('v2 -> v4 adds the volume title, items kept without one', () async {
+  test('v2 -> v5 adds the volume title, items kept without one', () async {
     final schema = await verifier.schemaAt(2);
     schema.rawDatabase
       ..execute(series)
@@ -38,7 +38,7 @@ void main() {
       );
     final db = AppDatabase(schema.newConnection());
 
-    await verifier.migrateAndValidate(db, 4);
+    await verifier.migrateAndValidate(db, 5);
 
     final item = await db.select(db.itemsTable).getSingle();
     expect(
@@ -48,15 +48,34 @@ void main() {
     await db.close();
   });
 
-  test('v3 -> v4 adds the dismissed suggestions, collection kept', () async {
+  test('v3 -> v5 adds the dismissed suggestions, collection kept', () async {
     final schema = await verifier.schemaAt(3);
     schema.rawDatabase.execute(series);
     final db = AppDatabase(schema.newConnection());
 
-    await verifier.migrateAndValidate(db, 4);
+    await verifier.migrateAndValidate(db, 5);
 
     expect((await db.select(db.seriesTable).getSingle()).title, 'One Piece');
     expect(await db.select(db.recommendationFeedbackTable).get(), isEmpty);
+    await db.close();
+  });
+
+  test('v4 -> v5 adds the signing fields and the item photos', () async {
+    final schema = await verifier.schemaAt(4);
+    schema.rawDatabase
+      ..execute(series)
+      ..execute(
+        'INSERT INTO items (id, created_at, updated_at, series_id, type, '
+        "title, volume_number) VALUES ('i1', '2026-01-01T00:00:00.000Z', "
+        "'2026-01-01T00:00:00.000Z', 's1', 'manga', 'One Piece', '3')",
+      );
+    final db = AppDatabase(schema.newConnection());
+
+    await verifier.migrateAndValidate(db, 5);
+
+    final item = await db.select(db.itemsTable).getSingle();
+    expect((item.isSigned, item.signedBy), (false, null));
+    expect(await db.select(db.itemPhotosTable).get(), isEmpty);
     await db.close();
   });
 }

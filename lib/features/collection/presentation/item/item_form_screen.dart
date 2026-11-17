@@ -14,6 +14,7 @@ import 'package:dupe/features/collection/domain/metadata_mapping.dart';
 import 'package:dupe/features/collection/domain/series_attachment.dart';
 import 'package:dupe/features/collection/presentation/item/item_form_controllers.dart';
 import 'package:dupe/features/collection/presentation/item/item_reading_fields.dart';
+import 'package:dupe/features/collection/presentation/item/item_signing_fields.dart';
 import 'package:dupe/features/collection/presentation/item/item_text_input.dart';
 import 'package:dupe/features/collection/presentation/item/previous_volumes_offer.dart';
 import 'package:dupe/features/collection/presentation/item/series_attachment_tile.dart';
@@ -215,6 +216,7 @@ class _ItemFormScreenState extends ConsumerState<ItemFormScreen> {
                     l10n.fieldLocation,
                     helper: l10n.fieldLocationHelper,
                   ),
+                  ItemSigningFields(_c, onChanged: () => setState(() {})),
                   FormSection(l10n.sectionPrice),
                   ItemTextInput(
                     _c,

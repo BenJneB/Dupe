@@ -269,3 +269,7 @@ Description détaillée des choix techniques et de l'organisation du code (dépl
   défaut) → `planCompletion` (complète / crée, jamais de doublon ni d'écrasement) → `completeSeries` (transaction).
   Écran `presentation/series_completion/` (route `<onglet>/serie-complete?titre=&serie=`), action groupée Qualité
   `SeriesIsbnFill` (`series_isbn_tile.dart`).
+- Dédicaces (v4 phase 31, schéma v5) : champs `is_signed`… sur `items`, table synchronisée `item_photos`
+  (`ItemPhotosRepository`, url `dupe-cover:` envoyée par `uploadPendingCovers`) ; formulaire
+  `item_signing_fields.dart`, fiche `item/signing/` (galerie, plein écran), `SignedMark`, filtre
+  `CompletionFilter.signed`. Archive complète : `backup/data/full_archive.dart` (zip `sauvegarde.json` + `photos/`).

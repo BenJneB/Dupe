@@ -3,6 +3,7 @@ import 'package:dupe/features/collection/domain/collection_entry.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
 import 'package:dupe/features/collection/presentation/collection_tab/entry_display.dart';
 import 'package:dupe/features/collection/presentation/collection_tab/series_progress_bar.dart';
+import 'package:dupe/features/collection/presentation/signed_mark.dart';
 import 'package:dupe/features/quality/presentation/missing_isbn_mark.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
 import 'package:go_router/go_router.dart';
@@ -49,6 +50,11 @@ class EntriesGrid extends StatelessWidget {
                       top: 4,
                       right: 4,
                       child: MissingIsbnMark(count: entry.missingIsbnCount),
+                    ),
+                    Positioned(
+                      top: 4,
+                      left: 4,
+                      child: SignedMark(count: entry.signedCount),
                     ),
                   ],
                 ),

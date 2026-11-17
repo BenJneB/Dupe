@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:dupe/core/database/app_database.drift.dart';
+import 'package:dupe/core/database/tables/item_photos_table.dart';
+import 'package:dupe/core/database/tables/item_photos_table.drift.dart';
 import 'package:dupe/core/database/tables/items_table.dart';
 import 'package:dupe/core/database/tables/loans_table.dart';
 import 'package:dupe/core/database/tables/local_tables.dart';
@@ -19,6 +21,7 @@ import 'package:sqlite3/sqlite3.dart' as sqlite;
     ItemsTable,
     LoansTable,
     RecommendationFeedbackTable,
+    ItemPhotosTable,
     AppSettingsTable,
     MetadataCacheTable,
     ScanQueueTable,
@@ -47,7 +50,7 @@ class AppDatabase extends $AppDatabase {
       AppDatabase(NativeDatabase.memory(setup: setupConnection));
 
   @override
-  int get schemaVersion => 4;
+  int get schemaVersion => 5;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -66,6 +69,20 @@ class AppDatabase extends $AppDatabase {
       if (from < 4) {
         // v4: dismissed suggestions (PLAN_V4 phase 30).
         await m.createTable(recommendationFeedbackTable);
+      }
+      if (from < 5) {
+        // v5: signed copies and their photos (PLAN_V4 phase 31).
+        for (final c in [
+          itemsTable.isSigned,
+          itemsTable.signedBy,
+          itemsTable.signedOn,
+          itemsTable.signedPlace,
+          itemsTable.signingNote,
+        ]) {
+          await m.addColumn(itemsTable, c);
+        }
+        await m.createTable(itemPhotosTable);
+        await m.createIndex(itemPhotosItemIdIdx);
       }
     },
     beforeOpen: (details) async {

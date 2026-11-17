@@ -193,6 +193,16 @@ class _Pastille extends StatelessWidget {
                           color: colors.foreground,
                         ),
                       ),
+                    if (slot.copies.any((c) => c.isSigned))
+                      Padding(
+                        padding: const EdgeInsets.only(right: 2),
+                        child: Icon(
+                          Icons.draw,
+                          key: ValueKey('signed-${slot.label}'),
+                          size: 14,
+                          color: colors.foreground,
+                        ),
+                      ),
                     Text(
                       slot.label,
                       style: Theme.of(context).textTheme.labelLarge?.copyWith(

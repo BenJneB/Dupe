@@ -1682,6 +1682,83 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String get sectionSigning => 'Dédicace';
+
+  @override
+  String get fieldSigned => 'Dédicacé';
+
+  @override
+  String get fieldSignedBy => 'Dédicacé par';
+
+  @override
+  String get fieldSignedOn => 'Date de la dédicace';
+
+  @override
+  String get fieldSignedPlace => 'Lieu';
+
+  @override
+  String get fieldSignedPlaceHelper => 'Festival, librairie, salon…';
+
+  @override
+  String get fieldSigningNote => 'Texte de la dédicace (à qui…)';
+
+  @override
+  String get signedTitle => 'Dédicacé';
+
+  @override
+  String get itemPhotosTitle => 'Photos';
+
+  @override
+  String get addItemPhoto => 'Ajouter une photo';
+
+  @override
+  String get deletePhotoMessage => 'Cette photo sera supprimée.';
+
+  @override
+  String get filterSigned => 'Dédicacés';
+
+  @override
+  String get statsSigned => 'Dédicacés';
+
+  @override
+  String get csvSigned => 'Dédicacé';
+
+  @override
+  String get fullArchiveExport => 'Archive complète (avec photos)';
+
+  @override
+  String get fullArchiveExportHelp =>
+      'Un fichier .zip : la sauvegarde JSON et toutes tes photos (couvertures, dédicaces)';
+
+  @override
+  String get fullArchiveImport => 'Restaurer une archive complète';
+
+  @override
+  String get fullArchiveImportHelp =>
+      'Fusionne la collection et remet les photos (rien n\'est effacé)';
+
+  @override
+  String fullArchiveRestored(int rows, int photos) {
+    return '$rows lignes et $photos photos restaurées';
+  }
+
+  @override
+  String fullArchiveSaved(int photos) {
+    return 'Archive enregistrée : $photos photos';
+  }
+
+  @override
+  String signedCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count livres dédicacés',
+      one: '1 livre dédicacé',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get coverPhoto => 'Photographier la couverture';
 
   @override

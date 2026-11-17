@@ -20,6 +20,7 @@ class SeriesEntry extends CollectionEntry {
     this.firstVolumeCover,
     this.highestVolume,
     this.missingIsbnCount = 0,
+    this.signedCount = 0,
   });
 
   final Series series;
@@ -32,6 +33,9 @@ class SeriesEntry extends CollectionEntry {
 
   /// Owned volumes without ISBN (quality marker).
   final int missingIsbnCount;
+
+  /// Signed volumes (phase 31).
+  final int signedCount;
 
   /// Owned volumes (distinct numbers) not deleted.
   final int ownedCount;
@@ -91,12 +95,18 @@ class ItemEntry extends CollectionEntry {
 
 enum CollectionSort { title, recent, progress }
 
-enum CompletionFilter { all, complete, incomplete }
+enum CompletionFilter { all, complete, incomplete, signed }
 
 extension EntryMissingIsbn on CollectionEntry {
   /// Owned books without ISBN in this row: a series' volumes, or the book.
   int get missingIsbnCount => switch (this) {
     SeriesEntry(:final missingIsbnCount) => missingIsbnCount,
     ItemEntry(:final item) => item.lacksIsbn ? 1 : 0,
+  };
+
+  /// Signed books in this row (phase 31).
+  int get signedCount => switch (this) {
+    SeriesEntry(:final signedCount) => signedCount,
+    ItemEntry(:final item) => item.isSigned ? 1 : 0,
   };
 }

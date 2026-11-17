@@ -7,7 +7,7 @@
 > finale. Les phases 15 à 20 ajoutent leurs tests ici et marquent « automatisé (phase N) » ceux que leurs tests
 > automatiques couvrent désormais.
 
-Ce fichier liste ce que les **328 tests automatiques (et 4 parcours d'intégration) ne couvrent pas** : matériel (caméra, vibrations,
+Ce fichier liste ce que les **334 tests automatiques (et 4 parcours d'intégration) ne couvrent pas** : matériel (caméra, vibrations,
 notifications, raccourci), services réels (Supabase, API GitHub, sources de métadonnées), plateformes non
 compilées ici (Windows) et workflows GitHub (jamais exécutés).
 
@@ -555,3 +555,14 @@ bouton du mode Magasin. Simulée : la BnF.
 - [ ] **Z-03** Plus → Qualité → « Compléter les ISBN des séries (BnF) » sur la vraie collection : nombre d'ISBN
       ajoutés plausible ; les séries « à faire depuis leur menu » ont bien plusieurs éditions. En magasin, scanner
       un tome d'une série inconnue → « Ajouter la série complète » ouvre l'écran pré-rempli.
+
+## 23. Dédicaces (v4, phase 31)
+**Avant d'installer** : appliquer `supabase/migrations/20261117120000_signed_copies.sql` (sinon la synchro des ouvrages
+échoue). Automatisé : migration, champs, photo ajoutée, plein écran, filtre, stylo, statistiques, archive
+(restauration sur base vierge). Simulés : l'appareil photo, le stockage Supabase.
+- [ ] **W-01** Téléphone : modifier un tome → cocher « Dédicacé » (signataire pré-rempli), lieu, date, texte ; sur la
+      fiche, ajouter deux photos (appareil photo) → plein écran, zoom, balayage.
+- [ ] **W-02** Après synchro, sur le PC : la dédicace et les deux photos apparaissent ; stylo sur la pastille et dans
+      la liste ; filtre « Dédicacés » ; tuile « Dédicacés » des statistiques.
+- [ ] **W-03** Paramètres → « Archive complète » sur le téléphone, puis sur une installation propre (ou un autre
+      compte) « Restaurer une archive complète » : collection et photos de dédicace revenues.

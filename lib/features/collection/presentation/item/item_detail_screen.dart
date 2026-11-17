@@ -11,6 +11,7 @@ import 'package:dupe/features/collection/domain/item_checks.dart';
 import 'package:dupe/features/collection/presentation/confirm_delete_dialog.dart';
 import 'package:dupe/features/collection/presentation/item/bought_action.dart';
 import 'package:dupe/features/collection/presentation/item/item_reading_bar.dart';
+import 'package:dupe/features/collection/presentation/item/signing/item_signing_section.dart';
 import 'package:dupe/features/collection/presentation/labels.dart';
 import 'package:dupe/features/collection/presentation/providers/detail_providers.dart';
 import 'package:dupe/features/collection/presentation/undo_delete.dart';
@@ -210,6 +211,8 @@ class _ItemDetailView extends ConsumerWidget {
             const SizedBox(height: 8),
             ItemLoanSection(item: item),
           ],
+          const SizedBox(height: 8),
+          ItemSigningSection(item: item),
           const SizedBox(height: 8),
           for (final (label, value) in rows)
             if (value != null && value.isNotEmpty)

@@ -109,6 +109,13 @@ class _StatsBodyState extends State<_StatsBody> {
                   value: '${s.ownedVolumes}',
                   caption: l10n.statsVolumesCaption(s.ownedCopies),
                 ),
+                if (s.signedCopies > 0)
+                  StatTile(
+                    key: const Key('statSigned'),
+                    width: width,
+                    label: l10n.statsSigned,
+                    value: '${s.signedCopies}',
+                  ),
               ],
             );
           },

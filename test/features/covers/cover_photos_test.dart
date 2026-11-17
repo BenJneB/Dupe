@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:dupe/core/database/local_stores.dart';
+import 'package:dupe/features/collection/data/item_photos_repository.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
 import 'package:dupe/features/covers/data/cover_photos.dart';
 import 'package:dupe/features/covers/data/cover_providers.dart';
@@ -111,4 +112,33 @@ void main() {
       );
     },
   );
+
+  test('the other photos of an item (signature) are uploaded too', () async {
+    final store = FakeCoverStore();
+    final item = env.repo.newItem(CollectionType.bd).copyWith(title: 'Blast');
+    await env.repo.saveItem(item);
+    final url = await photos.save(
+      item.id,
+      jpeg,
+      extension: '.jpg',
+      now: DateTime(2026, 11, 17),
+    );
+    await ItemPhotosRepository(
+      env.db,
+      now: () => env.now,
+      newId: () => 'p1',
+    ).add(item.id, url);
+
+    expect(
+      await uploadPendingCovers(
+        env.db,
+        photos,
+        store,
+        AppSettingsStore(env.db),
+        userId: 'u1',
+      ),
+      1,
+    );
+    expect(store.files[CoverPhotos.nameOf(url)], jpeg);
+  });
 }

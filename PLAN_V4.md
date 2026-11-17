@@ -56,7 +56,7 @@ deux fonctions tournées vers la suite de la collection : être prévenu des nou
 | 5 | 29 | Photos : redressement et recadrage | ✅ fait (2026-11-16) | oui | non (`P-*`) |
 | 6 | 30 | Recommandations | ✅ fait (2026-11-16) | oui | non (`G-*`) |
 | 7 | 37 | Ajout d'une série complète (ISBN de tous les tomes sans rescanner) | ✅ fait (2026-11-17) | oui | non (`Z-*`) |
-| 8 | 31 | Dédicaces | à faire | — | — |
+| 8 | 31 | Dédicaces | ✅ fait (2026-11-17) | oui (+ Supabase local) | non (`W-*`) |
 | 9 | 32 | Nouvelles sources de métadonnées | à faire | — | — |
 | 10 | 33 | Alertes de nouveautés | à faire | — | — |
 | 11 | 34 | Compte : mot de passe oublié, liens de confirmation | à faire | — | — |
@@ -384,6 +384,27 @@ l'utilisateur, et chacune affiche une raison compréhensible.*
 *Critère : je coche un tome comme dédicacé, j'ajoute deux photos sur le téléphone, et je les retrouve sur le PC
 après synchro ; l'archive complète restaure les photos sur un appareil vierge.*
 
+
+**Bilan (2026-11-17)**
+- **Réalisé** : schéma **v5** (`items` : `is_signed`, `signed_by`, `signed_on`, `signed_place`, `signing_note` ;
+  table synchronisée `item_photos` : `item_id`, `url` `dupe-cover:`, `kind` dédicace | autre, `position`) + migration
+  Supabase `20261117120000_signed_copies.sql` (validée sur le Supabase local avec celle de la phase 30, tests
+  `-P supabase` verts). Photos par le pipeline des couvertures (`uploadPendingCovers` lit aussi `item_photos`).
+  Formulaire : section « Dédicace » (`item_signing_fields.dart`, signataire pré-rempli avec les auteurs, détails
+  effacés si décoché). Fiche : `signing/item_signing_section.dart` (détails, galerie, ajout de photo redressée
+  sans EXIF à 1200 px sans recadrage forcé, appui long = suppression) et plein écran avec zoom et balayage
+  (`photo_viewer.dart`) ; « Ajouter une photo » aussi sur un ouvrage non dédicacé. Stylo sur les pastilles, la vue
+  liste, les lignes et la grille des onglets (`SignedMark`) ; filtre « Dédicacés » ; tuile des statistiques ;
+  5 colonnes dans l'export CSV. Paramètres → « Archive complète (avec photos) » / « Restaurer une archive
+  complète » (`full_archive.dart`, package `archive` : `sauvegarde.json` + `photos/`, photos d'un autre appareil
+  téléchargées, restauration en fusion, aucun chemin hors du dossier des photos).
+  Tests : migration v4 → v5, envoi des photos, archive (appareil vierge, chemin malveillant, fichier invalide),
+  parcours complet (`signed_copy_test.dart`).
+- **Écarts** : pas de choix du type de photo (toutes « dédicace ») ni de réordonnancement ; photos à 1200 px (même
+  format que les couvertures) ; l'import CSV ignore les colonnes de dédicace ; restauration d'archive en fusion
+  seulement (pas de « remplacer »).
+- **Non vérifié** : critère réel (deux photos sur le téléphone retrouvées sur le PC), archive sur un appareil vierge
+  (`W-01` à `W-03`) ; migration Supabase **à appliquer avant d'installer**.
 
 ### Phase 32 — Nouvelles sources de métadonnées
 **Avant de coder** : produire un bilan à partir du journal et de la base (par type : part des ouvrages sans

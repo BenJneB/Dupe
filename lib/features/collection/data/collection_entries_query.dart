@@ -46,6 +46,11 @@ Stream<List<CollectionEntry>> watchCollectionEntries(
      WHERE c.series_id = series.id AND c.deleted_at IS NULL
        AND c.ownership = 'possede'
        AND trim(coalesce(c.isbn13, '')) = '')''');
+  // Signed volumes (phase 31).
+  const signed = CustomExpression<int>('''
+    (SELECT COUNT(*) FROM items c
+     WHERE c.series_id = series.id AND c.deleted_at IS NULL
+       AND c.is_signed = 1)''');
   // Highest plain volume number ("12", not "HS 2").
   const highestVolume = CustomExpression<int>('''
     (SELECT MAX(CAST(c.volume_number AS INTEGER)) FROM items c
@@ -64,6 +69,7 @@ Stream<List<CollectionEntry>> watchCollectionEntries(
           firstCover,
           highestVolume,
           missingIsbn,
+          signed,
         ]);
 
   final seriesStream = seriesQuery.watch().map(
@@ -77,6 +83,7 @@ Stream<List<CollectionEntry>> watchCollectionEntries(
           firstVolumeCover: row.read(firstCover),
           highestVolume: row.read(highestVolume),
           missingIsbnCount: row.read(missingIsbn) ?? 0,
+          signedCount: row.read(signed) ?? 0,
         ),
     ],
   );
