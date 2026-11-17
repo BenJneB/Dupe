@@ -99,7 +99,7 @@ sources de métadonnées, scan, synchro, sauvegardes, couvertures, CI…). Le me
 - Données initiales d'un test widget : `pumpApp(seed: (db) async {...})` (écrit avant le démarrage de
   l'appli). Écrire en base après `pumpApp` via `runAsync` bloque (flux drift actifs).
 - Tests de synchro : `FakeSyncAuth` (comptes en mémoire, mot de passe ≥ 6, `confirmEmail` + `confirm()`),
-  `fillSignIn` dans `sync_flow_test.dart` ; `pumpApp(overrides: [syncAuthProvider.overrideWithValue(FakeSyncAuth(...)),
+  `fillSignIn` dans `sync_flow_test.dart` ; codes e-mail simulés : `codes`, `sent`, `confirmSignUp`/`resetPassword` ; `pumpApp(overrides: [syncAuthProvider.overrideWithValue(FakeSyncAuth(...)),
   syncRemoteProvider.overrideWithValue(FakeSyncRemote())])` ; I/O fichiers réels dans `tester.runAsync`.
 - Ne jamais `pkill -f <motif>` : le motif est dans la ligne de commande et tue le shell ; utiliser `pkill -x`.
 - flutter_test simule Android par défaut : pour un comportement desktop, `variant:
@@ -110,7 +110,7 @@ sources de métadonnées, scan, synchro, sauvegardes, couvertures, CI…). Le me
   en mémoire, `goBack` car `tester.pageBack()` ne connaît pas le BackButton de material_ui),
   `test_repositories.dart` (repo + horloge contrôlable).
 - En test widget, la base se ferme via `tester.runAsync` (sinon blocage en temps simulé).
-  `dart_test.yaml` : timeout 30 s par test. Suite complète ~70 s (347 tests, 2026-11-17) : le temps vient surtout
+  `dart_test.yaml` : timeout 30 s par test. Suite complète ~55 s (354 tests, 2026-11-17) : le temps vient surtout
   de la compilation de chaque fichier de test widget. Helpers de navigation : `test/helpers/screen_helpers.dart`
   (`goTo`, `openSettings`, `tapTile`, `fillSignIn`) ; ne jamais importer un fichier `_test.dart` depuis un autre.
 

@@ -2317,14 +2317,8 @@ abstract class AppLocalizations {
   /// No description provided for @confirmEmailSent.
   ///
   /// In fr, this message translates to:
-  /// **'Compte créé. Ouvre le lien envoyé à {email} pour confirmer ton adresse (la page qui s’ouvre ensuite peut afficher une erreur « localhost » : c’est normal, l’adresse est confirmée), puis reviens ici et touche « Se connecter ».'**
+  /// **'Compte créé : saisis ci-dessous le code à 6 chiffres envoyé à {email} (ou ouvre le lien de l’e-mail, puis « Se connecter »).'**
   String confirmEmailSent(String email);
-
-  /// No description provided for @forgotPasswordHelp.
-  ///
-  /// In fr, this message translates to:
-  /// **'Mot de passe oublié : change-le depuis un appareil encore connecté (Paramètres → Mot de passe).'**
-  String get forgotPasswordHelp;
 
   /// No description provided for @setPassword.
   ///
@@ -2907,6 +2901,84 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Ne plus suivre cet auteur'**
   String get unfollowAuthor;
+
+  /// No description provided for @emailCodeLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Code reçu par e-mail'**
+  String get emailCodeLabel;
+
+  /// No description provided for @emailCodeHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'6 chiffres, valable une heure'**
+  String get emailCodeHelp;
+
+  /// No description provided for @emailCodeMissing.
+  ///
+  /// In fr, this message translates to:
+  /// **'Saisis le code à 6 chiffres de l’e-mail'**
+  String get emailCodeMissing;
+
+  /// No description provided for @confirmCodeAction.
+  ///
+  /// In fr, this message translates to:
+  /// **'Confirmer mon adresse'**
+  String get confirmCodeAction;
+
+  /// No description provided for @resendCode.
+  ///
+  /// In fr, this message translates to:
+  /// **'Renvoyer le code'**
+  String get resendCode;
+
+  /// No description provided for @forgotPassword.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mot de passe oublié ?'**
+  String get forgotPassword;
+
+  /// No description provided for @resetHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Saisis l’adresse de ton compte : un code à 6 chiffres t’y sera envoyé pour choisir un nouveau mot de passe.'**
+  String get resetHelp;
+
+  /// No description provided for @resetCodeSent.
+  ///
+  /// In fr, this message translates to:
+  /// **'Si un compte existe pour {email}, un code vient d’y être envoyé. Saisis-le avec ton nouveau mot de passe.'**
+  String resetCodeSent(String email);
+
+  /// No description provided for @sendResetCode.
+  ///
+  /// In fr, this message translates to:
+  /// **'Envoyer le code'**
+  String get sendResetCode;
+
+  /// No description provided for @newPasswordLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouveau mot de passe'**
+  String get newPasswordLabel;
+
+  /// No description provided for @resetPasswordAction.
+  ///
+  /// In fr, this message translates to:
+  /// **'Changer le mot de passe'**
+  String get resetPasswordAction;
+
+  /// No description provided for @passwordResetDone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mot de passe changé : tu es connecté'**
+  String get passwordResetDone;
+
+  /// No description provided for @errorInvalidCode.
+  ///
+  /// In fr, this message translates to:
+  /// **'Code incorrect ou expiré : demande un nouveau code'**
+  String get errorInvalidCode;
 
   /// No description provided for @coverPhoto.
   ///

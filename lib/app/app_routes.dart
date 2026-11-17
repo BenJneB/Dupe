@@ -40,6 +40,12 @@ abstract final class AppRoutes {
   static const about = '/plus/a-propos';
   static const journal = '/plus/a-propos/journal';
   static const signIn = '/connexion';
+
+  /// Password reset by email code (phase 34), [email] prefilled.
+  static String resetPassword(String email) => Uri(
+    path: '$signIn/mot-de-passe-oublie',
+    queryParameters: {if (email.isNotEmpty) 'email': email},
+  ).toString();
   static const scan = '/scan';
   static const scanReview = '/scan/revue';
 

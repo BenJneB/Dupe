@@ -284,3 +284,7 @@ Description détaillée des choix techniques et de l'organisation du code (dépl
   `ReleaseNotifications`. Premier passage d'une série ou d'un auteur = référence sans alerte (relevés locaux
   `releases_base_*`, `releases_seen_*`) ; `closeOwned` passe « ajoutée » les alertes déjà en collection. Écran
   `/plus/nouveautes`, réglages `ReleaseSettingsSection`, cloche `FollowAuthorButton`.
+- Compte (v4 phase 34) : confirmation d'inscription et mot de passe oublié par **code à 6 chiffres** de l'e-mail
+  Supabase (`verifyOTP` signup / recovery, `{{ .Token }}` dans les modèles d'e-mail) : `SyncAuth.confirmSignUp`,
+  `resendConfirmation`, `sendPasswordReset`, `resetPassword` ; écrans `sign_in_screen.dart` (champ du code) et
+  `reset_password_screen.dart` (`/connexion/mot-de-passe-oublie`). Pas de lien profond.

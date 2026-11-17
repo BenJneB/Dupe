@@ -1456,12 +1456,8 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String confirmEmailSent(String email) {
-    return 'Compte créé. Ouvre le lien envoyé à $email pour confirmer ton adresse (la page qui s’ouvre ensuite peut afficher une erreur « localhost » : c’est normal, l’adresse est confirmée), puis reviens ici et touche « Se connecter ».';
+    return 'Compte créé : saisis ci-dessous le code à 6 chiffres envoyé à $email (ou ouvre le lien de l’e-mail, puis « Se connecter »).';
   }
-
-  @override
-  String get forgotPasswordHelp =>
-      'Mot de passe oublié : change-le depuis un appareil encore connecté (Paramètres → Mot de passe).';
 
   @override
   String get setPassword => 'Mot de passe';
@@ -1880,6 +1876,49 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get unfollowAuthor => 'Ne plus suivre cet auteur';
+
+  @override
+  String get emailCodeLabel => 'Code reçu par e-mail';
+
+  @override
+  String get emailCodeHelp => '6 chiffres, valable une heure';
+
+  @override
+  String get emailCodeMissing => 'Saisis le code à 6 chiffres de l’e-mail';
+
+  @override
+  String get confirmCodeAction => 'Confirmer mon adresse';
+
+  @override
+  String get resendCode => 'Renvoyer le code';
+
+  @override
+  String get forgotPassword => 'Mot de passe oublié ?';
+
+  @override
+  String get resetHelp =>
+      'Saisis l’adresse de ton compte : un code à 6 chiffres t’y sera envoyé pour choisir un nouveau mot de passe.';
+
+  @override
+  String resetCodeSent(String email) {
+    return 'Si un compte existe pour $email, un code vient d’y être envoyé. Saisis-le avec ton nouveau mot de passe.';
+  }
+
+  @override
+  String get sendResetCode => 'Envoyer le code';
+
+  @override
+  String get newPasswordLabel => 'Nouveau mot de passe';
+
+  @override
+  String get resetPasswordAction => 'Changer le mot de passe';
+
+  @override
+  String get passwordResetDone => 'Mot de passe changé : tu es connecté';
+
+  @override
+  String get errorInvalidCode =>
+      'Code incorrect ou expiré : demande un nouveau code';
 
   @override
   String get coverPhoto => 'Photographier la couverture';

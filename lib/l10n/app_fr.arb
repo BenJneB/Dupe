@@ -780,7 +780,7 @@
   "hidePassword": "Masquer le mot de passe",
   "noAccountYet": "Pas encore de compte ? Créer un compte",
   "alreadyHaveAccount": "Déjà un compte ? Se connecter",
-  "confirmEmailSent": "Compte créé. Ouvre le lien envoyé à {email} pour confirmer ton adresse (la page qui s’ouvre ensuite peut afficher une erreur « localhost » : c’est normal, l’adresse est confirmée), puis reviens ici et touche « Se connecter ».",
+  "confirmEmailSent": "Compte créé : saisis ci-dessous le code à 6 chiffres envoyé à {email} (ou ouvre le lien de l’e-mail, puis « Se connecter »).",
   "@confirmEmailSent": {
     "placeholders": {
       "email": {
@@ -788,7 +788,6 @@
       }
     }
   },
-  "forgotPasswordHelp": "Mot de passe oublié : change-le depuis un appareil encore connecté (Paramètres → Mot de passe).",
   "setPassword": "Mot de passe",
   "setPasswordHelp": "Définir ou changer le mot de passe du compte",
   "setPasswordTitle": "Nouveau mot de passe",
@@ -977,6 +976,20 @@
   "followedAuthorsHelp": "Suivre un auteur : cloche sur sa page (vue par auteur)",
   "followAuthor": "Suivre les nouveautés de cet auteur",
   "unfollowAuthor": "Ne plus suivre cet auteur",
+  "emailCodeLabel": "Code reçu par e-mail",
+  "emailCodeHelp": "6 chiffres, valable une heure",
+  "emailCodeMissing": "Saisis le code à 6 chiffres de l’e-mail",
+  "confirmCodeAction": "Confirmer mon adresse",
+  "resendCode": "Renvoyer le code",
+  "forgotPassword": "Mot de passe oublié ?",
+  "resetHelp": "Saisis l’adresse de ton compte : un code à 6 chiffres t’y sera envoyé pour choisir un nouveau mot de passe.",
+  "resetCodeSent": "Si un compte existe pour {email}, un code vient d’y être envoyé. Saisis-le avec ton nouveau mot de passe.",
+  "@resetCodeSent": {"placeholders": {"email": {"type": "String"}}},
+  "sendResetCode": "Envoyer le code",
+  "newPasswordLabel": "Nouveau mot de passe",
+  "resetPasswordAction": "Changer le mot de passe",
+  "passwordResetDone": "Mot de passe changé : tu es connecté",
+  "errorInvalidCode": "Code incorrect ou expiré : demande un nouveau code",
   "coverPhoto": "Photographier la couverture",
   "coverRecrop": "Recadrer la couverture",
   "cropTitle": "Recadrer",

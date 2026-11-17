@@ -59,7 +59,7 @@ deux fonctions tournées vers la suite de la collection : être prévenu des nou
 | 8 | 31 | Dédicaces | ✅ fait (2026-11-17) | oui (+ Supabase local) | non (`W-*`) |
 | 9 | 32 | Nouvelles sources de métadonnées (réduite : MangaDex, MangaUpdates) | ✅ fait (2026-11-17) | oui | non (`SR-*`) |
 | 10 | 33 | Alertes de nouveautés | ✅ fait (2026-11-17) | oui (+ Supabase local) | non (`AL-*`) |
-| 11 | 34 | Compte : mot de passe oublié, liens de confirmation | à faire | — | — |
+| 11 | 34 | Compte : mot de passe oublié, liens de confirmation | ✅ fait (2026-11-17) | oui | non (`K2-*`) |
 | 12 | 26 | Fin de la recette de la v3 (reprise de la phase 21) | à faire, juste avant les livres numériques | — | — |
 | 13 | 27 | Livres numériques (1/2) : support numérique, import Calibre | à faire | — | — |
 | 14 | 28 | Livres numériques (2/2) : dossier EPUB/CBZ, Kobo | à faire | — | — |
@@ -509,6 +509,20 @@ alerte apparaît une seule fois, sur les deux appareils, et part en envie en un 
   renvoie dans l'appli. Le lien de réinitialisation du mot de passe a le même besoin : à traiter ensemble.
 - Question ouverte : lien profond `dupe://` (Android ; Linux/Windows à étudier) ou petite page web statique.
 
+**Décision (2026-11-17)** : **code à 6 chiffres** dans l'e-mail plutôt qu'un lien profond `dupe://` ou une page web
+(marche sur Android, Linux et Windows, rien à héberger).
+
+**Bilan (2026-11-17)**
+- **Réalisé** : `SyncAuth` : `confirmSignUp` (`verifyOTP` type signup, puis connecté), `resendConfirmation`,
+  `sendPasswordReset` (`resetPasswordForEmail`), `resetPassword` (`verifyOTP` type recovery puis `updateUser`) ;
+  code faux ou expiré → `SignInFailure.invalidCode` (« Code incorrect ou expiré »). Écran de connexion : après une
+  inscription à confirmer (ou une connexion refusée « adresse non confirmée »), champ du code + « Renvoyer le code » ;
+  « Mot de passe oublié ? » → `/connexion/mot-de-passe-oublie` (adresse reprise, code + nouveau mot de passe,
+  connecté à la fin). Le lien de l'e-mail reste utilisable. Tests : inscription confirmée par code (code faux puis
+  bon, renvoi), mot de passe oublié.
+- **Écarts** : pas de lien profond ; le lien des e-mails mène toujours à la *Site URL* du projet (à régler).
+- **Non vérifié** : vrais e-mails Supabase (`K2-01`, `K2-02`).
+
 ### Phase 35 — Recette de la v4
 Pilotée par l'utilisateur, comme la phase 21 : tests manuels ajoutés par les phases 22 à 37, puis **mode rafale
 `R-01` à `R-04`** (reportés de la v3), et ce qui resterait non fait de la recette v3.
@@ -573,7 +587,9 @@ tome de série ; mettre à jour **une** série (menu de la série) **ou toutes**
 - **Phase 31** : tester l'archive complète sur un appareil vierge (ou une installation propre).
 - **Phase 32** : créer un compte Metron et générer un jeton ; relire le bilan avant priorisation.
 - **Phase 33** : appliquer la migration `20261117180000_release_alerts.sql` avant d'installer (pas de tâche de fond).
-- **Phase 34** : régler *Site URL* / *Redirect URLs* du projet Supabase.
+- **Phase 34** : dans Supabase (Authentication → Email Templates), ajouter `{{ .Token }}` (le code à 6 chiffres) aux
+  modèles « Confirm signup » et « Reset password » ; régler la *Site URL* (sinon le lien des e-mails ouvre
+  `localhost`).
 
 ## 6. Hors périmètre
 iOS/macOS, partage de collection, scraping, cote automatique, notifications poussées par un serveur,

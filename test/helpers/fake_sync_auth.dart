@@ -51,6 +51,7 @@ class FakeSyncAuth implements SyncAuth {
     passwords[email] = password;
     if (confirmEmail) {
       unconfirmed.add(email);
+      codes[email] = '123456';
       return false;
     }
     _email = email;
@@ -60,6 +61,47 @@ class FakeSyncAuth implements SyncAuth {
 
   /// The user opened the confirmation link.
   void confirm(String email) => unconfirmed.remove(email);
+
+  /// Codes "sent" by email: confirmation and password reset.
+  final codes = <String, String>{};
+  final sent = <String>[];
+
+  @override
+  Future<void> confirmSignUp(String email, String code) async {
+    _checkCode(email, code);
+    unconfirmed.remove(email);
+    _email = email;
+    _changes.add(null);
+  }
+
+  @override
+  Future<void> resendConfirmation(String email) async {
+    sent.add('confirm:$email');
+    codes[email] = '123456';
+  }
+
+  @override
+  Future<void> sendPasswordReset(String email) async {
+    sent.add('reset:$email');
+    // No account enumeration: unknown addresses get no error either.
+    if (passwords.containsKey(email)) codes[email] = '654321';
+  }
+
+  @override
+  Future<void> resetPassword(String email, String code, String password) async {
+    _checkCode(email, code);
+    _checkStrength(password);
+    passwords[email] = password;
+    unconfirmed.remove(email);
+    _email = email;
+    _changes.add(null);
+  }
+
+  void _checkCode(String email, String code) {
+    if (codes.remove(email) != code) {
+      throw const SignInException(SignInFailure.invalidCode, 'x');
+    }
+  }
 
   @override
   Future<void> setPassword(String password) async {

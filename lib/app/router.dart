@@ -2,6 +2,7 @@ import 'package:dupe/app/adaptive_shell.dart';
 import 'package:dupe/app/app_routes.dart';
 import 'package:dupe/features/about/presentation/about_screen.dart';
 import 'package:dupe/features/about/presentation/journal_screen.dart';
+import 'package:dupe/features/account/presentation/reset_password_screen.dart';
 import 'package:dupe/features/account/presentation/sign_in_screen.dart';
 import 'package:dupe/features/authors/presentation/author_screen.dart';
 import 'package:dupe/features/backup/presentation/auto_backups_screen.dart';
@@ -149,6 +150,14 @@ GoRouter appRouter(Ref ref) {
         path: AppRoutes.signIn,
         parentNavigatorKey: rootNavigatorKey,
         builder: (context, state) => const SignInScreen(),
+        routes: [
+          GoRoute(
+            path: 'mot-de-passe-oublie',
+            parentNavigatorKey: rootNavigatorKey,
+            builder: (context, state) =>
+                ResetPasswordScreen(email: state.uri.queryParameters['email']),
+          ),
+        ],
       ),
       GoRoute(
         path: AppRoutes.search,
