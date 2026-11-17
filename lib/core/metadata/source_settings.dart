@@ -5,7 +5,15 @@ part 'source_settings.g.dart';
 
 /// Sources the user can turn off in the settings. Comic Vine is one switch
 /// for both its issue search and its series lookup.
-enum SourceId { bnf, googleBooks, openLibrary, comicVine, anilist }
+enum SourceId {
+  bnf,
+  googleBooks,
+  openLibrary,
+  comicVine,
+  anilist,
+  mangaUpdates,
+  mangadex,
+}
 
 /// Sources turned off by the user (all on by default), persisted in the
 /// `app_settings` table.

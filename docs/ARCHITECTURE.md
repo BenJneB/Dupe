@@ -273,3 +273,6 @@ Description détaillée des choix techniques et de l'organisation du code (dépl
   (`ItemPhotosRepository`, url `dupe-cover:` envoyée par `uploadPendingCovers`) ; formulaire
   `item_signing_fields.dart`, fiche `item/signing/` (galerie, plein écran), `SignedMark`, filtre
   `CompletionFilter.signed`. Archive complète : `backup/data/full_archive.dart` (zip `sauvegarde.json` + `photos/`).
+- Sources v4 phase 32 : MangaDex (`providers/mangadex/`, couvertures françaises par tome, `mangaDexCoversProvider`,
+  utilisé par `MissingCoversFill` après la recherche par ISBN) et MangaUpdates (`providers/mangaupdates/`,
+  `SeriesMetadataProvider`, après AniList dans `SeriesLookup` pour les mangas). `SourceId.mangaUpdates` / `mangadex`.

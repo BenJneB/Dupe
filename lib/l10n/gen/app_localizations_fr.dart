@@ -1759,6 +1759,18 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String get sourceMangaUpdatesHelp =>
+      'Mangas, y compris français (nombre de tomes parus)';
+
+  @override
+  String get sourceMangaDexHelp => 'Couvertures françaises des tomes de manga';
+
+  @override
+  String totalFromMangaUpdates(String title, int total) {
+    return 'MangaUpdates : « $title », $total tomes';
+  }
+
+  @override
   String get coverPhoto => 'Photographier la couverture';
 
   @override

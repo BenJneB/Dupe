@@ -16,5 +16,6 @@ extension SeriesSourceLabel on SeriesSource {
   String get label => switch (this) {
     SeriesSource.anilist => 'AniList',
     SeriesSource.comicVine => 'Comic Vine',
+    SeriesSource.mangaUpdates => 'MangaUpdates',
   };
 }

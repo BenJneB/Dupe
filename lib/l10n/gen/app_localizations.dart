@@ -2752,6 +2752,24 @@ abstract class AppLocalizations {
   /// **'{count, plural, =1{1 livre dédicacé} other{{count} livres dédicacés}}'**
   String signedCount(int count);
 
+  /// No description provided for @sourceMangaUpdatesHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mangas, y compris français (nombre de tomes parus)'**
+  String get sourceMangaUpdatesHelp;
+
+  /// No description provided for @sourceMangaDexHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Couvertures françaises des tomes de manga'**
+  String get sourceMangaDexHelp;
+
+  /// No description provided for @totalFromMangaUpdates.
+  ///
+  /// In fr, this message translates to:
+  /// **'MangaUpdates : « {title} », {total} tomes'**
+  String totalFromMangaUpdates(String title, int total);
+
   /// No description provided for @coverPhoto.
   ///
   /// In fr, this message translates to:

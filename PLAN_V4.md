@@ -57,7 +57,7 @@ deux fonctions tournées vers la suite de la collection : être prévenu des nou
 | 6 | 30 | Recommandations | ✅ fait (2026-11-16) | oui | non (`G-*`) |
 | 7 | 37 | Ajout d'une série complète (ISBN de tous les tomes sans rescanner) | ✅ fait (2026-11-17) | oui | non (`Z-*`) |
 | 8 | 31 | Dédicaces | ✅ fait (2026-11-17) | oui (+ Supabase local) | non (`W-*`) |
-| 9 | 32 | Nouvelles sources de métadonnées | à faire | — | — |
+| 9 | 32 | Nouvelles sources de métadonnées (réduite : MangaDex, MangaUpdates) | ✅ fait (2026-11-17) | oui | non (`SR-*`) |
 | 10 | 33 | Alertes de nouveautés | à faire | — | — |
 | 11 | 34 | Compte : mot de passe oublié, liens de confirmation | à faire | — | — |
 | 12 | 26 | Fin de la recette de la v3 (reprise de la phase 21) | à faire, juste avant les livres numériques | — | — |
@@ -430,6 +430,27 @@ jour dans `defaultPriorities`, fusion sans écraser une donnée plus fiable (BnF
 *Critère : sur un échantillon fixé des ouvrages sans couverture ou sans numéro (fixtures), le taux de
 complétion mesuré avant/après progresse, chiffres notés dans le bilan de phase.*
 
+
+**Bilan préalable (2026-11-17, base du PC, 134 ouvrages ; journal sans erreur)** : mangas 39/50 sans couverture
+(31 avec ISBN : Dreamland, Everdark, Pika), BD 33/34 sans couverture ni ISBN, livres 10/45 sans couverture ; séries
+sans nombre de tomes : mangas 4/5. Vérifié sur les API : MangaDex a les couvertures **françaises** de Dreamland
+(tomes 4-21) et d'Everdark (1-5) ; MangaUpdates connaît les mangas français ignorés d'AniList (Dreamland : 22 tomes
+en cours). **Décision de l'utilisateur** : phase réduite à ces deux sources ; Wikidata (rattachement déjà assuré par
+la BnF), Metron (5 comics, jeton) et Sudoc (recoupe la BnF) abandonnés.
+
+**Bilan (2026-11-17)**
+- **Réalisé** : `providers/mangadex/mangadex_covers.dart` (manga au titre exact, toutes langues et titres
+  alternatifs ; couvertures `locales[]=fr` paginées, mises en mémoire par série ; image 512 px) branché dans
+  « Compléter les couvertures » après la recherche par ISBN : la couverture française d'un tome de manga est
+  **appliquée** (même édition), téléchargement vérifié ; sinon la proposition d'autre édition (phase 25) continue.
+  `providers/mangaupdates/mangaupdates_provider.dart` (recherche, fiche complète pour le titre exact, « N Volumes »
+  → nombre de tomes parus, statut) ; `SeriesLookup` interroge AniList puis MangaUpdates pour les mangas (une source
+  en panne est journalisée). Deux sources de plus dans Paramètres → Sources (activables). Tests : fixtures réelles
+  (`mangadex/`, `mangaupdates/`), complétion d'une couverture, repli entre sources.
+- **Écarts** : MangaDex numérote parfois autrement (Dreamland 1.1, 1.2… : tomes 1 à 3 non trouvés) ; nombre de tomes
+  MangaUpdates = tomes **parus** pour une série en cours ; les BD restent sans source de couvertures (pas de
+  scraping de Bédéthèque).
+- **Non vérifié** : sur la vraie collection (`SR-01`, `SR-02`).
 
 ### Phase 33 — Alertes de nouveautés
 **Limite assumée** : aucune source fiable ne liste les sorties françaises *à venir*. L'alerte signale une

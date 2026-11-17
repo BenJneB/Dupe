@@ -62,7 +62,11 @@ Future<ApiKeyCheck> checkApiKey(Dio dio, SourceId id, String key) async {
           (_, 107) || (420 || 429, _) => ApiKeyCheck.quota,
           _ => ApiKeyCheck.failed,
         };
-      case SourceId.bnf || SourceId.openLibrary || SourceId.anilist:
+      case SourceId.bnf ||
+          SourceId.openLibrary ||
+          SourceId.anilist ||
+          SourceId.mangaUpdates ||
+          SourceId.mangadex:
         return ApiKeyCheck.valid;
     }
   } on DioException catch (e) {

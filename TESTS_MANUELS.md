@@ -7,7 +7,7 @@
 > finale. Les phases 15 à 20 ajoutent leurs tests ici et marquent « automatisé (phase N) » ceux que leurs tests
 > automatiques couvrent désormais.
 
-Ce fichier liste ce que les **334 tests automatiques (et 4 parcours d'intégration) ne couvrent pas** : matériel (caméra, vibrations,
+Ce fichier liste ce que les **341 tests automatiques (et 4 parcours d'intégration) ne couvrent pas** : matériel (caméra, vibrations,
 notifications, raccourci), services réels (Supabase, API GitHub, sources de métadonnées), plateformes non
 compilées ici (Windows) et workflows GitHub (jamais exécutés).
 
@@ -566,3 +566,11 @@ bouton du mode Magasin. Simulée : la BnF.
       la liste ; filtre « Dédicacés » ; tuile « Dédicacés » des statistiques.
 - [ ] **W-03** Paramètres → « Archive complète » sur le téléphone, puis sur une installation propre (ou un autre
       compte) « Restaurer une archive complète » : collection et photos de dédicace revenues.
+
+## 24. Nouvelles sources : MangaDex et MangaUpdates (v4, phase 32)
+Automatisé : couverture française par tome (réponses réelles), application dans « Compléter les couvertures », nombre
+de tomes MangaUpdates, repli AniList → MangaUpdates.
+- [ ] **SR-01** Plus → Qualité → « Compléter les couvertures manquantes » : les tomes de Dreamland (4 et suivants) et
+      d'Everdark reçoivent leur couverture française.
+- [ ] **SR-02** Menu de la série Dreamland → « Nombre total de tomes… » : MangaUpdates propose 22 tomes (en cours).
+      Paramètres → Sources : MangaDex et MangaUpdates désactivables.

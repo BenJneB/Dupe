@@ -77,7 +77,7 @@ sources de métadonnées, scan, synchro, sauvegardes, couvertures, CI…). Le me
 - `flutter test` doit passer à chaque fin de phase.
 - `pumpApp` injecte des faux pour tout ce qui touche le matériel ou le réseau : `FakeLoanReminders`,
   `FakeAppShortcuts`, `FakeHomeScreenWidget`, `FakeVoiceInput`, `FakeNetworkStatus` (aucune connexion par défaut),
-  `FakeCoverCache`, `FakeCoverScanner`, `FakeSuggestionSources`, `FakeSeriesCatalogSource`, `MemoryBackupStore`, un `SeriesLookup` sans source (param `seriesLookup:`) ; jamais les vrais
+  `FakeCoverCache`, `FakeCoverScanner`, `FakeSuggestionSources`, `FakeSeriesCatalogSource`, `MemoryBackupStore`, un `SeriesLookup` sans source (param `seriesLookup:`), pas de MangaDex (param `mangaDex:`) ; jamais les vrais
   plugins ni le réseau.
 - Journal en test : `appLog.clear()` en début de test.
 - Tests de Paramètres : la liste est longue ; une tuile peut être construite (cache) mais hors écran →
@@ -110,7 +110,7 @@ sources de métadonnées, scan, synchro, sauvegardes, couvertures, CI…). Le me
   en mémoire, `goBack` car `tester.pageBack()` ne connaît pas le BackButton de material_ui),
   `test_repositories.dart` (repo + horloge contrôlable).
 - En test widget, la base se ferme via `tester.runAsync` (sinon blocage en temps simulé).
-  `dart_test.yaml` : timeout 30 s par test. Suite complète ~110 s (334 tests, 2026-11-17) : le temps vient surtout
+  `dart_test.yaml` : timeout 30 s par test. Suite complète ~120 s (341 tests, 2026-11-17) : le temps vient surtout
   de la compilation de chaque fichier de test widget. Helpers de navigation : `test/helpers/screen_helpers.dart`
   (`goTo`, `openSettings`, `tapTile`, `fillSignIn`) ; ne jamais importer un fichier `_test.dart` depuis un autre.
 

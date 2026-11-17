@@ -2,6 +2,7 @@ import 'package:dupe/app/app.dart';
 import 'package:dupe/core/database/app_database.dart';
 import 'package:dupe/core/database/database_provider.dart';
 import 'package:dupe/core/metadata/metadata_providers.dart';
+import 'package:dupe/core/metadata/providers/mangadex/mangadex_covers.dart';
 import 'package:dupe/core/metadata/series_lookup.dart';
 import 'package:dupe/core/network/network_status.dart';
 import 'package:dupe/features/backup/data/auto_backups.dart';
@@ -57,6 +58,7 @@ Future<AppDatabase> pumpApp(
   CoverScanner? coverScanner,
   SuggestionSources? suggestionSources,
   SeriesCatalogSource? seriesCatalog,
+  MangaDexCovers? mangaDex,
 
   /// Series sources (AniList, Comic Vine): none by default, never the network.
   SeriesLookup? seriesLookup,
@@ -91,6 +93,8 @@ Future<AppDatabase> pumpApp(
         suggestionSourcesProvider.overrideWithValue(
           suggestionSources ?? FakeSuggestionSources(),
         ),
+        // No MangaDex in tests unless a test brings its own.
+        mangaDexCoversProvider.overrideWithValue(mangaDex),
         seriesCatalogSourceProvider.overrideWithValue(
           seriesCatalog ?? FakeSeriesCatalogSource(),
         ),

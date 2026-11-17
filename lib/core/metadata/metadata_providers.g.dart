@@ -304,4 +304,51 @@ final class SeriesLookupProvider
   }
 }
 
-String _$seriesLookupHash() => r'5b7a0df9ec9ea1b66dc7be4c86347b2355ed35cf';
+String _$seriesLookupHash() => r'd75f5ed453c38d5e08e51f76c51d9d3d5926e800';
+
+/// French manga covers by volume (phase 32); null when the source is off.
+
+@ProviderFor(mangaDexCovers)
+final mangaDexCoversProvider = MangaDexCoversProvider._();
+
+/// French manga covers by volume (phase 32); null when the source is off.
+
+final class MangaDexCoversProvider
+    extends
+        $FunctionalProvider<MangaDexCovers?, MangaDexCovers?, MangaDexCovers?>
+    with $Provider<MangaDexCovers?> {
+  /// French manga covers by volume (phase 32); null when the source is off.
+  MangaDexCoversProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'mangaDexCoversProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$mangaDexCoversHash();
+
+  @$internal
+  @override
+  $ProviderElement<MangaDexCovers?> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  MangaDexCovers? create(Ref ref) {
+    return mangaDexCovers(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(MangaDexCovers? value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<MangaDexCovers?>(value),
+    );
+  }
+}
+
+String _$mangaDexCoversHash() => r'd6424d4d50f30c130f6cd122bde47b5f697a5555';

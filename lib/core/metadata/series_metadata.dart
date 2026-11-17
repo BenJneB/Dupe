@@ -4,7 +4,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'series_metadata.freezed.dart';
 
 /// Sources describing whole series (not editions).
-enum SeriesSource { anilist, comicVine }
+enum SeriesSource { anilist, comicVine, mangaUpdates }
 
 /// Normalized series information (AniList for manga, Comic Vine for comics).
 /// AniList describes the original work, not the French edition: volume

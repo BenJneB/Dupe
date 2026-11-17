@@ -2,6 +2,8 @@ import 'package:dupe/core/database/database_provider.dart';
 import 'package:dupe/core/metadata/metadata_aggregator.dart';
 import 'package:dupe/core/metadata/metadata_providers.dart';
 import 'package:dupe/core/metadata/metadata_result.dart';
+import 'package:dupe/core/metadata/providers/mangadex/mangadex_covers.dart';
+import 'package:dupe/core/network/rate_limiter.dart';
 import 'package:dupe/features/collection/data/collection_repository.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
 import 'package:dupe/features/covers/data/cover_cache.dart';
@@ -11,6 +13,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../helpers/fake_covers.dart';
+import '../../helpers/fake_http.dart';
 import '../../helpers/fake_metadata.dart';
 import '../../helpers/test_repositories.dart';
 
@@ -104,4 +107,50 @@ void main() {
     // The found cover is already on the device (offline).
     expect(cache.cached, contains(google));
   });
+
+  test(
+    'a manga volume without cover gets its French one from MangaDex',
+    () async {
+      final env = TestEnv();
+      addTearDown(env.dispose);
+      final http = FakeHttpAdapter()
+        ..on(
+          (u) => u.path == '/manga',
+          fixture('mangadex/search_dreamland.json'),
+        )
+        ..on(
+          (u) => u.path == '/cover',
+          fixture('mangadex/covers_dreamland.json'),
+        );
+      final container = ProviderContainer(
+        overrides: [
+          appDatabaseProvider.overrideWithValue(env.db),
+          collectionRepositoryProvider.overrideWithValue(env.repo),
+          coverCacheProvider.overrideWithValue(FakeCoverCache()),
+          // Google Books and co. have no image for it.
+          metadataAggregatorProvider.overrideWithValue(
+            MetadataAggregator(providers: const []),
+          ),
+          mangaDexCoversProvider.overrideWithValue(
+            MangaDexCovers(fakeDio(http), limiter: RateLimiter(Duration.zero)),
+          ),
+        ],
+      );
+      addTearDown(container.dispose);
+      final series = env.repo
+          .newSeries(CollectionType.manga)
+          .copyWith(title: 'Dreamland');
+      await env.repo.saveSeries(series);
+      final volume = env.repo
+          .newItem(CollectionType.manga, series: series, volumeNumber: '4')
+          .copyWith(isbn13: '9782845998773');
+      await env.repo.saveItem(volume);
+
+      await container.read(missingCoversFillProvider.notifier).run();
+
+      final cover = (await env.repo.getItem(volume.id))!.coverUrl;
+      expect(cover, startsWith('https://uploads.mangadex.org/covers/'));
+      expect(container.read(missingCoversFillProvider).found, 1);
+    },
+  );
 }
