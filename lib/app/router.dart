@@ -23,6 +23,7 @@ import 'package:dupe/features/quality/presentation/isbn_completion_screen.dart';
 import 'package:dupe/features/quality/presentation/quality_list_screen.dart';
 import 'package:dupe/features/quality/presentation/quality_screen.dart';
 import 'package:dupe/features/recommendations/presentation/suggestions_screen.dart';
+import 'package:dupe/features/releases/presentation/releases_screen.dart';
 import 'package:dupe/features/scan/presentation/burst/scan_review_screen.dart';
 import 'package:dupe/features/scan/presentation/scan_screen.dart';
 import 'package:dupe/features/search/presentation/online_search/online_search_screen.dart';
@@ -75,6 +76,10 @@ GoRouter appRouter(Ref ref) {
                   GoRoute(
                     path: 'statistiques',
                     builder: (context, state) => const StatsScreen(),
+                  ),
+                  GoRoute(
+                    path: 'nouveautes',
+                    builder: (context, state) => const ReleasesScreen(),
                   ),
                   GoRoute(
                     path: 'suggestions',

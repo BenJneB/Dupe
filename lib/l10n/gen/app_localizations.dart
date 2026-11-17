@@ -1117,7 +1117,7 @@ abstract class AppLocalizations {
   /// No description provided for @fieldFollowedHelper.
   ///
   /// In fr, this message translates to:
-  /// **'Les tomes non possédés comptent comme manquants'**
+  /// **'Les tomes non possédés comptent comme manquants ; nouveaux tomes signalés'**
   String get fieldFollowedHelper;
 
   /// No description provided for @fieldCoverUrl.
@@ -2769,6 +2769,132 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'MangaUpdates : « {title} », {total} tomes'**
   String totalFromMangaUpdates(String title, int total);
+
+  /// No description provided for @releasesTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouveautés'**
+  String get releasesTitle;
+
+  /// No description provided for @releasesSubtitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouveaux tomes de tes séries et auteurs suivis'**
+  String get releasesSubtitle;
+
+  /// No description provided for @releasesHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Une nouveauté apparaît dès qu’une source la connaît (souvent à la parution). Vérifié au plus une fois par jour au démarrage.'**
+  String get releasesHelp;
+
+  /// No description provided for @releasesNone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune nouveauté pour l’instant.'**
+  String get releasesNone;
+
+  /// No description provided for @releasesCheckNow.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vérifier maintenant'**
+  String get releasesCheckNow;
+
+  /// No description provided for @releasesFound.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =0{Aucune nouveauté} =1{1 nouveauté} other{{count} nouveautés}}'**
+  String releasesFound(int count);
+
+  /// No description provided for @releasesNotificationTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{1 nouveauté dans tes séries} other{{count} nouveautés dans tes séries}}'**
+  String releasesNotificationTitle(int count);
+
+  /// No description provided for @releasesNotificationBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Plus → Nouveautés pour les ajouter aux envies'**
+  String get releasesNotificationBody;
+
+  /// No description provided for @notificationChannelReleases.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouveaux tomes des séries et auteurs suivis'**
+  String get notificationChannelReleases;
+
+  /// No description provided for @releaseVolume.
+  ///
+  /// In fr, this message translates to:
+  /// **'{title}, tome {volume}'**
+  String releaseVolume(String title, String volume);
+
+  /// No description provided for @releaseNew.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouveau'**
+  String get releaseNew;
+
+  /// No description provided for @releaseByAuthor.
+  ///
+  /// In fr, this message translates to:
+  /// **'de {author}'**
+  String releaseByAuthor(String author);
+
+  /// No description provided for @releaseIgnore.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ignorer'**
+  String get releaseIgnore;
+
+  /// No description provided for @releaseWished.
+  ///
+  /// In fr, this message translates to:
+  /// **'« {title} » ajouté aux envies'**
+  String releaseWished(String title);
+
+  /// No description provided for @releasesEnabled.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rechercher les nouveautés'**
+  String get releasesEnabled;
+
+  /// No description provided for @releasesEnabledHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Séries suivies et auteurs suivis, une fois par jour'**
+  String get releasesEnabledHelp;
+
+  /// No description provided for @releasesNotify.
+  ///
+  /// In fr, this message translates to:
+  /// **'Notification des nouveautés'**
+  String get releasesNotify;
+
+  /// No description provided for @followedAuthorsTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =0{Aucun auteur suivi} =1{1 auteur suivi} other{{count} auteurs suivis}}'**
+  String followedAuthorsTitle(int count);
+
+  /// No description provided for @followedAuthorsHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Suivre un auteur : cloche sur sa page (vue par auteur)'**
+  String get followedAuthorsHelp;
+
+  /// No description provided for @followAuthor.
+  ///
+  /// In fr, this message translates to:
+  /// **'Suivre les nouveautés de cet auteur'**
+  String get followAuthor;
+
+  /// No description provided for @unfollowAuthor.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ne plus suivre cet auteur'**
+  String get unfollowAuthor;
 
   /// No description provided for @coverPhoto.
   ///

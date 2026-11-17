@@ -124,6 +124,8 @@ class SyncController extends _$SyncController {
             db.loansTable,
             db.recommendationFeedbackTable,
             db.itemPhotosTable,
+            db.releaseAlertsTable,
+            db.followedAuthorsTable,
           ]),
         )
         .listen((_) {

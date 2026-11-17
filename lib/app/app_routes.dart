@@ -19,6 +19,7 @@ abstract final class AppRoutes {
   static const loans = '/plus/prets';
   static const stats = '/plus/statistiques';
   static const suggestions = '/plus/suggestions';
+  static const releases = '/plus/nouveautes';
   static const quality = '/plus/qualite';
 
   /// Items (or series) of one quality issue (`QualityIssue.name`).

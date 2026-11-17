@@ -276,3 +276,7 @@ Description détaillée des choix techniques et de l'organisation du code (dépl
 - Sources v4 phase 32 : MangaDex (`providers/mangadex/`, couvertures françaises par tome, `mangaDexCoversProvider`,
   utilisé par `MissingCoversFill` après la recherche par ISBN) et MangaUpdates (`providers/mangaupdates/`,
   `SeriesMetadataProvider`, après AniList dans `SeriesLookup` pour les mangas). `SourceId.mangaUpdates` / `mangadex`.
+- Nouveautés (v4 phase 33, schéma v6, `features/releases/`) : `ReleaseChecker` (démarrage, 1×/jour, Wi-Fi par
+  défaut) → séries suivies via `SeriesCatalogSource` + `nextVolumes`, auteurs suivis via `SuggestionSources` +
+  `newBooks` → `ReleasesRepository.addIfNew` (id UUID v5 de la clé) → `ReleaseNotifications`. Écran
+  `/plus/nouveautes`, réglages `ReleaseSettingsSection`, cloche `FollowAuthorButton`.

@@ -58,7 +58,7 @@ deux fonctions tournées vers la suite de la collection : être prévenu des nou
 | 7 | 37 | Ajout d'une série complète (ISBN de tous les tomes sans rescanner) | ✅ fait (2026-11-17) | oui | non (`Z-*`) |
 | 8 | 31 | Dédicaces | ✅ fait (2026-11-17) | oui (+ Supabase local) | non (`W-*`) |
 | 9 | 32 | Nouvelles sources de métadonnées (réduite : MangaDex, MangaUpdates) | ✅ fait (2026-11-17) | oui | non (`SR-*`) |
-| 10 | 33 | Alertes de nouveautés | à faire | — | — |
+| 10 | 33 | Alertes de nouveautés | ✅ fait (2026-11-17) | oui (+ Supabase local) | non (`AL-*`) |
 | 11 | 34 | Compte : mot de passe oublié, liens de confirmation | à faire | — | — |
 | 12 | 26 | Fin de la recette de la v3 (reprise de la phase 21) | à faire, juste avant les livres numériques | — | — |
 | 13 | 27 | Livres numériques (1/2) : support numérique, import Calibre | à faire | — | — |
@@ -476,6 +476,24 @@ Books), pas des mois à l'avance. Exception : les comics US, dont Metron connaî
 *Critère : avec une série dont je possède les tomes 1 à N-1 et dont le tome N existe à la BnF (fixtures), une
 alerte apparaît une seule fois, sur les deux appareils, et part en envie en un appui.*
 
+**Bilan (2026-11-17)**
+- **Réalisé** : schéma **v6** (tables synchronisées `release_alerts`, `followed_authors`) + migration Supabase
+  `20261117180000_release_alerts.sql`. L'interrupteur par série est le « Série suivie » existant (aide mise à
+  jour) ; suivre un auteur : cloche sur sa page (`FollowAuthorButton`). Détection (`release_detection.dart`) :
+  série → tomes après le dernier connu (possédé ou en envie) dans l'édition de l'éditeur de la série, 3 au plus
+  (BnF par `SeriesCatalogSource`, phase 37) ; auteur → ISBN absents du relevé précédent (le premier relevé sert de
+  référence, sans alerte ; relevés locaux `releases_seen_*`), hors collection. Id d'alerte = UUID v5 de sa clé :
+  une même nouveauté trouvée sur deux appareils = une ligne ; une alerte ignorée ne revient pas.
+  `ReleaseChecker` : au démarrage, une fois par jour au plus, Wi-Fi seulement par défaut, 12 séries par passage à
+  tour de rôle, sources et limiteurs existants ; notification groupée (`ReleaseNotifications`). Écran Plus →
+  « Nouveautés » (pastille du nombre de nouvelles, « Vérifier maintenant », ajout aux envies en un appui, Ignorer ;
+  les nouvelles passent « vues » en quittant l'écran) ; Paramètres → section « Nouveautés » (activation, Wi-Fi,
+  notification, auteurs suivis). Tests : détection sur fixtures réelles, id stable, parcours série et auteur.
+- **Écarts** : **pas de tâche de fond Android** (`workmanager`) : vérification au démarrage de l'appli seulement ;
+  pas de réglage de fréquence (une fois par jour) ; pas de Google Books ni de Metron (sources abandonnées en
+  phase 32) ; détection série limitée à la BnF (souvent à la parution).
+- **Non vérifié** : vraie collection (`AL-01`, `AL-02`) ; migration Supabase **à appliquer avant d'installer**.
+
 ### Phase 34 — Compte : mot de passe oublié, liens de confirmation
 - **Mot de passe oublié sans être connecté** : lien « Mot de passe oublié ? » sur l'écran de connexion
   (email de réinitialisation Supabase), au lieu de passer par Paramètres → Mot de passe une fois connecté.
@@ -547,7 +565,7 @@ tome de série ; mettre à jour **une** série (menu de la série) **ou toutes**
 - **Phase 30** : juger la pertinence des suggestions sur la vraie collection.
 - **Phase 31** : tester l'archive complète sur un appareil vierge (ou une installation propre).
 - **Phase 32** : créer un compte Metron et générer un jeton ; relire le bilan avant priorisation.
-- **Phase 33** : vérifier sur Android que la tâche de fond n'est pas tuée par l'économiseur de batterie.
+- **Phase 33** : appliquer la migration `20261117180000_release_alerts.sql` avant d'installer (pas de tâche de fond).
 - **Phase 34** : régler *Site URL* / *Redirect URLs* du projet Supabase.
 
 ## 6. Hors périmètre

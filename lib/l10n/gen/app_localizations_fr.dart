@@ -693,7 +693,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get fieldFollowedHelper =>
-      'Les tomes non possédés comptent comme manquants';
+      'Les tomes non possédés comptent comme manquants ; nouveaux tomes signalés';
 
   @override
   String get fieldCoverUrl => 'URL de la couverture';
@@ -1769,6 +1769,107 @@ class AppLocalizationsFr extends AppLocalizations {
   String totalFromMangaUpdates(String title, int total) {
     return 'MangaUpdates : « $title », $total tomes';
   }
+
+  @override
+  String get releasesTitle => 'Nouveautés';
+
+  @override
+  String get releasesSubtitle =>
+      'Nouveaux tomes de tes séries et auteurs suivis';
+
+  @override
+  String get releasesHelp =>
+      'Une nouveauté apparaît dès qu’une source la connaît (souvent à la parution). Vérifié au plus une fois par jour au démarrage.';
+
+  @override
+  String get releasesNone => 'Aucune nouveauté pour l’instant.';
+
+  @override
+  String get releasesCheckNow => 'Vérifier maintenant';
+
+  @override
+  String releasesFound(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count nouveautés',
+      one: '1 nouveauté',
+      zero: 'Aucune nouveauté',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String releasesNotificationTitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count nouveautés dans tes séries',
+      one: '1 nouveauté dans tes séries',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get releasesNotificationBody =>
+      'Plus → Nouveautés pour les ajouter aux envies';
+
+  @override
+  String get notificationChannelReleases =>
+      'Nouveaux tomes des séries et auteurs suivis';
+
+  @override
+  String releaseVolume(String title, String volume) {
+    return '$title, tome $volume';
+  }
+
+  @override
+  String get releaseNew => 'Nouveau';
+
+  @override
+  String releaseByAuthor(String author) {
+    return 'de $author';
+  }
+
+  @override
+  String get releaseIgnore => 'Ignorer';
+
+  @override
+  String releaseWished(String title) {
+    return '« $title » ajouté aux envies';
+  }
+
+  @override
+  String get releasesEnabled => 'Rechercher les nouveautés';
+
+  @override
+  String get releasesEnabledHelp =>
+      'Séries suivies et auteurs suivis, une fois par jour';
+
+  @override
+  String get releasesNotify => 'Notification des nouveautés';
+
+  @override
+  String followedAuthorsTitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count auteurs suivis',
+      one: '1 auteur suivi',
+      zero: 'Aucun auteur suivi',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get followedAuthorsHelp =>
+      'Suivre un auteur : cloche sur sa page (vue par auteur)';
+
+  @override
+  String get followAuthor => 'Suivre les nouveautés de cet auteur';
+
+  @override
+  String get unfollowAuthor => 'Ne plus suivre cet auteur';
 
   @override
   String get coverPhoto => 'Photographier la couverture';

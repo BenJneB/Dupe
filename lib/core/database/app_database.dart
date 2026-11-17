@@ -9,6 +9,7 @@ import 'package:dupe/core/database/tables/items_table.dart';
 import 'package:dupe/core/database/tables/loans_table.dart';
 import 'package:dupe/core/database/tables/local_tables.dart';
 import 'package:dupe/core/database/tables/recommendation_feedback_table.dart';
+import 'package:dupe/core/database/tables/releases_tables.dart';
 import 'package:dupe/core/database/tables/series_table.dart';
 import 'package:dupe/core/utils/text_fold.dart';
 import 'package:path/path.dart' as p;
@@ -22,6 +23,8 @@ import 'package:sqlite3/sqlite3.dart' as sqlite;
     LoansTable,
     RecommendationFeedbackTable,
     ItemPhotosTable,
+    ReleaseAlertsTable,
+    FollowedAuthorsTable,
     AppSettingsTable,
     MetadataCacheTable,
     ScanQueueTable,
@@ -50,7 +53,7 @@ class AppDatabase extends $AppDatabase {
       AppDatabase(NativeDatabase.memory(setup: setupConnection));
 
   @override
-  int get schemaVersion => 5;
+  int get schemaVersion => 6;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -83,6 +86,11 @@ class AppDatabase extends $AppDatabase {
         }
         await m.createTable(itemPhotosTable);
         await m.createIndex(itemPhotosItemIdIdx);
+      }
+      if (from < 6) {
+        // v6: new release alerts and followed authors (PLAN_V4 phase 33).
+        await m.createTable(releaseAlertsTable);
+        await m.createTable(followedAuthorsTable);
       }
     },
     beforeOpen: (details) async {

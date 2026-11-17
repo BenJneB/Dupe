@@ -7,7 +7,7 @@
 > finale. Les phases 15 à 20 ajoutent leurs tests ici et marquent « automatisé (phase N) » ceux que leurs tests
 > automatiques couvrent désormais.
 
-Ce fichier liste ce que les **341 tests automatiques (et 4 parcours d'intégration) ne couvrent pas** : matériel (caméra, vibrations,
+Ce fichier liste ce que les **347 tests automatiques (et 4 parcours d'intégration) ne couvrent pas** : matériel (caméra, vibrations,
 notifications, raccourci), services réels (Supabase, API GitHub, sources de métadonnées), plateformes non
 compilées ici (Windows) et workflows GitHub (jamais exécutés).
 
@@ -574,3 +574,13 @@ de tomes MangaUpdates, repli AniList → MangaUpdates.
       d'Everdark reçoivent leur couverture française.
 - [ ] **SR-02** Menu de la série Dreamland → « Nombre total de tomes… » : MangaUpdates propose 22 tomes (en cours).
       Paramètres → Sources : MangaDex et MangaUpdates désactivables.
+
+## 25. Alertes de nouveautés (v4, phase 33)
+**Avant d'installer** : appliquer `supabase/migrations/20261117180000_release_alerts.sql`. Automatisé : tomes suivants
+(réponses BnF réelles), relevé d'un auteur, alerte unique et ignorée pour de bon, ajout aux envies. Simulées : BnF,
+notifications.
+- [ ] **AL-01** Plus → Nouveautés → « Vérifier maintenant » sur la vraie collection : les tomes parus après ton dernier
+      tome d'une série suivie apparaissent (pas de déluge pour une série abandonnée : 3 au plus) ; notification
+      « N nouveautés dans tes séries » ; « Ajouter aux envies » range le tome dans sa série.
+- [ ] **AL-02** Cloche sur la page d'un auteur → Paramètres → Nouveautés : « 1 auteur suivi ». Une alerte ignorée sur le
+      téléphone ne revient pas sur le PC après synchro (et pas en double si les deux vérifient).

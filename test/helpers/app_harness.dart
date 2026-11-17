@@ -14,6 +14,7 @@ import 'package:dupe/features/covers/data/cover_scanner.dart';
 import 'package:dupe/features/home_widget/data/home_screen_widget.dart';
 import 'package:dupe/features/loans/data/loan_reminders.dart';
 import 'package:dupe/features/recommendations/data/suggestion_sources.dart';
+import 'package:dupe/features/releases/data/release_notifications.dart';
 import 'package:dupe/features/scan/data/app_shortcuts.dart';
 import 'package:dupe/features/search/data/voice_input.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -24,6 +25,7 @@ import 'package:material_ui/material_ui.dart';
 import 'fake_app_shortcuts.dart';
 import 'fake_covers.dart';
 import 'fake_home_widget.dart';
+import 'fake_release_notifications.dart';
 import 'fake_reminders.dart';
 import 'fake_series_catalog.dart';
 import 'fake_suggestion_sources.dart';
@@ -59,6 +61,7 @@ Future<AppDatabase> pumpApp(
   SuggestionSources? suggestionSources,
   SeriesCatalogSource? seriesCatalog,
   MangaDexCovers? mangaDex,
+  FakeReleaseNotifications? releaseNotifications,
 
   /// Series sources (AniList, Comic Vine): none by default, never the network.
   SeriesLookup? seriesLookup,
@@ -95,6 +98,9 @@ Future<AppDatabase> pumpApp(
         ),
         // No MangaDex in tests unless a test brings its own.
         mangaDexCoversProvider.overrideWithValue(mangaDex),
+        releaseNotificationsProvider.overrideWithValue(
+          releaseNotifications ?? FakeReleaseNotifications(),
+        ),
         seriesCatalogSourceProvider.overrideWithValue(
           seriesCatalog ?? FakeSeriesCatalogSource(),
         ),

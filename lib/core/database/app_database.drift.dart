@@ -7,7 +7,8 @@ import 'package:dupe/core/database/tables/loans_table.drift.dart' as i3;
 import 'package:dupe/core/database/tables/recommendation_feedback_table.drift.dart'
     as i4;
 import 'package:dupe/core/database/tables/item_photos_table.drift.dart' as i5;
-import 'package:dupe/core/database/tables/local_tables.drift.dart' as i6;
+import 'package:dupe/core/database/tables/releases_tables.drift.dart' as i6;
+import 'package:dupe/core/database/tables/local_tables.drift.dart' as i7;
 
 abstract class $AppDatabase extends i0.GeneratedDatabase {
   $AppDatabase(i0.QueryExecutor e) : super(e);
@@ -19,11 +20,15 @@ abstract class $AppDatabase extends i0.GeneratedDatabase {
       i4.$RecommendationFeedbackTableTable(this);
   late final i5.$ItemPhotosTableTable itemPhotosTable = i5
       .$ItemPhotosTableTable(this);
-  late final i6.$AppSettingsTableTable appSettingsTable = i6
+  late final i6.$ReleaseAlertsTableTable releaseAlertsTable = i6
+      .$ReleaseAlertsTableTable(this);
+  late final i6.$FollowedAuthorsTableTable followedAuthorsTable = i6
+      .$FollowedAuthorsTableTable(this);
+  late final i7.$AppSettingsTableTable appSettingsTable = i7
       .$AppSettingsTableTable(this);
-  late final i6.$MetadataCacheTableTable metadataCacheTable = i6
+  late final i7.$MetadataCacheTableTable metadataCacheTable = i7
       .$MetadataCacheTableTable(this);
-  late final i6.$ScanQueueTableTable scanQueueTable = i6.$ScanQueueTableTable(
+  late final i7.$ScanQueueTableTable scanQueueTable = i7.$ScanQueueTableTable(
     this,
   );
   @override
@@ -36,6 +41,8 @@ abstract class $AppDatabase extends i0.GeneratedDatabase {
     loansTable,
     recommendationFeedbackTable,
     itemPhotosTable,
+    releaseAlertsTable,
+    followedAuthorsTable,
     appSettingsTable,
     metadataCacheTable,
     scanQueueTable,
@@ -66,10 +73,14 @@ class $AppDatabaseManager {
       );
   i5.$$ItemPhotosTableTableTableManager get itemPhotosTable =>
       i5.$$ItemPhotosTableTableTableManager(_db, _db.itemPhotosTable);
-  i6.$$AppSettingsTableTableTableManager get appSettingsTable =>
-      i6.$$AppSettingsTableTableTableManager(_db, _db.appSettingsTable);
-  i6.$$MetadataCacheTableTableTableManager get metadataCacheTable =>
-      i6.$$MetadataCacheTableTableTableManager(_db, _db.metadataCacheTable);
-  i6.$$ScanQueueTableTableTableManager get scanQueueTable =>
-      i6.$$ScanQueueTableTableTableManager(_db, _db.scanQueueTable);
+  i6.$$ReleaseAlertsTableTableTableManager get releaseAlertsTable =>
+      i6.$$ReleaseAlertsTableTableTableManager(_db, _db.releaseAlertsTable);
+  i6.$$FollowedAuthorsTableTableTableManager get followedAuthorsTable =>
+      i6.$$FollowedAuthorsTableTableTableManager(_db, _db.followedAuthorsTable);
+  i7.$$AppSettingsTableTableTableManager get appSettingsTable =>
+      i7.$$AppSettingsTableTableTableManager(_db, _db.appSettingsTable);
+  i7.$$MetadataCacheTableTableTableManager get metadataCacheTable =>
+      i7.$$MetadataCacheTableTableTableManager(_db, _db.metadataCacheTable);
+  i7.$$ScanQueueTableTableTableManager get scanQueueTable =>
+      i7.$$ScanQueueTableTableTableManager(_db, _db.scanQueueTable);
 }
