@@ -1,4 +1,5 @@
 import 'package:dupe/core/logging/app_log.dart';
+import 'package:dupe/core/notifications/local_notifications.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -16,7 +17,6 @@ ReleaseNotifications releaseNotifications(Ref ref) =>
     LocalReleaseNotifications();
 
 class LocalReleaseNotifications implements ReleaseNotifications {
-  final _plugin = FlutterLocalNotificationsPlugin();
   final AppLocalizations _l10n = lookupAppLocalizations(const Locale('fr'));
 
   /// Its own id: never replaces a loan notification.
@@ -25,20 +25,8 @@ class LocalReleaseNotifications implements ReleaseNotifications {
   @override
   Future<void> show(int count) async {
     try {
-      await _plugin.initialize(
-        settings: InitializationSettings(
-          android: const AndroidInitializationSettings('@mipmap/ic_launcher'),
-          linux: LinuxInitializationSettings(
-            defaultActionName: _l10n.notificationOpen,
-          ),
-          windows: WindowsInitializationSettings(
-            appName: _l10n.appTitle,
-            appUserModelId: 'Dev.Dupe.Dupe',
-            guid: '6f1d9c2e-4b7a-4d55-9a0e-3c8b2f71d5a4',
-          ),
-        ),
-      );
-      await _plugin.show(
+      if (!await initLocalNotifications()) return;
+      await localNotifications.show(
         id: _id,
         title: _l10n.releasesNotificationTitle(count),
         body: _l10n.releasesNotificationBody,

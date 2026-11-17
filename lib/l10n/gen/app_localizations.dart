@@ -2854,6 +2854,18 @@ abstract class AppLocalizations {
   /// **'« {title} » ajouté aux envies'**
   String releaseWished(String title);
 
+  /// No description provided for @releaseAlreadyOwned.
+  ///
+  /// In fr, this message translates to:
+  /// **'« {title} » est déjà dans ta collection'**
+  String releaseAlreadyOwned(String title);
+
+  /// No description provided for @releaseWishFailed.
+  ///
+  /// In fr, this message translates to:
+  /// **'Impossible d’ajouter « {title} » : sa série n’existe plus'**
+  String releaseWishFailed(String title);
+
   /// No description provided for @releasesEnabled.
   ///
   /// In fr, this message translates to:

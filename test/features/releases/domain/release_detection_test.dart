@@ -14,20 +14,26 @@ void main() {
     'Everdark',
     parseUnimarcResponse(fixture('bnf/series_everdark.xml')),
   );
-  List<int> next(List<String> owned, {String? publisher, int limit = 3}) =>
-      nextVolumes(
-        [
-          for (final n in owned)
-            item(
-              'Everdark',
-              seriesId: 's',
-              type: CollectionType.manga,
-            ).copyWith(id: n, volumeNumber: n),
-        ],
-        everdark,
-        publisher: publisher,
-        limit: limit,
-      ).map((v) => v.number).toList();
+  List<int> next(
+    List<String> owned, {
+    String? publisher,
+    int baseline = 0,
+    Set<int> alerted = const {},
+    int limit = 3,
+  }) => nextVolumes(
+    [
+      for (final n in owned)
+        item(
+          'Everdark',
+          seriesId: 's',
+          type: CollectionType.manga,
+        ).copyWith(id: n, volumeNumber: n),
+    ],
+    editionOf(everdark, publisher),
+    baseline: baseline,
+    alerted: alerted,
+    limit: limit,
+  ).map((v) => v.number).toList();
 
   test('the volumes after the last one known (real BnF records)', () {
     expect(next(['1', '2', '3', '4', '5'], publisher: 'Pika'), [6, 7]);
@@ -38,6 +44,15 @@ void main() {
     expect(next([]), isEmpty);
     // Another publisher's edition does not count.
     expect(next(['1'], publisher: 'Glénat'), isEmpty);
+  });
+
+  test('after the first check reference, skipping handled alerts', () {
+    // Volumes out at the first check are not new releases.
+    expect(next(['1', '2'], baseline: 4), [5, 6, 7]);
+    expect(next(['1', '2'], baseline: 7), isEmpty);
+    // Alerts already seen or ignored do not hide the next volumes.
+    expect(next(['1', '2'], alerted: {3, 4}), [5, 6, 7]);
+    expect(next(['1', '2'], alerted: {3, 4}, limit: 1), [5]);
   });
 
   test('new books of an author: unseen, not owned, really theirs', () {

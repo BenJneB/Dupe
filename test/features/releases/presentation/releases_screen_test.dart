@@ -25,14 +25,11 @@ void main() {
     tester,
   ) async {
     final notifications = FakeReleaseNotifications();
+    final everdark = parseUnimarcResponse(fixture('bnf/series_everdark.xml'));
     final db = await pumpApp(
       tester,
       releaseNotifications: notifications,
-      seriesCatalog: FakeSeriesCatalogSource(
-        byTitle: {
-          'Everdark': parseUnimarcResponse(fixture('bnf/series_everdark.xml')),
-        },
-      ),
+      seriesCatalog: FakeSeriesCatalogSource(byTitle: {'Everdark': everdark}),
       seed: (db) async {
         final repo = repoOf(db);
         final s = repo
@@ -49,12 +46,21 @@ void main() {
     await goTo(tester, AppRoutes.more);
     await tester.tap(find.byKey(const Key('moreReleases')));
     await tester.pumpAndSettle();
+    // First check: volumes 6 and 7 are already out, missing but not new.
     await _check(tester);
+    expect(find.text('Aucune nouveauté'), findsOneWidget);
+    expect(notifications.shown, isEmpty);
 
+    final seven = everdark.firstWhere((r) => r.volumeNumber == '7');
+    everdark.addAll([
+      for (final n in [8, 9])
+        seven.copyWith(sourceId: 'v$n', volumeNumber: '$n', isbn13: '97828$n'),
+    ]);
+    await _check(tester);
     expect(find.text('2 nouveautés'), findsOneWidget);
     expect(notifications.shown, [2]);
-    expect(find.text('Everdark, tome 6'), findsOneWidget);
-    expect(find.text('Everdark, tome 7'), findsOneWidget);
+    expect(find.text('Everdark, tome 8'), findsOneWidget);
+    expect(find.text('Everdark, tome 9'), findsOneWidget);
 
     await tester.tap(find.byIcon(Icons.favorite_border).first);
     await tester.pumpAndSettle();
@@ -84,7 +90,7 @@ void main() {
   testWidgets('followed author: the books out after the first check', (
     tester,
   ) async {
-    final larcenet = parseUnimarcResponse(fixture('bnf/author_larcenet.xml'));
+    final larcenet = <MetadataResult>[];
     final sources = FakeSuggestionSources(
       byAuthor: {'Manu Larcenet': larcenet},
     );
@@ -105,7 +111,10 @@ void main() {
     await tester.pumpAndSettle();
 
     await goTo(tester, AppRoutes.releases);
-    // First check: what exists now is the reference, no alert.
+    // Source off or failing: nothing found is no reference.
+    await _check(tester);
+    larcenet.addAll(parseUnimarcResponse(fixture('bnf/author_larcenet.xml')));
+    // First real check: what exists now is the reference, no alert.
     await _check(tester);
     expect(find.text('Aucune nouveauté'), findsOneWidget);
 

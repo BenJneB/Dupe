@@ -489,6 +489,13 @@ alerte apparaît une seule fois, sur les deux appareils, et part en envie en un 
   « Nouveautés » (pastille du nombre de nouvelles, « Vérifier maintenant », ajout aux envies en un appui, Ignorer ;
   les nouvelles passent « vues » en quittant l'écran) ; Paramètres → section « Nouveautés » (activation, Wi-Fi,
   notification, auteurs suivis). Tests : détection sur fixtures réelles, id stable, parcours série et auteur.
+- **Revue de code (2026-11-17)** : série → le premier passage sert aussi de référence (dernier tome paru, relevé
+  local `releases_base_*` : un vieux tome manquant n'est pas une nouveauté) ; les tomes déjà signalés (vus,
+  ignorés) ne masquent plus les suivants ; auteur → un relevé vide (source coupée) ne sert pas de référence ; une
+  alerte par ISBN (série suivie + auteur suivi = une alerte) ; tome entré dans la collection → alerte « ajoutée »
+  (à l'ouverture de l'écran et à chaque passage) ; envie : pas de double appui, rien de créé si l'ISBN est déjà là,
+  message si la série n'existe plus. Notifications et règle Wi-Fi partagées (`core/notifications/`,
+  `NetworkKind.allows`).
 - **Écarts** : **pas de tâche de fond Android** (`workmanager`) : vérification au démarrage de l'appli seulement ;
   pas de réglage de fréquence (une fois par jour) ; pas de Google Books ni de Metron (sources abandonnées en
   phase 32) ; détection série limitée à la BnF (souvent à la parution).

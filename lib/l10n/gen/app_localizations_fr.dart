@@ -1840,6 +1840,16 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String releaseAlreadyOwned(String title) {
+    return '« $title » est déjà dans ta collection';
+  }
+
+  @override
+  String releaseWishFailed(String title) {
+    return 'Impossible d’ajouter « $title » : sa série n’existe plus';
+  }
+
+  @override
   String get releasesEnabled => 'Rechercher les nouveautés';
 
   @override

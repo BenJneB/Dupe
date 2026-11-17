@@ -3,6 +3,8 @@ import 'package:dupe/core/database/app_database.dart';
 import 'package:dupe/core/database/database_provider.dart';
 import 'package:dupe/core/database/tables/releases_tables.drift.dart';
 import 'package:dupe/features/authors/domain/author_groups.dart';
+import 'package:dupe/features/collection/domain/item.dart';
+import 'package:dupe/features/collection/domain/volume_number.dart';
 import 'package:dupe/features/releases/domain/release_alert.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
@@ -49,12 +51,20 @@ class ReleasesRepository {
           .watch();
 
   /// Saves [alert] unless that release is already known (in any status:
-  /// an ignored one never comes back). True when added.
+  /// an ignored one never comes back), by key or by ISBN (a volume of a
+  /// followed series by a followed author is one alert). True when added.
   Future<bool> addIfNew(ReleaseAlert alert) async {
     final id = alertId(alert.key);
-    final known = await (_db.select(
-      _db.releaseAlertsTable,
-    )..where((t) => t.id.equals(id))).getSingleOrNull();
+    final isbn = alert.isbn13;
+    final known =
+        await (_db.select(_db.releaseAlertsTable)
+              ..where(
+                (t) => isbn == null
+                    ? t.id.equals(id)
+                    : t.id.equals(id) | t.isbn13.equals(isbn),
+              )
+              ..limit(1))
+            .getSingleOrNull();
     if (known != null) return false;
     final at = now();
     await _db
@@ -63,6 +73,40 @@ class ReleasesRepository {
           alert.copyWith(id: id, createdAt: at, updatedAt: at).toInsertable(),
         );
     return true;
+  }
+
+  /// Keys of every alert ever saved (any status).
+  Future<Set<String>> knownKeys() async {
+    final key = _db.releaseAlertsTable.key;
+    final rows = await (_db.selectOnly(
+      _db.releaseAlertsTable,
+    )..addColumns([key])).get();
+    return {for (final r in rows) r.read(key)!};
+  }
+
+  /// Alerts still to look at whose release is now in the collection
+  /// ([items], whatever their ownership) become added.
+  Future<void> closeOwned(List<Item> items) async {
+    final isbns = {for (final i in items) ?i.isbn13};
+    final volumes = {
+      for (final i in items)
+        if (i.seriesId != null && VolumeNumber.asInt(i.volumeNumber) != null)
+          (i.seriesId, VolumeNumber.asInt(i.volumeNumber)),
+    };
+    final open =
+        await (_db.select(_db.releaseAlertsTable)..where(
+              (t) =>
+                  t.deletedAt.isNull() &
+                  t.status.isInValues([AlertStatus.nouveau, AlertStatus.vu]),
+            ))
+            .get();
+    for (final a in open) {
+      final volume = (a.seriesId, VolumeNumber.asInt(a.volumeNumber));
+      if (isbns.contains(a.isbn13) ||
+          (a.seriesId != null && volumes.contains(volume))) {
+        await setStatus(a, AlertStatus.ajoute);
+      }
+    }
   }
 
   Future<void> setStatus(ReleaseAlert alert, AlertStatus status) => _db
@@ -74,22 +118,27 @@ class ReleasesRepository {
       );
 
   /// The new alerts become seen (the screen was opened).
-  Future<void> markAllSeen() async {
-    final fresh = await (_db.select(
-      _db.releaseAlertsTable,
-    )..where((t) => t.status.equalsValue(AlertStatus.nouveau))).get();
-    for (final a in fresh) {
-      await setStatus(a, AlertStatus.vu);
-    }
-  }
+  Future<void> markAllSeen() =>
+      (_db.update(_db.releaseAlertsTable)..where(
+            (t) =>
+                t.deletedAt.isNull() &
+                t.status.equalsValue(AlertStatus.nouveau),
+          ))
+          .write(
+            ReleaseAlertsTableCompanion(
+              status: const Value(AlertStatus.vu),
+              updatedAt: Value(now()),
+              syncPending: const Value(true),
+            ),
+          );
 
-  Stream<List<FollowedAuthor>> watchFollowed() => (_db.select(
-    _db.followedAuthorsTable,
-  )..where((t) => t.deletedAt.isNull())).watch();
+  SimpleSelectStatement<$FollowedAuthorsTableTable, FollowedAuthor>
+  _followed() =>
+      _db.select(_db.followedAuthorsTable)..where((t) => t.deletedAt.isNull());
 
-  Future<List<FollowedAuthor>> listFollowed() => (_db.select(
-    _db.followedAuthorsTable,
-  )..where((t) => t.deletedAt.isNull())).get();
+  Stream<List<FollowedAuthor>> watchFollowed() => _followed().watch();
+
+  Future<List<FollowedAuthor>> listFollowed() => _followed().get();
 
   /// Follows [name] (nothing when already followed, whatever the spelling).
   Future<void> follow(String name) async {

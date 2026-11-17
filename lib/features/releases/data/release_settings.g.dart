@@ -39,7 +39,7 @@ final class ReleaseSettingsProvider
   ReleaseSettings create() => ReleaseSettings();
 }
 
-String _$releaseSettingsHash() => r'df84ba94ec1311c0c015c125f6fe5f31c90db45f';
+String _$releaseSettingsHash() => r'ad22d24b8c28a3f35385ded9d83313e9c2ac6aa5';
 
 /// New release checks, per device (local `app_settings`): on, Wi-Fi only
 /// and notifications by default.

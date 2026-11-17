@@ -4,6 +4,7 @@ import 'package:drift/drift.dart' show TableUpdateQuery;
 import 'package:dupe/core/database/database_provider.dart';
 import 'package:dupe/core/logging/app_log.dart';
 import 'package:dupe/core/sync/clock_check.dart';
+import 'package:dupe/core/sync/sync_codec.dart';
 import 'package:dupe/core/sync/sync_providers.dart';
 import 'package:dupe/core/sync/sync_remote.dart';
 import 'package:dupe/features/covers/data/cover_providers.dart';
@@ -117,17 +118,7 @@ class SyncController extends _$SyncController {
     );
     final db = ref.read(appDatabaseProvider);
     _localChanges = db
-        .tableUpdates(
-          TableUpdateQuery.onAllTables([
-            db.seriesTable,
-            db.itemsTable,
-            db.loansTable,
-            db.recommendationFeedbackTable,
-            db.itemPhotosTable,
-            db.releaseAlertsTable,
-            db.followedAuthorsTable,
-          ]),
-        )
+        .tableUpdates(TableUpdateQuery.onAllTables(SyncCodec(db).tables))
         .listen((_) {
           _debounce?.cancel();
           _debounce = Timer(debounce, () => unawaited(_syncIfPending()));

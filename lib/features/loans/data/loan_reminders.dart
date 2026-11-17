@@ -1,4 +1,4 @@
-import 'package:dupe/core/logging/app_log.dart';
+import 'package:dupe/core/notifications/local_notifications.dart';
 import 'package:dupe/features/loans/data/loans_repository.dart';
 import 'package:dupe/features/loans/domain/loan.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
@@ -31,45 +31,14 @@ LoanReminders loanReminders(Ref ref) => LocalLoanReminders();
 
 /// [LoanReminders] with flutter_local_notifications.
 class LocalLoanReminders implements LoanReminders {
-  final _plugin = FlutterLocalNotificationsPlugin();
   final AppLocalizations _l10n = lookupAppLocalizations(const Locale('fr'));
-  Future<bool>? _ready;
 
   static const _overdueId = 0;
 
   @override
   bool get canSchedule => defaultTargetPlatform == TargetPlatform.android;
 
-  Future<bool> _init() => _ready ??= () async {
-    try {
-      await _plugin.initialize(
-        settings: InitializationSettings(
-          android: const AndroidInitializationSettings('@mipmap/ic_launcher'),
-          linux: LinuxInitializationSettings(
-            defaultActionName: _l10n.notificationOpen,
-          ),
-          windows: WindowsInitializationSettings(
-            appName: _l10n.appTitle,
-            appUserModelId: 'Dev.Dupe.Dupe',
-            guid: '6f1d9c2e-4b7a-4d55-9a0e-3c8b2f71d5a4',
-          ),
-        ),
-      );
-      if (canSchedule) {
-        await _plugin
-            .resolvePlatformSpecificImplementation<
-              AndroidFlutterLocalNotificationsPlugin
-            >()
-            ?.requestNotificationsPermission();
-      }
-      return true;
-    } on Object catch (e) {
-      // No notification server (e.g. headless Linux): reminders are
-      // optional, the loans screen still shows overdue loans.
-      appLog.warning('notifications', 'Notifications unavailable: $e');
-      return false;
-    }
-  }();
+  Future<bool> _init() => initLocalNotifications();
 
   NotificationDetails get _details => NotificationDetails(
     android: AndroidNotificationDetails(
@@ -94,7 +63,7 @@ class LocalLoanReminders implements LoanReminders {
     if (!canSchedule || due == null || !await _init()) return;
     final at = DateTime(due.year, due.month, due.day, 10);
     if (!at.isAfter(DateTime.now())) return;
-    await _plugin.zonedSchedule(
+    await localNotifications.zonedSchedule(
       id: idOf(loan),
       title: _l10n.loanDueTitle,
       body: _l10n.loanDueBody(itemTitle, loan.borrowerName),
@@ -108,7 +77,7 @@ class LocalLoanReminders implements LoanReminders {
   @override
   Future<bool> notificationsAllowed() async {
     if (!canSchedule || !await _init()) return true;
-    return await _plugin
+    return await localNotifications
             .resolvePlatformSpecificImplementation<
               AndroidFlutterLocalNotificationsPlugin
             >()
@@ -119,13 +88,13 @@ class LocalLoanReminders implements LoanReminders {
   @override
   Future<void> cancel(Loan loan) async {
     if (!canSchedule || !await _init()) return;
-    await _plugin.cancel(id: idOf(loan));
+    await localNotifications.cancel(id: idOf(loan));
   }
 
   @override
   Future<void> showOverdue(List<LoanWithItem> overdue) async {
     if (overdue.isEmpty || !await _init()) return;
-    await _plugin.show(
+    await localNotifications.show(
       id: _overdueId,
       title: _l10n.loansOverdueTitle(overdue.length),
       body: [

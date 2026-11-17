@@ -14,8 +14,7 @@ class ReleaseSettingsSection extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
     final o =
-        ref.watch(releaseSettingsProvider).value ??
-        (enabled: true, wifiOnly: true, notify: true);
+        ref.watch(releaseSettingsProvider).value ?? ReleaseSettings.defaults;
     final settings = ref.read(releaseSettingsProvider.notifier);
     final authors = ref.watch(followedAuthorsProvider).value ?? const [];
     return Column(

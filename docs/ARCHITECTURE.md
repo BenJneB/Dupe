@@ -22,7 +22,9 @@ Description détaillée des choix techniques et de l'organisation du code (dépl
   (`features/covers/data/cover_cache.dart`, flutter_cache_manager 3.5 : `<support>/cover_cache`, 20 000 fichiers,
   2 ans ; jamais le `DefaultCacheManager` : 200 fichiers dans le dossier temporaire). Index en sqflite sur Android,
   JSON sur Linux/Windows (pas besoin de sqflite desktop). Tout nouvel affichage d'image réseau passe par lui.
-- Notifications : flutter_local_notifications 23 + timezone (`features/loans/data/loan_reminders.dart`). Android
+- Notifications : flutter_local_notifications 23 + timezone ; plugin et initialisation unique (permission Android
+  comprise) partagés dans `core/notifications/local_notifications.dart` (prêts : `features/loans/data/loan_reminders.dart`,
+  nouveautés : `features/releases/data/release_notifications.dart`). Android
   seulement planifie (inexact, `zonedSchedule` à 10 h le jour de retour, instant absolu `tz.UTC`, pas de base
   de fuseaux) ; Linux n'a pas de planificateur et Windows hors MSIX ne sait pas annuler → sur desktop,
   notification « prêts en retard » au démarrage, une fois par jour (`loans_overdue_notified_on`).
@@ -244,7 +246,7 @@ Description détaillée des choix techniques et de l'organisation du code (dépl
   par défaut `cover_prefetch_enabled` / `cover_prefetch_wifi_only`, annulé par compteur de passage ; les
   adresses en échec sont journalisées avec leur cause, une seule fois par exécution de l'appli tant que leur nombre
   et la liste ne changent pas) ; connexion
-  `core/network/network_status.dart` (`connectivity_plus`, `NetworkKind` unmetered/metered/none) ; Paramètres
+  `core/network/network_status.dart` (`connectivity_plus`, `NetworkKind` unmetered/metered/none, règle « Wi-Fi seulement » `NetworkKind.allows`) ; Paramètres
   `covers/presentation/offline_covers_section.dart`. `pumpApp` injecte `FakeNetworkStatus` (aucune connexion par
   défaut) et `FakeCoverCache` (`test/helpers/fake_covers.dart`). **Stats de lecture** :
   `stats/domain/reading_stats.dart` (`volumesOf` partagé avec `collection_stats.dart`). Choisir « Lu » remplit
@@ -278,5 +280,7 @@ Description détaillée des choix techniques et de l'organisation du code (dépl
   `SeriesMetadataProvider`, après AniList dans `SeriesLookup` pour les mangas). `SourceId.mangaUpdates` / `mangadex`.
 - Nouveautés (v4 phase 33, schéma v6, `features/releases/`) : `ReleaseChecker` (démarrage, 1×/jour, Wi-Fi par
   défaut) → séries suivies via `SeriesCatalogSource` + `nextVolumes`, auteurs suivis via `SuggestionSources` +
-  `newBooks` → `ReleasesRepository.addIfNew` (id UUID v5 de la clé) → `ReleaseNotifications`. Écran
+  `newBooks` → `ReleasesRepository.addIfNew` (id UUID v5 de la clé, une alerte par clé ou ISBN) →
+  `ReleaseNotifications`. Premier passage d'une série ou d'un auteur = référence sans alerte (relevés locaux
+  `releases_base_*`, `releases_seen_*`) ; `closeOwned` passe « ajoutée » les alertes déjà en collection. Écran
   `/plus/nouveautes`, réglages `ReleaseSettingsSection`, cloche `FollowAuthorButton`.

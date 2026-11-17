@@ -5,7 +5,19 @@ part 'network_status.g.dart';
 
 /// What the current connection costs: Wi-Fi or cable (unmetered), mobile
 /// data or unknown (metered), or no connection.
-enum NetworkKind { unmetered, metered, none }
+enum NetworkKind {
+  unmetered,
+  metered,
+  none;
+
+  /// Whether background downloads may run on this connection
+  /// ([wifiOnly]: not on mobile data).
+  bool allows({required bool wifiOnly}) => switch (this) {
+    unmetered => true,
+    metered => !wifiOnly,
+    none => false,
+  };
+}
 
 /// Current connection and its changes. Overridden in tests.
 abstract interface class NetworkStatus {

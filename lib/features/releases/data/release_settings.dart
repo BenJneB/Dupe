@@ -14,6 +14,13 @@ class ReleaseSettings extends _$ReleaseSettings {
   static const _wifi = 'releases_wifi_only';
   static const _notify = 'releases_notify';
 
+  /// All on: a missing setting reads as on.
+  static const ReleaseOptions defaults = (
+    enabled: true,
+    wifiOnly: true,
+    notify: true,
+  );
+
   AppSettingsStore get _store => ref.read(appSettingsStoreProvider);
 
   @override

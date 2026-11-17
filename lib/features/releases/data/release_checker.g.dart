@@ -12,7 +12,7 @@ part of 'release_checker.dart';
 /// day (at start-up): followed series at the BnF (volumes after the last
 /// known one), followed authors (ISBNs not seen at the previous check).
 /// The sources' rate limiters and caches apply; [seriesPerRun] series per
-/// check, in turn.
+/// check, in turn. State: a check is running.
 
 @ProviderFor(ReleaseChecker)
 final releaseCheckerProvider = ReleaseCheckerProvider._();
@@ -21,14 +21,14 @@ final releaseCheckerProvider = ReleaseCheckerProvider._();
 /// day (at start-up): followed series at the BnF (volumes after the last
 /// known one), followed authors (ISBNs not seen at the previous check).
 /// The sources' rate limiters and caches apply; [seriesPerRun] series per
-/// check, in turn.
+/// check, in turn. State: a check is running.
 final class ReleaseCheckerProvider
-    extends $NotifierProvider<ReleaseChecker, ReleaseCheckState> {
+    extends $NotifierProvider<ReleaseChecker, bool> {
   /// Looks for new releases (PLAN_V4 phase 33), on the device, at most once a
   /// day (at start-up): followed series at the BnF (volumes after the last
   /// known one), followed authors (ISBNs not seen at the previous check).
   /// The sources' rate limiters and caches apply; [seriesPerRun] series per
-  /// check, in turn.
+  /// check, in turn. State: a check is running.
   ReleaseCheckerProvider._()
     : super(
         from: null,
@@ -48,33 +48,33 @@ final class ReleaseCheckerProvider
   ReleaseChecker create() => ReleaseChecker();
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(ReleaseCheckState value) {
+  Override overrideWithValue(bool value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<ReleaseCheckState>(value),
+      providerOverride: $SyncValueProvider<bool>(value),
     );
   }
 }
 
-String _$releaseCheckerHash() => r'09accf0a4429ed4e01b790cb9cf434c83d573838';
+String _$releaseCheckerHash() => r'b2928d9fee2fa9e289c03084e4e0df14bc1b3e09';
 
 /// Looks for new releases (PLAN_V4 phase 33), on the device, at most once a
 /// day (at start-up): followed series at the BnF (volumes after the last
 /// known one), followed authors (ISBNs not seen at the previous check).
 /// The sources' rate limiters and caches apply; [seriesPerRun] series per
-/// check, in turn.
+/// check, in turn. State: a check is running.
 
-abstract class _$ReleaseChecker extends $Notifier<ReleaseCheckState> {
-  ReleaseCheckState build();
+abstract class _$ReleaseChecker extends $Notifier<bool> {
+  bool build();
   @$mustCallSuper
   @override
   WhenComplete runBuild() {
-    final ref = this.ref as $Ref<ReleaseCheckState, ReleaseCheckState>;
+    final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<ReleaseCheckState, ReleaseCheckState>,
-              ReleaseCheckState,
+              AnyNotifier<bool, bool>,
+              bool,
               Object?,
               Object?
             >;
