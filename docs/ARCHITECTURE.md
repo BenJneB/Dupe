@@ -230,8 +230,10 @@ Description détaillée des choix techniques et de l'organisation du code (dépl
   collection d'éditeur : Folio junior, Tracts Gallimard, Poches Jouvence), titre du volume
   s'il est numéroté. Sans correspondance → proposition de créer la série (`SeriesAttachment`). Le type de la
   série trouvée prime sur le type de l'onglet.
-- Confort magasin (phase 13) : vibrations par verdict (`scan/presentation/store/store_haptics.dart`, retour
-  haptique système, `store_haptics_enabled`, déclenchées par `ref.listen` dans `StoreResultBanner` au verdict
+- Confort magasin (phase 13) : vibrations par verdict (`scan/presentation/store/store_haptics.dart` :
+  vraies vibrations à durées explicites via le canal `dev.dupe.dupe/vibration` de `MainActivity.kt`, permission
+  `VIBRATE` — les constantes de `HapticFeedback` donnaient le même petit clic partout ; aussi pour la rafale ;
+  `store_haptics_enabled`, déclenchées par `ref.listen` dans `StoreResultBanner` au verdict
   final), lampe torche (`camera_scanner_view.dart`), raccourci Android (`scan/data/app_shortcuts.dart`,
   quick_actions 1.1.1, icône `res/drawable/ic_shortcut_scan.xml`; `FakeAppShortcuts` injecté par `pumpApp`).
   Anti-doublon : `DetectionSpeed.noDuplicates` + `enqueue` qui refuse un ISBN déjà en file.

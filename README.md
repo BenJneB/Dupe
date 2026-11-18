@@ -48,8 +48,8 @@ de valeur par défaut (une clé saisie dans l'appli passe devant).
 - **Mode Rafale** : scanne une étagère à la suite ; les infos sont cherchées en arrière-plan, puis
   « Revoir » permet de corriger et d'ajouter tout en une fois.
 - **Vibrations** (mode Magasin, Android) : 1 forte = possédé, 2 = envie, 3 légères = tome manquant d'une
-  série, 1 brève = inconnu ; désactivables dans Paramètres → *Scan* (et muettes si le retour haptique est
-  coupé dans les réglages du téléphone).
+  série, 1 brève = inconnu ; désactivables dans Paramètres → *Scan* (et muettes si les vibrations sont
+  coupées dans les réglages du téléphone).
 - **Raccourci** : appui long sur l'icône de l'appli → *Scanner* ; bouton **lampe torche** sur la caméra.
 - **Widget** (Android) : ajouter « Dupe » sur l'écran d'accueil : bouton *Scanner* et nombre d'ouvrages / de
   prêts en retard.

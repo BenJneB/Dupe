@@ -2280,7 +2280,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get storeHapticsHelp =>
-      'Mode Magasin : 1 forte = déjà possédé, 2 = en envie, 3 légères = tome manquant d’une série, 1 brève = inconnu';
+      'Mode Magasin : 1 longue = déjà possédé, 2 = en envie, 3 courtes = tome manquant d’une série, 1 brève = inconnu';
 
   @override
   String get voiceSearchTitle => 'Recherche vocale';

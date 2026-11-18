@@ -3559,7 +3559,7 @@ abstract class AppLocalizations {
   /// No description provided for @storeHapticsHelp.
   ///
   /// In fr, this message translates to:
-  /// **'Mode Magasin : 1 forte = déjà possédé, 2 = en envie, 3 légères = tome manquant d’une série, 1 brève = inconnu'**
+  /// **'Mode Magasin : 1 longue = déjà possédé, 2 = en envie, 3 courtes = tome manquant d’une série, 1 brève = inconnu'**
   String get storeHapticsHelp;
 
   /// No description provided for @voiceSearchTitle.

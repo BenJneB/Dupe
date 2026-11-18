@@ -7,7 +7,7 @@
 > finale. Les phases 15 à 20 ajoutent leurs tests ici et marquent « automatisé (phase N) » ceux que leurs tests
 > automatiques couvrent désormais.
 
-Ce fichier liste ce que les **360 tests automatiques (et 4 parcours d'intégration) ne couvrent pas** : matériel (caméra, vibrations,
+Ce fichier liste ce que les **361 tests automatiques (et 4 parcours d'intégration) ne couvrent pas** : matériel (caméra, vibrations,
 notifications, raccourci), services réels (Supabase, API GitHub, sources de métadonnées), plateformes non
 compilées ici (Windows) et workflows GitHub (jamais exécutés).
 
@@ -114,10 +114,12 @@ Tous les tests non faits en phase 14 et non marqués « automatisé ». Le but :
       — OK 2026-11-15 (téléphone, v0.1.0).
 - [ ] **M-08** Code UPC de comic US → message d'aide.
       — REPORTÉ (2026-11-15, choix de l'utilisateur).
-- [ ] **M-09** (phase 13) Vibrations : 1 forte (vert), 2 moyennes (jaune), 3 légères (bleu), 1 brève (gris),
-      au verdict final et une seule fois par scan. Si rien ne vibre : vérifier le retour haptique système.
+- [ ] **M-09** (phase 13) Vibrations : 1 longue et forte (vert), 2 moyennes (jaune), 3 courtes (bleu), 1 brève (gris),
+      au verdict final et une seule fois par scan. Si rien ne vibre : vérifier les vibrations dans les réglages du téléphone.
       — À REFAIRE 2026-11-15 : aucune vibration ; retour haptique système (vibration au toucher) et mode
       silencieux à vérifier sur le téléphone.
+      — ÉCHEC 2026-11-18 : vibrations reçues, mais vert indiscernable des autres (les constantes haptiques
+        Android donnent toutes un petit clic). Corrigé : vraies vibrations à durées explicites ; à refaire.
 - [ ] **M-10** (phase 13) Paramètres → Scan → couper « Vibrer selon le résultat » : plus de vibration.
       — REPORTÉ avec `M-09` (2026-11-15).
 - [x] **M-11** (phase 13) Lampe torche : le bouton allume / éteint ; absent si le téléphone n'a pas de flash.
@@ -189,7 +191,9 @@ appareils (reportés de la phase 14).
       dans le navigateur, puis connexion OK ; avant confirmation → « pas encore confirmé ».
       — OK 2026-11-18
 - [ ] **S-03** Le gestionnaire de mots de passe propose d'enregistrer le mot de passe.
-      — ÉCHEC 2026-11-18 : à la création du compte, aucune proposition d'enregistrer le mot de passe (appareil à préciser ; sur Linux, Flutter n'a pas de remplissage automatique).
+      — ÉCART ACCEPTÉ 2026-11-18 : compte créé sur Linux, où Flutter n'a pas de remplissage automatique (aucun
+        gestionnaire de mots de passe possible). Reste à voir sur Android : se déconnecter puis se reconnecter →
+        Google propose d'enregistrer le mot de passe.
 - [x] **S-04** *(reporté de la phase 14)* Ajout sur le téléphone → visible sur le PC (≤ 30 s ou bouton synchro), et inversement.
       — OK 2026-11-15 (téléphone ↔ PC, dans les deux sens).
 - [x] **S-05** *(reporté de la phase 14)* **(critique, phase 9)** Après la mise à jour, la synchro reçoit toujours les changements de
@@ -234,10 +238,11 @@ appareils (reportés de la phase 14).
       — OK 2026-11-15 (téléphone : feuille de partage ; PC : « Enregistrer sous »).
 - [x] **J-04** Le journal est conservé après redémarrage de l'appli.
       — OK 2026-11-15 (Linux) : vu pendant `J-02`, entrées du 2026-11-14 affichées après redémarrage.
-- [ ] **J-05** Messages en français à l'écran (hors ligne, fichier invalide, mauvais mot de passe).
+- [x] **J-05** Messages en français à l'écran (hors ligne, fichier invalide, mauvais mot de passe).
       — PARTIEL 2026-11-15 : mauvais mot de passe et hors ligne (« sources indisponibles ») en français ; fichier
       invalide à la restauration reporté par l'utilisateur.
-      — ÉCHEC 2026-11-18 : un message « pas vraiment en français » (lequel ? à préciser).
+      — ÉCART ACCEPTÉ 2026-11-18 : écran en français ; pour une erreur non prévue, l'écran dit « Une erreur est
+        survenue (détails dans À propos → Journal) » et seul le détail technique du journal reste en anglais.
 - [x] **J-06** (phase 12, facultatif) Mettre le projet Supabase en pause depuis son tableau de bord, puis
       synchroniser → « Serveur de synchronisation indisponible… en pause ». Le réactiver ensuite (quelques
       minutes). Si le message est différent, copier le journal : le code d'erreur d'un projet en pause n'a
@@ -448,20 +453,26 @@ l'onglet, onglet toujours ouvert sur sa liste, couverture d'une série = celle d
 quitter, type du scan choisi et mémorisé, pastille « ? » pour un tome sans numéro, indicateur « lu »,
 proposition d'ajouter les tomes précédents, « Compléter les couvertures manquantes » (adresses cassées
 remplacées, photos gardées), vue et page par auteur. Simulés : les sources et le cache des couvertures.
-- [ ] **Q-01** Android : sur la liste d'un onglet, retour → « Appuie de nouveau sur retour pour quitter » ;
+- [x] **Q-01** Android : sur la liste d'un onglet, retour → « Appuie de nouveau sur retour pour quitter » ;
       un second appui dans les 2 s ferme l'appli, après 2 s il ne fait que réafficher le message.
-- [ ] **Q-02** Scanner en magasin un tome d'une série nouvelle (Free Quest 1, Jumeaux Fowl 3) : le formulaire
+      — OK 2026-11-18
+- [x] **Q-02** Scanner en magasin un tome d'une série nouvelle (Free Quest 1, Jumeaux Fowl 3) : le formulaire
       propose de créer la bonne série (pas « Folio junior ») avec le bon numéro.
-- [ ] **Q-03** Ajouter le tome 9 possédé d'une série qui n'a que le 1 : « Il te manque 7 tomes avant le 9 » →
+      — OK 2026-11-18
+- [x] **Q-03** Ajouter le tome 9 possédé d'une série qui n'a que le 1 : « Il te manque 7 tomes avant le 9 » →
       Ajouter → les tomes 2 à 8 apparaissent en vert.
-- [ ] **Q-04** Plus → Qualité → « Compléter les couvertures manquantes » (déplacé des Paramètres le 2026-11-16) sur la vraie collection : progression,
+      — OK 2026-11-18
+- [x] **Q-04** Plus → Qualité → « Compléter les couvertures manquantes » (déplacé des Paramètres le 2026-11-16) sur la vraie collection : progression,
       couvertures ajoutées visibles dans les listes ; le journal liste les livres restés sans couverture et les
       sources qui ont répondu ; « Télécharger maintenant » liste les adresses en échec avec leur cause.
-- [ ] **Q-05** Scan ouvert depuis Plus / le journal : choisir « BD » dans le menu de type ; au scan suivant
+      — OK 2026-11-18
+- [x] **Q-05** Scan ouvert depuis Plus / le journal : choisir « BD » dans le menu de type ; au scan suivant
       ouvert hors d'un onglet, « BD » est déjà choisi.
-- [ ] **Q-06** Livres → « Par auteur » sur la vraie collection : un auteur écrit de deux façons selon la source
+      — OK 2026-11-18
+- [x] **Q-06** Livres → « Par auteur » sur la vraie collection : un auteur écrit de deux façons selon la source
       n'apparaît qu'une fois ; sa page liste toutes ses séries et livres ; toucher un nom d'auteur sur une fiche
       ouvre la même page.
+      — OK 2026-11-18
 - [x] **Q-07** Recherche (locale, et en ligne par texte) : l'ISBN apparaît dans le sous-titre des livres.
       — OK 2026-11-16 : ISBN affiché quand la source en donne un (pas toujours en recherche en ligne : Open
       Library ou Comic Vine n'en fournissent pas pour tous les résultats).
@@ -471,10 +482,12 @@ remplacées, photos gardées), vue et page par auteur. Simulés : les sources et
 - [x] **Q-09** Page d'un auteur → menu ⋮ → « Marquer les livres hors série comme lus » / « Tout marquer comme lu » :
       confirmation avec le nombre de livres, puis livres marqués « Lu » avec la date du jour.
       — OK 2026-11-16.
-- [ ] **Q-10** Tome créé vide (« Ajouter des tomes », ou « Il te manque … → Ajouter ») puis scanné en mode Magasin :
+- [x] **Q-10** Tome créé vide (« Ajouter des tomes », ou « Il te manque … → Ajouter ») puis scanné en mode Magasin :
       « ISBN mémorisé », et la fiche du tome a maintenant couverture, auteurs, éditeur, prix (ce que tu avais saisi
       reste inchangé).
-- [ ] **Q-11** Envies : glisser un livre vers la gauche le retire, « Annuler » le remet.
+      — OK 2026-11-18
+- [x] **Q-11** Envies : glisser un livre vers la gauche le retire, « Annuler » le remet.
+      — OK 2026-11-18
 
 ## 16. Séries : nombre de tomes et vue liste (v4, phase 23)
 Automatisé (phase 23) : seul un titre identique propose un total ; vérification depuis le menu d'une série et en

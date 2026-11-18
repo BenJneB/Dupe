@@ -14,7 +14,6 @@ import 'package:dupe/features/scan/presentation/store/store_haptics.dart';
 import 'package:dupe/features/scan/presentation/store/store_result_banner.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -83,11 +82,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
     final haptics = ref.read(storeHapticsProvider);
     final worker = ref.read(scanQueueWorkerProvider);
     final added = await queue.enqueue(isbn, _type);
-    if (await haptics.enabled) {
-      unawaited(
-        added ? HapticFeedback.lightImpact() : HapticFeedback.selectionClick(),
-      );
-    }
+    unawaited(haptics.queued(added: added));
     unawaited(worker.run());
     final count = await queue.count();
     messenger

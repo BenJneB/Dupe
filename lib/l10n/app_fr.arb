@@ -1197,7 +1197,7 @@
   "torchOff": "Éteindre la lampe",
   "scanSection": "Scan",
   "storeHaptics": "Vibrer selon le résultat",
-  "storeHapticsHelp": "Mode Magasin : 1 forte = déjà possédé, 2 = en envie, 3 légères = tome manquant d’une série, 1 brève = inconnu",
+  "storeHapticsHelp": "Mode Magasin : 1 longue = déjà possédé, 2 = en envie, 3 courtes = tome manquant d’une série, 1 brève = inconnu",
   "voiceSearchTitle": "Recherche vocale",
   "voiceSearchExplain": "Dupe va te demander l’accès au micro. Ce que tu dis est transcrit par le service de reconnaissance vocale de ton appareil, puis cherché dans ta collection : Dupe n’enregistre rien. Dis par exemple « One Piece tome 107 » ou « tome 3 de Blacksad ».",
   "voiceSearchContinue": "Continuer",
