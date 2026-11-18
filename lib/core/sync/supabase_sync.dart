@@ -198,7 +198,25 @@ class SupabaseSyncRemote implements SyncRemote {
     }
   }
 
+  /// A REST error as a [SyncFailure]. PGRST301/303: JWT invalid or expired;
+  /// 42501 (insufficient privilege): the request went without a session
+  /// (anonymous role), e.g. after a failed token refresh. A 3-digit code is
+  /// the HTTP status of a non-JSON error page (gateway, paused project); a
+  /// 5-character one is a Postgres SQLSTATE, not a status.
+  static SyncFailure failureOf(PostgrestException e) {
+    final code = e.code ?? '';
+    if (const {'PGRST301', 'PGRST303', '42501'}.contains(code)) {
+      return SyncFailure.session;
+    }
+    final status = code.length == 3 ? int.tryParse(code) ?? 0 : 0;
+    return status >= 500 ? SyncFailure.unavailable : SyncFailure.rejected;
+  }
+
   Future<T> _guard<T>(Future<T> Function() call) async {
+    // No session (refresh refused meanwhile): never query as anonymous.
+    if (client.auth.currentSession == null) {
+      throw const SyncException('not signed in', failure: SyncFailure.session);
+    }
     try {
       return await call();
     } on SocketException catch (e) {
@@ -208,17 +226,9 @@ class SupabaseSyncRemote implements SyncRemote {
     } on TimeoutException {
       throw const SyncException.network('timeout');
     } on PostgrestException catch (e) {
-      // PGRST301/303: JWT invalid or expired.
-      final expired = e.code == 'PGRST301' || e.code == 'PGRST303';
-      // Non-JSON error pages (gateway, paused project) carry the HTTP status.
-      final status = int.tryParse(e.code ?? '') ?? 0;
       throw SyncException(
         e.message.length > 300 ? e.message.substring(0, 300) : e.message,
-        failure: expired
-            ? SyncFailure.session
-            : status >= 500
-            ? SyncFailure.unavailable
-            : SyncFailure.rejected,
+        failure: failureOf(e),
       );
     } on AuthException catch (e) {
       throw SyncException(e.message, failure: SyncFailure.session);
