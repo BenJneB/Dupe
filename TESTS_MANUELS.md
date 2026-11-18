@@ -1,13 +1,13 @@
 # Dupe — Tests manuels
 
-> Document autonome, à jour au **2026-11-16**. Dupe est une appli Flutter personnelle de catalogue de
+> Document autonome, à jour au **2026-11-18**. Dupe est une appli Flutter personnelle de catalogue de
 > collection (mangas, BD, comics, livres) pour Android, Linux et Windows, avec synchro Supabase optionnelle.
 > Contexte : `PLAN_V2.md` (phases 9-13) et `PLAN_V3.md`. Une petite partie de ces tests est faite **maintenant**
 > (phase 14, vérifications de base) ; tout le reste l'est à la fin (**phase 21, recette finale**), sur la version
 > finale. Les phases 15 à 20 ajoutent leurs tests ici et marquent « automatisé (phase N) » ceux que leurs tests
 > automatiques couvrent désormais.
 
-Ce fichier liste ce que les **356 tests automatiques (et 4 parcours d'intégration) ne couvrent pas** : matériel (caméra, vibrations,
+Ce fichier liste ce que les **360 tests automatiques (et 4 parcours d'intégration) ne couvrent pas** : matériel (caméra, vibrations,
 notifications, raccourci), services réels (Supabase, API GitHub, sources de métadonnées), plateformes non
 compilées ici (Windows) et workflows GitHub (jamais exécutés).
 
@@ -84,9 +84,10 @@ Tous les tests non faits en phase 14 et non marqués « automatisé ». Le but :
       — OK 2026-11-14 (Linux) : compte créé, lien confirmé, connexion réussie.
 - [x] **P-05** (phase 16) Migration `20261115090000_keep_alive.sql` appliquée (fonction `keep_alive()`).
       — OK 2026-11-15 : migration appliquée dans le SQL Editor du projet.
-- [ ] **P-06** (phase 16) `.github/dependabot.yml` présent sur la branche par défaut (Dependabot ne lit sa
+- [x] **P-06** (phase 16) `.github/dependabot.yml` présent sur la branche par défaut (Dependabot ne lit sa
       configuration que là). Branche par défaut = `dev` depuis le 2026-11-15, qui contient le fichier : **probablement
       levé** ; à confirmer dans Insights → Dependency graph → Dependabot (dernière vérification sans erreur).
+      — OK 2026-11-18
 - [x] **P-07** (phase 17) Docker utilisable sans sudo, Supabase CLI 2.122.1 et `psql` installés ;
       `tool/supabase_tests.sh` passe (README « Tests de synchro contre un Supabase local »).
       — OK 2026-11-14 (Linux) : accès Docker donné, CLI via `npx` (sans installation), 8 tests verts.
@@ -167,12 +168,15 @@ Tous les tests non faits en phase 14 et non marqués « automatisé ». Le but :
       — OK 2026-11-15 (téléphone + PC, v0.1.0).
 - [x] **F-02** Export JSON et CSV → feuille de partage Android (Drive, Fichiers, email).
       — OK 2026-11-15 (téléphone + PC, v0.1.0).
-- [ ] **F-03** Le CSV s'ouvre correctement (accents) dans un tableur.
+- [x] **F-03** Le CSV s'ouvre correctement (accents) dans un tableur.
       — REPORTÉ (2026-11-15, choix de l'utilisateur).
-- [ ] **F-04** Import CSV depuis le téléphone (sélection de fichier).
+      — OK 2026-11-18
+- [x] **F-04** Import CSV depuis le téléphone (sélection de fichier).
       — REPORTÉ (2026-11-15, choix de l'utilisateur).
-- [ ] **F-05** PC : export/import via les fenêtres « Enregistrer sous » / « Ouvrir ».
+      — OK 2026-11-18
+- [x] **F-05** PC : export/import via les fenêtres « Enregistrer sous » / « Ouvrir ».
       — REPORTÉ (2026-11-15, choix de l'utilisateur).
+      — OK 2026-11-18
 
 ## 5. Compte et synchro Supabase (téléphone + PC)
 Couvert contre un Supabase **local** par les tests `supabase` (phase 17, verts le 2026-11-14) : `S-04` à `S-08`
@@ -181,30 +185,37 @@ appareils (reportés de la phase 14).
 - [x] **S-01** *(reporté de la phase 14)* Connexion email + mot de passe sur chaque appareil ; mauvais mot de passe → « Email ou mot de
       passe incorrect ».
       — OK 2026-11-15 (téléphone, PC, et instance Linux vide : mauvais mot de passe refusé).
-- [ ] **S-02** Créer un compte avec un autre email (si Supabase peut lui écrire) : lien de confirmation ouvert
+- [x] **S-02** Créer un compte avec un autre email (si Supabase peut lui écrire) : lien de confirmation ouvert
       dans le navigateur, puis connexion OK ; avant confirmation → « pas encore confirmé ».
+      — OK 2026-11-18
 - [ ] **S-03** Le gestionnaire de mots de passe propose d'enregistrer le mot de passe.
+      — ÉCHEC 2026-11-18 : à la création du compte, aucune proposition d'enregistrer le mot de passe (appareil à préciser ; sur Linux, Flutter n'a pas de remplissage automatique).
 - [x] **S-04** *(reporté de la phase 14)* Ajout sur le téléphone → visible sur le PC (≤ 30 s ou bouton synchro), et inversement.
       — OK 2026-11-15 (téléphone ↔ PC, dans les deux sens).
 - [x] **S-05** *(reporté de la phase 14)* **(critique, phase 9)** Après la mise à jour, la synchro reçoit toujours les changements de
       l'autre appareil : le filtre du pull a changé et n'a été testé que contre un faux serveur.
       — OK 2026-11-15 (téléphone ↔ PC avec la version de la recette).
-- [ ] **S-06** Même tome modifié des deux côtés hors ligne → la modification la plus récente gagne.
+- [x] **S-06** Même tome modifié des deux côtés hors ligne → la modification la plus récente gagne.
       — REPORTÉ (2026-11-15, choix de l'utilisateur).
-- [ ] **S-07** Modifier sur les deux appareils et synchroniser en même temps (bouton) : identiques à la fin.
+      — OK 2026-11-18
+- [x] **S-07** Modifier sur les deux appareils et synchroniser en même temps (bouton) : identiques à la fin.
       — REPORTÉ (2026-11-15, choix de l'utilisateur).
-- [ ] **S-08** Suppression propagée.
+      — OK 2026-11-18
+- [x] **S-08** Suppression propagée.
       — REPORTÉ (2026-11-15, choix de l'utilisateur).
+      — OK 2026-11-18
 - [x] **S-09** Icône d'état de synchro cohérente (en cours, hors ligne, à jour, erreur).
       — OK 2026-11-15 (v0.1.0) : en cours, hors ligne, à jour cohérents (« erreur » non provoquée, voir `J-06`).
-- [ ] **S-10** (phase 10) Changer le mot de passe sur un appareil : l'autre reste connecté et synchronise ;
+- [x] **S-10** (phase 10) Changer le mot de passe sur un appareil : l'autre reste connecté et synchronise ;
       une nouvelle connexion n'accepte que le nouveau mot de passe.
       — REPORTÉ (2026-11-15, choix de l'utilisateur) : à faire plus tard dans la recette.
+      — OK 2026-11-18
 - [x] **S-11** (phase 10) Inscription avec un mot de passe trop court → « Mot de passe refusé : trop court ou
       trop simple » ; deux mots de passe différents → message, rien n'est envoyé.
       — OK 2026-11-15 (instance Linux de test) : mot de passe trop court refusé ; mots de passe différents signalés.
-- [ ] **S-13** (phase 17) Avancer l'heure d'un appareil de 10 minutes (réglage manuel), synchroniser : le
+- [x] **S-13** (phase 17) Avancer l'heure d'un appareil de 10 minutes (réglage manuel), synchroniser : le
       statut affiche « l'heure de cet appareil semble fausse (écart de 10 min…) » ; une entrée au journal.
+      — OK 2026-11-18
 - [x] **S-12** (phase 10) Se déconnecter puis se reconnecter au même compte : rien n'est dupliqué, la
       collection est identique sur les deux appareils.
       — OK 2026-11-15 (PC) : déconnexion puis reconnexion, aucun doublon constaté ; à revoir si un doublon apparaît.
@@ -226,10 +237,12 @@ appareils (reportés de la phase 14).
 - [ ] **J-05** Messages en français à l'écran (hors ligne, fichier invalide, mauvais mot de passe).
       — PARTIEL 2026-11-15 : mauvais mot de passe et hors ligne (« sources indisponibles ») en français ; fichier
       invalide à la restauration reporté par l'utilisateur.
-- [ ] **J-06** (phase 12, facultatif) Mettre le projet Supabase en pause depuis son tableau de bord, puis
+      — ÉCHEC 2026-11-18 : un message « pas vraiment en français » (lequel ? à préciser).
+- [x] **J-06** (phase 12, facultatif) Mettre le projet Supabase en pause depuis son tableau de bord, puis
       synchroniser → « Serveur de synchronisation indisponible… en pause ». Le réactiver ensuite (quelques
       minutes). Si le message est différent, copier le journal : le code d'erreur d'un projet en pause n'a
       jamais été observé.
+      — OK 2026-11-18
 
 ## 7. Filets de sécurité (phase 11)
 - [x] **B-01** Supprimer un ouvrage puis « Annuler » : il revient, aussi sur l'autre appareil après synchro.

@@ -13,7 +13,10 @@ import 'package:supabase/supabase.dart';
 /// `app_settings` table and its token refreshed automatically.
 class SupabaseSyncAuth implements SyncAuth {
   new(this.client, this._settings) {
-    _sub = client.auth.onAuthStateChange.listen(_onAuthChange);
+    _sub = client.auth.onAuthStateChange.listen(
+      _onAuthChange,
+      onError: _onAuthError,
+    );
   }
 
   final SupabaseClient client;
@@ -40,6 +43,14 @@ class SupabaseSyncAuth implements SyncAuth {
       await _settings.set(_sessionKey, jsonEncode(session.toJson()));
     }
     _changes.add(null);
+  }
+
+  /// gotrue reports a failed background token refresh on the stream. Offline
+  /// it fails every tick (retried later, session kept): not worth a log entry,
+  /// the sync status already says offline.
+  void _onAuthError(Object error) {
+    if (error is AuthRetryableFetchException) return;
+    appLog.warning('auth', error);
   }
 
   @override
