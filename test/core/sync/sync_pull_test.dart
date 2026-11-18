@@ -68,4 +68,45 @@ void main() {
     await Future<void>.delayed(Duration.zero);
     expect(writes, isEmpty);
   });
+
+  test('a row of an older schema (server not migrated, old backup) is '
+      'pulled: newer columns keep their default or local value', () async {
+    final id = await addBook(phone, 'Antidote');
+    await phone.sync();
+    // The server has no signing columns yet (phase 31 migration not run).
+    const newer = [
+      'is_signed',
+      'signed_by',
+      'signed_on',
+      'signed_place',
+      'signing_note',
+    ];
+    remote.tables['items']![id]!.removeWhere((k, _) => newer.contains(k));
+
+    await pc.sync();
+    final pulled = (await pc.repo.getItem(id))!;
+    expect((pulled.title, pulled.isSigned), ('Antidote', false));
+
+    // Signed on the PC, then changed elsewhere without those columns.
+    await pc.repo.saveItem(pulled.copyWith(isSigned: true, signedBy: 'O. H.'));
+    await pc.sync();
+    final row = {...remote.tables['items']![id]!}
+      ..removeWhere((k, _) => newer.contains(k) || k == 'server_updated_at');
+    final later = DateTime.parse(row['updated_at']! as String)
+        .add(const Duration(minutes: 1));
+    // Another app version, not knowing the columns, writes the row.
+    await remote.upsert('items', [
+      {
+        ...row,
+        'title': 'Antidote au culte de la performance',
+        'updated_at': later.toUtc().toIso8601String(),
+      },
+    ]);
+    await pc.sync();
+    final merged = (await pc.repo.getItem(id))!;
+    expect(
+      (merged.title, merged.isSigned, merged.signedBy),
+      ('Antidote au culte de la performance', true, 'O. H.'),
+    );
+  });
 }

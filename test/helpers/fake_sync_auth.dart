@@ -98,7 +98,8 @@ class FakeSyncAuth implements SyncAuth {
   }
 
   void _checkCode(String email, String code) {
-    if (codes.remove(email) != code) {
+    // A pasted link carries the code as its token.
+    if (codes.remove(email) != (emailLinkToken(code) ?? code)) {
       throw const SignInException(SignInFailure.invalidCode, 'x');
     }
   }

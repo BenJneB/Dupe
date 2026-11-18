@@ -2317,7 +2317,7 @@ abstract class AppLocalizations {
   /// No description provided for @confirmEmailSent.
   ///
   /// In fr, this message translates to:
-  /// **'Compte créé : saisis ci-dessous le code à 6 chiffres envoyé à {email} (ou ouvre le lien de l’e-mail, puis « Se connecter »).'**
+  /// **'Compte créé : colle ci-dessous le lien de l’e-mail envoyé à {email} (appui long sur le lien → copier, sans l’ouvrir), ou son code s’il en a un.'**
   String confirmEmailSent(String email);
 
   /// No description provided for @setPassword.
@@ -2905,19 +2905,19 @@ abstract class AppLocalizations {
   /// No description provided for @emailCodeLabel.
   ///
   /// In fr, this message translates to:
-  /// **'Code reçu par e-mail'**
+  /// **'Code ou lien reçu par e-mail'**
   String get emailCodeLabel;
 
   /// No description provided for @emailCodeHelp.
   ///
   /// In fr, this message translates to:
-  /// **'6 chiffres, valable une heure'**
+  /// **'Le code à 6 chiffres, ou le lien de l’e-mail copié (appui long, sans l’ouvrir)'**
   String get emailCodeHelp;
 
   /// No description provided for @emailCodeMissing.
   ///
   /// In fr, this message translates to:
-  /// **'Saisis le code à 6 chiffres de l’e-mail'**
+  /// **'Saisis le code de l’e-mail ou colle son lien'**
   String get emailCodeMissing;
 
   /// No description provided for @confirmCodeAction.
@@ -2941,19 +2941,19 @@ abstract class AppLocalizations {
   /// No description provided for @resetHelp.
   ///
   /// In fr, this message translates to:
-  /// **'Saisis l’adresse de ton compte : un code à 6 chiffres t’y sera envoyé pour choisir un nouveau mot de passe.'**
+  /// **'Saisis l’adresse de ton compte : un e-mail t’y sera envoyé pour choisir un nouveau mot de passe.'**
   String get resetHelp;
 
   /// No description provided for @resetCodeSent.
   ///
   /// In fr, this message translates to:
-  /// **'Si un compte existe pour {email}, un code vient d’y être envoyé. Saisis-le avec ton nouveau mot de passe.'**
+  /// **'Si un compte existe pour {email}, un e-mail vient d’y être envoyé : colle son lien (appui long → copier, sans l’ouvrir) ou son code, avec ton nouveau mot de passe.'**
   String resetCodeSent(String email);
 
   /// No description provided for @sendResetCode.
   ///
   /// In fr, this message translates to:
-  /// **'Envoyer le code'**
+  /// **'Envoyer l’e-mail'**
   String get sendResetCode;
 
   /// No description provided for @newPasswordLabel.

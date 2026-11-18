@@ -85,13 +85,20 @@ class SupabaseSyncAuth implements SyncAuth {
   );
 
   @override
-  Future<void> confirmSignUp(String email, String code) => _signInGuard(
-    () => client.auth.verifyOTP(
-      email: email.trim(),
-      token: code.trim(),
-      type: OtpType.signup,
-    ),
-  );
+  Future<void> confirmSignUp(String email, String code) =>
+      _signInGuard(() => _verify(email, code, OtpType.signup));
+
+  /// A 6-digit code, or the link of the email pasted (its token hash).
+  Future<AuthResponse> _verify(String email, String code, OtpType type) {
+    final hash = emailLinkToken(code);
+    return hash != null
+        ? client.auth.verifyOTP(tokenHash: hash, type: type)
+        : client.auth.verifyOTP(
+            email: email.trim(),
+            token: code.trim(),
+            type: type,
+          );
+  }
 
   @override
   Future<void> resendConfirmation(String email) => _signInGuard(
@@ -105,11 +112,7 @@ class SupabaseSyncAuth implements SyncAuth {
   @override
   Future<void> resetPassword(String email, String code, String password) =>
       _signInGuard(() async {
-        await client.auth.verifyOTP(
-          email: email.trim(),
-          token: code.trim(),
-          type: OtpType.recovery,
-        );
+        await _verify(email, code, OtpType.recovery);
         await client.auth.updateUser(UserAttributes(password: password));
       });
 

@@ -7,7 +7,7 @@
 > finale. Les phases 15 à 20 ajoutent leurs tests ici et marquent « automatisé (phase N) » ceux que leurs tests
 > automatiques couvrent désormais.
 
-Ce fichier liste ce que les **354 tests automatiques (et 4 parcours d'intégration) ne couvrent pas** : matériel (caméra, vibrations,
+Ce fichier liste ce que les **356 tests automatiques (et 4 parcours d'intégration) ne couvrent pas** : matériel (caméra, vibrations,
 notifications, raccourci), services réels (Supabase, API GitHub, sources de métadonnées), plateformes non
 compilées ici (Windows) et workflows GitHub (jamais exécutés).
 
@@ -586,10 +586,10 @@ notifications.
       téléphone ne revient pas sur le PC après synchro (et pas en double si les deux vérifient).
 
 ## 26. Compte : code par e-mail (v4, phase 34)
-**Avant** : Supabase → Authentication → Email Templates : ajouter `{{ .Token }}` dans « Confirm signup » et « Reset
-password » (ex. « Ton code : {{ .Token }} ») ; régler la *Site URL*. Automatisé : confirmation par code (faux puis bon,
-renvoi), mot de passe oublié complet. Simulé : Supabase.
-- [ ] **K2-01** Créer un compte avec une nouvelle adresse : l'e-mail contient un code à 6 chiffres ; le saisir dans
-      l'appli → connecté, synchro lancée.
-- [ ] **K2-02** Déconnecté : « Mot de passe oublié ? » → code reçu → nouveau mot de passe → connecté ; l'ancien mot de
-      passe ne marche plus sur l'autre appareil.
+Sans SMTP personnalisé, les e-mails Supabase n'ont qu'un lien : le **copier (appui long) sans l'ouvrir** et le coller
+dans le champ « Code ou lien ». Automatisé : confirmation par code (faux puis bon, renvoi), mot de passe oublié avec
+lien collé. Simulé : Supabase.
+- [ ] **K2-01** Créer un compte avec une nouvelle adresse : coller le lien de l'e-mail de confirmation dans l'appli →
+      connecté, synchro lancée.
+- [ ] **K2-02** Déconnecté : « Mot de passe oublié ? » → e-mail reçu → coller son lien + nouveau mot de passe →
+      connecté ; l'ancien mot de passe ne marche plus sur l'autre appareil.

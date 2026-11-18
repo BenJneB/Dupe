@@ -146,7 +146,8 @@ Description détaillée des choix techniques et de l'organisation du code (dépl
   auth.uid(), pas de DELETE, pas de FK entre tables, bucket privé `covers/<uid>/`).
 - Pull (phase 9) : pagination par clé `(server_updated_at, id)` (`SyncCursor`, filtre PostgREST `or` avec valeurs
   entre guillemets, instants envoyés en UTC `Z`) et relecture de `SyncEngine.overlap` (1 min) avant le curseur :
-  une ligne commitée tard peut porter un horodatage antérieur. `SyncCodec.apply` ignore une ligne déjà
+  une ligne commitée tard peut porter un horodatage antérieur. `SyncCodec.apply` n'écrit que les colonnes présentes
+  dans la ligne (serveur pas migré, vieille sauvegarde : valeur locale ou par défaut gardée) et ignore une ligne déjà
   identique (même `updated_at` + `user_id`) → suppose que deux écritures d'une ligne n'ont jamais le même
   `updated_at` (horloge µs ; le `Device` de test avance son horloge à chaque lecture, `test/helpers/sync_device.dart`).
 - Erreurs de synchro typées : `SyncException.failure` (`offline` / `session` / `rejected`), `SignInException`
@@ -285,6 +286,7 @@ Description détaillée des choix techniques et de l'organisation du code (dépl
   `releases_base_*`, `releases_seen_*`) ; `closeOwned` passe « ajoutée » les alertes déjà en collection. Écran
   `/plus/nouveautes`, réglages `ReleaseSettingsSection`, cloche `FollowAuthorButton`.
 - Compte (v4 phase 34) : confirmation d'inscription et mot de passe oublié par **code à 6 chiffres** de l'e-mail
-  Supabase (`verifyOTP` signup / recovery, `{{ .Token }}` dans les modèles d'e-mail) : `SyncAuth.confirmSignUp`,
+  Supabase (`verifyOTP` signup / recovery, `{{ .Token }}` dans les modèles d'e-mail, qui exige un SMTP) **ou lien de
+  l'e-mail collé** (`emailLinkToken` → `verifyOTP(tokenHash:)`) : `SyncAuth.confirmSignUp`,
   `resendConfirmation`, `sendPasswordReset`, `resetPassword` ; écrans `sign_in_screen.dart` (champ du code) et
   `reset_password_screen.dart` (`/connexion/mot-de-passe-oublie`). Pas de lien profond.

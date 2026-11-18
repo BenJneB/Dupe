@@ -39,6 +39,17 @@ abstract interface class SyncAuth {
   Future<void> signOut();
 }
 
+/// The token of an email link pasted instead of a code: the default
+/// Supabase emails (no SMTP: templates cannot hold the 6-digit code) only
+/// have a link, `…/auth/v1/verify?token=<hash>&type=…`. Null for a code.
+String? emailLinkToken(String input) {
+  final uri = Uri.tryParse(input.trim());
+  if (uri == null || !uri.hasScheme) return null;
+  final token =
+      uri.queryParameters['token'] ?? uri.queryParameters['token_hash'];
+  return token == null || token.isEmpty ? null : token;
+}
+
 /// No Supabase configured: the app works locally only.
 class LocalOnlyAuth implements SyncAuth {
   const new();

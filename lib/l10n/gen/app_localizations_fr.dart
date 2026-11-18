@@ -1456,7 +1456,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String confirmEmailSent(String email) {
-    return 'Compte créé : saisis ci-dessous le code à 6 chiffres envoyé à $email (ou ouvre le lien de l’e-mail, puis « Se connecter »).';
+    return 'Compte créé : colle ci-dessous le lien de l’e-mail envoyé à $email (appui long sur le lien → copier, sans l’ouvrir), ou son code s’il en a un.';
   }
 
   @override
@@ -1878,13 +1878,14 @@ class AppLocalizationsFr extends AppLocalizations {
   String get unfollowAuthor => 'Ne plus suivre cet auteur';
 
   @override
-  String get emailCodeLabel => 'Code reçu par e-mail';
+  String get emailCodeLabel => 'Code ou lien reçu par e-mail';
 
   @override
-  String get emailCodeHelp => '6 chiffres, valable une heure';
+  String get emailCodeHelp =>
+      'Le code à 6 chiffres, ou le lien de l’e-mail copié (appui long, sans l’ouvrir)';
 
   @override
-  String get emailCodeMissing => 'Saisis le code à 6 chiffres de l’e-mail';
+  String get emailCodeMissing => 'Saisis le code de l’e-mail ou colle son lien';
 
   @override
   String get confirmCodeAction => 'Confirmer mon adresse';
@@ -1897,15 +1898,15 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get resetHelp =>
-      'Saisis l’adresse de ton compte : un code à 6 chiffres t’y sera envoyé pour choisir un nouveau mot de passe.';
+      'Saisis l’adresse de ton compte : un e-mail t’y sera envoyé pour choisir un nouveau mot de passe.';
 
   @override
   String resetCodeSent(String email) {
-    return 'Si un compte existe pour $email, un code vient d’y être envoyé. Saisis-le avec ton nouveau mot de passe.';
+    return 'Si un compte existe pour $email, un e-mail vient d’y être envoyé : colle son lien (appui long → copier, sans l’ouvrir) ou son code, avec ton nouveau mot de passe.';
   }
 
   @override
-  String get sendResetCode => 'Envoyer le code';
+  String get sendResetCode => 'Envoyer l’e-mail';
 
   @override
   String get newPasswordLabel => 'Nouveau mot de passe';

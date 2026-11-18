@@ -520,6 +520,15 @@ alerte apparaît une seule fois, sur les deux appareils, et part en envie en un 
   « Mot de passe oublié ? » → `/connexion/mot-de-passe-oublie` (adresse reprise, code + nouveau mot de passe,
   connecté à la fin). Le lien de l'e-mail reste utilisable. Tests : inscription confirmée par code (code faux puis
   bon, renvoi), mot de passe oublié.
+- **Retour de l'utilisateur (2026-11-18)** : sans SMTP personnalisé, Supabase interdit de modifier les modèles
+  d'e-mail (pas de `{{ .Token }}`). Le champ accepte donc aussi **le lien de l'e-mail collé** (copié par appui long,
+  sans l'ouvrir) : son jeton (`token=`) est vérifié par `verifyOTP(tokenHash:)` (`emailLinkToken`). Marche avec les
+  e-mails par défaut ; le code reste possible si un SMTP est configuré un jour.
+- **Correctif synchro (même retour)** : « Erreur de synchronisation » = migration de la phase 31 non appliquée
+  (colonne `is_signed` inconnue du serveur), **et** bug : une ligne reçue sans une colonne récente (serveur pas
+  migré, vieille sauvegarde) écrivait NULL (`NOT NULL constraint failed: items.is_signed`). `SyncCodec.apply`
+  n'écrit plus que les colonnes présentes : les autres gardent leur valeur locale ou par défaut
+  (`sync_pull_test.dart`).
 - **Écarts** : pas de lien profond ; le lien des e-mails mène toujours à la *Site URL* du projet (à régler).
 - **Non vérifié** : vrais e-mails Supabase (`K2-01`, `K2-02`).
 
@@ -587,9 +596,8 @@ tome de série ; mettre à jour **une** série (menu de la série) **ou toutes**
 - **Phase 31** : tester l'archive complète sur un appareil vierge (ou une installation propre).
 - **Phase 32** : créer un compte Metron et générer un jeton ; relire le bilan avant priorisation.
 - **Phase 33** : appliquer la migration `20261117180000_release_alerts.sql` avant d'installer (pas de tâche de fond).
-- **Phase 34** : dans Supabase (Authentication → Email Templates), ajouter `{{ .Token }}` (le code à 6 chiffres) aux
-  modèles « Confirm signup » et « Reset password » ; régler la *Site URL* (sinon le lien des e-mails ouvre
-  `localhost`).
+- **Phase 34** : régler la *Site URL* (sinon le lien des e-mails ouvre `localhost` s'il est ouvert). Modèles
+  d'e-mail : `{{ .Token }}` seulement avec un SMTP personnalisé ; sinon coller le lien dans l'appli.
 
 ## 6. Hors périmètre
 iOS/macOS, partage de collection, scraping, cote automatique, notifications poussées par un serveur,
