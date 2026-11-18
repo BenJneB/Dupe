@@ -2,6 +2,7 @@ import 'package:dupe/features/account/presentation/account_section.dart';
 import 'package:dupe/features/backup/presentation/backup_section.dart';
 import 'package:dupe/features/covers/presentation/cover_originals_tile.dart';
 import 'package:dupe/features/covers/presentation/offline_covers_section.dart';
+import 'package:dupe/features/releases/presentation/release_settings_section.dart';
 import 'package:dupe/features/scan/presentation/scan_settings_section.dart';
 import 'package:dupe/features/settings/presentation/appearance_section.dart';
 import 'package:dupe/features/settings/presentation/sources_section.dart';
@@ -34,6 +35,8 @@ class SettingsScreen extends ConsumerWidget {
           CoverOriginalsTile(),
           Divider(),
           SourcesSection(),
+          Divider(),
+          ReleaseSettingsSection(),
           Divider(),
           UpdatesSection(),
         ],

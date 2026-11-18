@@ -8,9 +8,11 @@ import 'package:dupe/features/backup/data/auto_backups.dart';
 import 'package:dupe/features/backup/data/csv_codec.dart';
 import 'package:dupe/features/backup/data/csv_export.dart';
 import 'package:dupe/features/backup/data/file_io.dart';
+import 'package:dupe/features/backup/data/full_archive.dart';
 import 'package:dupe/features/backup/data/json_backup.dart';
 import 'package:dupe/features/backup/presentation/restore_dialog.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
+import 'package:dupe/features/covers/data/cover_providers.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -64,6 +66,40 @@ class BackupActions {
         );
     return saved ? _l10n.exportDone : null;
   });
+
+  /// Zip with the backup and every photo (phase 31).
+  Future<void> exportArchive() => _guard(() async {
+    final (:bytes, :photos) = await _archive().export(
+      now: ref.read(clockProvider)(),
+    );
+    final saved = await ref
+        .read(fileIoProvider)
+        .save(
+          'dupe-archive-${_stamp()}.zip',
+          bytes,
+          mimeType: 'application/zip',
+        );
+    return saved ? _l10n.fullArchiveSaved(photos) : null;
+  });
+
+  Future<void> restoreArchive() => _guard(() async {
+    final file = await ref
+        .read(fileIoProvider)
+        .open(
+          label: 'Zip',
+          extensions: const ['zip'],
+          mimeTypes: const ['application/zip'],
+        );
+    if (file == null) return null;
+    final (:rows, :photos) = await _archive().restore(file.bytes);
+    return _l10n.fullArchiveRestored(rows, photos);
+  });
+
+  FullArchive _archive() => FullArchive(
+    ref.read(appDatabaseProvider),
+    ref.read(coverPhotosProvider),
+    ref.read(coverStoreProvider),
+  );
 
   Future<void> restoreJson() => _guard(() async {
     final file = await ref

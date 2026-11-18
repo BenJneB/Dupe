@@ -76,6 +76,8 @@ class SourcesSection extends ConsumerWidget {
     SourceId.openLibrary => 'Open Library',
     SourceId.comicVine => 'Comic Vine',
     SourceId.anilist => 'AniList',
+    SourceId.mangaUpdates => 'MangaUpdates',
+    SourceId.mangadex => 'MangaDex',
   };
 
   static String _help(SourceId id, AppLocalizations l10n) => switch (id) {
@@ -84,5 +86,7 @@ class SourcesSection extends ConsumerWidget {
     SourceId.openLibrary => l10n.sourceOpenLibraryHelp,
     SourceId.comicVine => l10n.sourceComicVineHelp,
     SourceId.anilist => l10n.sourceAnilistHelp,
+    SourceId.mangaUpdates => l10n.sourceMangaUpdatesHelp,
+    SourceId.mangadex => l10n.sourceMangaDexHelp,
   };
 }

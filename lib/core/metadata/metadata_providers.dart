@@ -7,6 +7,8 @@ import 'package:dupe/core/metadata/providers/anilist/anilist_provider.dart';
 import 'package:dupe/core/metadata/providers/bnf/bnf_provider.dart';
 import 'package:dupe/core/metadata/providers/comic_vine/comic_vine_provider.dart';
 import 'package:dupe/core/metadata/providers/google_books/google_books_provider.dart';
+import 'package:dupe/core/metadata/providers/mangadex/mangadex_covers.dart';
+import 'package:dupe/core/metadata/providers/mangaupdates/mangaupdates_provider.dart';
 import 'package:dupe/core/metadata/providers/open_library/open_library_provider.dart';
 import 'package:dupe/core/metadata/series_lookup.dart';
 import 'package:dupe/core/metadata/source_settings.dart';
@@ -79,4 +81,14 @@ AniListProvider? anilistSource(Ref ref) =>
 SeriesLookup seriesLookup(Ref ref) => SeriesLookup(
   anilist: ref.watch(anilistSourceProvider),
   comicVine: ref.watch(comicVineSourceProvider),
+  mangaUpdates: _enabledSources(ref)(SourceId.mangaUpdates)
+      ? MangaUpdatesProvider(ref.watch(httpClientProvider))
+      : null,
 );
+
+/// French manga covers by volume (phase 32); null when the source is off.
+@Riverpod(keepAlive: true)
+MangaDexCovers? mangaDexCovers(Ref ref) =>
+    _enabledSources(ref)(SourceId.mangadex)
+    ? MangaDexCovers(ref.watch(httpClientProvider))
+    : null;

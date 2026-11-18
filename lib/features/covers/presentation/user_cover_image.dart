@@ -4,17 +4,23 @@ import 'package:material_ui/material_ui.dart';
 
 /// A cover photo taken by the user (`dupe-cover:` URL).
 class UserCoverImage extends ConsumerWidget {
-  const new({required this.name, required this.placeholder, super.key});
+  const new({
+    required this.name,
+    required this.placeholder,
+    this.fit = BoxFit.cover,
+    super.key,
+  });
 
   final String name;
   final Widget placeholder;
+  final BoxFit fit;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) =>
       switch (ref.watch(userCoverFileProvider(name)).value) {
         final file? => Image.file(
           file,
-          fit: BoxFit.cover,
+          fit: fit,
           errorBuilder: (_, _, _) => placeholder,
         ),
         null => placeholder,

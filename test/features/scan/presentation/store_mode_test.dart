@@ -106,6 +106,19 @@ void main() {
     expect(find.text('Tome 3 de One Piece'), findsOneWidget);
     expect(find.text('tu as 1, 2'), findsOneWidget);
     expect(find.byKey(const Key('addOwned')), findsOneWidget);
+
+    // Phase 37: the whole series from the BnF, its menu prefilled.
+    await tester.tap(find.byKey(const Key('storeWholeSeries')));
+    await tester.pumpAndSettle();
+    expect(find.text('Série complète'), findsOneWidget);
+    expect(find.text('Compléter depuis la BnF'), findsNothing);
+    expect(
+      tester
+          .widget<TextField>(find.byKey(const Key('catalogQuery')))
+          .controller!
+          .text,
+      'One Piece',
+    );
   }, variant: linux);
 
   testWidgets('a volume owned without ISBN is recognised by series and '
@@ -156,6 +169,8 @@ void main() {
       findsOneWidget,
     );
     expect(find.byKey(const Key('storeOnlineSearch')), findsOneWidget);
+    // Not a series volume: no whole series to offer.
+    expect(find.byKey(const Key('storeWholeSeries')), findsNothing);
   }, variant: linux);
 
   testWidgets('a series volume without number shows its own title', (

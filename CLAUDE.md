@@ -5,7 +5,7 @@ Windows, avec synchro Supabase optionnelle.
 **État courant et suite du projet : `PLAN_V3.md`** (à relire avant chaque phase ; tenir à jour son tableau §3 et
 ajouter un bilan « Réalisé / Écarts / Non vérifié » sous chaque phase terminée).
 Historique : `PLAN.md` (spécification v1, phases 0-8) et `PLAN_V2.md` (phases 9-13, état au 2026-11-14).
-Suite : `PLAN_V4.md` (phases 22-35, ordre d'exécution dans son §3), commencée pendant la recette v3 ; la fin de
+Suite : `PLAN_V4.md` (phases 22-37, ordre d'exécution dans son §3), commencée pendant la recette v3 ; la fin de
 cette recette (phase 26) vient juste avant les livres numériques (27-28), placés en fin de v4.
 `PLAN_V3.md` prime en cas de contradiction (ex. Supabase **local** autorisé pour les tests, projet distant
 toujours interdit). Phases 14 (vérifications de base, courte) et 21 (recette finale) pilotées par l'utilisateur : il rapporte les
@@ -64,7 +64,7 @@ sources de métadonnées, scan, synchro, sauvegardes, couvertures, CI…). Le me
 - Schéma versionné : après changement de tables, incrémenter `schemaVersion`, écrire la migration, puis
   `dart run drift_dev schema dump lib/core/database/app_database.dart drift_schemas/` puis
   `dart run drift_dev schema generate drift_schemas/ test/core/database/generated/` et compléter
-  `test/core/database/migration_test.dart` (schéma actuel : v4, table `recommendation_feedback`). Toute nouvelle colonne
+  `test/core/database/migration_test.dart` (schéma actuel : v6, tables `release_alerts` et `followed_authors`). Toute nouvelle colonne
   synchronisée exige sa migration Supabase, appliquée par l'utilisateur **avant** d'installer la version.
 - Lecture ponctuelle : méthodes `get*` du repository, jamais `watch*().first` (bloque en test widget).
 
@@ -77,7 +77,7 @@ sources de métadonnées, scan, synchro, sauvegardes, couvertures, CI…). Le me
 - `flutter test` doit passer à chaque fin de phase.
 - `pumpApp` injecte des faux pour tout ce qui touche le matériel ou le réseau : `FakeLoanReminders`,
   `FakeAppShortcuts`, `FakeHomeScreenWidget`, `FakeVoiceInput`, `FakeNetworkStatus` (aucune connexion par défaut),
-  `FakeCoverCache`, `FakeCoverScanner`, `FakeSuggestionSources`, `MemoryBackupStore`, un `SeriesLookup` sans source (param `seriesLookup:`) ; jamais les vrais
+  `FakeCoverCache`, `FakeCoverScanner`, `FakeSuggestionSources`, `FakeSeriesCatalogSource`, `FakeReleaseNotifications`, `MemoryBackupStore`, un `SeriesLookup` sans source (param `seriesLookup:`), pas de MangaDex (param `mangaDex:`) ; jamais les vrais
   plugins ni le réseau.
 - Journal en test : `appLog.clear()` en début de test.
 - Tests de Paramètres : la liste est longue ; une tuile peut être construite (cache) mais hors écran →
@@ -99,7 +99,7 @@ sources de métadonnées, scan, synchro, sauvegardes, couvertures, CI…). Le me
 - Données initiales d'un test widget : `pumpApp(seed: (db) async {...})` (écrit avant le démarrage de
   l'appli). Écrire en base après `pumpApp` via `runAsync` bloque (flux drift actifs).
 - Tests de synchro : `FakeSyncAuth` (comptes en mémoire, mot de passe ≥ 6, `confirmEmail` + `confirm()`),
-  `fillSignIn` dans `sync_flow_test.dart` ; `pumpApp(overrides: [syncAuthProvider.overrideWithValue(FakeSyncAuth(...)),
+  `fillSignIn` dans `sync_flow_test.dart` ; codes e-mail simulés : `codes`, `sent`, `confirmSignUp`/`resetPassword` ; `pumpApp(overrides: [syncAuthProvider.overrideWithValue(FakeSyncAuth(...)),
   syncRemoteProvider.overrideWithValue(FakeSyncRemote())])` ; I/O fichiers réels dans `tester.runAsync`.
 - Ne jamais `pkill -f <motif>` : le motif est dans la ligne de commande et tue le shell ; utiliser `pkill -x`.
 - flutter_test simule Android par défaut : pour un comportement desktop, `variant:
@@ -110,7 +110,7 @@ sources de métadonnées, scan, synchro, sauvegardes, couvertures, CI…). Le me
   en mémoire, `goBack` car `tester.pageBack()` ne connaît pas le BackButton de material_ui),
   `test_repositories.dart` (repo + horloge contrôlable).
 - En test widget, la base se ferme via `tester.runAsync` (sinon blocage en temps simulé).
-  `dart_test.yaml` : timeout 30 s par test. Suite complète ~40 s (319 tests, 2026-11-16) : le temps vient surtout
+  `dart_test.yaml` : timeout 30 s par test. Suite complète ~55 s (354 tests, 2026-11-17) : le temps vient surtout
   de la compilation de chaque fichier de test widget. Helpers de navigation : `test/helpers/screen_helpers.dart`
   (`goTo`, `openSettings`, `tapTile`, `fillSignIn`) ; ne jamais importer un fichier `_test.dart` depuis un autre.
 

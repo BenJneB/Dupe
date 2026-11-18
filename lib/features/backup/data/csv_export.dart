@@ -20,6 +20,12 @@ const csvHeaders = [
   'Prix éditeur',
   'Emplacement',
   'Notes',
+  // Signed copies (phase 31).
+  'Dédicacé',
+  'Dédicacé par',
+  'Date de dédicace',
+  'Lieu de dédicace',
+  'Texte de dédicace',
 ];
 
 /// One line per item (copy), ordered by series then volume.
@@ -56,6 +62,11 @@ String itemsToCsv(List<Item> items, Map<String, Series> series) {
         money(i.coverPrice),
         i.location,
         i.notes,
+        if (i.isSigned) 'oui' else null,
+        i.signedBy,
+        day(i.signedOn),
+        i.signedPlace,
+        i.signingNote,
       ],
   ]);
 }

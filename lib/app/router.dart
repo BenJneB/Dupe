@@ -2,6 +2,7 @@ import 'package:dupe/app/adaptive_shell.dart';
 import 'package:dupe/app/app_routes.dart';
 import 'package:dupe/features/about/presentation/about_screen.dart';
 import 'package:dupe/features/about/presentation/journal_screen.dart';
+import 'package:dupe/features/account/presentation/reset_password_screen.dart';
 import 'package:dupe/features/account/presentation/sign_in_screen.dart';
 import 'package:dupe/features/authors/presentation/author_screen.dart';
 import 'package:dupe/features/backup/presentation/auto_backups_screen.dart';
@@ -13,6 +14,7 @@ import 'package:dupe/features/collection/presentation/item/item_detail_screen.da
 import 'package:dupe/features/collection/presentation/item/item_form_screen.dart';
 import 'package:dupe/features/collection/presentation/series/series_detail_screen.dart';
 import 'package:dupe/features/collection/presentation/series/series_form_screen.dart';
+import 'package:dupe/features/collection/presentation/series_completion/series_completion_screen.dart';
 import 'package:dupe/features/collection/presentation/volume_counts/volume_counts_screen.dart';
 import 'package:dupe/features/loans/presentation/loans_screen.dart';
 import 'package:dupe/features/more/presentation/more_screen.dart';
@@ -22,6 +24,7 @@ import 'package:dupe/features/quality/presentation/isbn_completion_screen.dart';
 import 'package:dupe/features/quality/presentation/quality_list_screen.dart';
 import 'package:dupe/features/quality/presentation/quality_screen.dart';
 import 'package:dupe/features/recommendations/presentation/suggestions_screen.dart';
+import 'package:dupe/features/releases/presentation/releases_screen.dart';
 import 'package:dupe/features/scan/presentation/burst/scan_review_screen.dart';
 import 'package:dupe/features/scan/presentation/scan_screen.dart';
 import 'package:dupe/features/search/presentation/online_search/online_search_screen.dart';
@@ -74,6 +77,10 @@ GoRouter appRouter(Ref ref) {
                   GoRoute(
                     path: 'statistiques',
                     builder: (context, state) => const StatsScreen(),
+                  ),
+                  GoRoute(
+                    path: 'nouveautes',
+                    builder: (context, state) => const ReleasesScreen(),
                   ),
                   GoRoute(
                     path: 'suggestions',
@@ -143,6 +150,14 @@ GoRouter appRouter(Ref ref) {
         path: AppRoutes.signIn,
         parentNavigatorKey: rootNavigatorKey,
         builder: (context, state) => const SignInScreen(),
+        routes: [
+          GoRoute(
+            path: 'mot-de-passe-oublie',
+            parentNavigatorKey: rootNavigatorKey,
+            builder: (context, state) =>
+                ResetPasswordScreen(email: state.uri.queryParameters['email']),
+          ),
+        ],
       ),
       GoRoute(
         path: AppRoutes.search,
@@ -205,6 +220,14 @@ StatefulShellBranch _collectionBranch(CollectionType type) =>
             GoRoute(
               path: 'nouvelle-serie',
               builder: (context, state) => SeriesFormScreen(type: type),
+            ),
+            GoRoute(
+              path: 'serie-complete',
+              builder: (context, state) => SeriesCompletionScreen(
+                type: type,
+                title: state.uri.queryParameters['titre'],
+                seriesId: state.uri.queryParameters['serie'],
+              ),
             ),
             GoRoute(
               path: 'serie/:seriesId',

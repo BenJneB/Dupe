@@ -51,5 +51,12 @@ abstract class Item with _$Item {
     String? notes,
     String? source,
     String? sourceId,
+
+    /// Signed copy (PLAN_V4 phase 31): who, when, where, what was written.
+    @Default(false) bool isSigned,
+    String? signedBy,
+    DateTime? signedOn,
+    String? signedPlace,
+    String? signingNote,
   }) = _Item;
 }

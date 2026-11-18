@@ -61,4 +61,11 @@ class ItemsTable extends Table with SyncedColumns {
   TextColumn get notes => text().nullable()();
   TextColumn get source => text().nullable()();
   TextColumn get sourceId => text().nullable()();
+
+  // Signed copy (schema v5).
+  BoolColumn get isSigned => boolean().withDefault(const Constant(false))();
+  TextColumn get signedBy => text().nullable()();
+  DateTimeColumn get signedOn => dateTime().nullable()();
+  TextColumn get signedPlace => text().nullable()();
+  TextColumn get signingNote => text().nullable()();
 }

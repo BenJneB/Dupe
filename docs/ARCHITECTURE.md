@@ -22,7 +22,9 @@ Description détaillée des choix techniques et de l'organisation du code (dépl
   (`features/covers/data/cover_cache.dart`, flutter_cache_manager 3.5 : `<support>/cover_cache`, 20 000 fichiers,
   2 ans ; jamais le `DefaultCacheManager` : 200 fichiers dans le dossier temporaire). Index en sqflite sur Android,
   JSON sur Linux/Windows (pas besoin de sqflite desktop). Tout nouvel affichage d'image réseau passe par lui.
-- Notifications : flutter_local_notifications 23 + timezone (`features/loans/data/loan_reminders.dart`). Android
+- Notifications : flutter_local_notifications 23 + timezone ; plugin et initialisation unique (permission Android
+  comprise) partagés dans `core/notifications/local_notifications.dart` (prêts : `features/loans/data/loan_reminders.dart`,
+  nouveautés : `features/releases/data/release_notifications.dart`). Android
   seulement planifie (inexact, `zonedSchedule` à 10 h le jour de retour, instant absolu `tz.UTC`, pas de base
   de fuseaux) ; Linux n'a pas de planificateur et Windows hors MSIX ne sait pas annuler → sur desktop,
   notification « prêts en retard » au démarrage, une fois par jour (`loans_overdue_notified_on`).
@@ -244,7 +246,7 @@ Description détaillée des choix techniques et de l'organisation du code (dépl
   par défaut `cover_prefetch_enabled` / `cover_prefetch_wifi_only`, annulé par compteur de passage ; les
   adresses en échec sont journalisées avec leur cause, une seule fois par exécution de l'appli tant que leur nombre
   et la liste ne changent pas) ; connexion
-  `core/network/network_status.dart` (`connectivity_plus`, `NetworkKind` unmetered/metered/none) ; Paramètres
+  `core/network/network_status.dart` (`connectivity_plus`, `NetworkKind` unmetered/metered/none, règle « Wi-Fi seulement » `NetworkKind.allows`) ; Paramètres
   `covers/presentation/offline_covers_section.dart`. `pumpApp` injecte `FakeNetworkStatus` (aucune connexion par
   défaut) et `FakeCoverCache` (`test/helpers/fake_covers.dart`). **Stats de lecture** :
   `stats/domain/reading_stats.dart` (`volumesOf` partagé avec `collection_stats.dart`). Choisir « Lu » remplit
@@ -264,3 +266,25 @@ Description détaillée des choix techniques et de l'organisation du code (dépl
   AniList (`AniListProvider.neighbours`) via `SuggestionSources` (faux en test) → `rankSuggestions` (règles en tête
   du fichier) ; état `suggestionsProvider` (cache `suggestions_cache` 7 jours) ; refus synchronisés
   (`recommendation_feedback`, schéma v4).
+- Série complète (v4 phase 37) : `BnfProvider.searchSeriesVolumes` (pages SRU) via `SeriesCatalogSource`
+  (`series_completion_service.dart`, faux en test) → `buildCatalog` (éditions par éditeur, ISBN le plus bas par
+  défaut) → `planCompletion` (complète / crée, jamais de doublon ni d'écrasement) → `completeSeries` (transaction).
+  Écran `presentation/series_completion/` (route `<onglet>/serie-complete?titre=&serie=`), action groupée Qualité
+  `SeriesIsbnFill` (`series_isbn_tile.dart`).
+- Dédicaces (v4 phase 31, schéma v5) : champs `is_signed`… sur `items`, table synchronisée `item_photos`
+  (`ItemPhotosRepository`, url `dupe-cover:` envoyée par `uploadPendingCovers`) ; formulaire
+  `item_signing_fields.dart`, fiche `item/signing/` (galerie, plein écran), `SignedMark`, filtre
+  `CompletionFilter.signed`. Archive complète : `backup/data/full_archive.dart` (zip `sauvegarde.json` + `photos/`).
+- Sources v4 phase 32 : MangaDex (`providers/mangadex/`, couvertures françaises par tome, `mangaDexCoversProvider`,
+  utilisé par `MissingCoversFill` après la recherche par ISBN) et MangaUpdates (`providers/mangaupdates/`,
+  `SeriesMetadataProvider`, après AniList dans `SeriesLookup` pour les mangas). `SourceId.mangaUpdates` / `mangadex`.
+- Nouveautés (v4 phase 33, schéma v6, `features/releases/`) : `ReleaseChecker` (démarrage, 1×/jour, Wi-Fi par
+  défaut) → séries suivies via `SeriesCatalogSource` + `nextVolumes`, auteurs suivis via `SuggestionSources` +
+  `newBooks` → `ReleasesRepository.addIfNew` (id UUID v5 de la clé, une alerte par clé ou ISBN) →
+  `ReleaseNotifications`. Premier passage d'une série ou d'un auteur = référence sans alerte (relevés locaux
+  `releases_base_*`, `releases_seen_*`) ; `closeOwned` passe « ajoutée » les alertes déjà en collection. Écran
+  `/plus/nouveautes`, réglages `ReleaseSettingsSection`, cloche `FollowAuthorButton`.
+- Compte (v4 phase 34) : confirmation d'inscription et mot de passe oublié par **code à 6 chiffres** de l'e-mail
+  Supabase (`verifyOTP` signup / recovery, `{{ .Token }}` dans les modèles d'e-mail) : `SyncAuth.confirmSignUp`,
+  `resendConfirmation`, `sendPasswordReset`, `resetPassword` ; écrans `sign_in_screen.dart` (champ du code) et
+  `reset_password_screen.dart` (`/connexion/mot-de-passe-oublie`). Pas de lien profond.

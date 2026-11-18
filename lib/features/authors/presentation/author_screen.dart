@@ -4,6 +4,7 @@ import 'package:dupe/features/authors/data/author_providers.dart';
 import 'package:dupe/features/authors/presentation/author_menu.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
 import 'package:dupe/features/collection/presentation/collection_tab/entries_list.dart';
+import 'package:dupe/features/releases/presentation/follow_author_button.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
@@ -30,6 +31,7 @@ class AuthorScreen extends ConsumerWidget {
       appBar: AppBar(
         title: Text(name.isEmpty ? l10n.unknownAuthor : name),
         actions: [
+          if (name.isNotEmpty) FollowAuthorButton(name: name),
           if (group case AsyncData(value: final g?)) AuthorMenu(group: g),
         ],
       ),

@@ -38,3 +38,14 @@ const List<ReadingStatus> toReadStatuses = [
   ReadingStatus.nonLu,
   ReadingStatus.enCours,
 ];
+
+/// What an item photo shows (PLAN_V4 phase 31).
+enum PhotoKind implements DbEnum {
+  dedicace('dedicace'),
+  autre('autre');
+
+  new(this.dbValue);
+
+  @override
+  final String dbValue;
+}

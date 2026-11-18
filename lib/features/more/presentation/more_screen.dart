@@ -1,5 +1,6 @@
 import 'package:dupe/app/router.dart';
 import 'package:dupe/app/widgets/global_search_bar.dart';
+import 'package:dupe/features/releases/presentation/releases_tile.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
@@ -30,6 +31,7 @@ class MoreScreen extends StatelessWidget {
             title: Text(l10n.moreStats),
             onTap: () => context.go(AppRoutes.stats),
           ),
+          const ReleasesTile(),
           ListTile(
             key: const Key('moreSuggestions'),
             leading: const Icon(Icons.auto_awesome_outlined),

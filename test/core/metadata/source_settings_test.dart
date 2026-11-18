@@ -1,6 +1,7 @@
 import 'package:dupe/core/database/app_database.dart';
 import 'package:dupe/core/database/database_provider.dart';
 import 'package:dupe/core/metadata/metadata_providers.dart';
+import 'package:dupe/core/metadata/providers/mangaupdates/mangaupdates_provider.dart';
 import 'package:dupe/core/metadata/source_settings.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -31,9 +32,11 @@ void main() {
     await first
         .read(disabledSourcesProvider.notifier)
         .setEnabled(SourceId.anilist, enabled: false);
+    // MangaUpdates still answers for manga (phase 32), AniList no more.
+    expect(first.read(seriesLookupProvider).anilist, isNull);
     expect(
       first.read(seriesLookupProvider).providerFor(CollectionType.manga),
-      isNull,
+      isA<MangaUpdatesProvider>(),
     );
 
     // After a restart.

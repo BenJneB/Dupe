@@ -84,6 +84,35 @@ class SupabaseSyncAuth implements SyncAuth {
     () => client.auth.updateUser(UserAttributes(password: password)),
   );
 
+  @override
+  Future<void> confirmSignUp(String email, String code) => _signInGuard(
+    () => client.auth.verifyOTP(
+      email: email.trim(),
+      token: code.trim(),
+      type: OtpType.signup,
+    ),
+  );
+
+  @override
+  Future<void> resendConfirmation(String email) => _signInGuard(
+    () => client.auth.resend(email: email.trim(), type: OtpType.signup),
+  );
+
+  @override
+  Future<void> sendPasswordReset(String email) =>
+      _signInGuard(() => client.auth.resetPasswordForEmail(email.trim()));
+
+  @override
+  Future<void> resetPassword(String email, String code, String password) =>
+      _signInGuard(() async {
+        await client.auth.verifyOTP(
+          email: email.trim(),
+          token: code.trim(),
+          type: OtpType.recovery,
+        );
+        await client.auth.updateUser(UserAttributes(password: password));
+      });
+
   /// Supabase errors become [SignInException] / offline [SyncException].
   Future<T> _signInGuard<T>(Future<T> Function() call) async {
     try {
@@ -103,6 +132,7 @@ class SupabaseSyncAuth implements SyncAuth {
     _ when e is AuthWeakPasswordException => SignInFailure.weakPassword,
     'weak_password' || 'same_password' => SignInFailure.weakPassword,
     'invalid_credentials' => SignInFailure.invalidCredentials,
+    'otp_expired' || 'otp_disabled' => SignInFailure.invalidCode,
     'email_not_confirmed' => SignInFailure.emailNotConfirmed,
     'user_already_exists' || 'email_exists' => SignInFailure.emailTaken,
     'over_request_rate_limit' ||

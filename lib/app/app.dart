@@ -9,6 +9,7 @@ import 'package:dupe/features/covers/data/cover_prefetch.dart';
 import 'package:dupe/features/home_widget/data/home_screen_widget.dart';
 import 'package:dupe/features/home_widget/data/home_widget_updater.dart';
 import 'package:dupe/features/loans/data/loan_actions.dart';
+import 'package:dupe/features/releases/data/release_checker.dart';
 import 'package:dupe/features/scan/data/app_shortcuts.dart';
 import 'package:dupe/features/settings/data/theme_mode_provider.dart';
 import 'package:dupe/features/updates/data/update_checker.dart';
@@ -43,6 +44,11 @@ class _DupeAppState extends ConsumerState<DupeApp> {
     _inBackground('loans', ref.read(loanActionsProvider).syncReminders);
     _inBackground('backup', ref.read(autoBackupsProvider).weeklyIfDue);
     _inBackground('update', _checkForUpdate);
+    // New releases of the followed series and authors, once a day.
+    _inBackground(
+      'releases',
+      ref.read(releaseCheckerProvider.notifier).runIfDue,
+    );
     // Covers downloaded for offline use (Wi-Fi only by default).
     _inBackground('covers', ref.read(coverPrefetchProvider.notifier).start);
     // Long press on the icon → store-mode scan (Android).

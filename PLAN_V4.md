@@ -55,21 +55,25 @@ deux fonctions tournées vers la suite de la collection : être prévenu des nou
 | 4 | 25 | Éditions et couvertures | ✅ fait (2026-11-16) | oui | non (`X-*`) |
 | 5 | 29 | Photos : redressement et recadrage | ✅ fait (2026-11-16) | oui | non (`P-*`) |
 | 6 | 30 | Recommandations | ✅ fait (2026-11-16) | oui | non (`G-*`) |
-| 7 | 31 | Dédicaces | à faire | — | — |
-| 8 | 32 | Nouvelles sources de métadonnées | à faire | — | — |
-| 9 | 33 | Alertes de nouveautés | à faire | — | — |
-| 10 | 34 | Compte : mot de passe oublié, liens de confirmation | à faire | — | — |
-| 11 | 26 | Fin de la recette de la v3 (reprise de la phase 21) | à faire, juste avant les livres numériques | — | — |
-| 12 | 27 | Livres numériques (1/2) : support numérique, import Calibre | à faire | — | — |
-| 13 | 28 | Livres numériques (2/2) : dossier EPUB/CBZ, Kobo | à faire | — | — |
-| 14 | 35 | Recette de la v4 (dont mode rafale) | à faire | — | — |
+| 7 | 37 | Ajout d'une série complète (ISBN de tous les tomes sans rescanner) | ✅ fait (2026-11-17) | oui | non (`Z-*`) |
+| 8 | 31 | Dédicaces | ✅ fait (2026-11-17) | oui (+ Supabase local) | non (`W-*`) |
+| 9 | 32 | Nouvelles sources de métadonnées (réduite : MangaDex, MangaUpdates) | ✅ fait (2026-11-17) | oui | non (`SR-*`) |
+| 10 | 33 | Alertes de nouveautés | ✅ fait (2026-11-17) | oui (+ Supabase local) | non (`AL-*`) |
+| 11 | 34 | Compte : mot de passe oublié, liens de confirmation | ✅ fait (2026-11-17) | oui | non (`K2-*`) |
+| 12 | 26 | Fin de la recette de la v3 (reprise de la phase 21) | à faire, juste avant les livres numériques | — | — |
+| 13 | 27 | Livres numériques (1/2) : support numérique, import Calibre | à faire | — | — |
+| 14 | 28 | Livres numériques (2/2) : dossier EPUB/CBZ, Kobo | à faire | — | — |
+| 15 | 36 | Version web installable (PWA) | à faire | — | — |
+| 16 | 35 | Recette de la v4 (dont mode rafale) | à faire | — | — |
 
 L'ordre compte : 22 est rapide et utile tout de suite ; 29 sert à 31 ; 32 fournit les données dont 33 a besoin.
 **Décisions de l'utilisateur (2026-11-16)** : les livres numériques (27-28) passent à la fin, juste avant la recette
 de la v4, et la fin de la recette de la v3 (26) juste avant eux ; les **recommandations remontent en phase 30**
 (avant les dédicaces, renumérotées 31, les sources 32 et les alertes 33). Conséquence : elles partent des sources
 actuelles (AniList, BnF, Google Books, Open Library) ; Wikidata et MangaUpdates (phase 32) les enrichiront
-ensuite. L'ordre reste ajustable.
+ensuite. **Décisions du 2026-11-17** : une version web installable (PWA, phase 36) en fin de v4, juste avant la
+recette ; l'ajout d'une série complète (phase 37, idée de l'utilisateur) juste après les recommandations. L'ordre
+reste ajustable.
 
 ## 4. Phases
 
@@ -381,6 +385,27 @@ l'utilisateur, et chacune affiche une raison compréhensible.*
 après synchro ; l'archive complète restaure les photos sur un appareil vierge.*
 
 
+**Bilan (2026-11-17)**
+- **Réalisé** : schéma **v5** (`items` : `is_signed`, `signed_by`, `signed_on`, `signed_place`, `signing_note` ;
+  table synchronisée `item_photos` : `item_id`, `url` `dupe-cover:`, `kind` dédicace | autre, `position`) + migration
+  Supabase `20261117120000_signed_copies.sql` (validée sur le Supabase local avec celle de la phase 30, tests
+  `-P supabase` verts). Photos par le pipeline des couvertures (`uploadPendingCovers` lit aussi `item_photos`).
+  Formulaire : section « Dédicace » (`item_signing_fields.dart`, signataire pré-rempli avec les auteurs, détails
+  effacés si décoché). Fiche : `signing/item_signing_section.dart` (détails, galerie, ajout de photo redressée
+  sans EXIF à 1200 px sans recadrage forcé, appui long = suppression) et plein écran avec zoom et balayage
+  (`photo_viewer.dart`) ; « Ajouter une photo » aussi sur un ouvrage non dédicacé. Stylo sur les pastilles, la vue
+  liste, les lignes et la grille des onglets (`SignedMark`) ; filtre « Dédicacés » ; tuile des statistiques ;
+  5 colonnes dans l'export CSV. Paramètres → « Archive complète (avec photos) » / « Restaurer une archive
+  complète » (`full_archive.dart`, package `archive` : `sauvegarde.json` + `photos/`, photos d'un autre appareil
+  téléchargées, restauration en fusion, aucun chemin hors du dossier des photos).
+  Tests : migration v4 → v5, envoi des photos, archive (appareil vierge, chemin malveillant, fichier invalide),
+  parcours complet (`signed_copy_test.dart`).
+- **Écarts** : pas de choix du type de photo (toutes « dédicace ») ni de réordonnancement ; photos à 1200 px (même
+  format que les couvertures) ; l'import CSV ignore les colonnes de dédicace ; restauration d'archive en fusion
+  seulement (pas de « remplacer »).
+- **Non vérifié** : critère réel (deux photos sur le téléphone retrouvées sur le PC), archive sur un appareil vierge
+  (`W-01` à `W-03`) ; migration Supabase **à appliquer avant d'installer**.
+
 ### Phase 32 — Nouvelles sources de métadonnées
 **Avant de coder** : produire un bilan à partir du journal et de la base (par type : part des ouvrages sans
 couverture, sans numéro, sans série, sans ISBN, sources en échec) et le présenter à l'utilisateur pour
@@ -406,6 +431,27 @@ jour dans `defaultPriorities`, fusion sans écraser une donnée plus fiable (BnF
 complétion mesuré avant/après progresse, chiffres notés dans le bilan de phase.*
 
 
+**Bilan préalable (2026-11-17, base du PC, 134 ouvrages ; journal sans erreur)** : mangas 39/50 sans couverture
+(31 avec ISBN : Dreamland, Everdark, Pika), BD 33/34 sans couverture ni ISBN, livres 10/45 sans couverture ; séries
+sans nombre de tomes : mangas 4/5. Vérifié sur les API : MangaDex a les couvertures **françaises** de Dreamland
+(tomes 4-21) et d'Everdark (1-5) ; MangaUpdates connaît les mangas français ignorés d'AniList (Dreamland : 22 tomes
+en cours). **Décision de l'utilisateur** : phase réduite à ces deux sources ; Wikidata (rattachement déjà assuré par
+la BnF), Metron (5 comics, jeton) et Sudoc (recoupe la BnF) abandonnés.
+
+**Bilan (2026-11-17)**
+- **Réalisé** : `providers/mangadex/mangadex_covers.dart` (manga au titre exact, toutes langues et titres
+  alternatifs ; couvertures `locales[]=fr` paginées, mises en mémoire par série ; image 512 px) branché dans
+  « Compléter les couvertures » après la recherche par ISBN : la couverture française d'un tome de manga est
+  **appliquée** (même édition), téléchargement vérifié ; sinon la proposition d'autre édition (phase 25) continue.
+  `providers/mangaupdates/mangaupdates_provider.dart` (recherche, fiche complète pour le titre exact, « N Volumes »
+  → nombre de tomes parus, statut) ; `SeriesLookup` interroge AniList puis MangaUpdates pour les mangas (une source
+  en panne est journalisée). Deux sources de plus dans Paramètres → Sources (activables). Tests : fixtures réelles
+  (`mangadex/`, `mangaupdates/`), complétion d'une couverture, repli entre sources.
+- **Écarts** : MangaDex numérote parfois autrement (Dreamland 1.1, 1.2… : tomes 1 à 3 non trouvés) ; nombre de tomes
+  MangaUpdates = tomes **parus** pour une série en cours ; les BD restent sans source de couvertures (pas de
+  scraping de Bédéthèque).
+- **Non vérifié** : sur la vraie collection (`SR-01`, `SR-02`).
+
 ### Phase 33 — Alertes de nouveautés
 **Limite assumée** : aucune source fiable ne liste les sorties françaises *à venir*. L'alerte signale une
 nouveauté **dès qu'elle apparaît** dans une source (souvent à la parution, parfois un peu avant via Google
@@ -430,6 +476,31 @@ Books), pas des mois à l'avance. Exception : les comics US, dont Metron connaî
 *Critère : avec une série dont je possède les tomes 1 à N-1 et dont le tome N existe à la BnF (fixtures), une
 alerte apparaît une seule fois, sur les deux appareils, et part en envie en un appui.*
 
+**Bilan (2026-11-17)**
+- **Réalisé** : schéma **v6** (tables synchronisées `release_alerts`, `followed_authors`) + migration Supabase
+  `20261117180000_release_alerts.sql`. L'interrupteur par série est le « Série suivie » existant (aide mise à
+  jour) ; suivre un auteur : cloche sur sa page (`FollowAuthorButton`). Détection (`release_detection.dart`) :
+  série → tomes après le dernier connu (possédé ou en envie) dans l'édition de l'éditeur de la série, 3 au plus
+  (BnF par `SeriesCatalogSource`, phase 37) ; auteur → ISBN absents du relevé précédent (le premier relevé sert de
+  référence, sans alerte ; relevés locaux `releases_seen_*`), hors collection. Id d'alerte = UUID v5 de sa clé :
+  une même nouveauté trouvée sur deux appareils = une ligne ; une alerte ignorée ne revient pas.
+  `ReleaseChecker` : au démarrage, une fois par jour au plus, Wi-Fi seulement par défaut, 12 séries par passage à
+  tour de rôle, sources et limiteurs existants ; notification groupée (`ReleaseNotifications`). Écran Plus →
+  « Nouveautés » (pastille du nombre de nouvelles, « Vérifier maintenant », ajout aux envies en un appui, Ignorer ;
+  les nouvelles passent « vues » en quittant l'écran) ; Paramètres → section « Nouveautés » (activation, Wi-Fi,
+  notification, auteurs suivis). Tests : détection sur fixtures réelles, id stable, parcours série et auteur.
+- **Revue de code (2026-11-17)** : série → le premier passage sert aussi de référence (dernier tome paru, relevé
+  local `releases_base_*` : un vieux tome manquant n'est pas une nouveauté) ; les tomes déjà signalés (vus,
+  ignorés) ne masquent plus les suivants ; auteur → un relevé vide (source coupée) ne sert pas de référence ; une
+  alerte par ISBN (série suivie + auteur suivi = une alerte) ; tome entré dans la collection → alerte « ajoutée »
+  (à l'ouverture de l'écran et à chaque passage) ; envie : pas de double appui, rien de créé si l'ISBN est déjà là,
+  message si la série n'existe plus. Notifications et règle Wi-Fi partagées (`core/notifications/`,
+  `NetworkKind.allows`).
+- **Écarts** : **pas de tâche de fond Android** (`workmanager`) : vérification au démarrage de l'appli seulement ;
+  pas de réglage de fréquence (une fois par jour) ; pas de Google Books ni de Metron (sources abandonnées en
+  phase 32) ; détection série limitée à la BnF (souvent à la parution).
+- **Non vérifié** : vraie collection (`AL-01`, `AL-02`) ; migration Supabase **à appliquer avant d'installer**.
+
 ### Phase 34 — Compte : mot de passe oublié, liens de confirmation
 - **Mot de passe oublié sans être connecté** : lien « Mot de passe oublié ? » sur l'écran de connexion
   (email de réinitialisation Supabase), au lieu de passer par Paramètres → Mot de passe une fois connecté.
@@ -438,9 +509,76 @@ alerte apparaît une seule fois, sur les deux appareils, et part en envie en un 
   renvoie dans l'appli. Le lien de réinitialisation du mot de passe a le même besoin : à traiter ensemble.
 - Question ouverte : lien profond `dupe://` (Android ; Linux/Windows à étudier) ou petite page web statique.
 
+**Décision (2026-11-17)** : **code à 6 chiffres** dans l'e-mail plutôt qu'un lien profond `dupe://` ou une page web
+(marche sur Android, Linux et Windows, rien à héberger).
+
+**Bilan (2026-11-17)**
+- **Réalisé** : `SyncAuth` : `confirmSignUp` (`verifyOTP` type signup, puis connecté), `resendConfirmation`,
+  `sendPasswordReset` (`resetPasswordForEmail`), `resetPassword` (`verifyOTP` type recovery puis `updateUser`) ;
+  code faux ou expiré → `SignInFailure.invalidCode` (« Code incorrect ou expiré »). Écran de connexion : après une
+  inscription à confirmer (ou une connexion refusée « adresse non confirmée »), champ du code + « Renvoyer le code » ;
+  « Mot de passe oublié ? » → `/connexion/mot-de-passe-oublie` (adresse reprise, code + nouveau mot de passe,
+  connecté à la fin). Le lien de l'e-mail reste utilisable. Tests : inscription confirmée par code (code faux puis
+  bon, renvoi), mot de passe oublié.
+- **Écarts** : pas de lien profond ; le lien des e-mails mène toujours à la *Site URL* du projet (à régler).
+- **Non vérifié** : vrais e-mails Supabase (`K2-01`, `K2-02`).
+
 ### Phase 35 — Recette de la v4
-Pilotée par l'utilisateur, comme la phase 21 : tests manuels ajoutés par les phases 22 à 34, puis **mode rafale
+Pilotée par l'utilisateur, comme la phase 21 : tests manuels ajoutés par les phases 22 à 37, puis **mode rafale
 `R-01` à `R-04`** (reportés de la v3), et ce qui resterait non fait de la recette v3.
+
+### Phase 36 — Version web installable (PWA)
+Décision de l'utilisateur (2026-11-17) : en fin de v4, avant la recette. Flutter web, installable depuis le
+navigateur, même compte Supabase que les autres appareils.
+- **Faisabilité vérifiée (2026-11-17, en-têtes CORS)** : BnF, Open Library, AniList et Google Books répondent au
+  navigateur ; **Comic Vine non** (source désactivée sur le web).
+- **À adapter** : drift web (SQLite WebAssembly, stockage du navigateur) ; tout `dart:io` (photos de couverture,
+  sauvegardes, journal) derrière une abstraction ; `Isolate.run` indisponible (recadrage via `compute` ou direct).
+- **Désactivé sur le web** : rappels de prêt (notifications), widget d'accueil, raccourcis, scanner ML Kit (éditeur
+  manuel seul) ; recherche vocale à vérifier. Scan des codes-barres par la caméra possible (mobile_scanner web,
+  HTTPS obligatoire).
+- **Hébergement** : site statique HTTPS (GitHub Pages construit par la CI), URL de retour à ajouter dans Supabase.
+- **Risque à tester d'abord** : couvertures réseau sur le web (CanvasKit exige le CORS des images ; certaines BnF /
+  Google peuvent manquer).
+
+*Critère : la collection synchronisée s'affiche dans le navigateur du PC et du téléphone, l'appli s'installe
+depuis le navigateur, un ajout fait sur le web arrive sur le téléphone.*
+
+### Phase 37 — Ajout d'une série complète
+Idée de l'utilisateur (2026-11-17) : ajouter ou compléter une série entière sans scanner chaque tome pour son ISBN.
+- **Recherche par nom de série** (BnF, notices liées 461 + numéro 200$h, comme vu pour Everdark : 7 tomes avec ISBN
+  et numéros) ; Google Books en appoint. Pagination SRU (`startRecord`) pour les longues séries (One Piece).
+- **Choix de l'édition** : regrouper par éditeur / collection ; l'utilisateur choisit la bonne.
+- **Écran de revue** : un tome par ligne (numéro, titre, ISBN, couverture), coche « possédé » / « envie » / ignoré,
+  plage rapide (« j'ai 1 à 12 »).
+- **Série déjà présente** : les tomes sans ISBN reçoivent l'ISBN et les champs vides (`fillBlanks`, jamais une
+  saisie écrasée) ; les tomes absents sont créés ; aucun doublon (même numéro). Action aussi depuis le menu d'une
+  série : « Compléter depuis la BnF ».
+- Tests : fixtures réelles (série courte et série paginée), fusion avec une série existante sans ISBN.
+
+*Critère : pour une série possédée sans ISBN, une seule action donne leur ISBN à tous les tomes ; une nouvelle
+série de 20 tomes s'ajoute en moins de cinq appuis.*
+
+**Ajouts de l'utilisateur pendant la phase (2026-11-17)** : proposer la série complète quand le scan reconnaît un
+tome de série ; mettre à jour **une** série (menu de la série) **ou toutes** (Qualité).
+
+**Bilan (2026-11-17)**
+- **Réalisé** : `BnfProvider.searchSeriesVolumes` (titre, pages SRU de 50, `startRecord`, 6 pages max) ;
+  `domain/series_catalog.dart` (numéros « T07 », « . 31 », « 01 » ; éditions regroupées par éditeur via
+  `publishersMatch` ; un tome = toutes ses notices, ISBN le plus bas par défaut = première impression ; autre titre
+  écarté, ex. « Blue Lock épisode Nagi ») ; `domain/series_completion.dart` (`planCompletion` : tome sans ISBN
+  complété par `fillBlanks`, tome absent créé possédé/envie, tome déjà avec ISBN jamais touché, aucun doublon).
+  Écran `presentation/series_completion/` (titre, éditions en puces, « Possédés jusqu'au tome N », choix par tome,
+  autre ISBN au choix si réimpressions) ; entrées : menu « + » d'un onglet (« Série complète (BnF) »), menu d'une
+  série (« Compléter depuis la BnF »), bandeau du mode Magasin (« Ajouter la série complète », `context.go`).
+  Qualité → « Compléter les ISBN des séries (BnF) » (`SeriesIsbnFill`) : toutes les séries ayant des tomes
+  possédés sans ISBN, édition choisie par l'éditeur de la série, rien de créé ; plusieurs éditions possibles →
+  série signalée, à faire depuis son menu. Tests : fixtures réelles (`bnf/series_everdark.xml`,
+  `series_blue_lock_p1/p2.xml`), plan, écran (nouvelle série, menu, Qualité), bandeau magasin.
+- **Écarts** : ISBN par défaut = première impression, pas forcément celui de l'exemplaire réel (une réimpression
+  a son propre ISBN) ; BnF seule (Google Books non utilisé) ; écran à 262 lignes (un peu au-dessus de 250).
+  Test photo `cover_photo_form_test` : attente réelle portée à 2 s (échouait sous la charge de la suite complète).
+- **Non vérifié** : vraie collection (`Z-01` à `Z-03`).
 
 ## 5. Actions manuelles de l'utilisateur
 - **Phase 24** : appliquer la migration Supabase du titre de tome **avant** d'installer la version qui l'utilise.
@@ -448,8 +586,10 @@ Pilotée par l'utilisateur, comme la phase 21 : tests manuels ajoutés par les p
 - **Phase 30** : juger la pertinence des suggestions sur la vraie collection.
 - **Phase 31** : tester l'archive complète sur un appareil vierge (ou une installation propre).
 - **Phase 32** : créer un compte Metron et générer un jeton ; relire le bilan avant priorisation.
-- **Phase 33** : vérifier sur Android que la tâche de fond n'est pas tuée par l'économiseur de batterie.
-- **Phase 34** : régler *Site URL* / *Redirect URLs* du projet Supabase.
+- **Phase 33** : appliquer la migration `20261117180000_release_alerts.sql` avant d'installer (pas de tâche de fond).
+- **Phase 34** : dans Supabase (Authentication → Email Templates), ajouter `{{ .Token }}` (le code à 6 chiffres) aux
+  modèles « Confirm signup » et « Reset password » ; régler la *Site URL* (sinon le lien des e-mails ouvre
+  `localhost`).
 
 ## 6. Hors périmètre
 iOS/macOS, partage de collection, scraping, cote automatique, notifications poussées par un serveur,

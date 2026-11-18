@@ -2,16 +2,19 @@ import 'package:dupe/app/app.dart';
 import 'package:dupe/core/database/app_database.dart';
 import 'package:dupe/core/database/database_provider.dart';
 import 'package:dupe/core/metadata/metadata_providers.dart';
+import 'package:dupe/core/metadata/providers/mangadex/mangadex_covers.dart';
 import 'package:dupe/core/metadata/series_lookup.dart';
 import 'package:dupe/core/network/network_status.dart';
 import 'package:dupe/features/backup/data/auto_backups.dart';
 import 'package:dupe/features/backup/data/backup_store.dart';
+import 'package:dupe/features/collection/data/series_completion_service.dart';
 import 'package:dupe/features/covers/data/cover_cache.dart';
 import 'package:dupe/features/covers/data/cover_providers.dart';
 import 'package:dupe/features/covers/data/cover_scanner.dart';
 import 'package:dupe/features/home_widget/data/home_screen_widget.dart';
 import 'package:dupe/features/loans/data/loan_reminders.dart';
 import 'package:dupe/features/recommendations/data/suggestion_sources.dart';
+import 'package:dupe/features/releases/data/release_notifications.dart';
 import 'package:dupe/features/scan/data/app_shortcuts.dart';
 import 'package:dupe/features/search/data/voice_input.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -22,7 +25,9 @@ import 'package:material_ui/material_ui.dart';
 import 'fake_app_shortcuts.dart';
 import 'fake_covers.dart';
 import 'fake_home_widget.dart';
+import 'fake_release_notifications.dart';
 import 'fake_reminders.dart';
+import 'fake_series_catalog.dart';
 import 'fake_suggestion_sources.dart';
 import 'fake_voice_input.dart';
 import 'memory_backup_store.dart';
@@ -54,6 +59,9 @@ Future<AppDatabase> pumpApp(
   FakeCoverCache? coverCache,
   CoverScanner? coverScanner,
   SuggestionSources? suggestionSources,
+  SeriesCatalogSource? seriesCatalog,
+  MangaDexCovers? mangaDex,
+  FakeReleaseNotifications? releaseNotifications,
 
   /// Series sources (AniList, Comic Vine): none by default, never the network.
   SeriesLookup? seriesLookup,
@@ -87,6 +95,14 @@ Future<AppDatabase> pumpApp(
         ),
         suggestionSourcesProvider.overrideWithValue(
           suggestionSources ?? FakeSuggestionSources(),
+        ),
+        // No MangaDex in tests unless a test brings its own.
+        mangaDexCoversProvider.overrideWithValue(mangaDex),
+        releaseNotificationsProvider.overrideWithValue(
+          releaseNotifications ?? FakeReleaseNotifications(),
+        ),
+        seriesCatalogSourceProvider.overrideWithValue(
+          seriesCatalog ?? FakeSeriesCatalogSource(),
         ),
         seriesLookupProvider.overrideWithValue(seriesLookup ?? SeriesLookup()),
         ...overrides,

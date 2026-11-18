@@ -53,6 +53,11 @@ typedef $$ItemsTableTableCreateCompanionBuilder =
       i0.Value<String?> notes,
       i0.Value<String?> source,
       i0.Value<String?> sourceId,
+      i0.Value<bool> isSigned,
+      i0.Value<String?> signedBy,
+      i0.Value<DateTime?> signedOn,
+      i0.Value<String?> signedPlace,
+      i0.Value<String?> signingNote,
       i0.Value<int> rowid,
     });
 typedef $$ItemsTableTableUpdateCompanionBuilder =
@@ -97,6 +102,11 @@ typedef $$ItemsTableTableUpdateCompanionBuilder =
       i0.Value<String?> notes,
       i0.Value<String?> source,
       i0.Value<String?> sourceId,
+      i0.Value<bool> isSigned,
+      i0.Value<String?> signedBy,
+      i0.Value<DateTime?> signedOn,
+      i0.Value<String?> signedPlace,
+      i0.Value<String?> signingNote,
       i0.Value<int> rowid,
     });
 
@@ -340,6 +350,31 @@ class $$ItemsTableTableFilterComposer
     builder: (column) => i0.ColumnFilters(column),
   );
 
+  i0.ColumnFilters<bool> get isSigned => $composableBuilder(
+    column: $table.isSigned,
+    builder: (column) => i0.ColumnFilters(column),
+  );
+
+  i0.ColumnFilters<String> get signedBy => $composableBuilder(
+    column: $table.signedBy,
+    builder: (column) => i0.ColumnFilters(column),
+  );
+
+  i0.ColumnFilters<DateTime> get signedOn => $composableBuilder(
+    column: $table.signedOn,
+    builder: (column) => i0.ColumnFilters(column),
+  );
+
+  i0.ColumnFilters<String> get signedPlace => $composableBuilder(
+    column: $table.signedPlace,
+    builder: (column) => i0.ColumnFilters(column),
+  );
+
+  i0.ColumnFilters<String> get signingNote => $composableBuilder(
+    column: $table.signingNote,
+    builder: (column) => i0.ColumnFilters(column),
+  );
+
   i8.$$SeriesTableTableFilterComposer get seriesId {
     final i8.$$SeriesTableTableFilterComposer composer = $composerBuilder(
       composer: this,
@@ -570,6 +605,31 @@ class $$ItemsTableTableOrderingComposer
     builder: (column) => i0.ColumnOrderings(column),
   );
 
+  i0.ColumnOrderings<bool> get isSigned => $composableBuilder(
+    column: $table.isSigned,
+    builder: (column) => i0.ColumnOrderings(column),
+  );
+
+  i0.ColumnOrderings<String> get signedBy => $composableBuilder(
+    column: $table.signedBy,
+    builder: (column) => i0.ColumnOrderings(column),
+  );
+
+  i0.ColumnOrderings<DateTime> get signedOn => $composableBuilder(
+    column: $table.signedOn,
+    builder: (column) => i0.ColumnOrderings(column),
+  );
+
+  i0.ColumnOrderings<String> get signedPlace => $composableBuilder(
+    column: $table.signedPlace,
+    builder: (column) => i0.ColumnOrderings(column),
+  );
+
+  i0.ColumnOrderings<String> get signingNote => $composableBuilder(
+    column: $table.signingNote,
+    builder: (column) => i0.ColumnOrderings(column),
+  );
+
   i8.$$SeriesTableTableOrderingComposer get seriesId {
     final i8.$$SeriesTableTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -749,6 +809,25 @@ class $$ItemsTableTableAnnotationComposer
   i0.GeneratedColumn<String> get sourceId =>
       $composableBuilder(column: $table.sourceId, builder: (column) => column);
 
+  i0.GeneratedColumn<bool> get isSigned =>
+      $composableBuilder(column: $table.isSigned, builder: (column) => column);
+
+  i0.GeneratedColumn<String> get signedBy =>
+      $composableBuilder(column: $table.signedBy, builder: (column) => column);
+
+  i0.GeneratedColumn<DateTime> get signedOn =>
+      $composableBuilder(column: $table.signedOn, builder: (column) => column);
+
+  i0.GeneratedColumn<String> get signedPlace => $composableBuilder(
+    column: $table.signedPlace,
+    builder: (column) => column,
+  );
+
+  i0.GeneratedColumn<String> get signingNote => $composableBuilder(
+    column: $table.signingNote,
+    builder: (column) => column,
+  );
+
   i8.$$SeriesTableTableAnnotationComposer get seriesId {
     final i8.$$SeriesTableTableAnnotationComposer composer = $composerBuilder(
       composer: this,
@@ -846,6 +925,11 @@ class $$ItemsTableTableTableManager
                 i0.Value<String?> notes = const i0.Value.absent(),
                 i0.Value<String?> source = const i0.Value.absent(),
                 i0.Value<String?> sourceId = const i0.Value.absent(),
+                i0.Value<bool> isSigned = const i0.Value.absent(),
+                i0.Value<String?> signedBy = const i0.Value.absent(),
+                i0.Value<DateTime?> signedOn = const i0.Value.absent(),
+                i0.Value<String?> signedPlace = const i0.Value.absent(),
+                i0.Value<String?> signingNote = const i0.Value.absent(),
                 i0.Value<int> rowid = const i0.Value.absent(),
               }) => i4.ItemsTableCompanion(
                 id: id,
@@ -888,6 +972,11 @@ class $$ItemsTableTableTableManager
                 notes: notes,
                 source: source,
                 sourceId: sourceId,
+                isSigned: isSigned,
+                signedBy: signedBy,
+                signedOn: signedOn,
+                signedPlace: signedPlace,
+                signingNote: signingNote,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -933,6 +1022,11 @@ class $$ItemsTableTableTableManager
                 i0.Value<String?> notes = const i0.Value.absent(),
                 i0.Value<String?> source = const i0.Value.absent(),
                 i0.Value<String?> sourceId = const i0.Value.absent(),
+                i0.Value<bool> isSigned = const i0.Value.absent(),
+                i0.Value<String?> signedBy = const i0.Value.absent(),
+                i0.Value<DateTime?> signedOn = const i0.Value.absent(),
+                i0.Value<String?> signedPlace = const i0.Value.absent(),
+                i0.Value<String?> signingNote = const i0.Value.absent(),
                 i0.Value<int> rowid = const i0.Value.absent(),
               }) => i4.ItemsTableCompanion.insert(
                 id: id,
@@ -975,6 +1069,11 @@ class $$ItemsTableTableTableManager
                 notes: notes,
                 source: source,
                 sourceId: sourceId,
+                isSigned: isSigned,
+                signedBy: signedBy,
+                signedOn: signedOn,
+                signedPlace: signedPlace,
+                signingNote: signingNote,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -1508,6 +1607,68 @@ class $ItemsTableTable extends i5.ItemsTable
     type: i0.DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const i0.VerificationMeta _isSignedMeta = const i0.VerificationMeta(
+    'isSigned',
+  );
+  @override
+  late final i0.GeneratedColumn<bool> isSigned = i0.GeneratedColumn<bool>(
+    'is_signed',
+    aliasedName,
+    false,
+    type: i0.DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: i0.GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_signed" IN (0, 1))',
+    ),
+    defaultValue: const i6.Constant(false),
+  );
+  static const i0.VerificationMeta _signedByMeta = const i0.VerificationMeta(
+    'signedBy',
+  );
+  @override
+  late final i0.GeneratedColumn<String> signedBy = i0.GeneratedColumn<String>(
+    'signed_by',
+    aliasedName,
+    true,
+    type: i0.DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const i0.VerificationMeta _signedOnMeta = const i0.VerificationMeta(
+    'signedOn',
+  );
+  @override
+  late final i0.GeneratedColumn<DateTime> signedOn =
+      i0.GeneratedColumn<DateTime>(
+        'signed_on',
+        aliasedName,
+        true,
+        type: i0.DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      );
+  static const i0.VerificationMeta _signedPlaceMeta = const i0.VerificationMeta(
+    'signedPlace',
+  );
+  @override
+  late final i0.GeneratedColumn<String> signedPlace =
+      i0.GeneratedColumn<String>(
+        'signed_place',
+        aliasedName,
+        true,
+        type: i0.DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const i0.VerificationMeta _signingNoteMeta = const i0.VerificationMeta(
+    'signingNote',
+  );
+  @override
+  late final i0.GeneratedColumn<String> signingNote =
+      i0.GeneratedColumn<String>(
+        'signing_note',
+        aliasedName,
+        true,
+        type: i0.DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
   @override
   List<i0.GeneratedColumn> get $columns => [
     id,
@@ -1550,6 +1711,11 @@ class $ItemsTableTable extends i5.ItemsTable
     notes,
     source,
     sourceId,
+    isSigned,
+    signedBy,
+    signedOn,
+    signedPlace,
+    signingNote,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -1817,6 +1983,42 @@ class $ItemsTableTable extends i5.ItemsTable
         sourceId.isAcceptableOrUnknown(data['source_id']!, _sourceIdMeta),
       );
     }
+    if (data.containsKey('is_signed')) {
+      context.handle(
+        _isSignedMeta,
+        isSigned.isAcceptableOrUnknown(data['is_signed']!, _isSignedMeta),
+      );
+    }
+    if (data.containsKey('signed_by')) {
+      context.handle(
+        _signedByMeta,
+        signedBy.isAcceptableOrUnknown(data['signed_by']!, _signedByMeta),
+      );
+    }
+    if (data.containsKey('signed_on')) {
+      context.handle(
+        _signedOnMeta,
+        signedOn.isAcceptableOrUnknown(data['signed_on']!, _signedOnMeta),
+      );
+    }
+    if (data.containsKey('signed_place')) {
+      context.handle(
+        _signedPlaceMeta,
+        signedPlace.isAcceptableOrUnknown(
+          data['signed_place']!,
+          _signedPlaceMeta,
+        ),
+      );
+    }
+    if (data.containsKey('signing_note')) {
+      context.handle(
+        _signingNoteMeta,
+        signingNote.isAcceptableOrUnknown(
+          data['signing_note']!,
+          _signingNoteMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -1994,6 +2196,26 @@ class $ItemsTableTable extends i5.ItemsTable
         i0.DriftSqlType.string,
         data['${effectivePrefix}source_id'],
       ),
+      isSigned: attachedDatabase.typeMapping.read(
+        i0.DriftSqlType.bool,
+        data['${effectivePrefix}is_signed'],
+      )!,
+      signedBy: attachedDatabase.typeMapping.read(
+        i0.DriftSqlType.string,
+        data['${effectivePrefix}signed_by'],
+      ),
+      signedOn: attachedDatabase.typeMapping.read(
+        i0.DriftSqlType.dateTime,
+        data['${effectivePrefix}signed_on'],
+      ),
+      signedPlace: attachedDatabase.typeMapping.read(
+        i0.DriftSqlType.string,
+        data['${effectivePrefix}signed_place'],
+      ),
+      signingNote: attachedDatabase.typeMapping.read(
+        i0.DriftSqlType.string,
+        data['${effectivePrefix}signing_note'],
+      ),
     );
   }
 
@@ -2053,6 +2275,11 @@ class ItemsTableCompanion extends i0.UpdateCompanion<i1.Item> {
   final i0.Value<String?> notes;
   final i0.Value<String?> source;
   final i0.Value<String?> sourceId;
+  final i0.Value<bool> isSigned;
+  final i0.Value<String?> signedBy;
+  final i0.Value<DateTime?> signedOn;
+  final i0.Value<String?> signedPlace;
+  final i0.Value<String?> signingNote;
   final i0.Value<int> rowid;
   const ItemsTableCompanion({
     this.id = const i0.Value.absent(),
@@ -2095,6 +2322,11 @@ class ItemsTableCompanion extends i0.UpdateCompanion<i1.Item> {
     this.notes = const i0.Value.absent(),
     this.source = const i0.Value.absent(),
     this.sourceId = const i0.Value.absent(),
+    this.isSigned = const i0.Value.absent(),
+    this.signedBy = const i0.Value.absent(),
+    this.signedOn = const i0.Value.absent(),
+    this.signedPlace = const i0.Value.absent(),
+    this.signingNote = const i0.Value.absent(),
     this.rowid = const i0.Value.absent(),
   });
   ItemsTableCompanion.insert({
@@ -2138,6 +2370,11 @@ class ItemsTableCompanion extends i0.UpdateCompanion<i1.Item> {
     this.notes = const i0.Value.absent(),
     this.source = const i0.Value.absent(),
     this.sourceId = const i0.Value.absent(),
+    this.isSigned = const i0.Value.absent(),
+    this.signedBy = const i0.Value.absent(),
+    this.signedOn = const i0.Value.absent(),
+    this.signedPlace = const i0.Value.absent(),
+    this.signingNote = const i0.Value.absent(),
     this.rowid = const i0.Value.absent(),
   }) : id = i0.Value(id),
        createdAt = i0.Value(createdAt),
@@ -2185,6 +2422,11 @@ class ItemsTableCompanion extends i0.UpdateCompanion<i1.Item> {
     i0.Expression<String>? notes,
     i0.Expression<String>? source,
     i0.Expression<String>? sourceId,
+    i0.Expression<bool>? isSigned,
+    i0.Expression<String>? signedBy,
+    i0.Expression<DateTime>? signedOn,
+    i0.Expression<String>? signedPlace,
+    i0.Expression<String>? signingNote,
     i0.Expression<int>? rowid,
   }) {
     return i0.RawValuesInsertable({
@@ -2228,6 +2470,11 @@ class ItemsTableCompanion extends i0.UpdateCompanion<i1.Item> {
       if (notes != null) 'notes': notes,
       if (source != null) 'source': source,
       if (sourceId != null) 'source_id': sourceId,
+      if (isSigned != null) 'is_signed': isSigned,
+      if (signedBy != null) 'signed_by': signedBy,
+      if (signedOn != null) 'signed_on': signedOn,
+      if (signedPlace != null) 'signed_place': signedPlace,
+      if (signingNote != null) 'signing_note': signingNote,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -2273,6 +2520,11 @@ class ItemsTableCompanion extends i0.UpdateCompanion<i1.Item> {
     i0.Value<String?>? notes,
     i0.Value<String?>? source,
     i0.Value<String?>? sourceId,
+    i0.Value<bool>? isSigned,
+    i0.Value<String?>? signedBy,
+    i0.Value<DateTime?>? signedOn,
+    i0.Value<String?>? signedPlace,
+    i0.Value<String?>? signingNote,
     i0.Value<int>? rowid,
   }) {
     return i4.ItemsTableCompanion(
@@ -2316,6 +2568,11 @@ class ItemsTableCompanion extends i0.UpdateCompanion<i1.Item> {
       notes: notes ?? this.notes,
       source: source ?? this.source,
       sourceId: sourceId ?? this.sourceId,
+      isSigned: isSigned ?? this.isSigned,
+      signedBy: signedBy ?? this.signedBy,
+      signedOn: signedOn ?? this.signedOn,
+      signedPlace: signedPlace ?? this.signedPlace,
+      signingNote: signingNote ?? this.signingNote,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -2451,6 +2708,21 @@ class ItemsTableCompanion extends i0.UpdateCompanion<i1.Item> {
     if (sourceId.present) {
       map['source_id'] = i0.Variable<String>(sourceId.value);
     }
+    if (isSigned.present) {
+      map['is_signed'] = i0.Variable<bool>(isSigned.value);
+    }
+    if (signedBy.present) {
+      map['signed_by'] = i0.Variable<String>(signedBy.value);
+    }
+    if (signedOn.present) {
+      map['signed_on'] = i0.Variable<DateTime>(signedOn.value);
+    }
+    if (signedPlace.present) {
+      map['signed_place'] = i0.Variable<String>(signedPlace.value);
+    }
+    if (signingNote.present) {
+      map['signing_note'] = i0.Variable<String>(signingNote.value);
+    }
     if (rowid.present) {
       map['rowid'] = i0.Variable<int>(rowid.value);
     }
@@ -2500,6 +2772,11 @@ class ItemsTableCompanion extends i0.UpdateCompanion<i1.Item> {
           ..write('notes: $notes, ')
           ..write('source: $source, ')
           ..write('sourceId: $sourceId, ')
+          ..write('isSigned: $isSigned, ')
+          ..write('signedBy: $signedBy, ')
+          ..write('signedOn: $signedOn, ')
+          ..write('signedPlace: $signedPlace, ')
+          ..write('signingNote: $signingNote, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -2552,6 +2829,11 @@ class _$ItemInsertable implements i0.Insertable<i1.Item> {
       notes: i0.Value(_object.notes),
       source: i0.Value(_object.source),
       sourceId: i0.Value(_object.sourceId),
+      isSigned: i0.Value(_object.isSigned),
+      signedBy: i0.Value(_object.signedBy),
+      signedOn: i0.Value(_object.signedOn),
+      signedPlace: i0.Value(_object.signedPlace),
+      signingNote: i0.Value(_object.signingNote),
     ).toColumns(false);
   }
 }

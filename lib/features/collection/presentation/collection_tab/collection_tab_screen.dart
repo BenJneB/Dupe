@@ -45,6 +45,11 @@ class CollectionTabScreen extends ConsumerWidget {
                 child: Text(l10n.onlineSearchTitle),
               ),
               PopupMenuItem(
+                key: const Key('addWholeSeries'),
+                value: AppRoutes.seriesCompletion(type),
+                child: Text(l10n.addWholeSeries),
+              ),
+              PopupMenuItem(
                 value: AppRoutes.newSeries(type),
                 child: Text(type.newSeriesLabel(l10n)),
               ),

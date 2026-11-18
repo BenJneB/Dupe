@@ -3,10 +3,13 @@ import 'dart:io';
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:dupe/core/database/app_database.drift.dart';
+import 'package:dupe/core/database/tables/item_photos_table.dart';
+import 'package:dupe/core/database/tables/item_photos_table.drift.dart';
 import 'package:dupe/core/database/tables/items_table.dart';
 import 'package:dupe/core/database/tables/loans_table.dart';
 import 'package:dupe/core/database/tables/local_tables.dart';
 import 'package:dupe/core/database/tables/recommendation_feedback_table.dart';
+import 'package:dupe/core/database/tables/releases_tables.dart';
 import 'package:dupe/core/database/tables/series_table.dart';
 import 'package:dupe/core/utils/text_fold.dart';
 import 'package:path/path.dart' as p;
@@ -19,6 +22,9 @@ import 'package:sqlite3/sqlite3.dart' as sqlite;
     ItemsTable,
     LoansTable,
     RecommendationFeedbackTable,
+    ItemPhotosTable,
+    ReleaseAlertsTable,
+    FollowedAuthorsTable,
     AppSettingsTable,
     MetadataCacheTable,
     ScanQueueTable,
@@ -47,7 +53,7 @@ class AppDatabase extends $AppDatabase {
       AppDatabase(NativeDatabase.memory(setup: setupConnection));
 
   @override
-  int get schemaVersion => 4;
+  int get schemaVersion => 6;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -66,6 +72,25 @@ class AppDatabase extends $AppDatabase {
       if (from < 4) {
         // v4: dismissed suggestions (PLAN_V4 phase 30).
         await m.createTable(recommendationFeedbackTable);
+      }
+      if (from < 5) {
+        // v5: signed copies and their photos (PLAN_V4 phase 31).
+        for (final c in [
+          itemsTable.isSigned,
+          itemsTable.signedBy,
+          itemsTable.signedOn,
+          itemsTable.signedPlace,
+          itemsTable.signingNote,
+        ]) {
+          await m.addColumn(itemsTable, c);
+        }
+        await m.createTable(itemPhotosTable);
+        await m.createIndex(itemPhotosItemIdIdx);
+      }
+      if (from < 6) {
+        // v6: new release alerts and followed authors (PLAN_V4 phase 33).
+        await m.createTable(releaseAlertsTable);
+        await m.createTable(followedAuthorsTable);
       }
     },
     beforeOpen: (details) async {

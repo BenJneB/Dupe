@@ -5,7 +5,9 @@ import 'package:dupe/core/logging/app_log.dart';
 import 'package:dupe/core/metadata/metadata_aggregator.dart';
 import 'package:dupe/core/metadata/metadata_providers.dart';
 import 'package:dupe/core/metadata/metadata_result.dart';
+import 'package:dupe/core/metadata/providers/mangadex/mangadex_covers.dart';
 import 'package:dupe/features/collection/data/collection_repository.dart';
+import 'package:dupe/features/collection/domain/collection_type.dart';
 import 'package:dupe/features/collection/domain/item.dart';
 import 'package:dupe/features/covers/data/cover_cache.dart';
 import 'package:dupe/features/covers/data/cover_photos.dart';
@@ -97,6 +99,25 @@ Future<({String? url, String why})> findCover(
   );
 }
 
+/// The French cover of manga volume [item] on MangaDex, when it downloads.
+Future<String?> mangaDexCover(
+  MangaDexCovers mangaDex,
+  CoverCache cache,
+  Item item,
+  String seriesTitle,
+) async {
+  final volume = item.volumeNumber;
+  if (item.type != CollectionType.manga || volume == null) return null;
+  final url = await mangaDex.frenchCover(seriesTitle, volume);
+  if (url == null || url == item.coverUrl) return null;
+  try {
+    await cache.fetch(url);
+    return url;
+  } on Object {
+    return null; // Image refused: the text search proposal still runs.
+  }
+}
+
 /// Looks up, one by one, a cover for every item that has none or whose
 /// cover does not download.
 @Riverpod(keepAlive: true)
@@ -109,6 +130,7 @@ class MissingCoversFill extends _$MissingCoversFill {
     final repo = ref.read(collectionRepositoryProvider);
     final sources = ref.read(metadataAggregatorProvider);
     final cache = ref.read(coverCacheProvider);
+    final mangaDex = ref.read(mangaDexCoversProvider);
     final items = await itemsWithIsbn(ref.read(appDatabaseProvider));
     final proposals = ref.read(coverProposalsProvider.notifier);
     final refused = await proposals.refusedKeys();
@@ -122,7 +144,14 @@ class MissingCoversFill extends _$MissingCoversFill {
     for (final (i, item) in items.indexed) {
       try {
         if (!await needsCover(cache, item)) continue;
-        final (:url, :why) = await findCover(sources, cache, item);
+        var (:url, :why) = await findCover(sources, cache, item);
+        // A manga volume: its French cover on MangaDex (phase 32), same
+        // edition, applied like an ISBN cover.
+        final seriesTitle = seriesTitles[item.seriesId];
+        if (url == null && mangaDex != null && seriesTitle != null) {
+          url = await mangaDexCover(mangaDex, cache, item, seriesTitle);
+          if (url == null) why = '$why ; MangaDex : aucune';
+        }
         if (url == null) {
           // Another edition's cover, by text search: proposed, not applied
           // (phase 25).

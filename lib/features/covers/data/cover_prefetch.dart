@@ -109,11 +109,7 @@ class CoverPrefetch extends _$CoverPrefetch {
     return const PrefetchState();
   }
 
-  bool _allowed(NetworkKind kind) => switch (kind) {
-    NetworkKind.unmetered => true,
-    NetworkKind.metered => !_wifiOnly,
-    NetworkKind.none => false,
-  };
+  bool _allowed(NetworkKind kind) => kind.allows(wifiOnly: _wifiOnly);
 
   void _onNetwork(NetworkKind kind) {
     if (!state.running) {

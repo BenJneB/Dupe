@@ -78,4 +78,57 @@ void main() {
     expect(find.text('Mot de passe enregistré'), findsOneWidget);
     expect(auth.passwords['moi@exemple.be'], 'nouveau1');
   });
+
+  testWidgets('sign up confirmed with the email code (phase 34)', (
+    tester,
+  ) async {
+    final auth = await pumpWith(tester, FakeSyncAuth(confirmEmail: true));
+    await tester.tap(find.byKey(const Key('signInTile')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('toggleModeButton')));
+    await tester.pumpAndSettle();
+    await fillSignIn(tester, 'moi@exemple.be', 'secret1', confirm: 'secret1');
+
+    // Wrong code: refused, the right one signs in.
+    await tester.enterText(fieldIn('confirmCodeField'), '000000');
+    await tester.tap(find.byKey(const Key('confirmCodeButton')));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('Code incorrect'), findsOneWidget);
+    await tester.tap(find.byKey(const Key('resendCodeButton')));
+    await tester.pumpAndSettle();
+    expect(auth.sent, ['confirm:moi@exemple.be']);
+    await tester.enterText(fieldIn('confirmCodeField'), '123456');
+    await tester.tap(find.byKey(const Key('confirmCodeButton')));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Connecté : moi@exemple.be'), findsOneWidget);
+  });
+
+  testWidgets('forgot password: code by email, new password, signed in', (
+    tester,
+  ) async {
+    final auth = FakeSyncAuth()..passwords['moi@exemple.be'] = 'oublie';
+    await pumpWith(tester, auth);
+    await tester.tap(find.byKey(const Key('signInTile')));
+    await tester.pumpAndSettle();
+    await tester.enterText(
+      find.byKey(const Key('emailField')),
+      'moi@exemple.be',
+    );
+    await tester.tap(find.byKey(const Key('forgotPasswordButton')));
+    await tester.pumpAndSettle();
+
+    // The address typed on the sign-in screen is kept.
+    await tester.tap(find.byKey(const Key('sendResetButton')));
+    await tester.pumpAndSettle();
+    expect(auth.sent, ['reset:moi@exemple.be']);
+    await tester.enterText(fieldIn('resetCodeField'), '654321');
+    await tester.enterText(fieldIn('newPasswordField'), 'nouveau1');
+    await tester.enterText(fieldIn('newPasswordConfirmField'), 'nouveau1');
+    await tester.tap(find.byKey(const Key('resetPasswordButton')));
+    await tester.pumpAndSettle();
+
+    expect(auth.passwords['moi@exemple.be'], 'nouveau1');
+    expect(find.text('Connecté : moi@exemple.be'), findsOneWidget);
+  });
 }

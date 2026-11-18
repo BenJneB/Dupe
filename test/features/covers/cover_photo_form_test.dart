@@ -26,12 +26,12 @@ Uint8List _photo() {
 }
 
 /// Presses [key] directly (the button may sit below the viewport, in the
-/// lazily built part of the form), then lets the isolates and the disk
-/// work in real time.
+/// lazily built part of the form), then lets the isolates and the disk work
+/// in real time (2 s: slower when the whole suite runs).
 Future<void> _press(WidgetTester tester, Key key) async {
   await tester.runAsync(() async {
     tester.widget<IconButton>(find.byKey(key)).onPressed!();
-    await Future<void>.delayed(const Duration(milliseconds: 800));
+    await Future<void>.delayed(const Duration(seconds: 2));
   });
   await tester.pumpAndSettle();
 }

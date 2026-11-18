@@ -9,6 +9,10 @@ String volumeCountHint(AppLocalizations l10n, VolumeCountProposal p) =>
     switch (p.match.source) {
       SeriesSource.anilist => l10n.totalFromAniList(p.match.title, p.total),
       SeriesSource.comicVine => l10n.totalFromComicVine(p.match.title, p.total),
+      SeriesSource.mangaUpdates => l10n.totalFromMangaUpdates(
+        p.match.title,
+        p.total,
+      ),
     };
 
 /// Asks for the total number of volumes of a series, prefilled with

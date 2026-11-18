@@ -8,11 +8,20 @@ import 'package:material_ui/material_ui.dart';
 /// Downloaded covers are kept on disk ([coverCacheManager]: shown offline,
 /// in shops).
 class CoverImage extends StatelessWidget {
-  const new({required this.url, this.width = 48, this.height = 72, super.key});
+  const new({
+    required this.url,
+    this.width = 48,
+    this.height = 72,
+    this.fit = BoxFit.cover,
+    super.key,
+  });
 
   final String? url;
   final double width;
   final double height;
+
+  /// Contain for a full screen photo.
+  final BoxFit fit;
 
   @override
   Widget build(BuildContext context) {
@@ -39,11 +48,12 @@ class CoverImage extends StatelessWidget {
             ? UserCoverImage(
                 name: CoverPhotos.nameOf(value)!,
                 placeholder: placeholder,
+                fit: fit,
               )
             : CachedNetworkImage(
                 imageUrl: value,
                 cacheManager: coverCacheManager,
-                fit: BoxFit.cover,
+                fit: fit,
                 placeholder: (_, _) => placeholder,
                 errorWidget: (_, _, _) => placeholder,
               ),

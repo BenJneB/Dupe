@@ -1117,7 +1117,7 @@ abstract class AppLocalizations {
   /// No description provided for @fieldFollowedHelper.
   ///
   /// In fr, this message translates to:
-  /// **'Les tomes non possédés comptent comme manquants'**
+  /// **'Les tomes non possédés comptent comme manquants ; nouveaux tomes signalés'**
   String get fieldFollowedHelper;
 
   /// No description provided for @fieldCoverUrl.
@@ -2317,14 +2317,8 @@ abstract class AppLocalizations {
   /// No description provided for @confirmEmailSent.
   ///
   /// In fr, this message translates to:
-  /// **'Compte créé. Ouvre le lien envoyé à {email} pour confirmer ton adresse (la page qui s’ouvre ensuite peut afficher une erreur « localhost » : c’est normal, l’adresse est confirmée), puis reviens ici et touche « Se connecter ».'**
+  /// **'Compte créé : saisis ci-dessous le code à 6 chiffres envoyé à {email} (ou ouvre le lien de l’e-mail, puis « Se connecter »).'**
   String confirmEmailSent(String email);
-
-  /// No description provided for @forgotPasswordHelp.
-  ///
-  /// In fr, this message translates to:
-  /// **'Mot de passe oublié : change-le depuis un appareil encore connecté (Paramètres → Mot de passe).'**
-  String get forgotPasswordHelp;
 
   /// No description provided for @setPassword.
   ///
@@ -2499,6 +2493,492 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Suggestion écartée : ce type de suggestion comptera moins'**
   String get suggestionDismissed;
+
+  /// No description provided for @catalogTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Série complète'**
+  String get catalogTitle;
+
+  /// No description provided for @catalogQuery.
+  ///
+  /// In fr, this message translates to:
+  /// **'Titre de la série'**
+  String get catalogQuery;
+
+  /// No description provided for @catalogHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les tomes et leurs ISBN viennent de la BnF : plus besoin de les scanner.'**
+  String get catalogHelp;
+
+  /// No description provided for @catalogBnfOff.
+  ///
+  /// In fr, this message translates to:
+  /// **'La BnF est désactivée (Paramètres → Sources).'**
+  String get catalogBnfOff;
+
+  /// No description provided for @catalogNone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun tome numéroté trouvé à la BnF pour ce titre.'**
+  String get catalogNone;
+
+  /// No description provided for @catalogEdition.
+  ///
+  /// In fr, this message translates to:
+  /// **'{publisher} ({count} tomes)'**
+  String catalogEdition(String publisher, int count);
+
+  /// No description provided for @catalogUpTo.
+  ///
+  /// In fr, this message translates to:
+  /// **'Possédés jusqu’au tome (vide : tous)'**
+  String get catalogUpTo;
+
+  /// No description provided for @catalogMarkOwned.
+  ///
+  /// In fr, this message translates to:
+  /// **'Marquer possédés'**
+  String get catalogMarkOwned;
+
+  /// No description provided for @catalogSave.
+  ///
+  /// In fr, this message translates to:
+  /// **'Enregistrer ({count})'**
+  String catalogSave(int count);
+
+  /// No description provided for @catalogSaved.
+  ///
+  /// In fr, this message translates to:
+  /// **'{created, plural, =0{Aucun tome ajouté} =1{1 tome ajouté} other{{created} tomes ajoutés}}, {updated, plural, =0{aucun ISBN complété} =1{1 ISBN complété} other{{updated} ISBN complétés}}'**
+  String catalogSaved(int created, int updated);
+
+  /// No description provided for @catalogComplete.
+  ///
+  /// In fr, this message translates to:
+  /// **'Déjà dans la collection'**
+  String get catalogComplete;
+
+  /// No description provided for @catalogIsbnAdded.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dans la collection sans ISBN → {isbn}'**
+  String catalogIsbnAdded(String isbn);
+
+  /// No description provided for @catalogOtherIsbns.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count} ISBN (réimpressions, éditions)'**
+  String catalogOtherIsbns(int count);
+
+  /// No description provided for @catalogSkip.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ignorer'**
+  String get catalogSkip;
+
+  /// No description provided for @addWholeSeries.
+  ///
+  /// In fr, this message translates to:
+  /// **'Série complète (BnF)'**
+  String get addWholeSeries;
+
+  /// No description provided for @completeFromBnf.
+  ///
+  /// In fr, this message translates to:
+  /// **'Compléter depuis la BnF'**
+  String get completeFromBnf;
+
+  /// No description provided for @storeWholeSeries.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter la série complète'**
+  String get storeWholeSeries;
+
+  /// No description provided for @seriesIsbnTile.
+  ///
+  /// In fr, this message translates to:
+  /// **'Compléter les ISBN des séries (BnF)'**
+  String get seriesIsbnTile;
+
+  /// No description provided for @seriesIsbnHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les tomes possédés sans ISBN reçoivent celui de la BnF (première impression), sans rien rescanner'**
+  String get seriesIsbnHelp;
+
+  /// No description provided for @seriesIsbnProgress.
+  ///
+  /// In fr, this message translates to:
+  /// **'Série {done}/{total} · {found} ISBN ajoutés'**
+  String seriesIsbnProgress(int done, int total, int found);
+
+  /// No description provided for @seriesIsbnDone.
+  ///
+  /// In fr, this message translates to:
+  /// **'{found} ISBN ajoutés · {ambiguous} séries à faire depuis leur menu (plusieurs éditions)'**
+  String seriesIsbnDone(int found, int ambiguous);
+
+  /// No description provided for @sectionSigning.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dédicace'**
+  String get sectionSigning;
+
+  /// No description provided for @fieldSigned.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dédicacé'**
+  String get fieldSigned;
+
+  /// No description provided for @fieldSignedBy.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dédicacé par'**
+  String get fieldSignedBy;
+
+  /// No description provided for @fieldSignedOn.
+  ///
+  /// In fr, this message translates to:
+  /// **'Date de la dédicace'**
+  String get fieldSignedOn;
+
+  /// No description provided for @fieldSignedPlace.
+  ///
+  /// In fr, this message translates to:
+  /// **'Lieu'**
+  String get fieldSignedPlace;
+
+  /// No description provided for @fieldSignedPlaceHelper.
+  ///
+  /// In fr, this message translates to:
+  /// **'Festival, librairie, salon…'**
+  String get fieldSignedPlaceHelper;
+
+  /// No description provided for @fieldSigningNote.
+  ///
+  /// In fr, this message translates to:
+  /// **'Texte de la dédicace (à qui…)'**
+  String get fieldSigningNote;
+
+  /// No description provided for @signedTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dédicacé'**
+  String get signedTitle;
+
+  /// No description provided for @itemPhotosTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Photos'**
+  String get itemPhotosTitle;
+
+  /// No description provided for @addItemPhoto.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter une photo'**
+  String get addItemPhoto;
+
+  /// No description provided for @deletePhotoMessage.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cette photo sera supprimée.'**
+  String get deletePhotoMessage;
+
+  /// No description provided for @filterSigned.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dédicacés'**
+  String get filterSigned;
+
+  /// No description provided for @statsSigned.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dédicacés'**
+  String get statsSigned;
+
+  /// No description provided for @csvSigned.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dédicacé'**
+  String get csvSigned;
+
+  /// No description provided for @fullArchiveExport.
+  ///
+  /// In fr, this message translates to:
+  /// **'Archive complète (avec photos)'**
+  String get fullArchiveExport;
+
+  /// No description provided for @fullArchiveExportHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Un fichier .zip : la sauvegarde JSON et toutes tes photos (couvertures, dédicaces)'**
+  String get fullArchiveExportHelp;
+
+  /// No description provided for @fullArchiveImport.
+  ///
+  /// In fr, this message translates to:
+  /// **'Restaurer une archive complète'**
+  String get fullArchiveImport;
+
+  /// No description provided for @fullArchiveImportHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fusionne la collection et remet les photos (rien n\'est effacé)'**
+  String get fullArchiveImportHelp;
+
+  /// No description provided for @fullArchiveRestored.
+  ///
+  /// In fr, this message translates to:
+  /// **'{rows} lignes et {photos} photos restaurées'**
+  String fullArchiveRestored(int rows, int photos);
+
+  /// No description provided for @fullArchiveSaved.
+  ///
+  /// In fr, this message translates to:
+  /// **'Archive enregistrée : {photos} photos'**
+  String fullArchiveSaved(int photos);
+
+  /// No description provided for @signedCount.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{1 livre dédicacé} other{{count} livres dédicacés}}'**
+  String signedCount(int count);
+
+  /// No description provided for @sourceMangaUpdatesHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mangas, y compris français (nombre de tomes parus)'**
+  String get sourceMangaUpdatesHelp;
+
+  /// No description provided for @sourceMangaDexHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Couvertures françaises des tomes de manga'**
+  String get sourceMangaDexHelp;
+
+  /// No description provided for @totalFromMangaUpdates.
+  ///
+  /// In fr, this message translates to:
+  /// **'MangaUpdates : « {title} », {total} tomes'**
+  String totalFromMangaUpdates(String title, int total);
+
+  /// No description provided for @releasesTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouveautés'**
+  String get releasesTitle;
+
+  /// No description provided for @releasesSubtitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouveaux tomes de tes séries et auteurs suivis'**
+  String get releasesSubtitle;
+
+  /// No description provided for @releasesHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Une nouveauté apparaît dès qu’une source la connaît (souvent à la parution). Vérifié au plus une fois par jour au démarrage.'**
+  String get releasesHelp;
+
+  /// No description provided for @releasesNone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune nouveauté pour l’instant.'**
+  String get releasesNone;
+
+  /// No description provided for @releasesCheckNow.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vérifier maintenant'**
+  String get releasesCheckNow;
+
+  /// No description provided for @releasesFound.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =0{Aucune nouveauté} =1{1 nouveauté} other{{count} nouveautés}}'**
+  String releasesFound(int count);
+
+  /// No description provided for @releasesNotificationTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{1 nouveauté dans tes séries} other{{count} nouveautés dans tes séries}}'**
+  String releasesNotificationTitle(int count);
+
+  /// No description provided for @releasesNotificationBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Plus → Nouveautés pour les ajouter aux envies'**
+  String get releasesNotificationBody;
+
+  /// No description provided for @notificationChannelReleases.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouveaux tomes des séries et auteurs suivis'**
+  String get notificationChannelReleases;
+
+  /// No description provided for @releaseVolume.
+  ///
+  /// In fr, this message translates to:
+  /// **'{title}, tome {volume}'**
+  String releaseVolume(String title, String volume);
+
+  /// No description provided for @releaseNew.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouveau'**
+  String get releaseNew;
+
+  /// No description provided for @releaseByAuthor.
+  ///
+  /// In fr, this message translates to:
+  /// **'de {author}'**
+  String releaseByAuthor(String author);
+
+  /// No description provided for @releaseIgnore.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ignorer'**
+  String get releaseIgnore;
+
+  /// No description provided for @releaseWished.
+  ///
+  /// In fr, this message translates to:
+  /// **'« {title} » ajouté aux envies'**
+  String releaseWished(String title);
+
+  /// No description provided for @releaseAlreadyOwned.
+  ///
+  /// In fr, this message translates to:
+  /// **'« {title} » est déjà dans ta collection'**
+  String releaseAlreadyOwned(String title);
+
+  /// No description provided for @releaseWishFailed.
+  ///
+  /// In fr, this message translates to:
+  /// **'Impossible d’ajouter « {title} » : sa série n’existe plus'**
+  String releaseWishFailed(String title);
+
+  /// No description provided for @releasesEnabled.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rechercher les nouveautés'**
+  String get releasesEnabled;
+
+  /// No description provided for @releasesEnabledHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Séries suivies et auteurs suivis, une fois par jour'**
+  String get releasesEnabledHelp;
+
+  /// No description provided for @releasesNotify.
+  ///
+  /// In fr, this message translates to:
+  /// **'Notification des nouveautés'**
+  String get releasesNotify;
+
+  /// No description provided for @followedAuthorsTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =0{Aucun auteur suivi} =1{1 auteur suivi} other{{count} auteurs suivis}}'**
+  String followedAuthorsTitle(int count);
+
+  /// No description provided for @followedAuthorsHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Suivre un auteur : cloche sur sa page (vue par auteur)'**
+  String get followedAuthorsHelp;
+
+  /// No description provided for @followAuthor.
+  ///
+  /// In fr, this message translates to:
+  /// **'Suivre les nouveautés de cet auteur'**
+  String get followAuthor;
+
+  /// No description provided for @unfollowAuthor.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ne plus suivre cet auteur'**
+  String get unfollowAuthor;
+
+  /// No description provided for @emailCodeLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Code reçu par e-mail'**
+  String get emailCodeLabel;
+
+  /// No description provided for @emailCodeHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'6 chiffres, valable une heure'**
+  String get emailCodeHelp;
+
+  /// No description provided for @emailCodeMissing.
+  ///
+  /// In fr, this message translates to:
+  /// **'Saisis le code à 6 chiffres de l’e-mail'**
+  String get emailCodeMissing;
+
+  /// No description provided for @confirmCodeAction.
+  ///
+  /// In fr, this message translates to:
+  /// **'Confirmer mon adresse'**
+  String get confirmCodeAction;
+
+  /// No description provided for @resendCode.
+  ///
+  /// In fr, this message translates to:
+  /// **'Renvoyer le code'**
+  String get resendCode;
+
+  /// No description provided for @forgotPassword.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mot de passe oublié ?'**
+  String get forgotPassword;
+
+  /// No description provided for @resetHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Saisis l’adresse de ton compte : un code à 6 chiffres t’y sera envoyé pour choisir un nouveau mot de passe.'**
+  String get resetHelp;
+
+  /// No description provided for @resetCodeSent.
+  ///
+  /// In fr, this message translates to:
+  /// **'Si un compte existe pour {email}, un code vient d’y être envoyé. Saisis-le avec ton nouveau mot de passe.'**
+  String resetCodeSent(String email);
+
+  /// No description provided for @sendResetCode.
+  ///
+  /// In fr, this message translates to:
+  /// **'Envoyer le code'**
+  String get sendResetCode;
+
+  /// No description provided for @newPasswordLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouveau mot de passe'**
+  String get newPasswordLabel;
+
+  /// No description provided for @resetPasswordAction.
+  ///
+  /// In fr, this message translates to:
+  /// **'Changer le mot de passe'**
+  String get resetPasswordAction;
+
+  /// No description provided for @passwordResetDone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mot de passe changé : tu es connecté'**
+  String get passwordResetDone;
+
+  /// No description provided for @errorInvalidCode.
+  ///
+  /// In fr, this message translates to:
+  /// **'Code incorrect ou expiré : demande un nouveau code'**
+  String get errorInvalidCode;
 
   /// No description provided for @coverPhoto.
   ///

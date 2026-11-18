@@ -47,7 +47,7 @@ final class MissingCoversFillProvider
   }
 }
 
-String _$missingCoversFillHash() => r'15688d275a60ae8f22d1a811eaa9415f9a77fbc2';
+String _$missingCoversFillHash() => r'06dea8653e35a8a0de6014db9a692572208eb402';
 
 /// Looks up, one by one, a cover for every item that has none or whose
 /// cover does not download.

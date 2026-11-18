@@ -62,6 +62,20 @@ class BackupSection extends ConsumerWidget {
           onTap: () => unawaited(actions.restoreJson()),
         ),
         ListTile(
+          key: const Key('exportArchive'),
+          leading: const Icon(Icons.folder_zip_outlined),
+          title: Text(l10n.fullArchiveExport),
+          subtitle: Text(l10n.fullArchiveExportHelp),
+          onTap: () => unawaited(actions.exportArchive()),
+        ),
+        ListTile(
+          key: const Key('restoreArchive'),
+          leading: const Icon(Icons.unarchive_outlined),
+          title: Text(l10n.fullArchiveImport),
+          subtitle: Text(l10n.fullArchiveImportHelp),
+          onTap: () => unawaited(actions.restoreArchive()),
+        ),
+        ListTile(
           key: const Key('autoBackups'),
           leading: const Icon(Icons.history),
           title: Text(l10n.autoBackups),

@@ -34,6 +34,7 @@ List<CollectionEntry> applyViewSettings(
       entries.whereType<SeriesEntry>().where((e) => e.isComplete).toList(),
     CompletionFilter.incomplete =>
       entries.whereType<SeriesEntry>().where((e) => !e.isComplete).toList(),
+    CompletionFilter.signed => entries.where((e) => e.signedCount > 0).toList(),
   };
   if (settings.toReadOnly) filtered.retainWhere((e) => e.isToRead);
   int byTitle(CollectionEntry a, CollectionEntry b) =>

@@ -24,6 +24,7 @@ class CollectionStats {
     required this.spentByMonth,
     required this.completeSeries,
     required this.seriesWithTotal,
+    this.signedCopies = 0,
   });
 
   final String currency;
@@ -53,6 +54,9 @@ class CollectionStats {
   /// Series with a known number of volumes, and how many are complete.
   final int completeSeries;
   final int seriesWithTotal;
+
+  /// Owned signed copies (PLAN_V4 phase 31).
+  final int signedCopies;
 
   double get readShare => ownedVolumes == 0 ? 0 : readVolumes / ownedVolumes;
 
@@ -157,5 +161,6 @@ CollectionStats computeCollectionStats(
     ],
     completeSeries: complete,
     seriesWithTotal: withTotal.length,
+    signedCopies: owned.where((i) => i.isSigned).length,
   );
 }

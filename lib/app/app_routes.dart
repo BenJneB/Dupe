@@ -19,6 +19,7 @@ abstract final class AppRoutes {
   static const loans = '/plus/prets';
   static const stats = '/plus/statistiques';
   static const suggestions = '/plus/suggestions';
+  static const releases = '/plus/nouveautes';
   static const quality = '/plus/qualite';
 
   /// Items (or series) of one quality issue (`QualityIssue.name`).
@@ -39,6 +40,12 @@ abstract final class AppRoutes {
   static const about = '/plus/a-propos';
   static const journal = '/plus/a-propos/journal';
   static const signIn = '/connexion';
+
+  /// Password reset by email code (phase 34), [email] prefilled.
+  static String resetPassword(String email) => Uri(
+    path: '$signIn/mot-de-passe-oublie',
+    queryParameters: {if (email.isNotEmpty) 'email': email},
+  ).toString();
   static const scan = '/scan';
   static const scanReview = '/scan/revue';
 
@@ -67,6 +74,17 @@ abstract final class AppRoutes {
 
   static String newSeries(CollectionType type) =>
       '${base(type)}/nouvelle-serie';
+
+  /// Whole series from the BnF (phase 37): searched by [title], or
+  /// completing the series [seriesId].
+  static String seriesCompletion(
+    CollectionType type, {
+    String? title,
+    String? seriesId,
+  }) => Uri(
+    path: '${base(type)}/serie-complete',
+    queryParameters: {'titre': ?title, 'serie': ?seriesId},
+  ).toString();
 
   static String series(CollectionType type, String id) =>
       '${base(type)}/serie/$id';

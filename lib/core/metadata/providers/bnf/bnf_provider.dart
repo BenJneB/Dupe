@@ -49,7 +49,33 @@ class BnfProvider implements MetadataProvider {
     );
   }
 
-  Future<List<MetadataResult>> _query(String cql, {int max = 20}) async {
+  /// Every printed record titled [title] (volumes of a series, PLAN_V4
+  /// phase 37), page after page (50 records each, at most [maxPages]).
+  Future<List<MetadataResult>> searchSeriesVolumes(
+    String title, {
+    int maxPages = 6,
+  }) async {
+    final cleaned = title.replaceAll('"', ' ').trim();
+    final cql = 'bib.title all "$cleaned" and bib.doctype any "a"';
+    final all = <MetadataResult>[];
+    int? start = 1;
+    for (var page = 0; page < maxPages && start != null; page++) {
+      final (:records, :next) = await _page(cql, max: 50, start: start);
+      all.addAll(records);
+      start = next;
+    }
+    return all;
+  }
+
+  Future<List<MetadataResult>> _query(String cql, {int max = 20}) async =>
+      (await _page(cql, max: max)).records;
+
+  /// One SRU page, with the position of the following one (`next`), if any.
+  Future<({List<MetadataResult> records, int? next})> _page(
+    String cql, {
+    required int max,
+    int start = 1,
+  }) async {
     try {
       final response = await _limiter.run(
         () => _dio.get<String>(
@@ -59,12 +85,20 @@ class BnfProvider implements MetadataProvider {
             'operation': 'searchRetrieve',
             'recordSchema': 'unimarcXchange',
             'maximumRecords': '$max',
+            if (start > 1) 'startRecord': '$start',
             'query': cql,
           },
           options: Options(responseType: ResponseType.plain),
         ),
       );
-      return parseUnimarcResponse(response.data ?? '');
+      final xml = response.data ?? '';
+      final next = RegExp(r'<srw:nextRecordPosition>(\d+)<')
+          .firstMatch(xml)
+          ?.group(1);
+      return (
+        records: parseUnimarcResponse(xml),
+        next: next == null ? null : int.parse(next),
+      );
     } on DioException catch (e) {
       throw MetadataException(source, e.message ?? e.type.name);
     } on FormatException catch (e) {

@@ -7,7 +7,7 @@
 > finale. Les phases 15 à 20 ajoutent leurs tests ici et marquent « automatisé (phase N) » ceux que leurs tests
 > automatiques couvrent désormais.
 
-Ce fichier liste ce que les **319 tests automatiques (et 4 parcours d'intégration) ne couvrent pas** : matériel (caméra, vibrations,
+Ce fichier liste ce que les **354 tests automatiques (et 4 parcours d'intégration) ne couvrent pas** : matériel (caméra, vibrations,
 notifications, raccourci), services réels (Supabase, API GitHub, sources de métadonnées), plateformes non
 compilées ici (Windows) et workflows GitHub (jamais exécutés).
 
@@ -544,3 +544,52 @@ Automatisé (phase 29) : calcul de la perspective, orientation EXIF, suppression
       chacune avec une raison compréhensible.
 - [ ] **G-02** « Pas intéressé » sur le téléphone → après synchro, la suggestion n'apparaît plus sur le PC
       (« Recalculer »). « Ajouter aux envies » → l'ouvrage est dans les envies.
+
+## 22. Série complète depuis la BnF (v4, phase 37)
+Automatisé : numéros BnF, regroupement par éditeur, choix de l'ISBN, plan sans doublon ni écrasement, écrans,
+bouton du mode Magasin. Simulée : la BnF.
+- [ ] **Z-01** Menu d'une série possédée sans ISBN (ex. Everdark) → « Compléter depuis la BnF » → Enregistrer : chaque
+      tome a son ISBN ; un scan en magasin les reconnaît ensuite tout de suite.
+- [ ] **Z-02** Onglet → « + » → « Série complète (BnF) » → une série de 20 tomes, « Possédés jusqu'au tome 12 »,
+      Enregistrer : 12 tomes possédés avec ISBN, en moins de cinq appuis.
+- [ ] **Z-03** Plus → Qualité → « Compléter les ISBN des séries (BnF) » sur la vraie collection : nombre d'ISBN
+      ajoutés plausible ; les séries « à faire depuis leur menu » ont bien plusieurs éditions. En magasin, scanner
+      un tome d'une série inconnue → « Ajouter la série complète » ouvre l'écran pré-rempli.
+
+## 23. Dédicaces (v4, phase 31)
+**Avant d'installer** : appliquer `supabase/migrations/20261117120000_signed_copies.sql` (sinon la synchro des ouvrages
+échoue). Automatisé : migration, champs, photo ajoutée, plein écran, filtre, stylo, statistiques, archive
+(restauration sur base vierge). Simulés : l'appareil photo, le stockage Supabase.
+- [ ] **W-01** Téléphone : modifier un tome → cocher « Dédicacé » (signataire pré-rempli), lieu, date, texte ; sur la
+      fiche, ajouter deux photos (appareil photo) → plein écran, zoom, balayage.
+- [ ] **W-02** Après synchro, sur le PC : la dédicace et les deux photos apparaissent ; stylo sur la pastille et dans
+      la liste ; filtre « Dédicacés » ; tuile « Dédicacés » des statistiques.
+- [ ] **W-03** Paramètres → « Archive complète » sur le téléphone, puis sur une installation propre (ou un autre
+      compte) « Restaurer une archive complète » : collection et photos de dédicace revenues.
+
+## 24. Nouvelles sources : MangaDex et MangaUpdates (v4, phase 32)
+Automatisé : couverture française par tome (réponses réelles), application dans « Compléter les couvertures », nombre
+de tomes MangaUpdates, repli AniList → MangaUpdates.
+- [ ] **SR-01** Plus → Qualité → « Compléter les couvertures manquantes » : les tomes de Dreamland (4 et suivants) et
+      d'Everdark reçoivent leur couverture française.
+- [ ] **SR-02** Menu de la série Dreamland → « Nombre total de tomes… » : MangaUpdates propose 22 tomes (en cours).
+      Paramètres → Sources : MangaDex et MangaUpdates désactivables.
+
+## 25. Alertes de nouveautés (v4, phase 33)
+**Avant d'installer** : appliquer `supabase/migrations/20261117180000_release_alerts.sql`. Automatisé : tomes suivants
+(réponses BnF réelles), relevé d'un auteur, alerte unique et ignorée pour de bon, ajout aux envies. Simulées : BnF,
+notifications.
+- [ ] **AL-01** Plus → Nouveautés → « Vérifier maintenant » sur la vraie collection : les tomes parus après ton dernier
+      tome d'une série suivie apparaissent (pas de déluge pour une série abandonnée : 3 au plus) ; notification
+      « N nouveautés dans tes séries » ; « Ajouter aux envies » range le tome dans sa série.
+- [ ] **AL-02** Cloche sur la page d'un auteur → Paramètres → Nouveautés : « 1 auteur suivi ». Une alerte ignorée sur le
+      téléphone ne revient pas sur le PC après synchro (et pas en double si les deux vérifient).
+
+## 26. Compte : code par e-mail (v4, phase 34)
+**Avant** : Supabase → Authentication → Email Templates : ajouter `{{ .Token }}` dans « Confirm signup » et « Reset
+password » (ex. « Ton code : {{ .Token }} ») ; régler la *Site URL*. Automatisé : confirmation par code (faux puis bon,
+renvoi), mot de passe oublié complet. Simulé : Supabase.
+- [ ] **K2-01** Créer un compte avec une nouvelle adresse : l'e-mail contient un code à 6 chiffres ; le saisir dans
+      l'appli → connecté, synchro lancée.
+- [ ] **K2-02** Déconnecté : « Mot de passe oublié ? » → code reçu → nouveau mot de passe → connecté ; l'ancien mot de
+      passe ne marche plus sur l'autre appareil.

@@ -23,6 +23,19 @@ abstract interface class SyncAuth {
   /// with an email link before phase 10 have none).
   Future<void> setPassword(String password);
 
+  /// Confirms the address with the 6-digit code of the confirmation email
+  /// (PLAN_V4 phase 34), then signs in.
+  Future<void> confirmSignUp(String email, String code);
+
+  /// Sends the confirmation email (and its code) again.
+  Future<void> resendConfirmation(String email);
+
+  /// Sends a password reset email with a 6-digit code (signed out).
+  Future<void> sendPasswordReset(String email);
+
+  /// Checks the reset [code], sets [password] and signs in.
+  Future<void> resetPassword(String email, String code, String password);
+
   Future<void> signOut();
 }
 
@@ -50,6 +63,18 @@ class LocalOnlyAuth implements SyncAuth {
   Future<void> setPassword(String password) =>
       throw UnsupportedError('local only');
   @override
+  Future<void> confirmSignUp(String email, String code) =>
+      throw UnsupportedError('local only');
+  @override
+  Future<void> resendConfirmation(String email) =>
+      throw UnsupportedError('local only');
+  @override
+  Future<void> sendPasswordReset(String email) =>
+      throw UnsupportedError('local only');
+  @override
+  Future<void> resetPassword(String email, String code, String password) =>
+      throw UnsupportedError('local only');
+  @override
   Future<void> signOut() async {}
 }
 
@@ -60,6 +85,9 @@ enum SignInFailure {
   emailTaken,
   weakPassword,
   tooManyAttempts,
+
+  /// Wrong or expired email code (phase 34).
+  invalidCode,
   refused,
 }
 

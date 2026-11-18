@@ -28,6 +28,9 @@ enum ItemTextField {
   maxPrice,
   location,
   notes,
+  signedBy,
+  signedPlace,
+  signingNote,
 }
 
 /// State of the item form (text controllers + choices) and its mapping
@@ -41,6 +44,8 @@ class ItemFormControllers {
   bool variant = false;
   DateTime? readDate;
   DateTime? purchaseDate;
+  bool signed = false;
+  DateTime? signedOn;
 
   final Map<ItemTextField, TextEditingController> _c = {
     for (final f in ItemTextField.values) f: TextEditingController(),
@@ -59,6 +64,8 @@ class ItemFormControllers {
     variant = i.isVariant;
     readDate = i.readDate;
     purchaseDate = i.purchaseDate;
+    signed = i.isSigned;
+    signedOn = i.signedOn;
     final values = <ItemTextField, String>{
       ItemTextField.title: i.title,
       ItemTextField.volume: i.volumeNumber ?? '',
@@ -82,6 +89,9 @@ class ItemFormControllers {
       ItemTextField.maxPrice: _price(i.wishlistMaxPrice),
       ItemTextField.location: i.location ?? '',
       ItemTextField.notes: i.notes ?? '',
+      ItemTextField.signedBy: i.signedBy ?? '',
+      ItemTextField.signedPlace: i.signedPlace ?? '',
+      ItemTextField.signingNote: i.signingNote ?? '',
     };
     for (final MapEntry(:key, :value) in values.entries) {
       _c[key]!.text = value;
@@ -124,6 +134,12 @@ class ItemFormControllers {
     wishlistMaxPrice: _d(ItemTextField.maxPrice),
     location: _t(ItemTextField.location),
     notes: _t(ItemTextField.notes),
+    // Unsigned: the signing details are cleared with the box.
+    isSigned: signed,
+    signedBy: signed ? _t(ItemTextField.signedBy) : null,
+    signedOn: signed ? signedOn : null,
+    signedPlace: signed ? _t(ItemTextField.signedPlace) : null,
+    signingNote: signed ? _t(ItemTextField.signingNote) : null,
   );
 
   void dispose() {

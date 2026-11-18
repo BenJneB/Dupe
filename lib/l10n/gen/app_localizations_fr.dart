@@ -693,7 +693,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get fieldFollowedHelper =>
-      'Les tomes non possédés comptent comme manquants';
+      'Les tomes non possédés comptent comme manquants ; nouveaux tomes signalés';
 
   @override
   String get fieldCoverUrl => 'URL de la couverture';
@@ -1456,12 +1456,8 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String confirmEmailSent(String email) {
-    return 'Compte créé. Ouvre le lien envoyé à $email pour confirmer ton adresse (la page qui s’ouvre ensuite peut afficher une erreur « localhost » : c’est normal, l’adresse est confirmée), puis reviens ici et touche « Se connecter ».';
+    return 'Compte créé : saisis ci-dessous le code à 6 chiffres envoyé à $email (ou ouvre le lien de l’e-mail, puis « Se connecter »).';
   }
-
-  @override
-  String get forgotPasswordHelp =>
-      'Mot de passe oublié : change-le depuis un appareil encore connecté (Paramètres → Mot de passe).';
 
   @override
   String get setPassword => 'Mot de passe';
@@ -1586,6 +1582,343 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get suggestionDismissed =>
       'Suggestion écartée : ce type de suggestion comptera moins';
+
+  @override
+  String get catalogTitle => 'Série complète';
+
+  @override
+  String get catalogQuery => 'Titre de la série';
+
+  @override
+  String get catalogHelp =>
+      'Les tomes et leurs ISBN viennent de la BnF : plus besoin de les scanner.';
+
+  @override
+  String get catalogBnfOff => 'La BnF est désactivée (Paramètres → Sources).';
+
+  @override
+  String get catalogNone =>
+      'Aucun tome numéroté trouvé à la BnF pour ce titre.';
+
+  @override
+  String catalogEdition(String publisher, int count) {
+    return '$publisher ($count tomes)';
+  }
+
+  @override
+  String get catalogUpTo => 'Possédés jusqu’au tome (vide : tous)';
+
+  @override
+  String get catalogMarkOwned => 'Marquer possédés';
+
+  @override
+  String catalogSave(int count) {
+    return 'Enregistrer ($count)';
+  }
+
+  @override
+  String catalogSaved(int created, int updated) {
+    String _temp0 = intl.Intl.pluralLogic(
+      created,
+      locale: localeName,
+      other: '$created tomes ajoutés',
+      one: '1 tome ajouté',
+      zero: 'Aucun tome ajouté',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      updated,
+      locale: localeName,
+      other: '$updated ISBN complétés',
+      one: '1 ISBN complété',
+      zero: 'aucun ISBN complété',
+    );
+    return '$_temp0, $_temp1';
+  }
+
+  @override
+  String get catalogComplete => 'Déjà dans la collection';
+
+  @override
+  String catalogIsbnAdded(String isbn) {
+    return 'Dans la collection sans ISBN → $isbn';
+  }
+
+  @override
+  String catalogOtherIsbns(int count) {
+    return '$count ISBN (réimpressions, éditions)';
+  }
+
+  @override
+  String get catalogSkip => 'Ignorer';
+
+  @override
+  String get addWholeSeries => 'Série complète (BnF)';
+
+  @override
+  String get completeFromBnf => 'Compléter depuis la BnF';
+
+  @override
+  String get storeWholeSeries => 'Ajouter la série complète';
+
+  @override
+  String get seriesIsbnTile => 'Compléter les ISBN des séries (BnF)';
+
+  @override
+  String get seriesIsbnHelp =>
+      'Les tomes possédés sans ISBN reçoivent celui de la BnF (première impression), sans rien rescanner';
+
+  @override
+  String seriesIsbnProgress(int done, int total, int found) {
+    return 'Série $done/$total · $found ISBN ajoutés';
+  }
+
+  @override
+  String seriesIsbnDone(int found, int ambiguous) {
+    return '$found ISBN ajoutés · $ambiguous séries à faire depuis leur menu (plusieurs éditions)';
+  }
+
+  @override
+  String get sectionSigning => 'Dédicace';
+
+  @override
+  String get fieldSigned => 'Dédicacé';
+
+  @override
+  String get fieldSignedBy => 'Dédicacé par';
+
+  @override
+  String get fieldSignedOn => 'Date de la dédicace';
+
+  @override
+  String get fieldSignedPlace => 'Lieu';
+
+  @override
+  String get fieldSignedPlaceHelper => 'Festival, librairie, salon…';
+
+  @override
+  String get fieldSigningNote => 'Texte de la dédicace (à qui…)';
+
+  @override
+  String get signedTitle => 'Dédicacé';
+
+  @override
+  String get itemPhotosTitle => 'Photos';
+
+  @override
+  String get addItemPhoto => 'Ajouter une photo';
+
+  @override
+  String get deletePhotoMessage => 'Cette photo sera supprimée.';
+
+  @override
+  String get filterSigned => 'Dédicacés';
+
+  @override
+  String get statsSigned => 'Dédicacés';
+
+  @override
+  String get csvSigned => 'Dédicacé';
+
+  @override
+  String get fullArchiveExport => 'Archive complète (avec photos)';
+
+  @override
+  String get fullArchiveExportHelp =>
+      'Un fichier .zip : la sauvegarde JSON et toutes tes photos (couvertures, dédicaces)';
+
+  @override
+  String get fullArchiveImport => 'Restaurer une archive complète';
+
+  @override
+  String get fullArchiveImportHelp =>
+      'Fusionne la collection et remet les photos (rien n\'est effacé)';
+
+  @override
+  String fullArchiveRestored(int rows, int photos) {
+    return '$rows lignes et $photos photos restaurées';
+  }
+
+  @override
+  String fullArchiveSaved(int photos) {
+    return 'Archive enregistrée : $photos photos';
+  }
+
+  @override
+  String signedCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count livres dédicacés',
+      one: '1 livre dédicacé',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get sourceMangaUpdatesHelp =>
+      'Mangas, y compris français (nombre de tomes parus)';
+
+  @override
+  String get sourceMangaDexHelp => 'Couvertures françaises des tomes de manga';
+
+  @override
+  String totalFromMangaUpdates(String title, int total) {
+    return 'MangaUpdates : « $title », $total tomes';
+  }
+
+  @override
+  String get releasesTitle => 'Nouveautés';
+
+  @override
+  String get releasesSubtitle =>
+      'Nouveaux tomes de tes séries et auteurs suivis';
+
+  @override
+  String get releasesHelp =>
+      'Une nouveauté apparaît dès qu’une source la connaît (souvent à la parution). Vérifié au plus une fois par jour au démarrage.';
+
+  @override
+  String get releasesNone => 'Aucune nouveauté pour l’instant.';
+
+  @override
+  String get releasesCheckNow => 'Vérifier maintenant';
+
+  @override
+  String releasesFound(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count nouveautés',
+      one: '1 nouveauté',
+      zero: 'Aucune nouveauté',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String releasesNotificationTitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count nouveautés dans tes séries',
+      one: '1 nouveauté dans tes séries',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get releasesNotificationBody =>
+      'Plus → Nouveautés pour les ajouter aux envies';
+
+  @override
+  String get notificationChannelReleases =>
+      'Nouveaux tomes des séries et auteurs suivis';
+
+  @override
+  String releaseVolume(String title, String volume) {
+    return '$title, tome $volume';
+  }
+
+  @override
+  String get releaseNew => 'Nouveau';
+
+  @override
+  String releaseByAuthor(String author) {
+    return 'de $author';
+  }
+
+  @override
+  String get releaseIgnore => 'Ignorer';
+
+  @override
+  String releaseWished(String title) {
+    return '« $title » ajouté aux envies';
+  }
+
+  @override
+  String releaseAlreadyOwned(String title) {
+    return '« $title » est déjà dans ta collection';
+  }
+
+  @override
+  String releaseWishFailed(String title) {
+    return 'Impossible d’ajouter « $title » : sa série n’existe plus';
+  }
+
+  @override
+  String get releasesEnabled => 'Rechercher les nouveautés';
+
+  @override
+  String get releasesEnabledHelp =>
+      'Séries suivies et auteurs suivis, une fois par jour';
+
+  @override
+  String get releasesNotify => 'Notification des nouveautés';
+
+  @override
+  String followedAuthorsTitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count auteurs suivis',
+      one: '1 auteur suivi',
+      zero: 'Aucun auteur suivi',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get followedAuthorsHelp =>
+      'Suivre un auteur : cloche sur sa page (vue par auteur)';
+
+  @override
+  String get followAuthor => 'Suivre les nouveautés de cet auteur';
+
+  @override
+  String get unfollowAuthor => 'Ne plus suivre cet auteur';
+
+  @override
+  String get emailCodeLabel => 'Code reçu par e-mail';
+
+  @override
+  String get emailCodeHelp => '6 chiffres, valable une heure';
+
+  @override
+  String get emailCodeMissing => 'Saisis le code à 6 chiffres de l’e-mail';
+
+  @override
+  String get confirmCodeAction => 'Confirmer mon adresse';
+
+  @override
+  String get resendCode => 'Renvoyer le code';
+
+  @override
+  String get forgotPassword => 'Mot de passe oublié ?';
+
+  @override
+  String get resetHelp =>
+      'Saisis l’adresse de ton compte : un code à 6 chiffres t’y sera envoyé pour choisir un nouveau mot de passe.';
+
+  @override
+  String resetCodeSent(String email) {
+    return 'Si un compte existe pour $email, un code vient d’y être envoyé. Saisis-le avec ton nouveau mot de passe.';
+  }
+
+  @override
+  String get sendResetCode => 'Envoyer le code';
+
+  @override
+  String get newPasswordLabel => 'Nouveau mot de passe';
+
+  @override
+  String get resetPasswordAction => 'Changer le mot de passe';
+
+  @override
+  String get passwordResetDone => 'Mot de passe changé : tu es connecté';
+
+  @override
+  String get errorInvalidCode =>
+      'Code incorrect ou expiré : demande un nouveau code';
 
   @override
   String get coverPhoto => 'Photographier la couverture';

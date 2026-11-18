@@ -35,6 +35,7 @@ String errorText(AppLocalizations l10n, Object error) => switch (error) {
   SignInException(failure: SignInFailure.emailTaken) => l10n.errorEmailTaken,
   SignInException(failure: SignInFailure.weakPassword) =>
     l10n.errorWeakPassword,
+  SignInException(failure: SignInFailure.invalidCode) => l10n.errorInvalidCode,
   SignInException() => l10n.errorSignInRefused,
   BackupFormatException() => l10n.errorNotBackup,
   FileSystemException() => l10n.errorFileAccess,
