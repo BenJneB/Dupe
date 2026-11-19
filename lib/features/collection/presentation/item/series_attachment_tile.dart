@@ -15,8 +15,13 @@ class SeriesAttachmentTile extends ConsumerWidget {
     required this.onChanged,
     required this.type,
     required this.suggestedTitle,
+    this.linked = false,
     super.key,
   });
+
+  /// The book points to a series this device does not know (not synced
+  /// yet): kept on save unless the user chooses otherwise.
+  final bool linked;
 
   final SeriesAttachment attachment;
   final ValueChanged<SeriesAttachment> onChanged;
@@ -45,29 +50,34 @@ class SeriesAttachmentTile extends ConsumerWidget {
     final l10n = AppLocalizations.of(context);
     final change = IconButton(
       key: const Key('changeSeries'),
-      tooltip: l10n.seriesPickerTitle,
+      tooltip: l10n.changeSeriesTooltip,
       icon: const Icon(Icons.edit_outlined),
       onPressed: () => _pick(context, ref),
     );
-    if (attachment.newSeriesTitle case final title?) {
+    if (attachment case CreateSeries(:final title, :final enabled)) {
       return SwitchListTile(
         key: const Key('createSeriesSwitch'),
         contentPadding: EdgeInsets.zero,
         secondary: change,
         title: Text(l10n.createSeriesNamed(title)),
         subtitle: Text(l10n.createSeriesHelper),
-        value: attachment.createNew,
-        onChanged: (v) => onChanged(attachment.withCreateNew(v)),
+        value: enabled,
+        onChanged: (v) => onChanged(CreateSeries(title, enabled: v)),
       );
     }
-    final series = attachment.series;
+    final series = switch (attachment) {
+      AttachToSeries(:final series) => series,
+      _ => null,
+    };
     return ListTile(
       key: Key(series == null ? 'noSeries' : 'attachedSeries'),
       contentPadding: EdgeInsets.zero,
       leading: const Icon(Icons.collections_bookmark),
-      title: Text(
-        series == null ? l10n.seriesNone : l10n.attachedToSeries(series.title),
-      ),
+      title: Text(switch (series) {
+        final s? => l10n.attachedToSeries(s.title),
+        null when linked && attachment is KeepSeries => l10n.seriesUnknown,
+        null => l10n.seriesNone,
+      }),
       subtitle: Text(l10n.seriesPickerHelper),
       trailing: const Icon(Icons.edit_outlined),
       onTap: () => _pick(context, ref),

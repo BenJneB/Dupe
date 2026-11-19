@@ -33,6 +33,13 @@ class _SeriesPickerSheetState extends State<_SeriesPickerSheet> {
   final _controller = TextEditingController();
   var _query = '';
 
+  /// Series with their normalized title, sorted once: the sheet is built
+  /// anew by [showSeriesPicker] each time, with the list of that moment.
+  late final List<({Series series, String key})> _keyed = [
+    for (final s in widget.series) (series: s, key: normalizeTitle(s.title)),
+  ]..sort((a, b) => a.key.compareTo(b.key));
+  late final Set<String> _keys = {for (final e in _keyed) e.key};
+
   @override
   void dispose() {
     _controller.dispose();
@@ -43,12 +50,13 @@ class _SeriesPickerSheetState extends State<_SeriesPickerSheet> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final wanted = normalizeTitle(_query);
-    String key(Series s) => normalizeTitle(s.title);
-    final shown = widget.series.where((s) => key(s).contains(wanted)).toList()
-      ..sort((a, b) => key(a).compareTo(key(b)));
+    final shown = [
+      for (final e in _keyed)
+        if (e.key.contains(wanted)) e.series,
+    ];
     final typed = _query.trim();
     final newTitle = typed.isEmpty ? widget.suggestedTitle.trim() : typed;
-    final exists = widget.series.any((s) => key(s) == normalizeTitle(newTitle));
+    final exists = _keys.contains(normalizeTitle(newTitle));
     return Padding(
       padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
       child: Column(
@@ -73,16 +81,14 @@ class _SeriesPickerSheetState extends State<_SeriesPickerSheet> {
                     key: const Key('seriesPickerNew'),
                     leading: const Icon(Icons.library_add_outlined),
                     title: Text(l10n.createSeriesNamed(newTitle)),
-                    onTap: () => Navigator.pop(
-                      context,
-                      SeriesAttachment(newSeriesTitle: newTitle),
-                    ),
+                    onTap: () => Navigator.pop(context, CreateSeries(newTitle)),
                   ),
                 ListTile(
                   key: const Key('seriesPickerNone'),
                   leading: const Icon(Icons.block),
                   title: Text(l10n.seriesNone),
-                  onTap: () => Navigator.pop(context, SeriesAttachment.none),
+                  onTap: () =>
+                      Navigator.pop(context, SeriesAttachment.detached),
                 ),
                 const Divider(),
                 for (final s in shown)
@@ -91,8 +97,7 @@ class _SeriesPickerSheetState extends State<_SeriesPickerSheet> {
                     leading: const Icon(Icons.collections_bookmark_outlined),
                     title: Text(s.title),
                     subtitle: s.publisher == null ? null : Text(s.publisher!),
-                    onTap: () =>
-                        Navigator.pop(context, SeriesAttachment(series: s)),
+                    onTap: () => Navigator.pop(context, AttachToSeries(s)),
                   ),
               ],
             ),

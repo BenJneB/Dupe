@@ -68,6 +68,9 @@ class _State extends ConsumerState<ResetPasswordScreen> {
         ? l10n.emailCodeMissing
         : _password.text.isEmpty
         ? l10n.passwordEmpty
+        // Checked first: Supabase would refuse it after using up the code.
+        : _password.text.length < 6
+        ? l10n.errorWeakPassword
         : _confirm.text != _password.text
         ? l10n.passwordsDontMatch
         : null;

@@ -26,7 +26,7 @@ class LoanActions {
     DateTime? dueAt,
   }) async {
     final loan = await _repo.lend(item.id, borrower: borrower, dueAt: dueAt);
-    if (dueAt != null) await _reminders.schedule(loan, item.title);
+    if (dueAt != null) await _reminders.schedule(loan, item);
     return loan;
   }
 
@@ -47,7 +47,7 @@ class LoanActions {
     for (final (:loan, :item) in await _repo.allLoans()) {
       if (loan.dueAt == null) continue;
       if (loan.isActive) {
-        await _reminders.schedule(loan, item.title);
+        await _reminders.schedule(loan, item);
       } else {
         await _reminders.cancel(loan);
       }

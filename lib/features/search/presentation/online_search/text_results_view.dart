@@ -1,5 +1,5 @@
-import 'package:dupe/app/error_text.dart';
 import 'package:dupe/app/widgets/cover_image.dart';
+import 'package:dupe/app/widgets/load_error_view.dart';
 import 'package:dupe/app/widgets/placeholder_body.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
 import 'package:dupe/features/search/presentation/online_search/add_from_result.dart';
@@ -53,9 +53,7 @@ class TextResultsView extends ConsumerWidget {
           );
         },
       ),
-      AsyncError(:final error) => Center(
-        child: Text(l10n.loadError(errorText(l10n, error))),
-      ),
+      AsyncError(:final error) => LoadErrorView(error),
       _ => const Center(child: CircularProgressIndicator()),
     };
   }

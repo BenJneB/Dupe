@@ -92,9 +92,7 @@ class _State extends ConsumerState<ReadingStatsSection> {
           title: l10n.statsPileCount(s.toRead),
           detail: switch ((s.oldestToRead, s.oldestToReadSince)) {
             (final item?, final since?) => l10n.statsPileOldest(
-              item.volumeNumber == null
-                  ? item.title
-                  : l10n.volumeTitle(item.title, item.volumeNumber!),
+              item.displayTitle(l10n),
               Formatters.date(since, l10n.localeName),
             ),
             _ => null,

@@ -109,4 +109,32 @@ void main() {
       ('Antidote au culte de la performance', true, 'O. H.'),
     );
   });
+
+  test('a new local schema pulls every row again (columns it added)', () async {
+    final id = await addBook(phone, 'Dédicacé');
+    final signed = (await phone.repo.getItem(id))!
+        .copyWith(isSigned: true, signedBy: 'L’autrice');
+    await phone.repo.saveItem(signed);
+    await phone.sync();
+    await pc.sync();
+    // Pulled before its migration added the signing columns: they hold
+    // their default, with the same updated_at as the server row.
+    await pc.db.customStatement(
+      "UPDATE items SET is_signed = 0, signed_by = NULL WHERE id = '$id'",
+    );
+    final quiet = await pc.sync();
+    expect(quiet.pulled, 0);
+    expect((await pc.repo.getItem(id))!.isSigned, isFalse);
+
+    // First sync on a new schema: everything is read again and rewritten.
+    await pc.db.customStatement(
+      "DELETE FROM app_settings WHERE key = 'sync_schema_version'",
+    );
+    await pc.sync();
+    final item = (await pc.repo.getItem(id))!;
+    expect(item.isSigned, isTrue);
+    expect(item.signedBy, 'L’autrice');
+    // Done once: the next sync is incremental again.
+    expect((await pc.sync()).pulled, 0);
+  });
 }

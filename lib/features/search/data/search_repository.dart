@@ -50,7 +50,7 @@ class SearchRepository {
 
     // ISBN typed with dashes/spaces: compare digits only; a full ISBN-10
     // (back covers of older books) as the ISBN-13 that is stored.
-    final typed = rawQuery.replaceAll(RegExp(r'[\s-]'), '');
+    final typed = Isbn.normalize(rawQuery);
     final digits = typed.length == 10 ? Isbn.toIsbn13(typed) ?? typed : typed;
     final isIsbnLike = RegExp(r'^\d{4,13}$').hasMatch(digits);
     final i = _db.itemsTable;

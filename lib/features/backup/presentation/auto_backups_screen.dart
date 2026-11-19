@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:dupe/app/error_text.dart';
+import 'package:dupe/app/widgets/load_error_view.dart';
 import 'package:dupe/features/backup/data/auto_backups.dart';
 import 'package:dupe/features/backup/presentation/backup_actions.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
@@ -27,9 +27,7 @@ class AutoBackupsScreen extends ConsumerWidget {
         AsyncData(:final value) => ListView(
           children: [for (final b in value) _BackupTile(b)],
         ),
-        AsyncError(:final error) => Center(
-          child: Text(l10n.loadError(errorText(l10n, error))),
-        ),
+        AsyncError(:final error) => LoadErrorView(error),
         _ => const Center(child: CircularProgressIndicator()),
       },
     );

@@ -43,7 +43,10 @@ Description détaillée des choix techniques et de l'organisation du code (dépl
 ## Architecture (`lib/`)
 - `app/` : `app.dart` (MaterialApp.router), `router.dart` (go_router, `AppRoutes`), `theme.dart`,
   `adaptive_shell.dart` (NavigationBar < 600 px, NavigationRail ≥ 600, rail étendu ≥ 1100, enveloppé par
-  `exit_guard.dart` : double retour pour quitter sur Android), `widgets/` partagés. « Voir la série » = `context.go`
+  `exit_guard.dart` : double retour pour quitter sur Android), `widgets/` partagés (dont `LoadErrorView` pour l'état
+  d'erreur d'un provider, `ListSectionHeader` pour les titres de section de liste). Titre « Série — tome N » :
+  `Item.displayTitle(l10n)` (`collection/presentation/labels.dart`) ; même tome (« 07 » = « 7 ») :
+  `VolumeNumber.key` ; réglages on/off : `AppSettingsStore.getBool` / `setBool`. « Voir la série » = `context.go`
   (pile onglet > série), jamais `push`. Un onglet s'ouvre toujours sur sa liste (`initialLocation: true`).
 - `core/` : `config/env.dart`, `database/` (`app_database.dart`, `tables/` un fichier par table,
   `converters.dart`), `sync/`, `network/`, `metadata/`, `utils/`.
@@ -113,13 +116,14 @@ Description détaillée des choix techniques et de l'organisation du code (dépl
   tomes possédés distincts (« 3,5 », « HS 1 », sans numéro).
 - Progression des séries (`collection_tab/series_progress_bar.dart`) : barre réelle si `totalVolumes` est connu,
   sinon barre **indicative** grise (`SeriesEntry.indicativeProgress` = possédés / `highestVolume`, plus haut numéro
-  simple calculé en SQL dans `collection_entries_query.dart`).
+  simple). Tous les compteurs d'une série (possédés, à lire, couverture, ISBN manquants, dédicacés) viennent de
+  `VolumeGrid.compute` dans `collection_entries_query.dart` (calcul en Dart, plus de recopie SQL de la règle).
 - Recherche : l'ISBN est ajouté au sous-titre des résultats texte (`resultSubtitle(withIsbn: true)`) et des livres
   de la recherche locale ; pas dans le bandeau du magasin ni la revue de rafale (code qu'on vient de scanner).
 - Lecture (`collection/data/reading_actions.dart`, extension du repository) : statut en un appui
   (`ItemReadingBar`, puces qui passent à la ligne : un SegmentedButton déborde sur téléphone), « Marquer comme
-  lus jusqu'au tome N » (`series_menu.dart`), filtre « À lire » (`ViewSettings.toReadOnly`, `unreadCount` de
-  `collection_entries_query.dart`, statuts `toReadStatuses`).
+  lus jusqu'au tome N » (`series_menu.dart`), filtre « À lire » (`ViewSettings.toReadOnly`, `unreadCount` =
+  `VolumeGrid.toReadCount`, statuts `toReadStatuses`).
 - Envies (`features/wishlist/`) : items `envie` triés par priorité, retirés d'un glissement (avec « Annuler ») ; « Prochains tomes à acheter » =
   `nextVolumesToBuy` (séries suivies, manquants non déjà en envie), ajout en un appui.
 - Auteurs (`features/authors/`) : `groupByAuthor` (`authorKey` : « Nom, Prénom » remis dans l'ordre, sans accents ni
@@ -154,6 +158,9 @@ Description détaillée des choix techniques et de l'organisation du code (dépl
   dans la ligne (serveur pas migré, vieille sauvegarde : valeur locale ou par défaut gardée) et ignore une ligne déjà
   identique (même `updated_at` + `user_id`) → suppose que deux écritures d'une ligne n'ont jamais le même
   `updated_at` (horloge µs ; le `Device` de test avance son horloge à chaque lecture, `test/helpers/sync_device.dart`).
+  Premières pages de toutes les tables lues en parallèle, appliquées dans l'ordre des tables. Rattrapage après
+  migration (recette 2026-11-19) : quand `schemaVersion` diffère de `sync_schema_version`, la synchro relit tout et
+  réécrit aussi les lignes de même `updated_at` (`apply(refetch: true)`), pour remplir les colonnes ajoutées.
 - Erreurs de synchro typées : `SyncException.failure` (`offline` / `session` / `rejected`), `SignInException`
   (`SupabaseSyncAuth` traduit les `AuthException`).
 - **Supabase local autorisé pour les tests** (phase 17, `PLAN_V3.md`) : `tool/supabase_tests.sh` (CLI 2.122.1,
@@ -181,7 +188,7 @@ Description détaillée des choix techniques et de l'organisation du code (dépl
   d'effacement). CSV maison (`csv_codec.dart` : `;` + BOM en écriture, séparateur détecté en lecture, lignes
   vides gardées pour les numéros de ligne). Import : `guessMapping` (en-têtes FR/EN, Mangacollec, CLZ, notre
   export), écran de correspondance, doublons ignorés (ISBN / tome de série / livre isolé, autre ISBN =
-  nouvelle édition). Fichiers : `FileIo` (desktop : dialogues file_selector ; Android : feuille de partage
+  nouvelle édition) ; colonnes de dédicace relues (aller-retour sans perte). Fichiers : `FileIo` (desktop : dialogues file_selector ; Android : feuille de partage
   share_plus) — `FakeFileIo` en test.
 - Journal (phase 9, `core/logging/`) : global `appLog` (pas un provider, utilisable partout), 500 entrées,
   fichier JSON-lines `dupe_log.jsonl` du dossier support (attaché dans `main.dart`, compacté à 2× la capacité),
@@ -229,17 +236,20 @@ Description détaillée des choix techniques et de l'organisation du code (dépl
 - `SyncFailure.unavailable` : erreur 5xx (page non JSON → `PostgrestException.code` = statut HTTP), message
   « projet Supabase peut-être en pause ».
 - Rattachement auto d'un tome scanné (`features/collection/domain/series_matching.dart`) : titre de série
-  normalisé (accents, ponctuation, qualificatifs entre parenthèses ignorés) ; l'éditeur (compatible = inclusion ou
-  même premier mot significatif : Panini France / Panini comics) et le type ne font que départager plusieurs séries
-  de même titre : une autre édition rejoint la série existante (recette 2026-11-19).
+  normalisé (accents, ponctuation, qualificatifs entre parenthèses ignorés) ; une autre édition rejoint la série
+  existante (recette 2026-11-19), mais d'un autre éditeur il faut aussi un auteur commun (`authorsCompatible`,
+  inconnu accepté) ; l'éditeur (compatible = inclusion ou même premier mot significatif : Panini France / Panini
+  comics) et le type départagent ensuite. Même règle de titre pour `CollectionRepository.findSeries` (import CSV,
+  série complète, suggestions).
   Candidats : BnF 461$t, 225$a **seulement si numéroté ($v) et confirmé par le 461** (un 225 sans 461 est une
   collection d'éditeur : Folio junior, Tracts Gallimard, Poches Jouvence), titre et sous-titre du volume
   s'il est numéroté (pré-notice BnF sans 461 : 200 $a « Requiem (II), Finale » $h T. 04 $i « Jupiter's Legacy »).
   Sous-titre BnF purement générique (« roman », « nouvelles »…) ignoré.
   Sans correspondance → proposition de créer la série (`SeriesAttachment`). Rangement manuel (recette 2026-11-19) :
   tuile « Série » du formulaire (`series_attachment_tile.dart` → `series_picker_sheet.dart` : série existante du même
-  type, nouvelle série nommée, ou aucune) ; `loadItemDraft` part de la série actuelle et `applyAttachment` applique
-  le choix (retrait compris). Le type de la
+  type, nouvelle série nommée, ou aucune) ; `SeriesAttachment` scellée (`KeepSeries`, `AttachToSeries`,
+  `CreateSeries`, `DetachSeries`) : `loadItemDraft` part de la série actuelle (supprimée → détaché, pas encore
+  synchronisée → gardée) et `applyAttachment` applique le choix. Le type de la
   série trouvée prime sur le type de l'onglet.
 - Confort magasin (phase 13) : vibrations par verdict (`scan/presentation/store/store_haptics.dart` :
   vraies vibrations à durées explicites via le canal `dev.dupe.dupe/vibration` de `MainActivity.kt`, permission

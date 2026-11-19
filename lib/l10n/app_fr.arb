@@ -382,8 +382,9 @@
     }
   },
   "seriesNone": "Aucune série",
+  "seriesUnknown": "Série pas encore synchronisée sur cet appareil (gardée)",
   "seriesPickerHelper": "Appuie pour choisir la série (ou aucune)",
-  "seriesPickerTitle": "Choisir la série",
+  "changeSeriesTooltip": "Choisir la série",
   "seriesPickerHint": "Chercher une série ou nommer une nouvelle",
   "createSeriesNamed": "Créer la série « {title} »",
   "@createSeriesNamed": {
@@ -933,7 +934,6 @@
   "deletePhotoMessage": "Cette photo sera supprimée.",
   "filterSigned": "Dédicacés",
   "statsSigned": "Dédicacés",
-  "csvSigned": "Dédicacé",
   "fullArchiveExport": "Archive complète (avec photos)",
   "fullArchiveExportHelp": "Un fichier .zip : la sauvegarde JSON et toutes tes photos (couvertures, dédicaces)",
   "fullArchiveImport": "Restaurer une archive complète",

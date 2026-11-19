@@ -1,3 +1,4 @@
+import 'package:dupe/app/widgets/form_helpers.dart';
 import 'package:dupe/core/metadata/api_keys.dart';
 import 'package:dupe/core/metadata/source_settings.dart';
 import 'package:dupe/features/settings/presentation/api_key_dialog.dart';
@@ -20,13 +21,7 @@ class SourcesSection extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
-          child: Text(
-            l10n.settingsSources,
-            style: Theme.of(context).textTheme.titleSmall,
-          ),
-        ),
+        ListSectionHeader(l10n.settingsSources),
         for (final id in SourceId.values) ...[
           SwitchListTile(
             key: Key('source_${id.name}'),

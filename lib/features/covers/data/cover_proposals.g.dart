@@ -47,7 +47,7 @@ final class CoverProposalsProvider
   }
 }
 
-String _$coverProposalsHash() => r'369bc4aa1449a61a1ad36fb43743922bedf67082';
+String _$coverProposalsHash() => r'6bdd1614af0c8eede41725a2603a492f21b5cb8a';
 
 /// Proposals waiting in Plus → Qualité (filled by "Compléter les
 /// couvertures manquantes").

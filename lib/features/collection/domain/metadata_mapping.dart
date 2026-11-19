@@ -24,14 +24,13 @@ String? volumeTitleOf(MetadataResult m, {String? seriesTitle}) {
   final subtitle = m.subtitle?.trim();
   // A subtitle repeating the series or the title says nothing (BnF 200 $i
   // "Jupiter's Legacy" in « Requiem (II), Finale »).
-  final sub =
-      subtitle == null ||
-          subtitle.isEmpty ||
-          (series != null &&
-              normalizeTitle(subtitle) == normalizeTitle(series)) ||
-          normalizeTitle(subtitle) == normalizeTitle(title)
+  final key = subtitle == null || subtitle.isEmpty
       ? null
-      : subtitle;
+      : normalizeTitle(subtitle);
+  final repeats =
+      key == normalizeTitle(title) ||
+      (series != null && key == normalizeTitle(series));
+  final sub = key == null || repeats ? null : subtitle;
   if (own != null && sub != null) return '$own : $sub';
   return own ?? sub;
 }

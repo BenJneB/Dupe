@@ -1,6 +1,7 @@
 import 'package:dupe/features/collection/domain/item.dart';
 import 'package:dupe/features/collection/domain/series.dart';
 import 'package:dupe/features/collection/domain/volume_grid.dart';
+import 'package:dupe/features/collection/domain/volume_number.dart';
 
 /// Missing volumes of a followed series that are not wished yet.
 typedef NextVolumes = ({Series series, List<int> numbers});
@@ -43,7 +44,7 @@ int compareWishes(Item a, Item b) {
   final pb = b.wishlistPriority ?? 99;
   if (pa != pb) return pa.compareTo(pb);
   final byTitle = a.title.compareTo(b.title);
-  return byTitle != 0 ? byTitle : _volume(a).compareTo(_volume(b));
+  return byTitle != 0
+      ? byTitle
+      : VolumeNumber.compare(a.volumeNumber, b.volumeNumber);
 }
-
-int _volume(Item i) => int.tryParse(i.volumeNumber ?? '') ?? 0;

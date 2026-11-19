@@ -110,7 +110,7 @@ sources de métadonnées, scan, synchro, sauvegardes, couvertures, CI…). Le me
   en mémoire, `goBack` car `tester.pageBack()` ne connaît pas le BackButton de material_ui),
   `test_repositories.dart` (repo + horloge contrôlable).
 - En test widget, la base se ferme via `tester.runAsync` (sinon blocage en temps simulé).
-  `dart_test.yaml` : timeout 30 s par test. Suite complète ~60 s (371 tests, 2026-11-19) : le temps vient surtout
+  `dart_test.yaml` : timeout 30 s par test. Suite complète ~60 s (375 tests, 2026-11-19) : le temps vient surtout
   de la compilation de chaque fichier de test widget. Helpers de navigation : `test/helpers/screen_helpers.dart`
   (`goTo`, `openSettings`, `tapTile`, `fillSignIn`) ; ne jamais importer un fichier `_test.dart` depuis un autre.
 
@@ -139,6 +139,9 @@ Windows ne se compile pas depuis Linux (à vérifier sur un PC Windows).
 - **En fin de phase, proposer un message de commit conventionnel** (`type(portée): description`, types `feat`,
   `fix`, `chore`, `docs`, `test`, `refactor`, `ci`, première ligne ≤ 100 caractères, en français) : il passe le hook
   `commit-msg` (`tool/check_commit_msg.sh`) et alimente les notes de Release (`tool/ci/release_notes.sh`).
+  Contraintes du hook : première ligne ≤ 100 caractères (le détail va dans le corps), portée facultative en
+  `[a-z0-9._/-]` seulement (`feat(series)`, jamais `feat(séries)`). **Vérifier le message avec
+  `bash tool/check_commit_msg.sh <fichier>` avant de le proposer.**
 - Publier une version (tag, Release) : **toujours fait à la main par l'utilisateur** ; ne pas proposer de script de
   release (décision du 2026-11-16).
 - Hooks lefthook (`lefthook.yml`, phase 18) : pré-commit format, en parallèle de `tool/ci/check_generated.sh`

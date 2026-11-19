@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dupe/app/error_text.dart';
 import 'package:dupe/app/widgets/placeholder_body.dart';
 import 'package:dupe/features/collection/data/collection_repository.dart';
 import 'package:dupe/features/scan/data/burst_import.dart';
@@ -33,11 +34,20 @@ class _ScanReviewScreenState extends ConsumerState<ScanReviewScreen> {
     final l10n = AppLocalizations.of(context);
     final messenger = ScaffoldMessenger.of(context);
     setState(() => _importing = true);
-    final added = await importScanQueue(
-      ref.read(collectionRepositoryProvider),
-      ref.read(scanQueueRepositoryProvider),
-      [for (final r in rows) r.entry],
-    );
+    final int added;
+    try {
+      added = await importScanQueue(
+        ref.read(collectionRepositoryProvider),
+        ref.read(scanQueueRepositoryProvider),
+        [for (final r in rows) r.entry],
+      );
+    } on Object catch (e, stack) {
+      if (mounted) {
+        showError(context, 'scan', e, stack);
+        setState(() => _importing = false);
+      }
+      return;
+    }
     if (!mounted) return;
     setState(() => _importing = false);
     messenger

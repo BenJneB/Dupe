@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dupe/app/router.dart';
+import 'package:dupe/app/widgets/form_helpers.dart';
 import 'package:dupe/features/backup/presentation/backup_actions.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
 import 'package:dupe/features/collection/presentation/labels.dart';
@@ -40,13 +41,7 @@ class BackupSection extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
-          child: Text(
-            l10n.backupSection,
-            style: Theme.of(context).textTheme.titleSmall,
-          ),
-        ),
+        ListSectionHeader(l10n.backupSection),
         ListTile(
           key: const Key('exportJson'),
           leading: const Icon(Icons.save_alt),

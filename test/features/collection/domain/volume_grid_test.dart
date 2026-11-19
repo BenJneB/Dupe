@@ -114,12 +114,15 @@ void main() {
           testItem('c', volume: 'Première époque'),
           testItem('d'),
           testItem('e', volume: '2', ownership: Ownership.envie),
+          testItem('f', volume: '0'),
         ],
         totalVolumes: null,
         followed: true,
       );
 
-      expect(grid.ownedCount, 4);
+      // Volume "0" is shown (with the specials) and counted, as in the list.
+      expect(grid.slots.map((s) => s.label), contains('0'));
+      expect(grid.ownedCount, 5);
     });
 
     test('owned volume beyond total extends the grid without counting', () {

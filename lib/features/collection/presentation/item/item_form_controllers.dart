@@ -1,5 +1,6 @@
 import 'package:dupe/app/widgets/form_helpers.dart';
 import 'package:dupe/core/utils/formatters.dart';
+import 'package:dupe/core/utils/isbn.dart';
 import 'package:dupe/features/collection/domain/enums.dart';
 import 'package:dupe/features/collection/domain/item.dart';
 import 'package:material_ui/material_ui.dart';
@@ -115,7 +116,11 @@ class ItemFormControllers {
     title: _c[ItemTextField.title]!.text.trim(),
     volumeNumber: _t(ItemTextField.volume),
     volumeTitle: _t(ItemTextField.volumeTitle),
-    isbn13: _t(ItemTextField.isbn)?.replaceAll(RegExp(r'[\s-]'), ''),
+    isbn13: switch (_t(ItemTextField.isbn)) {
+      // An ISBN-10 is stored as its ISBN-13, as the scan finds it.
+      final isbn? => Isbn.toIsbn13(isbn) ?? Isbn.normalize(isbn),
+      null => null,
+    },
     upc: _t(ItemTextField.upc),
     authors: Formatters.splitList(_c[ItemTextField.authors]!.text),
     publisher: _t(ItemTextField.publisher),

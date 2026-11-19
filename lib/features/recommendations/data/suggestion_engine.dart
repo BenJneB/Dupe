@@ -40,32 +40,43 @@ class SuggestionEngine {
     var done = 0;
     void step() => onProgress?.call(++done, total);
 
-    final candidates = <Suggestion>[];
-    for (final a in authors) {
-      try {
-        final books = await _sources.booksByAuthor(a.name);
-        candidates.addAll(_fromAuthor(a, books, max));
-      } on Object catch (e) {
-        appLog.warning('suggestions', e);
-      }
-      step();
-    }
+    // BnF (authors) and AniList (manga): different sources and limiters,
+    // queried at the same time; the order of the candidates is kept.
+    final fromAuthors = <Suggestion>[];
+    final fromManga = <Suggestion>[];
     final known = <String>{};
-    for (final s in manga) {
-      try {
-        final n = await _sources.mangaNeighbours(
-          title: s.series.title,
-          anilistId: s.series.externalIds['anilist_id'],
-        );
-        if (n != null && _sameManga(n, s.series)) {
-          known.add(n.media.sourceId);
-          candidates.addAll(_fromManga(s, n, max));
+    Future<void> byAuthors() async {
+      for (final a in authors) {
+        try {
+          final books = await _sources.booksByAuthor(a.name);
+          fromAuthors.addAll(_fromAuthor(a, books, max));
+        } on Object catch (e) {
+          appLog.warning('suggestions', e);
         }
-      } on Object catch (e) {
-        appLog.warning('suggestions', e);
+        step();
       }
-      step();
     }
+
+    Future<void> byManga() async {
+      for (final s in manga) {
+        try {
+          final n = await _sources.mangaNeighbours(
+            title: s.series.title,
+            anilistId: s.series.externalIds['anilist_id'],
+          );
+          if (n != null && _sameManga(n, s.series)) {
+            known.add(n.media.sourceId);
+            fromManga.addAll(_fromManga(s, n, max));
+          }
+        } on Object catch (e) {
+          appLog.warning('suggestions', e);
+        }
+        step();
+      }
+    }
+
+    await Future.wait([byAuthors(), byManga()]);
+    final candidates = [...fromAuthors, ...fromManga];
     return rankSuggestions(
       candidates,
       owned: OwnedWorks.of(items, series, anilistIds: known),

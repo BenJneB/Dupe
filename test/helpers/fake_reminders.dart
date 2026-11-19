@@ -1,3 +1,4 @@
+import 'package:dupe/features/collection/domain/item.dart';
 import 'package:dupe/features/loans/data/loan_reminders.dart';
 import 'package:dupe/features/loans/data/loans_repository.dart';
 import 'package:dupe/features/loans/domain/loan.dart';
@@ -16,8 +17,7 @@ class FakeLoanReminders implements LoanReminders {
   final overdueShown = <List<LoanWithItem>>[];
 
   @override
-  Future<void> schedule(Loan loan, String itemTitle) async =>
-      scheduled.add(loan.id);
+  Future<void> schedule(Loan loan, Item item) async => scheduled.add(loan.id);
 
   @override
   Future<void> cancel(Loan loan) async => scheduled.remove(loan.id);

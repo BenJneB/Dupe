@@ -35,7 +35,11 @@ MetadataResult? parseUnimarcRecord(UnimarcRecord r) {
   final title = r.first('200', 'a');
   if (title == null) return null;
 
-  final isbn = r.first('010', 'a') ?? r.first('073', 'a');
+  // Valid ones only: an invalid 010 falls back on the EAN (073).
+  final isbn = [
+    for (final tag in ['010', '073'])
+      for (final f in r.fields(tag)) ...UnimarcRecord.subfields(f, 'a'),
+  ].map(Isbn.toIsbn13).nonNulls.firstOrNull;
   final price = _parsePrice(r.first('010', 'd'));
   final linkedSeries = r.first('461', 't');
   final ownVolume = r.first('200', 'h');
@@ -55,7 +59,7 @@ MetadataResult? parseUnimarcRecord(UnimarcRecord r) {
     publishDate: _year(r.first('214', 'd') ?? r.first('210', 'd')),
     pageCount: _pages(r.first('215', 'a')),
     language: _languages[r.first('101', 'a')],
-    isbn13: isbn == null ? null : Isbn.toIsbn13(isbn),
+    isbn13: isbn,
     description: r.first('330', 'a'),
     seriesTitle: linkedSeries ?? numberedCollection?.title,
     volumeNumber: cleanVolumeNumber(
@@ -103,8 +107,9 @@ String? _subtitle(UnimarcRecord r) {
   for (final code in ['e', 'i']) {
     for (final value
         in r.fields('200').expand((f) => UnimarcRecord.subfields(f, code))) {
-      final cleaned = value.trim().replaceAll(RegExp(r'\s+'), ' ');
-      if (cleaned.isNotEmpty && !_genreOnly.hasMatch(cleaned)) return cleaned;
+      // subfields() already trims and drops empty values.
+      final cleaned = value.replaceAll(RegExp(r'\s+'), ' ');
+      if (!_genreOnly.hasMatch(cleaned)) return cleaned;
     }
   }
   return null;

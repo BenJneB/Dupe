@@ -1,4 +1,4 @@
-import 'package:dupe/app/error_text.dart';
+import 'package:dupe/app/widgets/load_error_view.dart';
 import 'package:dupe/app/widgets/placeholder_body.dart';
 import 'package:dupe/core/utils/formatters.dart';
 import 'package:dupe/features/collection/presentation/labels.dart';
@@ -21,9 +21,7 @@ class StatsScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(title: Text(l10n.moreStats)),
       body: switch (ref.watch(collectionStatsProvider)) {
-        AsyncError(:final error) => Center(
-          child: Text(l10n.loadError(errorText(l10n, error))),
-        ),
+        AsyncError(:final error) => LoadErrorView(error),
         AsyncValue(value: null) => const Center(
           child: CircularProgressIndicator(),
         ),

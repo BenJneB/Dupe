@@ -8,8 +8,12 @@ class UserCoverImage extends ConsumerWidget {
     required this.name,
     required this.placeholder,
     this.fit = BoxFit.cover,
+    this.cacheHeight,
     super.key,
   });
+
+  /// Height (physical pixels) the photo is decoded at; null: full size.
+  final int? cacheHeight;
 
   final String name;
   final Widget placeholder;
@@ -21,6 +25,7 @@ class UserCoverImage extends ConsumerWidget {
         final file? => Image.file(
           file,
           fit: fit,
+          cacheHeight: cacheHeight,
           errorBuilder: (_, _, _) => placeholder,
         ),
         null => placeholder,

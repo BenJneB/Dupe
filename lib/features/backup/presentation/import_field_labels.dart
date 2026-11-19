@@ -18,5 +18,10 @@ extension ImportFieldLabel on ImportField {
     ImportField.coverPrice => l10n.importFieldCoverPrice,
     ImportField.location => l10n.importFieldLocation,
     ImportField.notes => l10n.importFieldNotes,
+    ImportField.signed => l10n.fieldSigned,
+    ImportField.signedBy => l10n.fieldSignedBy,
+    ImportField.signedOn => l10n.fieldSignedOn,
+    ImportField.signedPlace => l10n.fieldSignedPlace,
+    ImportField.signingNote => l10n.fieldSigningNote,
   };
 }

@@ -3,6 +3,7 @@ import 'package:dupe/features/collection/domain/enums.dart';
 import 'package:dupe/features/collection/domain/item.dart';
 import 'package:dupe/features/collection/domain/series.dart';
 import 'package:dupe/features/collection/domain/volume_grid.dart';
+import 'package:dupe/features/collection/domain/volume_number.dart';
 
 /// Statistics of the collection (PLAN.md §5: prices and statistics).
 ///
@@ -71,13 +72,14 @@ class CollectionStats {
   }
 }
 
-/// Copies of each volume: one entry per series + number, or per item for
-/// books outside a series.
+/// Copies of each volume: one entry per series + number ("07" = "7", as in
+/// the series grid), or per item for books outside a series.
 Map<String, List<Item>> volumesOf(Iterable<Item> owned) {
   final volumes = <String, List<Item>>{};
   for (final i in owned) {
-    final key = i.seriesId != null && i.volumeNumber != null
-        ? '${i.seriesId}#${i.volumeNumber!.trim()}'
+    final number = VolumeNumber.key(i.volumeNumber);
+    final key = i.seriesId != null && number != null
+        ? '${i.seriesId}#$number'
         : i.id;
     (volumes[key] ??= []).add(i);
   }

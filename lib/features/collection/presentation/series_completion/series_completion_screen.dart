@@ -12,6 +12,7 @@ import 'package:dupe/features/collection/domain/series.dart';
 import 'package:dupe/features/collection/domain/series_catalog.dart';
 import 'package:dupe/features/collection/domain/series_completion.dart';
 import 'package:dupe/features/collection/domain/series_matching.dart';
+import 'package:dupe/features/collection/presentation/series_completion/catalog_controls.dart';
 import 'package:dupe/features/collection/presentation/series_completion/catalog_volume_row.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -55,6 +56,7 @@ class _State extends ConsumerState<SeriesCompletionScreen> {
     final repo = ref.read(collectionRepositoryProvider);
     final id = widget.seriesId;
     _series = id == null ? null : await repo.getSeries(id);
+    if (!mounted) return;
     _query.text = _series?.title ?? widget.title ?? '';
     if (_query.text.isNotEmpty) await _search();
   }
@@ -78,7 +80,11 @@ class _State extends ConsumerState<SeriesCompletionScreen> {
       final records = await ref
           .read(seriesCatalogSourceProvider)
           .volumesOf(title);
-      _series = await findSeriesByTitle(repo, widget.type, title) ?? _series;
+      // Opened from a series: its field is locked, the series stays. From
+      // the tab: the series of this title, or none (never the previous one).
+      if (widget.seriesId == null) {
+        _series = await repo.findSeries(widget.type, title);
+      }
       final series = _series;
       _existing = series == null
           ? const []
@@ -132,16 +138,27 @@ class _State extends ConsumerState<SeriesCompletionScreen> {
   Future<void> _save() async {
     final l10n = AppLocalizations.of(context);
     final messenger = ScaffoldMessenger.of(context);
-    final result = await completeSeries(
-      ref.read(collectionRepositoryProvider),
-      type: widget.type,
-      title: _series?.title ?? _query.text.trim(),
-      series: _series,
-      chosen: {
-        for (final MapEntry(key: n, value: choice) in _choices.entries)
-          n: (record: _records[n]!, choice: choice),
-      },
-    );
+    // One save at a time: a double tap would create the series twice.
+    setState(() => _loading = true);
+    final ({Series series, int updated, int created}) result;
+    try {
+      result = await completeSeries(
+        ref.read(collectionRepositoryProvider),
+        type: widget.type,
+        title: _series?.title ?? _query.text.trim(),
+        series: _series,
+        chosen: {
+          for (final MapEntry(key: n, value: choice) in _choices.entries)
+            n: (record: _records[n]!, choice: choice),
+        },
+      );
+    } on Object catch (e, stack) {
+      if (mounted) {
+        showError(context, 'series', e, stack);
+        setState(() => _loading = false);
+      }
+      return;
+    }
     messenger.showSnackBar(
       SnackBar(
         content: Text(l10n.catalogSaved(result.created, result.updated)),
@@ -150,6 +167,8 @@ class _State extends ConsumerState<SeriesCompletionScreen> {
     if (!mounted) return;
     if (result.created + result.updated > 0 || _series != null) {
       context.go(AppRoutes.series(widget.type, result.series.id));
+    } else {
+      setState(() => _loading = false);
     }
   }
 
@@ -200,52 +219,16 @@ class _State extends ConsumerState<SeriesCompletionScreen> {
           if (_searched && !_loading && edition == null)
             ListTile(title: Text(l10n.catalogNone)),
           if (_editions.length > 1)
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Wrap(
-                spacing: 8,
-                children: [
-                  for (final (i, e) in _editions.indexed)
-                    ChoiceChip(
-                      key: ValueKey('catalogEdition-$i'),
-                      label: Text(
-                        l10n.catalogEdition(
-                          e.publisher ?? '?',
-                          e.volumes.length,
-                        ),
-                      ),
-                      selected: i == _edition,
-                      onSelected: (_) => setState(() {
-                        _edition = i;
-                        _reset();
-                      }),
-                    ),
-                ],
-              ),
+            CatalogEditionChips(
+              editions: _editions,
+              selected: _edition,
+              onSelected: (i) => setState(() {
+                _edition = i;
+                _reset();
+              }),
             ),
           if (edition != null)
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      key: const Key('catalogUpTo'),
-                      controller: _upTo,
-                      keyboardType: TextInputType.number,
-                      decoration: InputDecoration(labelText: l10n.catalogUpTo),
-                      onSubmitted: (v) => _ownUpTo(int.tryParse(v)),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  OutlinedButton(
-                    key: const Key('catalogAllOwned'),
-                    onPressed: () => _ownUpTo(int.tryParse(_upTo.text)),
-                    child: Text(l10n.catalogMarkOwned),
-                  ),
-                ],
-              ),
-            ),
+            CatalogUpToRow(controller: _upTo, onOwnUpTo: _ownUpTo),
           for (final v in edition?.volumes ?? const <CatalogVolume>[])
             CatalogVolumeRow(
               volume: v,

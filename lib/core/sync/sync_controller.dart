@@ -207,7 +207,13 @@ class SyncController extends _$SyncController {
 
   Future<void> signOut() async {
     await _running;
-    await ref.read(syncAuthProvider).signOut();
-    await ref.read(syncEngineProvider)?.reset();
+    try {
+      await ref.read(syncAuthProvider).signOut();
+    } on Object catch (e) {
+      // Offline: the local session is gone, only the server call failed.
+      appLog.warning('sync', e);
+    } finally {
+      await ref.read(syncEngineProvider)?.reset();
+    }
   }
 }

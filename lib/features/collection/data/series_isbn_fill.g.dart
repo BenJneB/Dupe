@@ -53,7 +53,7 @@ final class SeriesIsbnFillProvider
   }
 }
 
-String _$seriesIsbnFillHash() => r'4bc280f6f6242acfd83e1f68fab4b603bb98f990';
+String _$seriesIsbnFillHash() => r'017d88dcbe11e6aa5e5b33aa8609e12fef0a95b8';
 
 /// Qualité (PLAN_V4 phase 37, every series at once): the volumes owned
 /// without ISBN get the one of the BnF, edition chosen by the publisher of

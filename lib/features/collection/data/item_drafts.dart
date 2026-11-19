@@ -2,12 +2,14 @@ import 'package:dupe/features/collection/data/collection_repository.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
 import 'package:dupe/features/collection/domain/item.dart';
 import 'package:dupe/features/collection/domain/metadata_mapping.dart';
+import 'package:dupe/features/collection/domain/series.dart';
 import 'package:dupe/features/collection/domain/series_attachment.dart';
 import 'package:dupe/features/collection/domain/series_matching.dart';
 
 typedef ItemDraft = ({Item item, SeriesAttachment attachment});
 
-const SeriesAttachment _none = SeriesAttachment.none;
+SeriesAttachment _attachTo(Series? series) =>
+    series == null ? SeriesAttachment.none : AttachToSeries(series);
 
 /// Another copy of [source] (other edition): same work, volume and series;
 /// edition-specific and personal fields are left empty.
@@ -33,14 +35,19 @@ Future<ItemDraft?> loadItemDraft(
   ItemPrefill? prefill,
   String? copyOf,
 }) async {
-  // The series an item is already in, shown and changeable in the form.
-  Future<SeriesAttachment> current(Item item) async => switch (item.seriesId) {
-    final id? => switch (await repo.getSeries(id)) {
-      final series? => SeriesAttachment(series: series),
-      null => _none,
-    },
-    null => _none,
-  };
+  // The series an item is already in, shown and changeable in the form. A
+  // deleted series is left on save; one not synced yet is kept.
+  Future<SeriesAttachment> current(Item item) async {
+    final id = item.seriesId;
+    if (id == null) return SeriesAttachment.none;
+    if (await repo.getSeries(id) case final series?) {
+      return AttachToSeries(series);
+    }
+    return await repo.isSeriesDeleted(id)
+        ? SeriesAttachment.detached
+        : SeriesAttachment.none;
+  }
+
   final source = copyOf == null ? null : await repo.getItem(copyOf);
   if (source != null) {
     final copy = newCopy(repo, source);
@@ -51,9 +58,7 @@ Future<ItemDraft?> loadItemDraft(
     return item == null ? null : (item: item, attachment: await current(item));
   }
   var series = seriesId == null ? null : await repo.getSeries(seriesId);
-  var attachment = series == null
-      ? SeriesAttachment.none
-      : SeriesAttachment(series: series);
+  var attachment = _attachTo(series);
   if (prefill != null && series == null) {
     final metadata = prefill.metadata;
     series = findMatchingSeries(
@@ -63,9 +68,9 @@ Future<ItemDraft?> loadItemDraft(
     );
     final candidates = seriesTitleCandidates(metadata);
     attachment = series != null
-        ? SeriesAttachment(series: series)
+        ? AttachToSeries(series)
         : metadata.volumeNumber != null && candidates.isNotEmpty
-        ? SeriesAttachment(newSeriesTitle: candidates.first)
+        ? CreateSeries(candidates.first)
         : SeriesAttachment.none;
   }
   // A matched series dictates the type (scanned from another tab).
@@ -80,29 +85,40 @@ Future<ItemDraft?> loadItemDraft(
         : applyMetadata(
             draft,
             prefill,
-            seriesTitle: series?.title ?? attachment.newSeriesTitle,
+            seriesTitle: switch (attachment) {
+              AttachToSeries(:final series) => series.title,
+              CreateSeries(:final title) => title,
+              _ => null,
+            },
           ),
     attachment: attachment,
   );
 }
 
-/// Files [item] as [attachment] says: in its series, in no series, or in a
-/// new series created now (proposed title, or one typed by the user).
+/// Files [item] as [attachment] says: in its series, out of any series
+/// (detach), in a new series created now (proposed title, or one typed by
+/// the user), or where it already is.
 Future<Item> applyAttachment(
   CollectionRepository repo,
   Item item,
   SeriesAttachment attachment,
 ) async {
-  final title = attachment.newSeriesTitle;
-  if (attachment.series case final series?) {
-    return item.copyWith(seriesId: series.id);
+  switch (attachment) {
+    case AttachToSeries(:final series):
+      return item.copyWith(seriesId: series.id);
+    case KeepSeries():
+      return item;
+    case DetachSeries() || CreateSeries(enabled: false):
+      return item.copyWith(seriesId: null);
+    case CreateSeries(:final title):
+      final series = repo
+          .newSeries(item.type)
+          .copyWith(
+            title: title,
+            authors: item.authors,
+            publisher: item.publisher,
+          );
+      await repo.saveSeries(series);
+      return item.copyWith(seriesId: series.id);
   }
-  if (title == null || !attachment.createNew) {
-    return item.copyWith(seriesId: null);
-  }
-  final series = repo
-      .newSeries(item.type)
-      .copyWith(title: title, authors: item.authors, publisher: item.publisher);
-  await repo.saveSeries(series);
-  return item.copyWith(seriesId: series.id);
 }

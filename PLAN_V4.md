@@ -47,6 +47,11 @@ deux fonctions tournées vers la suite de la collection : être prévenu des nou
   sous-titres génériques (« roman ») ignorés, tomes spéciaux comptés sans total, auteurs aux mots inversés fusionnés ;
   ajoutés à la demande de l'utilisateur : **rangement manuel d'un livre dans une série** (formulaire) et **ligne de
   total** en haut de l'onglet.
+  Puis revue de code du projet entier (4 zones) et nettoyages : série complète (série d'une recherche précédente,
+  double appui), ISBN-10 saisi converti, traitements en lot jamais bloqués « en cours », scan du widget d'accueil
+  empilé (retour = onglet), dédicaces relues par l'import CSV, rattrapage de synchro après migration (colonnes
+  ajoutées), mot de passe oublié (code non consommé par un mot de passe trop court), alertes de série non bloquées
+  par une alerte d'auteur ; compteurs de liste calculés par `VolumeGrid`, synchro en parallèle, helpers partagés.
 - **Tests reportés après la v4** (décision de l'utilisateur) : mode rafale `R-01` à `R-04`, à dérouler dans la
   recette de la v4 (phase 35).
 

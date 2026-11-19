@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dupe/app/router.dart';
+import 'package:dupe/app/widgets/form_helpers.dart';
 import 'package:dupe/features/collection/presentation/series_completion/series_isbn_tile.dart';
 import 'package:dupe/features/collection/presentation/volume_titles/volume_titles_tile.dart';
 import 'package:dupe/features/covers/data/cover_proposals.dart';
@@ -24,10 +25,6 @@ class QualityScreen extends ConsumerWidget {
     final quality = ref.watch(collectionQualityProvider).value;
     final markIsbn = ref.watch(missingIsbnInGridProvider).value ?? false;
     final proposals = ref.watch(coverProposalsProvider).length;
-    Widget header(String title) => Padding(
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
-      child: Text(title, style: text.titleSmall),
-    );
     return Scaffold(
       appBar: AppBar(title: Text(l10n.qualityTitle)),
       body: ListView(
@@ -79,7 +76,7 @@ class QualityScreen extends ConsumerWidget {
               ref.read(missingIsbnInGridProvider.notifier).set(on: on),
             ),
           ),
-          header(l10n.qualityAutomatic),
+          ListSectionHeader(l10n.qualityAutomatic),
           const MissingCoversTile(),
           const VolumeTitlesTile(),
           const SeriesIsbnTile(),

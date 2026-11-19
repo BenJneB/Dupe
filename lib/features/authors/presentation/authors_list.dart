@@ -1,5 +1,5 @@
-import 'package:dupe/app/error_text.dart';
 import 'package:dupe/app/router.dart';
+import 'package:dupe/app/widgets/load_error_view.dart';
 import 'package:dupe/features/authors/data/author_providers.dart';
 import 'package:dupe/features/authors/domain/author_groups.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
@@ -17,16 +17,13 @@ class AuthorsList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = AppLocalizations.of(context);
     return switch (ref.watch(visibleAuthorGroupsProvider(type))) {
       AsyncData(:final value) => ListView.builder(
         key: const Key('authorsList'),
         itemCount: value.length,
         itemBuilder: (context, i) => AuthorTile(type: type, group: value[i]),
       ),
-      AsyncError(:final error) => Center(
-        child: Text(l10n.loadError(errorText(l10n, error))),
-      ),
+      AsyncError(:final error) => LoadErrorView(error),
       _ => const Center(child: CircularProgressIndicator()),
     };
   }

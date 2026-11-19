@@ -1,7 +1,6 @@
 import 'package:dupe/features/collection/data/collection_repository.dart';
 import 'package:dupe/features/collection/domain/enums.dart';
 import 'package:dupe/features/collection/domain/item.dart';
-import 'package:dupe/features/collection/domain/series_matching.dart';
 import 'package:dupe/features/recommendations/domain/suggestion.dart';
 
 /// Adds [s] to the wishlist: volume 1 of its series (an existing series of
@@ -12,9 +11,7 @@ Future<Item> addSuggestionToWishes(
 ) async {
   var item = repo.newItem(s.type);
   if (s.seriesTitle case final title?) {
-    final existing = (await repo.listSeries(type: s.type))
-        .where((x) => normalizeTitle(x.title) == normalizeTitle(title))
-        .firstOrNull;
+    final existing = await repo.findSeries(s.type, title);
     final series =
         existing ??
         repo

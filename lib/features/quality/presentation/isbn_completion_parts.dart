@@ -1,6 +1,6 @@
 import 'package:dupe/app/widgets/cover_image.dart';
 import 'package:dupe/features/collection/domain/item.dart';
-import 'package:dupe/features/quality/presentation/quality_list_screen.dart';
+import 'package:dupe/features/collection/presentation/labels.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -47,7 +47,7 @@ class IsbnCompletionCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        QualityListScreen.itemTitle(l10n, item),
+                        item.displayTitle(l10n),
                         key: const Key('isbnCompletionTitle'),
                         style: text.titleMedium,
                       ),

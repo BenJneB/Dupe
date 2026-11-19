@@ -36,11 +36,7 @@ void main() {
   );
 
   Future<Item> saved(WidgetTester tester, AppDatabase db, String id) async =>
-      (await tester.runAsync(
-        () => (db.select(
-          db.itemsTable,
-        )..where((t) => t.id.equals(id))).getSingle(),
-      ))!;
+      (await tester.runAsync(() => repoOf(db).getItem(id)))!;
 
   Future<void> save(WidgetTester tester) async {
     await tester.tap(find.byKey(const Key('saveButton')));

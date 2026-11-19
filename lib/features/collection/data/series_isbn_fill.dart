@@ -50,15 +50,37 @@ class SeriesIsbnFill extends _$SeriesIsbnFill {
   Future<void> run() async {
     if (state.running) return;
     state = const SeriesIsbnFillState(running: true);
-    final repo = ref.read(collectionRepositoryProvider);
-    final source = ref.read(seriesCatalogSourceProvider);
-    final todo = <(String, List<Item>)>[];
-    for (final s in await repo.listSeries()) {
-      final items = await repo.listSeriesItems(s.id);
-      if (items.any((i) => i.ownership == Ownership.possede && i.hasNoIsbn)) {
-        todo.add((s.id, items));
+    try {
+      await _run();
+    } finally {
+      // Never left spinning (keepAlive) when a read fails.
+      if (state.running) {
+        state = SeriesIsbnFillState(
+          done: state.done,
+          total: state.total,
+          found: state.found,
+          ambiguous: state.ambiguous,
+        );
       }
     }
+  }
+
+  Future<void> _run() async {
+    final repo = ref.read(collectionRepositoryProvider);
+    final source = ref.read(seriesCatalogSourceProvider);
+    // One read of the collection to find the series to complete.
+    final bySeries = <String, List<Item>>{};
+    for (final i in await repo.listItems()) {
+      if (i.seriesId case final id?) (bySeries[id] ??= []).add(i);
+    }
+    final todo = <(String, List<Item>)>[
+      for (final s in await repo.listSeries())
+        if (bySeries[s.id] case final items?
+            when items.any(
+              (i) => i.ownership == Ownership.possede && i.hasNoIsbn,
+            ))
+          (s.id, items),
+    ];
     var (found, ambiguous) = (0, 0);
     state = SeriesIsbnFillState(running: todo.isNotEmpty, total: todo.length);
     for (final (i, (id, items)) in todo.indexed) {
@@ -73,19 +95,24 @@ class SeriesIsbnFill extends _$SeriesIsbnFill {
             await source.volumesOf(series.title),
           ).where((e) => publishersMatch(publisher, e.publisher)).toList();
           if (editions.length == 1) {
+            // Volumes read again after the network call, just before the
+            // write: an edit made meanwhile (read, loaned) is not undone.
+            final fresh = await repo.listSeriesItems(id);
             final plan = planCompletion(
-              existing: items,
+              existing: fresh,
               chosen: {
                 for (final v in editions.single.volumes)
-                  if (volumeState(items, v.number) == VolumeState.missingIsbn)
+                  if (volumeState(fresh, v.number) == VolumeState.missingIsbn)
                     v.number: (record: v.preferred, choice: VolumeChoice.owned),
               },
               seriesTitle: series.title,
               newItem: (_) => throw StateError('nothing is created'),
             );
-            for (final item in plan.updates) {
-              await repo.saveItem(item);
-            }
+            await repo.inTransaction(() async {
+              for (final item in plan.updates) {
+                await repo.saveItem(item);
+              }
+            });
             found += plan.updates.length;
           } else if (editions.length > 1) {
             ambiguous++;

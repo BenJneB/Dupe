@@ -133,9 +133,11 @@ class CoverProposals extends _$CoverProposals {
     _remove(p);
   }
 
-  Future<void> keepAll() async {
-    for (final p in [...state]) {
-      await keep(p);
-    }
-  }
+  /// All in one transaction: the collection streams refresh once.
+  Future<void> keepAll() =>
+      ref.read(collectionRepositoryProvider).inTransaction(() async {
+        for (final p in [...state]) {
+          await keep(p);
+        }
+      });
 }

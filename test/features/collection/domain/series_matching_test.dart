@@ -91,6 +91,34 @@ void main() {
     expect(findMatchingSeries(volume(), [other]), other);
   });
 
+  test('another publisher needs a common author (not another work)', () {
+    final spirou = series(
+      's',
+      'Spirou',
+      publisher: 'Dupuis',
+      type: CollectionType.bd,
+    ).copyWith(authors: ['Franquin']);
+    MetadataResult spirouBy(String author, String publisher) => volume(
+      title: 'Spirou',
+      publisher: publisher,
+    ).copyWith(authors: [author]);
+    // Another edition of the same work: joins the series.
+    expect(
+      findMatchingSeries(spirouBy('Franquin', 'Niffle'), [spirou]),
+      spirou,
+    );
+    // Another work with the same title, from another publisher: no.
+    expect(
+      findMatchingSeries(spirouBy('Émile Bravo', 'Niffle'), [spirou]),
+      isNull,
+    );
+    // Same publisher: the author is not checked.
+    expect(
+      findMatchingSeries(spirouBy('Émile Bravo', 'Dupuis'), [spirou]),
+      spirou,
+    );
+  });
+
   test('a compatible publisher wins among same-title series', () {
     final kana = series('k', 'One Piece', publisher: 'Kana');
     final glenat = series('g', 'One Piece', publisher: 'Glénat');

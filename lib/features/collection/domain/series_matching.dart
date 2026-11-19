@@ -1,5 +1,6 @@
 import 'package:dupe/core/metadata/metadata_result.dart';
 import 'package:dupe/core/utils/text_fold.dart';
+import 'package:dupe/features/authors/domain/author_groups.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
 import 'package:dupe/features/collection/domain/series.dart';
 
@@ -34,14 +35,15 @@ bool publishersMatch(String? a, String? b) {
 /// T. 04, a record without 461).
 List<String> seriesTitleCandidates(MetadataResult m) => {
   ?m.seriesTitle,
-  if (m.volumeNumber != null) m.title,
-  if (m.volumeNumber != null) ?m.subtitle,
+  if (m.volumeNumber != null) ...[m.title, ?m.subtitle],
 }.where((t) => t.trim().isNotEmpty).toList();
 
 /// Existing series a scanned volume belongs to: same series title. Other
-/// editions of a work go into the same series (recette 2026-11-19), so the
-/// publisher only breaks ties, like the type: same type and compatible
-/// publisher first, then same type, then compatible publisher.
+/// editions of a work go into the same series (recette 2026-11-19); from
+/// another publisher, a common author is required too (another work with
+/// the same title, "Spirou" elsewhere, is not that series). The publisher
+/// and the type then break ties: same type and compatible publisher first,
+/// then same type, then compatible publisher.
 Series? findMatchingSeries(
   MetadataResult m,
   List<Series> series, {
@@ -49,10 +51,14 @@ Series? findMatchingSeries(
 }) {
   final titles = seriesTitleCandidates(m).map(normalizeTitle).toSet();
   if (titles.isEmpty) return null;
-  final matches = series
-      .where((s) => titles.contains(normalizeTitle(s.title)))
-      .toList();
   bool samePublisher(Series s) => publishersMatch(s.publisher, m.publisher);
+  final matches = series
+      .where(
+        (s) =>
+            titles.contains(normalizeTitle(s.title)) &&
+            (samePublisher(s) || authorsCompatible(s.authors, m.authors)),
+      )
+      .toList();
   bool sameType(Series s) => s.type == preferredType;
   return matches.where((s) => sameType(s) && samePublisher(s)).firstOrNull ??
       matches.where(sameType).firstOrNull ??

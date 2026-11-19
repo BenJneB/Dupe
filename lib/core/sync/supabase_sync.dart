@@ -123,7 +123,12 @@ class SupabaseSyncAuth implements SyncAuth {
   @override
   Future<void> resetPassword(String email, String code, String password) =>
       _signInGuard(() async {
-        await _verify(email, code, OtpType.recovery);
+        // Retried after a refused password: the code is already used and
+        // the session open, so only the password is set again.
+        final user = client.auth.currentUser;
+        if (user?.email?.toLowerCase() != email.trim().toLowerCase()) {
+          await _verify(email, code, OtpType.recovery);
+        }
         await client.auth.updateUser(UserAttributes(password: password));
       });
 
@@ -216,6 +221,11 @@ class SupabaseSyncRemote implements SyncRemote {
   /// 5-character one is a Postgres SQLSTATE, not a status.
   static SyncFailure failureOf(PostgrestException e) {
     final code = e.code ?? '';
+    // 42501 is also a row-level security refusal (rows of another account):
+    // signing in again would not help, it is a rejection.
+    if (code == '42501' && e.message.contains('row-level security')) {
+      return SyncFailure.rejected;
+    }
     if (const {'PGRST301', 'PGRST303', '42501'}.contains(code)) {
       return SyncFailure.session;
     }

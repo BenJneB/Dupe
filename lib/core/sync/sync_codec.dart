@@ -49,12 +49,15 @@ class SyncCodec {
   /// Writes a remote/backup row locally unless a local row is newer
   /// (last write wins). [pending]: whether the row must be pushed later.
   /// [force]: write even over a newer local row (full restore).
+  /// [refetch]: rewrite a row received again (same `updated_at`), to fill
+  /// the columns added by a migration since it was pulled.
   /// Returns whether the row was written.
   Future<bool> apply(
     TableInfo<Table, Object?> table,
     Map<String, Object?> row, {
     required bool pending,
     bool force = false,
+    bool refetch = false,
   }) async {
     final name = table.actualTableName;
     final local = await _db
@@ -74,7 +77,8 @@ class SyncCodec {
       final localMayWin = pending || local.data['sync_pending'] == 1;
       if (localMayWin && !rowAt.isAfter(localAt)) return false;
       // Same write received again (pull overlap): nothing to change.
-      if (rowAt.isAtSameMomentAs(localAt) &&
+      if (!refetch &&
+          rowAt.isAtSameMomentAs(localAt) &&
           local.data['user_id'] == row['user_id']) {
         return false;
       }

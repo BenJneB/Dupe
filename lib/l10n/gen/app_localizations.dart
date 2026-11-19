@@ -1462,17 +1462,23 @@ abstract class AppLocalizations {
   /// **'Aucune série'**
   String get seriesNone;
 
+  /// No description provided for @seriesUnknown.
+  ///
+  /// In fr, this message translates to:
+  /// **'Série pas encore synchronisée sur cet appareil (gardée)'**
+  String get seriesUnknown;
+
   /// No description provided for @seriesPickerHelper.
   ///
   /// In fr, this message translates to:
   /// **'Appuie pour choisir la série (ou aucune)'**
   String get seriesPickerHelper;
 
-  /// No description provided for @seriesPickerTitle.
+  /// No description provided for @changeSeriesTooltip.
   ///
   /// In fr, this message translates to:
   /// **'Choisir la série'**
-  String get seriesPickerTitle;
+  String get changeSeriesTooltip;
 
   /// No description provided for @seriesPickerHint.
   ///
@@ -2715,12 +2721,6 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Dédicacés'**
   String get statsSigned;
-
-  /// No description provided for @csvSigned.
-  ///
-  /// In fr, this message translates to:
-  /// **'Dédicacé'**
-  String get csvSigned;
 
   /// No description provided for @fullArchiveExport.
   ///

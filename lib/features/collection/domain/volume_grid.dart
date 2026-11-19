@@ -69,12 +69,11 @@ class VolumeGrid {
     final copies = <String, List<Item>>{};
     final unnumbered = <Item>[];
     for (final item in items) {
-      final label = item.volumeNumber?.trim() ?? '';
-      if (label.isEmpty) {
+      final key = VolumeNumber.key(item.volumeNumber);
+      if (key == null) {
         unnumbered.add(item);
         continue;
       }
-      final key = VolumeNumber.asInt(label)?.toString() ?? label;
       (copies[key] ??= []).add(item);
     }
     for (final list in copies.values) {
@@ -103,7 +102,8 @@ class VolumeGrid {
         ),
     ];
     final specials =
-        byLabel.keys.where((k) => VolumeNumber.asInt(k) == null).toList()
+        // "0" is not in 1..max: shown with the specials ("HS 1").
+        byLabel.keys.where((k) => (VolumeNumber.asInt(k) ?? 0) < 1).toList()
           ..sort(VolumeNumber.compare);
     for (final key in specials) {
       slots.add(

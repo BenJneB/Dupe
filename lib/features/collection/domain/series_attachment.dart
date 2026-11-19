@@ -1,24 +1,39 @@
 import 'package:dupe/features/collection/domain/series.dart';
 
-/// How a new item from an online result relates to a series.
-class SeriesAttachment {
-  const new({this.series, this.newSeriesTitle, this.createNew = true});
+/// Which series the item form files a book in.
+sealed class SeriesAttachment {
+  const new();
 
-  /// No series involved (standalone book, manual entry).
-  static const none = SeriesAttachment(createNew: false);
+  /// The current link is kept: no series, or one not synced yet.
+  static const SeriesAttachment none = KeepSeries();
 
-  /// Existing series the volume was matched to.
-  final Series? series;
+  /// "Aucune série" chosen by the user: the book leaves its series.
+  static const SeriesAttachment detached = DetachSeries();
+}
 
-  /// Series to create when none matched (numbered volume).
-  final String? newSeriesTitle;
+/// Unchanged: the book stays where it is (in no series, or in a series
+/// this device does not know yet).
+final class KeepSeries extends SeriesAttachment {
+  const new();
+}
 
-  /// Whether to create [newSeriesTitle] on save (user can opt out).
-  final bool createNew;
+/// Matched, current or chosen existing series.
+final class AttachToSeries extends SeriesAttachment {
+  const new(this.series);
 
-  SeriesAttachment withCreateNew(bool value) => SeriesAttachment(
-    series: series,
-    newSeriesTitle: newSeriesTitle,
-    createNew: value,
-  );
+  final Series series;
+}
+
+/// New series named [title], created on save while [enabled]; switched
+/// off, the book goes into no series.
+final class CreateSeries extends SeriesAttachment {
+  const new(this.title, {this.enabled = true});
+
+  final String title;
+  final bool enabled;
+}
+
+/// Out of any series.
+final class DetachSeries extends SeriesAttachment {
+  const new();
 }

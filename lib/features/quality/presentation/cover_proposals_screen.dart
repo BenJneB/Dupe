@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:dupe/app/widgets/cover_image.dart';
+import 'package:dupe/features/collection/presentation/labels.dart';
 import 'package:dupe/features/covers/data/cover_proposals.dart';
-import 'package:dupe/features/quality/presentation/quality_list_screen.dart';
 import 'package:dupe/features/search/presentation/online_search/source_labels.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -54,7 +54,7 @@ class CoverProposalsScreen extends ConsumerWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  QualityListScreen.itemTitle(l10n, p.item),
+                                  p.item.displayTitle(l10n),
                                   style: text.titleMedium,
                                 ),
                                 const SizedBox(height: 4),

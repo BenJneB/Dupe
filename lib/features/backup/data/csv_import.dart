@@ -7,6 +7,7 @@ import 'package:dupe/features/collection/domain/collection_type.dart';
 import 'package:dupe/features/collection/domain/enums.dart';
 import 'package:dupe/features/collection/domain/item.dart';
 import 'package:dupe/features/collection/domain/series.dart';
+import 'package:dupe/features/collection/domain/volume_number.dart';
 
 typedef ImportDefaults = ({CollectionType type, Ownership ownership});
 
@@ -117,6 +118,11 @@ Future<ImportReport> _importRows(
           coverPrice: ImportValues.price(get(ImportField.coverPrice)),
           location: get(ImportField.location),
           notes: get(ImportField.notes),
+          isSigned: ImportValues.flag(get(ImportField.signed)),
+          signedBy: get(ImportField.signedBy),
+          signedOn: ImportValues.date(get(ImportField.signedOn)),
+          signedPlace: get(ImportField.signedPlace),
+          signingNote: get(ImportField.signingNote),
           source: 'csv',
         );
     await repo.saveItem(item);
@@ -150,7 +156,7 @@ Future<bool> _isDuplicate(
     (i) =>
         (volume == null
             ? i.volumeNumber == null && i.title == title
-            : i.volumeNumber?.trim() == volume) &&
+            : VolumeNumber.key(i.volumeNumber) == VolumeNumber.key(volume)) &&
         (isbn == null || i.isbn13 == null || i.isbn13 == isbn),
   );
 }

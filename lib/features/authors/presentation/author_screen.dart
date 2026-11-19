@@ -1,4 +1,5 @@
-import 'package:dupe/app/error_text.dart';
+import 'package:dupe/app/widgets/form_helpers.dart';
+import 'package:dupe/app/widgets/load_error_view.dart';
 import 'package:dupe/app/widgets/placeholder_body.dart';
 import 'package:dupe/features/authors/data/author_providers.dart';
 import 'package:dupe/features/authors/presentation/author_menu.dart';
@@ -21,11 +22,6 @@ class AuthorScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
-    final text = Theme.of(context).textTheme;
-    Widget header(String title) => Padding(
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
-      child: Text(title, style: text.titleSmall),
-    );
     final group = ref.watch(authorGroupProvider(type, name));
     return Scaffold(
       appBar: AppBar(
@@ -49,9 +45,9 @@ class AuthorScreen extends ConsumerWidget {
                 ),
               ),
             ),
-            if (group.series.isNotEmpty) header(l10n.authorSeries),
+            if (group.series.isNotEmpty) ListSectionHeader(l10n.authorSeries),
             for (final s in group.series) EntryTile(type: type, entry: s),
-            if (group.books.isNotEmpty) header(l10n.authorBooks),
+            if (group.books.isNotEmpty) ListSectionHeader(l10n.authorBooks),
             for (final b in group.books) EntryTile(type: type, entry: b),
           ],
         ),
@@ -59,9 +55,7 @@ class AuthorScreen extends ConsumerWidget {
           icon: Icons.person_off_outlined,
           title: l10n.authorNotFound,
         ),
-        AsyncError(:final error) => Center(
-          child: Text(l10n.loadError(errorText(l10n, error))),
-        ),
+        AsyncError(:final error) => LoadErrorView(error),
         _ => const Center(child: CircularProgressIndicator()),
       },
     );

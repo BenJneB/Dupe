@@ -18,11 +18,6 @@ class QualityListScreen extends ConsumerWidget {
 
   final QualityIssue issue;
 
-  static String itemTitle(AppLocalizations l10n, Item i) =>
-      i.volumeNumber == null
-      ? i.title
-      : l10n.volumeTitle(i.title, i.volumeNumber!);
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
@@ -47,7 +42,7 @@ class QualityListScreen extends ConsumerWidget {
             ListTile(
               key: ValueKey('qualityItem-${i.id}'),
               leading: CoverImage(url: i.coverUrl, width: 32, height: 48),
-              title: Text(itemTitle(l10n, i)),
+              title: Text(i.displayTitle(l10n)),
               subtitle: Text(
                 [i.type.label(l10n), i.ownership.label(l10n)].join(' · '),
               ),

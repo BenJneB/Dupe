@@ -52,6 +52,31 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
     return null;
   }
 
+  /// Runs [action] with the busy state on; its error is shown in the form
+  /// ([onError] first, for a failure that needs more, like the code field).
+  Future<void> _run(
+    Future<void> Function() action, {
+    void Function(Object error)? onError,
+  }) async {
+    final l10n = AppLocalizations.of(context);
+    setState(() {
+      _busy = true;
+      _error = null;
+    });
+    try {
+      await action();
+    } on Object catch (e, stack) {
+      if (mounted) {
+        setState(() {
+          _error = reportError(l10n, 'auth', e, stack);
+          onError?.call(e);
+        });
+      }
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
+
   Future<void> _submit() async {
     final l10n = AppLocalizations.of(context);
     final invalid = _invalid(l10n);
@@ -63,37 +88,30 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
     final messenger = ScaffoldMessenger.of(context);
     final auth = ref.read(syncAuthProvider);
     final email = _email.text.trim();
-    setState(() => _busy = true);
-    try {
-      final signedIn = _signUp
-          ? await auth.signUp(email, _password.text)
-          : await auth.signIn(email, _password.text).then((_) => true);
-      TextInput.finishAutofillContext();
-      if (signedIn) {
-        messenger.showSnackBar(SnackBar(content: Text(l10n.signInDone)));
-        if (mounted) context.pop();
-      } else if (mounted) {
-        // Email confirmation required: the code of the email signs in.
-        setState(() {
-          _signUp = false;
+    await _run(
+      () async {
+        final signedIn = _signUp
+            ? await auth.signUp(email, _password.text)
+            : await auth.signIn(email, _password.text).then((_) => true);
+        TextInput.finishAutofillContext();
+        if (signedIn) {
+          messenger.showSnackBar(SnackBar(content: Text(l10n.signInDone)));
+          if (mounted) context.pop();
+        } else if (mounted) {
+          // Email confirmation required: the code of the email signs in.
+          setState(() {
+            _signUp = false;
+            _codeFor = email;
+            _info = l10n.confirmEmailSent(email);
+          });
+        }
+      },
+      onError: (e) {
+        if (e case SignInException(failure: SignInFailure.emailNotConfirmed)) {
           _codeFor = email;
-          _info = l10n.confirmEmailSent(email);
-        });
-      }
-    } on SignInException catch (e, stack) {
-      if (mounted) {
-        setState(() {
-          _error = reportError(l10n, 'auth', e, stack);
-          if (e.failure == SignInFailure.emailNotConfirmed) _codeFor = email;
-        });
-      }
-    } on Object catch (e, stack) {
-      if (mounted) {
-        setState(() => _error = reportError(l10n, 'auth', e, stack));
-      }
-    } finally {
-      if (mounted) setState(() => _busy = false);
-    }
+        }
+      },
+    );
   }
 
   /// The account is confirmed with the code of the email, then signed in.
@@ -106,35 +124,21 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
       return;
     }
     final messenger = ScaffoldMessenger.of(context);
-    setState(() {
-      _busy = true;
-      _error = null;
-    });
-    try {
+    await _run(() async {
       await ref.read(syncAuthProvider).confirmSignUp(email, _code.text);
       messenger.showSnackBar(SnackBar(content: Text(l10n.signInDone)));
       if (mounted) context.pop();
-    } on Object catch (e, stack) {
-      if (mounted) {
-        setState(() => _error = reportError(l10n, 'auth', e, stack));
-      }
-    } finally {
-      if (mounted) setState(() => _busy = false);
-    }
+    });
   }
 
   Future<void> _resend() async {
     final l10n = AppLocalizations.of(context);
     final email = _codeFor;
     if (email == null) return;
-    try {
+    await _run(() async {
       await ref.read(syncAuthProvider).resendConfirmation(email);
       if (mounted) setState(() => _info = l10n.confirmEmailSent(email));
-    } on Object catch (e, stack) {
-      if (mounted) {
-        setState(() => _error = reportError(l10n, 'auth', e, stack));
-      }
-    }
+    });
   }
 
   Future<void> _forgot() async {

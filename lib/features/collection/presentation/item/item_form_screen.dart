@@ -4,7 +4,6 @@ import 'package:dupe/app/error_text.dart';
 import 'package:dupe/app/router.dart';
 import 'package:dupe/app/widgets/form_helpers.dart';
 import 'package:dupe/core/database/database_provider.dart';
-import 'package:dupe/core/utils/formatters.dart';
 import 'package:dupe/features/collection/data/collection_repository.dart';
 import 'package:dupe/features/collection/data/item_drafts.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
@@ -13,6 +12,7 @@ import 'package:dupe/features/collection/domain/item.dart';
 import 'package:dupe/features/collection/domain/metadata_mapping.dart';
 import 'package:dupe/features/collection/domain/series_attachment.dart';
 import 'package:dupe/features/collection/presentation/item/item_form_controllers.dart';
+import 'package:dupe/features/collection/presentation/item/item_price_fields.dart';
 import 'package:dupe/features/collection/presentation/item/item_reading_fields.dart';
 import 'package:dupe/features/collection/presentation/item/item_signing_fields.dart';
 import 'package:dupe/features/collection/presentation/item/item_text_input.dart';
@@ -152,7 +152,6 @@ class _ItemFormScreenState extends ConsumerState<ItemFormScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final locale = l10n.localeName;
     final loaded = _original != null;
     return Scaffold(
       appBar: AppBar(
@@ -187,6 +186,7 @@ class _ItemFormScreenState extends ConsumerState<ItemFormScreen> {
                     onChanged: (a) => setState(() => _attachment = a),
                     type: _original!.type,
                     suggestedTitle: () => _c[ItemTextField.title].text,
+                    linked: _original!.seriesId != null,
                   ),
                   ItemGeneralFields(_c, itemId: _original!.id),
                   ItemReadingFields(
@@ -219,52 +219,7 @@ class _ItemFormScreenState extends ConsumerState<ItemFormScreen> {
                     helper: l10n.fieldLocationHelper,
                   ),
                   ItemSigningFields(_c, onChanged: () => setState(() {})),
-                  FormSection(l10n.sectionPrice),
-                  ItemTextInput(
-                    _c,
-                    ItemTextField.purchasePrice,
-                    l10n.fieldPurchasePrice,
-                    decimal: true,
-                  ),
-                  FormDate(
-                    label: l10n.fieldPurchaseDate,
-                    value: _c.purchaseDate,
-                    format: (d) => Formatters.date(d, locale),
-                    onChanged: (d) => setState(() => _c.purchaseDate = d),
-                  ),
-                  formGap,
-                  ItemTextInput(
-                    _c,
-                    ItemTextField.coverPrice,
-                    l10n.fieldCoverPrice,
-                    decimal: true,
-                  ),
-                  ItemTextInput(
-                    _c,
-                    ItemTextField.estimatedValue,
-                    l10n.fieldEstimatedValue,
-                    decimal: true,
-                  ),
-                  ItemTextInput(_c, ItemTextField.currency, l10n.fieldCurrency),
-                  if (_c.ownership == Ownership.envie) ...[
-                    FormSection(l10n.sectionWishlist),
-                    FormDropdown<int?>(
-                      label: l10n.fieldWishlistPriority,
-                      value: _c.priority,
-                      items: {
-                        null: l10n.none,
-                        for (var p = 1; p <= 3; p++) p: '$p',
-                      },
-                      onChanged: (p) => setState(() => _c.priority = p),
-                    ),
-                    formGap,
-                    ItemTextInput(
-                      _c,
-                      ItemTextField.maxPrice,
-                      l10n.fieldWishlistMaxPrice,
-                      decimal: true,
-                    ),
-                  ],
+                  ItemPriceFields(_c, onChanged: () => setState(() {})),
                   FormSection(l10n.fieldNotes),
                   ItemTextInput(
                     _c,

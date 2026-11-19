@@ -43,6 +43,16 @@ class VolumeCountScan extends _$VolumeCountScan {
     if (state.running) return;
     // Running from the first await on: a second tap meanwhile is ignored.
     state = const VolumeCountScanState(running: true);
+    try {
+      await _run();
+    } on Object catch (e) {
+      // A failed read must not leave the tile spinning (keepAlive).
+      appLog.warning('collection', e);
+      state = const VolumeCountScanState();
+    }
+  }
+
+  Future<void> _run() async {
     final lookup = ref.read(seriesLookupProvider);
     final candidates = [
       for (final s in await ref.read(collectionRepositoryProvider).listSeries())

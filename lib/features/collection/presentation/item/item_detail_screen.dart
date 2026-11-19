@@ -1,6 +1,6 @@
-import 'package:dupe/app/error_text.dart';
 import 'package:dupe/app/router.dart';
 import 'package:dupe/app/widgets/cover_image.dart';
+import 'package:dupe/app/widgets/load_error_view.dart';
 import 'package:dupe/app/widgets/placeholder_body.dart';
 import 'package:dupe/core/utils/formatters.dart';
 import 'package:dupe/features/authors/presentation/author_links.dart';
@@ -38,7 +38,7 @@ class ItemDetailScreen extends ConsumerWidget {
       ),
       AsyncError(:final error) => Scaffold(
         appBar: AppBar(),
-        body: Center(child: Text(l10n.loadError(errorText(l10n, error)))),
+        body: LoadErrorView(error),
       ),
       _ => Scaffold(
         appBar: AppBar(),
@@ -82,9 +82,7 @@ class _ItemDetailView extends ConsumerWidget {
         v == null ? null : Formatters.price(v, item.currency, locale);
     String? date(DateTime? v) => v == null ? null : Formatters.date(v, locale);
 
-    final title = item.volumeNumber == null
-        ? item.title
-        : l10n.volumeTitle(item.title, item.volumeNumber!);
+    final title = item.displayTitle(l10n);
 
     final rows = <(String, String?)>[
       (l10n.fieldPublisher, item.publisher),

@@ -41,10 +41,10 @@ class UpdateChecker {
   static const enabledKey = 'update_check_enabled';
   static const checkedOnKey = 'update_checked_on';
 
-  Future<bool> get enabled async => await _settings.get(enabledKey) != '0';
+  Future<bool> get enabled => _settings.getBool(enabledKey, orElse: true);
 
   Future<void> setEnabled({required bool enabled}) =>
-      _settings.set(enabledKey, enabled ? '1' : '0');
+      _settings.setBool(enabledKey, value: enabled);
 
   /// Null when up to date, disabled, or already checked today (unless
   /// [force]), or when the repository has no release yet. Network errors

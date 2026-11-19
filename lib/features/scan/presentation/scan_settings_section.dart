@@ -1,3 +1,4 @@
+import 'package:dupe/app/widgets/form_helpers.dart';
 import 'package:dupe/features/scan/presentation/store/store_haptics.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -20,13 +21,7 @@ class ScanSettingsSection extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
-          child: Text(
-            l10n.scanSection,
-            style: Theme.of(context).textTheme.titleSmall,
-          ),
-        ),
+        ListSectionHeader(l10n.scanSection),
         SwitchListTile(
           key: const Key('storeHapticsSwitch'),
           secondary: const Icon(Icons.vibration),

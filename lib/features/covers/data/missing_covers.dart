@@ -127,6 +127,18 @@ class MissingCoversFill extends _$MissingCoversFill {
 
   Future<void> run() async {
     if (state.running) return;
+    // Running from the first await on: a second tap meanwhile is ignored.
+    state = const CoverFillState(running: true);
+    try {
+      await _run();
+    } on Object catch (e) {
+      // A failed read must not leave the tile spinning (keepAlive).
+      appLog.warning('covers', e);
+      state = const CoverFillState();
+    }
+  }
+
+  Future<void> _run() async {
     final repo = ref.read(collectionRepositoryProvider);
     final sources = ref.read(metadataAggregatorProvider);
     final cache = ref.read(coverCacheProvider);

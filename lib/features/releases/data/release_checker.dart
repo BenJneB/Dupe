@@ -33,7 +33,10 @@ class ReleaseChecker extends _$ReleaseChecker {
   static const _lastRun = 'releases_last_run';
   static const _cursor = 'releases_cursor';
   static String _baselineKey(String seriesId) => 'releases_base_$seriesId';
-  static String _seenKey(String author) => 'releases_seen_${authorKey(author)}';
+  // Word order kept (authorNameKey): the key existed before authorKey
+  // sorted the words (recette 2026-11-19).
+  static String _seenKey(String author) =>
+      'releases_seen_${authorNameKey(author)}';
 
   @override
   bool build() => false;
@@ -133,6 +136,12 @@ class ReleaseChecker extends _$ReleaseChecker {
             for (final k in known)
               if (k.startsWith(prefix))
                 ?int.tryParse(k.substring(prefix.length)),
+            // Already announced through a followed author (same ISBN):
+            // addIfNew would refuse it and block the volumes after it.
+            for (final v in edition.volumes)
+              if (v.preferred.isbn13 case final isbn?
+                  when known.contains('isbn:$isbn'))
+                v.number,
           },
         );
         for (final v in next) {
@@ -140,7 +149,7 @@ class ReleaseChecker extends _$ReleaseChecker {
           final added = await alerts.addIfNew(
             _alert(
               r,
-              key: 'series:${s.id}:${v.number}',
+              key: '$prefix${v.number}',
               kind: AlertKind.serie,
               type: s.type,
               title: s.title,
@@ -170,7 +179,10 @@ class ReleaseChecker extends _$ReleaseChecker {
     for (final a in authors) {
       try {
         final records = await sources.booksByAuthor(a.name);
-        final seenRaw = await store.get(_seenKey(a.name));
+        // Builds of 2026-11-19 (commit 1362cca) used the sorted authorKey.
+        final seenRaw =
+            await store.get(_seenKey(a.name)) ??
+            await store.get('releases_seen_${authorKey(a.name)}');
         // Nothing found (source off or failing): no reference yet.
         if (seenRaw == null && records.isEmpty) continue;
         final seen = <String>{};

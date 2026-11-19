@@ -1,4 +1,6 @@
 import 'package:dupe/core/notifications/local_notifications.dart';
+import 'package:dupe/features/collection/domain/item.dart';
+import 'package:dupe/features/collection/presentation/labels.dart';
 import 'package:dupe/features/loans/data/loans_repository.dart';
 import 'package:dupe/features/loans/domain/loan.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
@@ -17,7 +19,7 @@ abstract interface class LoanReminders {
   /// gets an "overdue" notification when the app starts instead.
   bool get canSchedule;
 
-  Future<void> schedule(Loan loan, String itemTitle);
+  Future<void> schedule(Loan loan, Item item);
   Future<void> cancel(Loan loan);
 
   /// False when the user turned Dupe's notifications off (Android): a
@@ -58,7 +60,7 @@ class LocalLoanReminders implements LoanReminders {
   }
 
   @override
-  Future<void> schedule(Loan loan, String itemTitle) async {
+  Future<void> schedule(Loan loan, Item item) async {
     final due = loan.dueAt;
     if (!canSchedule || due == null || !await _init()) return;
     final at = DateTime(due.year, due.month, due.day, 10);
@@ -66,7 +68,7 @@ class LocalLoanReminders implements LoanReminders {
     await localNotifications.zonedSchedule(
       id: idOf(loan),
       title: _l10n.loanDueTitle,
-      body: _l10n.loanDueBody(itemTitle, loan.borrowerName),
+      body: _l10n.loanDueBody(item.displayTitle(_l10n), loan.borrowerName),
       // An absolute instant: no time zone database needed.
       scheduledDate: tz.TZDateTime.from(at, tz.UTC),
       notificationDetails: _details,
@@ -99,7 +101,7 @@ class LocalLoanReminders implements LoanReminders {
       title: _l10n.loansOverdueTitle(overdue.length),
       body: [
         for (final o in overdue)
-          _l10n.loanDueBody(o.item.title, o.loan.borrowerName),
+          _l10n.loanDueBody(o.item.displayTitle(_l10n), o.loan.borrowerName),
       ].join('\n'),
       notificationDetails: _details,
     );

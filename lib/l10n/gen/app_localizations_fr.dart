@@ -886,10 +886,14 @@ class AppLocalizationsFr extends AppLocalizations {
   String get seriesNone => 'Aucune série';
 
   @override
+  String get seriesUnknown =>
+      'Série pas encore synchronisée sur cet appareil (gardée)';
+
+  @override
   String get seriesPickerHelper => 'Appuie pour choisir la série (ou aucune)';
 
   @override
-  String get seriesPickerTitle => 'Choisir la série';
+  String get changeSeriesTooltip => 'Choisir la série';
 
   @override
   String get seriesPickerHint => 'Chercher une série ou nommer une nouvelle';
@@ -1724,9 +1728,6 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get statsSigned => 'Dédicacés';
-
-  @override
-  String get csvSigned => 'Dédicacé';
 
   @override
   String get fullArchiveExport => 'Archive complète (avec photos)';

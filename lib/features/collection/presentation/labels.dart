@@ -1,8 +1,17 @@
 import 'package:dupe/features/collection/domain/collection_entry.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
 import 'package:dupe/features/collection/domain/enums.dart';
+import 'package:dupe/features/collection/domain/item.dart';
 import 'package:dupe/features/collection/domain/volume_grid.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
+
+/// "One Piece — tome 3", or the title alone for a book without number.
+extension ItemDisplayTitle on Item {
+  String displayTitle(AppLocalizations l10n) => switch (volumeNumber) {
+    final volume? => l10n.volumeTitle(title, volume),
+    null => title,
+  };
+}
 
 /// French labels for domain enums.
 extension CollectionTypeLabel on CollectionType {

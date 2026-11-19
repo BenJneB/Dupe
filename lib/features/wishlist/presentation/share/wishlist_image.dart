@@ -1,7 +1,7 @@
 import 'package:dupe/app/theme.dart';
 import 'package:dupe/core/utils/formatters.dart';
 import 'package:dupe/features/collection/domain/item.dart';
-import 'package:dupe/features/wishlist/presentation/share/wishlist_text.dart';
+import 'package:dupe/features/collection/presentation/labels.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -124,7 +124,7 @@ class _Wish extends StatelessWidget {
         ),
         const SizedBox(height: 4),
         Text(
-          wishTitle(l10n, item),
+          item.displayTitle(l10n),
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
           style: small?.copyWith(

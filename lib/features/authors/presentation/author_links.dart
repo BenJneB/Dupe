@@ -15,17 +15,20 @@ class AuthorLinks extends StatelessWidget {
   Widget build(BuildContext context) => Wrap(
     spacing: 4,
     children: [
-      for (final raw in authors)
-        if (raw.trim().isNotEmpty)
-          ActionChip(
-            key: ValueKey('authorLink-${authorKey(raw)}'),
-            avatar: const Icon(Icons.person_outline, size: 18),
-            label: Text(displayAuthorName(raw)),
-            // go, not push: the stack becomes tab > author, so "back"
-            // returns to the tab instead of replaying every page visited.
-            onPressed: () =>
-                context.go(AppRoutes.author(type, displayAuthorName(raw))),
-          ),
+      // One chip per author: two spellings of a name share a key.
+      for (final raw in {
+        for (final a in authors)
+          if (a.trim().isNotEmpty) authorKey(a): a,
+      }.values)
+        ActionChip(
+          key: ValueKey('authorLink-${authorKey(raw)}'),
+          avatar: const Icon(Icons.person_outline, size: 18),
+          label: Text(displayAuthorName(raw)),
+          // go, not push: the stack becomes tab > author, so "back"
+          // returns to the tab instead of replaying every page visited.
+          onPressed: () =>
+              context.go(AppRoutes.author(type, displayAuthorName(raw))),
+        ),
     ],
   );
 }

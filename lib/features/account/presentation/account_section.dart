@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dupe/app/router.dart';
+import 'package:dupe/app/widgets/form_helpers.dart';
 import 'package:dupe/core/sync/sync_controller.dart';
 import 'package:dupe/core/sync/sync_providers.dart';
 import 'package:dupe/features/account/presentation/set_password_dialog.dart';
@@ -76,16 +77,7 @@ class AccountSection extends ConsumerWidget {
     };
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
-          child: Text(
-            l10n.accountSection,
-            style: Theme.of(context).textTheme.titleSmall,
-          ),
-        ),
-        ...tiles,
-      ],
+      children: [ListSectionHeader(l10n.accountSection), ...tiles],
     );
   }
 }

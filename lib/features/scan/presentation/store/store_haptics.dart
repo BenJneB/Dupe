@@ -22,10 +22,10 @@ class StoreHaptics {
   static const enabledKey = 'store_haptics_enabled';
   static const channel = MethodChannel('dev.dupe.dupe/vibration');
 
-  Future<bool> get enabled async => await _settings.get(enabledKey) != '0';
+  Future<bool> get enabled => _settings.getBool(enabledKey, orElse: true);
 
   Future<void> setEnabled({required bool enabled}) =>
-      _settings.set(enabledKey, enabled ? '1' : '0');
+      _settings.setBool(enabledKey, value: enabled);
 
   /// Owned: one long and strong. Wished: two medium. Missing volume of a
   /// series: three short. Unknown: one brief tick.

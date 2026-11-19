@@ -1,8 +1,9 @@
 import 'dart:async';
 
-import 'package:dupe/app/error_text.dart';
 import 'package:dupe/app/router.dart';
 import 'package:dupe/app/widgets/cover_image.dart';
+import 'package:dupe/app/widgets/form_helpers.dart';
+import 'package:dupe/app/widgets/load_error_view.dart';
 import 'package:dupe/app/widgets/placeholder_body.dart';
 import 'package:dupe/features/collection/domain/enums.dart';
 import 'package:dupe/features/collection/presentation/labels.dart';
@@ -117,7 +118,8 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
           ),
         AsyncValue(:final value?) => ListView(
           children: [
-            if (value.series.isNotEmpty) _Header(l10n.searchSeriesSection),
+            if (value.series.isNotEmpty)
+              ListSectionHeader(l10n.searchSeriesSection),
             for (final s in value.series)
               ListTile(
                 leading: CoverImage(url: s.coverUrl, width: 32, height: 48),
@@ -125,15 +127,12 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                 subtitle: Text(s.type.label(l10n)),
                 onTap: () => context.go(AppRoutes.series(s.type, s.id)),
               ),
-            if (value.items.isNotEmpty) _Header(l10n.searchItemsSection),
+            if (value.items.isNotEmpty)
+              ListSectionHeader(l10n.searchItemsSection),
             for (final i in value.items)
               ListTile(
                 leading: CoverImage(url: i.coverUrl, width: 32, height: 48),
-                title: Text(
-                  i.volumeNumber == null
-                      ? i.title
-                      : l10n.volumeTitle(i.title, i.volumeNumber!),
-                ),
+                title: Text(i.displayTitle(l10n)),
                 subtitle: Text(
                   [
                     i.type.label(l10n),
@@ -148,23 +147,9 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
               ),
           ],
         ),
-        AsyncError(:final error) => Center(
-          child: Text(l10n.loadError(errorText(l10n, error))),
-        ),
+        AsyncError(:final error) => LoadErrorView(error),
         _ => const LinearProgressIndicator(),
       },
     );
   }
-}
-
-class _Header extends StatelessWidget {
-  const new(this.text);
-
-  final String text;
-
-  @override
-  Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
-    child: Text(text, style: Theme.of(context).textTheme.titleSmall),
-  );
 }

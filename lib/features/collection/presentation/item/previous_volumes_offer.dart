@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dupe/app/error_text.dart';
 import 'package:dupe/features/collection/data/collection_repository.dart';
 import 'package:dupe/features/collection/domain/enums.dart';
 import 'package:dupe/features/collection/domain/item.dart';
@@ -46,14 +47,18 @@ Future<void> offerPreviousVolumes(
           key: const Key('addPreviousVolumes'),
           label: l10n.add,
           onPressed: () => unawaited(() async {
-            final created = await repo.addVolumeRange(
-              series,
-              from: 1,
-              to: number - 1,
-            );
-            messenger.showSnackBar(
-              SnackBar(content: Text(l10n.volumesAdded(created))),
-            );
+            String message;
+            try {
+              final created = await repo.addVolumeRange(
+                series,
+                from: 1,
+                to: number - 1,
+              );
+              message = l10n.volumesAdded(created);
+            } on Object catch (e, stack) {
+              message = reportError(l10n, 'collection', e, stack);
+            }
+            messenger.showSnackBar(SnackBar(content: Text(message)));
           }()),
         ),
       ),

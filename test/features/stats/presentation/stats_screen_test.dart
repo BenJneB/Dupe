@@ -34,10 +34,10 @@ void main() {
       tester,
       overrides: [
         collectionStatsProvider.overrideWith(
-          (ref) => Stream.error(StateError('broken')),
+          (ref) => Future.error(StateError('broken')),
         ),
         readingStatsProvider.overrideWith(
-          (ref) => Stream.error(StateError('broken')),
+          (ref) => Future.error(StateError('broken')),
         ),
       ],
     );

@@ -58,6 +58,12 @@ abstract final class ImportValues {
   };
 
   /// "7,20 €", "7.20", "$4.99" -> 7.2.
+  /// "oui" / "x" / "yes" / "1" (the export writes "oui"); empty is no.
+  static bool flag(String? v) => switch (v == null ? '' : _f(v)) {
+    'oui' || 'o' || 'x' || 'yes' || 'y' || 'true' || '1' => true,
+    _ => false,
+  };
+
   static double? price(String? v) => v == null
       ? null
       : Formatters.parseDecimal(v.replaceAll(RegExp(r'[^\d,.\-]'), ''));
