@@ -1456,11 +1456,29 @@ abstract class AppLocalizations {
   /// **'Série : {title}'**
   String attachedToSeries(String title);
 
-  /// No description provided for @attachedToSeriesHelper.
+  /// No description provided for @seriesNone.
   ///
   /// In fr, this message translates to:
-  /// **'Rangé automatiquement dans cette série'**
-  String get attachedToSeriesHelper;
+  /// **'Aucune série'**
+  String get seriesNone;
+
+  /// No description provided for @seriesPickerHelper.
+  ///
+  /// In fr, this message translates to:
+  /// **'Appuie pour choisir la série (ou aucune)'**
+  String get seriesPickerHelper;
+
+  /// No description provided for @seriesPickerTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Choisir la série'**
+  String get seriesPickerTitle;
+
+  /// No description provided for @seriesPickerHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Chercher une série ou nommer une nouvelle'**
+  String get seriesPickerHint;
 
   /// No description provided for @createSeriesNamed.
   ///

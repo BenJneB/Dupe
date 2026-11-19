@@ -49,7 +49,7 @@ MetadataResult? parseUnimarcRecord(UnimarcRecord r) {
     source: MetadataSource.bnf,
     sourceId: r.id ?? r.control('001') ?? title,
     title: title,
-    subtitle: r.first('200', 'e') ?? r.first('200', 'i'),
+    subtitle: _subtitle(r),
     authors: _authors(r),
     publisher: r.first('214', 'c') ?? r.first('210', 'c'),
     publishDate: _year(r.first('214', 'd') ?? r.first('210', 'd')),
@@ -86,6 +86,26 @@ MetadataResult? parseUnimarcRecord(UnimarcRecord r) {
     if (_fold(title) != _fold(linkedSeries)) continue;
     if ((int.tryParse(number.trim()) ?? 0) >= 1000) continue;
     return (title: title, number: number);
+  }
+  return null;
+}
+
+/// 200 $e that only names the genre (« roman », « nouvelles », « bande
+/// dessinée ») instead of a real subtitle: « Les fourmis : roman ».
+final _genreOnly = RegExp(
+  '^(romans?( (policier|noir|graphique|jeunesse|historique|fantastique))?'
+  '|r[ée]cits?|nouvelles?|contes?|essais?|po[ée]sies?|po[èe]mes?'
+  r'|th[ée][âa]tre|thriller|polar|bande dessin[ée]e|manga|comics?)$',
+  caseSensitive: false,
+);
+
+String? _subtitle(UnimarcRecord r) {
+  for (final code in ['e', 'i']) {
+    for (final value
+        in r.fields('200').expand((f) => UnimarcRecord.subfields(f, code))) {
+      final cleaned = value.trim().replaceAll(RegExp(r'\s+'), ' ');
+      if (cleaned.isNotEmpty && !_genreOnly.hasMatch(cleaned)) return cleaned;
+    }
   }
   return null;
 }

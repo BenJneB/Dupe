@@ -41,6 +41,8 @@ void main() {
     expect(authorKey('Colfer, Eoin'), authorKey('eoin  COLFER'));
     expect(authorKey('Eiichirō Oda'), authorKey('Eiichiro Oda'));
     expect(authorKey('J.R.R. Tolkien'), 'j r r tolkien');
+    // Same words in another order, without comma (recette 2026-11-19).
+    expect(authorKey('Di Mio Federica'), authorKey('Federica Di Mio'));
   });
 
   test('groups series and books by author, sorted by last name', () {

@@ -146,7 +146,10 @@ class VolumeGrid {
     return VolumeGrid(
       slots: slots,
       toReadCount: slots.where(isToRead).length,
-      ownedCount: numbered.where(isOwned).length,
+      // Without a total, every owned volume counts ("3,5", "HS 1", "?").
+      ownedCount: totalVolumes == null
+          ? slots.where(isOwned).length
+          : numbered.where(isOwned).length,
       totalVolumes: totalVolumes,
       missingNumbers: followed
           ? [
@@ -159,7 +162,8 @@ class VolumeGrid {
 
   final List<VolumeSlot> slots;
 
-  /// Owned (or loaned) numbered volumes within the series range.
+  /// Owned (or loaned) numbered volumes within the series total, or every
+  /// owned volume when the total is unknown.
   final int ownedCount;
   final int? totalVolumes;
   final List<int> missingNumbers;

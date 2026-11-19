@@ -883,7 +883,16 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get attachedToSeriesHelper => 'Rangé automatiquement dans cette série';
+  String get seriesNone => 'Aucune série';
+
+  @override
+  String get seriesPickerHelper => 'Appuie pour choisir la série (ou aucune)';
+
+  @override
+  String get seriesPickerTitle => 'Choisir la série';
+
+  @override
+  String get seriesPickerHint => 'Chercher une série ou nommer une nouvelle';
 
   @override
   String createSeriesNamed(String title) {

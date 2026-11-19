@@ -381,7 +381,10 @@
       }
     }
   },
-  "attachedToSeriesHelper": "Rangé automatiquement dans cette série",
+  "seriesNone": "Aucune série",
+  "seriesPickerHelper": "Appuie pour choisir la série (ou aucune)",
+  "seriesPickerTitle": "Choisir la série",
+  "seriesPickerHint": "Chercher une série ou nommer une nouvelle",
   "createSeriesNamed": "Créer la série « {title} »",
   "@createSeriesNamed": {
     "placeholders": {

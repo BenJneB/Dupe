@@ -3,6 +3,7 @@ import 'package:dupe/app/router.dart';
 import 'package:dupe/app/widgets/global_search_bar.dart';
 import 'package:dupe/app/widgets/placeholder_body.dart';
 import 'package:dupe/features/authors/presentation/authors_list.dart';
+import 'package:dupe/features/collection/domain/collection_entry.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
 import 'package:dupe/features/collection/presentation/collection_tab/collection_toolbar.dart';
 import 'package:dupe/features/collection/presentation/collection_tab/entries_grid.dart';
@@ -81,6 +82,8 @@ class CollectionTabScreen extends ConsumerWidget {
               byAuthor: settings.byAuthor,
               onToggleByAuthor: notifier.toggleByAuthor,
             ),
+            if (entries case AsyncData(:final value) when value.isNotEmpty)
+              _TabSummary(value),
             Expanded(
               child: switch (entries) {
                 AsyncData(:final value) when value.isEmpty => PlaceholderBody(
@@ -101,6 +104,34 @@ class CollectionTabScreen extends ConsumerWidget {
           ],
         ),
       },
+    );
+  }
+}
+
+/// Totals of the visible entries (they follow the filters).
+class _TabSummary extends StatelessWidget {
+  const new(this.entries);
+
+  final List<CollectionEntry> entries;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final series = entries.whereType<SeriesEntry>().length;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 4),
+      child: Align(
+        alignment: AlignmentDirectional.centerStart,
+        child: Text(
+          l10n.authorSummary(
+            series,
+            entries.length - series,
+            ownedVolumes(entries),
+          ),
+          key: const Key('tabSummary'),
+          style: Theme.of(context).textTheme.bodySmall,
+        ),
+      ),
     );
   }
 }

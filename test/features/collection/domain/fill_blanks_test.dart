@@ -81,5 +81,20 @@ void main() {
     expect(volumeTitleOf(r('One Piece', volume: '56')), isNull);
     // Standalone book without subtitle: nothing either.
     expect(volumeTitleOf(r('Dune')), isNull);
+    // A subtitle repeating the series or the title is dropped.
+    expect(
+      volumeTitleOf(
+        r('Requiem (II), Finale', subtitle: "Jupiter's Legacy", volume: '04'),
+        seriesTitle: "Jupiter's legacy",
+      ),
+      'Requiem (II), Finale',
+    );
+    expect(
+      volumeTitleOf(
+        r('Le chant de Susannah', subtitle: 'Le chant de Susannah'),
+        seriesTitle: 'La tour sombre',
+      ),
+      'Le chant de Susannah',
+    );
   });
 }

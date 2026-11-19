@@ -108,6 +108,26 @@ void main() {
     expect(r.volumeNumber, isNull);
   });
 
+  test('a genre-only subtitle is dropped (« Les fourmis : roman »)', () {
+    final r = parseUnimarcResponse(fixture('bnf/isbn_9782253251378.xml'))
+        .single;
+
+    expect(r.title, 'Les fourmis');
+    expect(r.subtitle, isNull);
+  });
+
+  test('a record without 461 keeps its 200 i subtitle (series name)', () {
+    // Real prerecord of Jupiter's Legacy T. 04: 200 a « Requiem (II),
+    // Finale », h T. 04, i Jupiter's Legacy, no 461.
+    final r = parseUnimarcResponse(fixture('bnf/isbn_9791039142922.xml'))
+        .single;
+
+    expect(r.title, 'Requiem (II), Finale');
+    expect(r.volumeNumber, '04');
+    expect(r.seriesTitle, isNull);
+    expect(r.subtitle, "Jupiter's Legacy");
+  });
+
   test('volume labels are cleaned', () {
     expect(cleanVolumeNumber('Tome 2'), '2');
     expect(cleanVolumeNumber('T. 12'), '12');

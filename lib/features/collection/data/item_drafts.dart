@@ -33,14 +33,27 @@ Future<ItemDraft?> loadItemDraft(
   ItemPrefill? prefill,
   String? copyOf,
 }) async {
+  // The series an item is already in, shown and changeable in the form.
+  Future<SeriesAttachment> current(Item item) async => switch (item.seriesId) {
+    final id? => switch (await repo.getSeries(id)) {
+      final series? => SeriesAttachment(series: series),
+      null => _none,
+    },
+    null => _none,
+  };
   final source = copyOf == null ? null : await repo.getItem(copyOf);
-  if (source != null) return (item: newCopy(repo, source), attachment: _none);
+  if (source != null) {
+    final copy = newCopy(repo, source);
+    return (item: copy, attachment: await current(copy));
+  }
   if (itemId != null) {
     final item = await repo.getItem(itemId);
-    return item == null ? null : (item: item, attachment: _none);
+    return item == null ? null : (item: item, attachment: await current(item));
   }
   var series = seriesId == null ? null : await repo.getSeries(seriesId);
-  var attachment = SeriesAttachment.none;
+  var attachment = series == null
+      ? SeriesAttachment.none
+      : SeriesAttachment(series: series);
   if (prefill != null && series == null) {
     final metadata = prefill.metadata;
     series = findMatchingSeries(
@@ -73,15 +86,19 @@ Future<ItemDraft?> loadItemDraft(
   );
 }
 
-/// Creates the proposed series if needed and links [item] to it.
+/// Files [item] as [attachment] says: in its series, in no series, or in a
+/// new series created now (proposed title, or one typed by the user).
 Future<Item> applyAttachment(
   CollectionRepository repo,
   Item item,
   SeriesAttachment attachment,
 ) async {
   final title = attachment.newSeriesTitle;
-  if (title == null || !attachment.createNew || item.seriesId != null) {
-    return item;
+  if (attachment.series case final series?) {
+    return item.copyWith(seriesId: series.id);
+  }
+  if (title == null || !attachment.createNew) {
+    return item.copyWith(seriesId: null);
   }
   final series = repo
       .newSeries(item.type)

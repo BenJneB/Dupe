@@ -1,6 +1,5 @@
 import 'package:dupe/core/utils/text_fold.dart';
 import 'package:dupe/features/collection/domain/collection_entry.dart';
-import 'package:dupe/features/collection/domain/enums.dart';
 
 /// "Colfer, Eoin" (library order) -> "Eoin Colfer"; other names unchanged.
 String displayAuthorName(String raw) {
@@ -11,11 +10,18 @@ String displayAuthorName(String raw) {
       : name;
 }
 
-/// Same author whatever the source wrote: order, accents, case, dots.
-String authorKey(String raw) =>
+/// Name folded for comparison: accents, case and dots removed.
+String _foldName(String raw) =>
     foldForSearch(displayAuthorName(raw))
         .replaceAll(RegExp('[^a-z0-9]+'), ' ')
         .trim();
+
+/// Same author whatever the source wrote: accents, case, dots, and word
+/// order ("Federica Di Mio" / "Di Mio Federica", without a comma).
+String authorKey(String raw) {
+  final words = _foldName(raw).split(' ')..sort();
+  return words.join(' ').trim();
+}
 
 /// Series and standalone books of one author in a tab.
 class AuthorGroup {
@@ -31,16 +37,14 @@ class AuthorGroup {
   bool get isUnknown => key.isEmpty;
 
   /// Owned volumes: series volumes plus owned standalone books.
-  int get volumes =>
-      series.fold(0, (sum, s) => sum + s.ownedCount) +
-      books.where((b) => b.item.ownership == Ownership.possede).length;
+  int get volumes => ownedVolumes(entries);
 
   /// Owned books without ISBN among its series and books (quality marker).
   int get missingIsbnCount =>
       entries.fold(0, (sum, e) => sum + e.missingIsbnCount);
 
   /// Sorted by last name ("Colfer" for "Eoin Colfer").
-  String get sortKey => key.split(' ').reversed.join(' ');
+  String get sortKey => _foldName(name).split(' ').reversed.join(' ');
 
   List<CollectionEntry> get entries => [...series, ...books];
 }

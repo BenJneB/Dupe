@@ -42,6 +42,11 @@ deux fonctions tournées vers la suite de la collection : être prévenu des nou
   complétés au scan.
 - **Fait en fin de v3** (2026-11-15) : obfuscation des Releases publiques (seulement elles ; les APK locaux de
   l'utilisateur restent lisibles), symboles joints à la Release, `coverError` sans `runtimeType`.
+- **Recette du 2026-11-19** (bugs de séries remontés par l'utilisateur) : autre édition rangée dans la série
+  existante, éditeurs « Panini France / Panini comics » compatibles, sous-titre BnF 200 $i comme série candidate,
+  sous-titres génériques (« roman ») ignorés, tomes spéciaux comptés sans total, auteurs aux mots inversés fusionnés ;
+  ajoutés à la demande de l'utilisateur : **rangement manuel d'un livre dans une série** (formulaire) et **ligne de
+  total** en haut de l'onglet.
 - **Tests reportés après la v4** (décision de l'utilisateur) : mode rafale `R-01` à `R-04`, à dérouler dans la
   recette de la v4 (phase 35).
 

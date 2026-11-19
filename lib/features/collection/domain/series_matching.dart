@@ -10,23 +10,38 @@ String normalizeTitle(String input) =>
         .replaceAll(RegExp('[^a-z0-9]+'), ' ')
         .trim();
 
-/// Publisher names vary ("Glénat", "Glénat Manga", "Éditions Glénat"):
-/// match when one contains the other. Unknown publishers match.
+/// Words that say nothing about the publisher ("Éditions Glénat").
+const _publisherNoise = {'editions', 'edition', 'ed', 'les', 'le', 'la', 'l'};
+
+/// Publisher names vary ("Glénat", "Glénat Manga", "Éditions Glénat",
+/// "Panini France" / "Panini comics"): match when one contains the other or
+/// when they start with the same significant word. Unknown publishers match.
 bool publishersMatch(String? a, String? b) {
   if (a == null || b == null) return true;
   final na = normalizeTitle(a);
   final nb = normalizeTitle(b);
   if (na.isEmpty || nb.isEmpty) return true;
-  return na.contains(nb) || nb.contains(na);
+  if (na.contains(nb) || nb.contains(na)) return true;
+  String? head(String s) =>
+      s.split(' ').where((w) => !_publisherNoise.contains(w)).firstOrNull;
+  final ha = head(na);
+  return ha != null && ha.length >= 3 && ha == head(nb);
 }
 
 /// Series titles a result may belong to: its explicit series (BnF 461),
-/// and its own title when it is a numbered volume ("One Piece", tome 112).
-List<String> seriesTitleCandidates(MetadataResult m) =>
-    {?m.seriesTitle, if (m.volumeNumber != null) m.title}.toList();
+/// and, for a numbered volume, its own title ("One Piece", tome 112) and its
+/// subtitle (BnF 200 $i "Jupiter's Legacy" for « Requiem (II), Finale »,
+/// T. 04, a record without 461).
+List<String> seriesTitleCandidates(MetadataResult m) => {
+  ?m.seriesTitle,
+  if (m.volumeNumber != null) m.title,
+  if (m.volumeNumber != null) ?m.subtitle,
+}.where((t) => t.trim().isNotEmpty).toList();
 
-/// Existing series a scanned volume belongs to: same series title and
-/// compatible publisher. Series of [preferredType] win over other types.
+/// Existing series a scanned volume belongs to: same series title. Other
+/// editions of a work go into the same series (recette 2026-11-19), so the
+/// publisher only breaks ties, like the type: same type and compatible
+/// publisher first, then same type, then compatible publisher.
 Series? findMatchingSeries(
   MetadataResult m,
   List<Series> series, {
@@ -35,12 +50,12 @@ Series? findMatchingSeries(
   final titles = seriesTitleCandidates(m).map(normalizeTitle).toSet();
   if (titles.isEmpty) return null;
   final matches = series
-      .where(
-        (s) =>
-            titles.contains(normalizeTitle(s.title)) &&
-            publishersMatch(s.publisher, m.publisher),
-      )
+      .where((s) => titles.contains(normalizeTitle(s.title)))
       .toList();
-  return matches.where((s) => s.type == preferredType).firstOrNull ??
+  bool samePublisher(Series s) => publishersMatch(s.publisher, m.publisher);
+  bool sameType(Series s) => s.type == preferredType;
+  return matches.where((s) => sameType(s) && samePublisher(s)).firstOrNull ??
+      matches.where(sameType).firstOrNull ??
+      matches.where(samePublisher).firstOrNull ??
       matches.firstOrNull;
 }

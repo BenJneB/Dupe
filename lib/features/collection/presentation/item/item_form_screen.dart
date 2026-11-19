@@ -185,6 +185,8 @@ class _ItemFormScreenState extends ConsumerState<ItemFormScreen> {
                   SeriesAttachmentTile(
                     attachment: _attachment,
                     onChanged: (a) => setState(() => _attachment = a),
+                    type: _original!.type,
+                    suggestedTitle: () => _c[ItemTextField.title].text,
                   ),
                   ItemGeneralFields(_c, itemId: _original!.id),
                   ItemReadingFields(

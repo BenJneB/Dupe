@@ -14,15 +14,21 @@ Stream<List<CollectionEntry>> watchCollectionEntries(
   final s = db.seriesTable;
   final i = db.itemsTable;
   final activeItem = i.deletedAt.isNull();
-  // Same counts as the series grid (VolumeGrid): owned plain volumes from 1
-  // to the total ("07" is volume 7, several editions count once), and owned
-  // volumes (any number) none of whose owned copies is read.
+  // Same counts as the series grid (VolumeGrid): with a total, owned plain
+  // volumes from 1 to the total ("07" is volume 7, several editions count
+  // once); without one, every owned volume ("3,5", "Première époque", no
+  // number); and owned volumes (any number) none of whose owned copies is
+  // read.
   final ownedCount = CustomExpression<int>('''
-    (SELECT COUNT(DISTINCT CAST(${_number('c')} AS INTEGER)) FROM items c
-     WHERE ${_ownedIn('c')} AND ${_isPlain('c')}
-       AND CAST(${_number('c')} AS INTEGER) >= 1
-       AND (series.total_volumes IS NULL
-         OR CAST(${_number('c')} AS INTEGER) <= series.total_volumes))''');
+    (CASE WHEN series.total_volumes IS NULL THEN
+      (SELECT COUNT(DISTINCT ${_volumeKey('c')}) FROM items c
+       WHERE ${_ownedIn('c')})
+    ELSE
+      (SELECT COUNT(DISTINCT CAST(${_number('c')} AS INTEGER)) FROM items c
+       WHERE ${_ownedIn('c')} AND ${_isPlain('c')}
+         AND CAST(${_number('c')} AS INTEGER) >= 1
+         AND CAST(${_number('c')} AS INTEGER) <= series.total_volumes)
+    END)''');
   final toRead = toReadStatuses.map((r) => "'${r.dbValue}'").join(', ');
   final unreadCount = CustomExpression<int>('''
     (SELECT COUNT(DISTINCT ${_volumeKey('c')}) FROM items c

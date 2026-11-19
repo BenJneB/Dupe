@@ -79,7 +79,7 @@ void main() {
     for (var i = 0; i < 2; i++) {
       await tester.tap(find.text('Artemis Fowl'));
       await tester.pumpAndSettle();
-      await tester.tap(find.byKey(const ValueKey('authorLink-eoin colfer')));
+      await tester.tap(find.byKey(const ValueKey('authorLink-colfer eoin')));
       await tester.pumpAndSettle();
     }
     expect(find.byKey(const Key('authorPage')), findsOneWidget);

@@ -107,6 +107,10 @@ Description détaillée des choix techniques et de l'organisation du code (dépl
   `20261116120000_volume_title.sql`) ; `volumeTitleOf` (`metadata_mapping.dart`) pour l'ajout et le scan,
   `VolumeTitleFill` (Plus → Qualité) pour l'existant, `VolumeSlot.ownTitle` (repli sur l'ancien titre) pour
   l'affichage : vue liste, fiche, sous les pastilles ; colonne CSV « Titre du tome ».
+- Ligne de total en haut de l'onglet (`_TabSummary`, `collection_tab_screen.dart`) : séries · livres · possédés des
+  entrées visibles (suit les filtres) ; `ownedVolumes` partagé avec les groupes d'auteurs.
+- Nombre de tomes possédés (liste et grille) : avec un total, numéros simples de 1 au total ; sans total, tous les
+  tomes possédés distincts (« 3,5 », « HS 1 », sans numéro).
 - Progression des séries (`collection_tab/series_progress_bar.dart`) : barre réelle si `totalVolumes` est connu,
   sinon barre **indicative** grise (`SeriesEntry.indicativeProgress` = possédés / `highestVolume`, plus haut numéro
   simple calculé en SQL dans `collection_entries_query.dart`).
@@ -119,7 +123,7 @@ Description détaillée des choix techniques et de l'organisation du code (dépl
 - Envies (`features/wishlist/`) : items `envie` triés par priorité, retirés d'un glissement (avec « Annuler ») ; « Prochains tomes à acheter » =
   `nextVolumesToBuy` (séries suivies, manquants non déjà en envie), ajout en un appui.
 - Auteurs (`features/authors/`) : `groupByAuthor` (`authorKey` : « Nom, Prénom » remis dans l'ordre, sans accents ni
-  casse ; une série prend aussi les auteurs de ses tomes via `seriesItemAuthorsProvider`), vue « Par auteur » de
+  casse, mots triés : « Di Mio Federica » = « Federica Di Mio » ; une série prend aussi les auteurs de ses tomes via `seriesItemAuthorsProvider`), vue « Par auteur » de
   l'onglet (`ViewSettings.byAuthor`, suit les filtres), `AuthorScreen` (`AppRoutes.author`, non filtrée),
   `AuthorMenu` (page auteur : « Marquer comme lus », `markOwnedRead` de `reading_actions.dart`),
   `AuthorLinks` sur les fiches livre/série (`context.go`, comme « Voir la série »). `EntryTile` (`entries_list.dart`) partagé par l'onglet et la page auteur.
@@ -225,10 +229,17 @@ Description détaillée des choix techniques et de l'organisation du code (dépl
 - `SyncFailure.unavailable` : erreur 5xx (page non JSON → `PostgrestException.code` = statut HTTP), message
   « projet Supabase peut-être en pause ».
 - Rattachement auto d'un tome scanné (`features/collection/domain/series_matching.dart`) : titre de série
-  normalisé (accents, ponctuation, qualificatifs entre parenthèses ignorés) + éditeur compatible (inclusion).
+  normalisé (accents, ponctuation, qualificatifs entre parenthèses ignorés) ; l'éditeur (compatible = inclusion ou
+  même premier mot significatif : Panini France / Panini comics) et le type ne font que départager plusieurs séries
+  de même titre : une autre édition rejoint la série existante (recette 2026-11-19).
   Candidats : BnF 461$t, 225$a **seulement si numéroté ($v) et confirmé par le 461** (un 225 sans 461 est une
-  collection d'éditeur : Folio junior, Tracts Gallimard, Poches Jouvence), titre du volume
-  s'il est numéroté. Sans correspondance → proposition de créer la série (`SeriesAttachment`). Le type de la
+  collection d'éditeur : Folio junior, Tracts Gallimard, Poches Jouvence), titre et sous-titre du volume
+  s'il est numéroté (pré-notice BnF sans 461 : 200 $a « Requiem (II), Finale » $h T. 04 $i « Jupiter's Legacy »).
+  Sous-titre BnF purement générique (« roman », « nouvelles »…) ignoré.
+  Sans correspondance → proposition de créer la série (`SeriesAttachment`). Rangement manuel (recette 2026-11-19) :
+  tuile « Série » du formulaire (`series_attachment_tile.dart` → `series_picker_sheet.dart` : série existante du même
+  type, nouvelle série nommée, ou aucune) ; `loadItemDraft` part de la série actuelle et `applyAttachment` applique
+  le choix (retrait compris). Le type de la
   série trouvée prime sur le type de l'onglet.
 - Confort magasin (phase 13) : vibrations par verdict (`scan/presentation/store/store_haptics.dart` :
   vraies vibrations à durées explicites via le canal `dev.dupe.dupe/vibration` de `MainActivity.kt`, permission
