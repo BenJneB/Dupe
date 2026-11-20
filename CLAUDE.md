@@ -110,7 +110,7 @@ sources de métadonnées, scan, synchro, sauvegardes, couvertures, CI…). Le me
   en mémoire, `goBack` car `tester.pageBack()` ne connaît pas le BackButton de material_ui),
   `test_repositories.dart` (repo + horloge contrôlable).
 - En test widget, la base se ferme via `tester.runAsync` (sinon blocage en temps simulé).
-  `dart_test.yaml` : timeout 30 s par test. Suite complète ~60 s (375 tests, 2026-11-19) : le temps vient surtout
+  `dart_test.yaml` : timeout 30 s par test. Suite complète ~60 s (376 tests, 2026-11-20) : le temps vient surtout
   de la compilation de chaque fichier de test widget. Helpers de navigation : `test/helpers/screen_helpers.dart`
   (`goTo`, `openSettings`, `tapTile`, `fillSignIn`) ; ne jamais importer un fichier `_test.dart` depuis un autre.
 

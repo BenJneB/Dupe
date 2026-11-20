@@ -607,7 +607,9 @@ de tomes MangaUpdates, repli AniList → MangaUpdates.
 notifications.
 - [ ] **AL-01** Plus → Nouveautés → « Vérifier maintenant » sur la vraie collection : les tomes parus après ton dernier
       tome d'une série suivie apparaissent (pas de déluge pour une série abandonnée : 3 au plus) ; notification
-      « N nouveautés dans tes séries » ; « Ajouter aux envies » range le tome dans sa série.
+      « N nouveautés dans tes séries » ; « Ajouter aux envies » range le tome dans sa série. Dès la première
+      vérification (recette 2026-11-20), les tomes et livres d'auteurs suivis parus cette année ou l'an dernier
+      apparaissent ; une réédition (poche, club) d'un livre déjà vu ou possédé n'est pas annoncée.
 - [ ] **AL-02** Cloche sur la page d'un auteur → Paramètres → Nouveautés : « 1 auteur suivi ». Une alerte ignorée sur le
       téléphone ne revient pas sur le PC après synchro (et pas en double si les deux vérifient).
 

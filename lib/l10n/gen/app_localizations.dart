@@ -2797,13 +2797,13 @@ abstract class AppLocalizations {
   /// No description provided for @releasesHelp.
   ///
   /// In fr, this message translates to:
-  /// **'Une nouveauté apparaît dès qu’une source la connaît (souvent à la parution). Vérifié au plus une fois par jour au démarrage.'**
+  /// **'Séries suivies : les tomes après ton dernier, et auteurs suivis : leurs nouveaux livres. Une nouveauté apparaît dès que la BnF la catalogue (souvent quelques semaines après la sortie) ; la première vérification montre les sorties de l’année et de l’an dernier. Vérifié une fois par jour au démarrage (12 séries à tour de rôle) ; « Vérifier maintenant » passe tout en revue.'**
   String get releasesHelp;
 
   /// No description provided for @releasesNone.
   ///
   /// In fr, this message translates to:
-  /// **'Aucune nouveauté pour l’instant.'**
+  /// **'Aucune nouveauté pour l’instant. Suis une série (interrupteur « Série suivie ») ou un auteur (cloche sur sa page) pour être prévenu.'**
   String get releasesNone;
 
   /// No description provided for @releasesCheckNow.
@@ -3817,7 +3817,7 @@ abstract class AppLocalizations {
   /// No description provided for @missingCoversHelp.
   ///
   /// In fr, this message translates to:
-  /// **'Cherche par ISBN une couverture pour chaque livre qui n’en a pas ou dont la couverture ne se charge pas (sans rien changer d’autre ; tes photos sont gardées)'**
+  /// **'Cherche par ISBN une couverture pour chaque livre qui n’en a pas ou dont la couverture ne se charge pas (sans rien changer d’autre ; tes photos sont gardées). Un livre déjà cherché sans succès n’est retenté qu’après 30 jours.'**
   String get missingCoversHelp;
 
   /// No description provided for @missingCoversProgress.

@@ -61,7 +61,7 @@ class _ReleasesScreenState extends ConsumerState<ReleasesScreen> {
 
   Future<void> _check() => _then(
     (l10n) async => l10n.releasesFound(
-      await ref.read(releaseCheckerProvider.notifier).run(),
+      await ref.read(releaseCheckerProvider.notifier).run(all: true),
     ),
   );
 

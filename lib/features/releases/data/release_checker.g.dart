@@ -56,7 +56,7 @@ final class ReleaseCheckerProvider
   }
 }
 
-String _$releaseCheckerHash() => r'9e50aac3677ae274951771b3ba970e732c8c5c74';
+String _$releaseCheckerHash() => r'232848aaacae46aa845d296c39c2c259256f19cf';
 
 /// Looks for new releases (PLAN_V4 phase 33), on the device, at most once a
 /// day (at start-up): followed series at the BnF (volumes after the last

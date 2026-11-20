@@ -55,6 +55,24 @@ void main() {
     expect(next(['1', '2'], alerted: {3, 4}, limit: 1), [5]);
   });
 
+  test('a first check shows only the volumes out lately', () {
+    // Real records: Everdark 6 (DL 2023) and 7 (DL 2024).
+    List<int> recent(DateTime now) => nextVolumes(
+      [
+        item(
+          'Everdark',
+          seriesId: 's',
+          type: CollectionType.manga,
+        ).copyWith(id: '5', volumeNumber: '5'),
+      ],
+      editionOf(everdark, 'Pika'),
+      where: (v) => isRecentRelease(v.preferred, now),
+    ).map((v) => v.number).toList();
+    expect(recent(DateTime(2024, 6)), [6, 7]);
+    expect(recent(DateTime(2025, 3)), [7]);
+    expect(recent(DateTime(2026, 11)), isEmpty);
+  });
+
   test('new books of an author: unseen, not owned, really theirs', () {
     MetadataResult book(String isbn, {String author = 'Manu Larcenet'}) =>
         MetadataResult(

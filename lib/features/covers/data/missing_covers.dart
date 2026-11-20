@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:drift/drift.dart';
 import 'package:dupe/core/database/app_database.dart';
 import 'package:dupe/core/database/database_provider.dart';
@@ -56,6 +58,24 @@ Future<bool> needsCover(CoverCache cache, Item item) async {
     return true;
   }
 }
+
+/// Items worth checking: no cover, or one not on the device yet (a local
+/// lookup, no network). Covers already downloaded and photos are skipped
+/// at once: on a large collection, most books.
+Future<List<Item>> coverCandidates(CoverCache cache, List<Item> items) async =>
+    [
+      for (final item in items)
+        if (switch (item.coverUrl) {
+          null || '' => true,
+          final url => !CoverPhotos.isUserCover(url) && !await cache.has(url),
+        })
+          item,
+    ];
+
+/// Books searched without result recently (ISBN → day), skipped for
+/// [notFoundDelay]: sources rarely get a cover within days.
+const notFoundKey = 'covers_not_found';
+const notFoundDelay = Duration(days: 30);
 
 /// First cover of the sources that really downloads (kept in the cache for
 /// offline use), or why none was found (for the journal). The Open Library
@@ -143,8 +163,29 @@ class MissingCoversFill extends _$MissingCoversFill {
     final sources = ref.read(metadataAggregatorProvider);
     final cache = ref.read(coverCacheProvider);
     final mangaDex = ref.read(mangaDexCoversProvider);
-    final items = await itemsWithIsbn(ref.read(appDatabaseProvider));
+    final settings = ref.read(appSettingsStoreProvider);
+    final now = ref.read(clockProvider)();
+    final searched = {
+      for (final MapEntry(:key, :value) in (jsonDecode(
+        await settings.get(notFoundKey) ?? '{}',
+      ) as Map<String, dynamic>).entries)
+        if (DateTime.tryParse('$value') case final day?
+            when now.difference(day) < notFoundDelay)
+          key: '$value',
+    };
     final proposals = ref.read(coverProposalsProvider.notifier);
+    final pending = {
+      for (final p in ref.read(coverProposalsProvider)) p.item.id,
+    };
+    final items = [
+      for (final item in await coverCandidates(
+        cache,
+        await itemsWithIsbn(ref.read(appDatabaseProvider)),
+      ))
+        // Searched lately for nothing, or a proposal already waiting.
+        if (!searched.containsKey(item.isbn13) && !pending.contains(item.id))
+          item,
+    ];
     final refused = await proposals.refusedKeys();
     final seriesTitles = {
       for (final s in await repo.listSeries()) s.id: s.title,
@@ -180,10 +221,13 @@ class MissingCoversFill extends _$MissingCoversFill {
             continue;
           }
         }
-        if (url == null && notFound.length < 30) {
-          notFound.add(
-            '${item.title} ${item.volumeNumber ?? ''} [${item.isbn13}] $why',
-          );
+        if (url == null) {
+          searched[item.isbn13!] = now.toIso8601String().substring(0, 10);
+          if (notFound.length < 30) {
+            notFound.add(
+              '${item.title} ${item.volumeNumber ?? ''} [${item.isbn13}] $why',
+            );
+          }
         }
         if (url != null) {
           // Re-read: the item may have changed during the lookup.
@@ -204,6 +248,7 @@ class MissingCoversFill extends _$MissingCoversFill {
         );
       }
     }
+    await settings.set(notFoundKey, jsonEncode(searched));
     final summary =
         '$found couverture(s) ajoutée(s) ou remplacée(s), '
         "$proposed proposée(s) d'une autre édition, "

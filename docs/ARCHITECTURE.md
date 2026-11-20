@@ -96,7 +96,9 @@ Description détaillée des choix techniques et de l'organisation du code (dépl
   sans total, pré-remplie, délai 5 s) ; `VolumeCountScan` + `volume_counts_screen.dart` (Plus → Qualité, en
   lot, propositions à valider). Vue liste des tomes : `volume_list_view.dart`, bascule `VolumesAsList`.
 - Éditions et couvertures (v4 phase 25) : `covers/domain/edition_match.dart` (`sameWork`, `sameStandaloneBook`) ;
-  `proposeCover` (recherche texte sans BnF après échec par ISBN) → `CoverProposals` (mémoire) validées dans Qualité ; « Compléter les couvertures manquantes » n'est plus que dans
+  « Compléter les couvertures manquantes » (`missing_covers.dart`) ne vérifie que les livres sans couverture ou
+  dont la couverture n'est pas en cache (`coverCandidates`, test local), et saute 30 jours un ISBN cherché sans
+  succès (`covers_not_found` dans `app_settings`) ; `proposeCover` (recherche texte sans BnF après échec par ISBN) → `CoverProposals` (mémoire) validées dans Qualité ; « Compléter les couvertures manquantes » n'est plus que dans
   Qualité (`MissingCoversTile`) →
   « Couvertures proposées », refus locaux `RefusedCovers` (`cover_refused`) ; `StoreChecker` reconnaît un livre hors
   série possédé dans une autre édition (titre + auteur).
@@ -305,8 +307,11 @@ Description détaillée des choix techniques et de l'organisation du code (dépl
 - Nouveautés (v4 phase 33, schéma v6, `features/releases/`) : `ReleaseChecker` (démarrage, 1×/jour, Wi-Fi par
   défaut) → séries suivies via `SeriesCatalogSource` + `nextVolumes`, auteurs suivis via `SuggestionSources` +
   `newBooks` → `ReleasesRepository.addIfNew` (id UUID v5 de la clé, une alerte par clé ou ISBN) →
-  `ReleaseNotifications`. Premier passage d'une série ou d'un auteur = référence sans alerte (relevés locaux
-  `releases_base_*`, `releases_seen_*`) ; `closeOwned` passe « ajoutée » les alertes déjà en collection. Écran
+  `ReleaseNotifications`. Premier passage d'une série ou d'un auteur : seulement les sorties de l'année et de l'an
+  dernier (`isRecentRelease`, l'année de la notice), puis référence (relevés locaux `releases_base_*`,
+  `releases_seen_*` = ISBN + clés d'œuvre `workKey` : une réédition d'une œuvre vue ou possédée n'est pas une
+  nouveauté ; `release_author_check.dart`). Passage automatique : 12 séries à tour de rôle ; « Vérifier maintenant »
+  (`run(all: true)`) : toutes ; `closeOwned` passe « ajoutée » les alertes déjà en collection. Écran
   `/plus/nouveautes`, réglages `ReleaseSettingsSection`, cloche `FollowAuthorButton`.
 - Compte (v4 phase 34) : confirmation d'inscription et mot de passe oublié par **code à 6 chiffres** de l'e-mail
   Supabase (`verifyOTP` signup / recovery, `{{ .Token }}` dans les modèles d'e-mail, qui exige un SMTP) **ou lien de
