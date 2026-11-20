@@ -177,6 +177,19 @@ void main() {
     // 3-9, 11, HS 1 and the unnumbered one.
     expect(grid.toReadCount, 10);
     expect(entry.unreadCount, grid.toReadCount);
+
+    // Without a total, every owned volume counts: 1-9, 11, HS 1, "?".
+    await env.repo.saveSeries(series.copyWith(totalVolumes: null));
+    final noTotal = (await env.repo.watchEntries(CollectionType.manga).first)
+        .whereType<SeriesEntry>()
+        .single;
+    final noTotalGrid = VolumeGrid.compute(
+      items: await env.repo.listSeriesItems(series.id),
+      totalVolumes: null,
+      followed: false,
+    );
+    expect(noTotalGrid.ownedCount, 12);
+    expect(noTotal.ownedCount, noTotalGrid.ownedCount);
   });
 
   test('renaming a series renames the volumes that had its title', () async {

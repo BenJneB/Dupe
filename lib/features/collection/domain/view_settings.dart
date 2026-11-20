@@ -37,8 +37,10 @@ List<CollectionEntry> applyViewSettings(
     CompletionFilter.signed => entries.where((e) => e.signedCount > 0).toList(),
   };
   if (settings.toReadOnly) filtered.retainWhere((e) => e.isToRead);
+  // Folded once per entry, not in every comparison.
+  final folded = {for (final e in filtered) e: foldForSearch(e.title)};
   int byTitle(CollectionEntry a, CollectionEntry b) =>
-      foldForSearch(a.title).compareTo(foldForSearch(b.title));
+      folded[a]!.compareTo(folded[b]!);
   double progressOf(CollectionEntry e) =>
       e is SeriesEntry ? e.progress ?? -1 : -2;
 

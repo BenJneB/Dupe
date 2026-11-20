@@ -1456,11 +1456,35 @@ abstract class AppLocalizations {
   /// **'Série : {title}'**
   String attachedToSeries(String title);
 
-  /// No description provided for @attachedToSeriesHelper.
+  /// No description provided for @seriesNone.
   ///
   /// In fr, this message translates to:
-  /// **'Rangé automatiquement dans cette série'**
-  String get attachedToSeriesHelper;
+  /// **'Aucune série'**
+  String get seriesNone;
+
+  /// No description provided for @seriesUnknown.
+  ///
+  /// In fr, this message translates to:
+  /// **'Série pas encore synchronisée sur cet appareil (gardée)'**
+  String get seriesUnknown;
+
+  /// No description provided for @seriesPickerHelper.
+  ///
+  /// In fr, this message translates to:
+  /// **'Appuie pour choisir la série (ou aucune)'**
+  String get seriesPickerHelper;
+
+  /// No description provided for @changeSeriesTooltip.
+  ///
+  /// In fr, this message translates to:
+  /// **'Choisir la série'**
+  String get changeSeriesTooltip;
+
+  /// No description provided for @seriesPickerHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Chercher une série ou nommer une nouvelle'**
+  String get seriesPickerHint;
 
   /// No description provided for @createSeriesNamed.
   ///
@@ -2317,7 +2341,7 @@ abstract class AppLocalizations {
   /// No description provided for @confirmEmailSent.
   ///
   /// In fr, this message translates to:
-  /// **'Compte créé : saisis ci-dessous le code à 6 chiffres envoyé à {email} (ou ouvre le lien de l’e-mail, puis « Se connecter »).'**
+  /// **'Compte créé : colle ci-dessous le lien de l’e-mail envoyé à {email} (appui long sur le lien → copier, sans l’ouvrir), ou son code s’il en a un.'**
   String confirmEmailSent(String email);
 
   /// No description provided for @setPassword.
@@ -2698,12 +2722,6 @@ abstract class AppLocalizations {
   /// **'Dédicacés'**
   String get statsSigned;
 
-  /// No description provided for @csvSigned.
-  ///
-  /// In fr, this message translates to:
-  /// **'Dédicacé'**
-  String get csvSigned;
-
   /// No description provided for @fullArchiveExport.
   ///
   /// In fr, this message translates to:
@@ -2779,13 +2797,13 @@ abstract class AppLocalizations {
   /// No description provided for @releasesHelp.
   ///
   /// In fr, this message translates to:
-  /// **'Une nouveauté apparaît dès qu’une source la connaît (souvent à la parution). Vérifié au plus une fois par jour au démarrage.'**
+  /// **'Séries suivies : les tomes après ton dernier, et auteurs suivis : leurs nouveaux livres. Une nouveauté apparaît dès que la BnF la catalogue (souvent quelques semaines après la sortie) ; la première vérification montre les sorties de l’année et de l’an dernier. Vérifié une fois par jour au démarrage (12 séries à tour de rôle) ; « Vérifier maintenant » passe tout en revue.'**
   String get releasesHelp;
 
   /// No description provided for @releasesNone.
   ///
   /// In fr, this message translates to:
-  /// **'Aucune nouveauté pour l’instant.'**
+  /// **'Aucune nouveauté pour l’instant. Suis une série (interrupteur « Série suivie ») ou un auteur (cloche sur sa page) pour être prévenu.'**
   String get releasesNone;
 
   /// No description provided for @releasesCheckNow.
@@ -2905,19 +2923,19 @@ abstract class AppLocalizations {
   /// No description provided for @emailCodeLabel.
   ///
   /// In fr, this message translates to:
-  /// **'Code reçu par e-mail'**
+  /// **'Code ou lien reçu par e-mail'**
   String get emailCodeLabel;
 
   /// No description provided for @emailCodeHelp.
   ///
   /// In fr, this message translates to:
-  /// **'6 chiffres, valable une heure'**
+  /// **'Le code à 6 chiffres, ou le lien de l’e-mail copié (appui long, sans l’ouvrir)'**
   String get emailCodeHelp;
 
   /// No description provided for @emailCodeMissing.
   ///
   /// In fr, this message translates to:
-  /// **'Saisis le code à 6 chiffres de l’e-mail'**
+  /// **'Saisis le code de l’e-mail ou colle son lien'**
   String get emailCodeMissing;
 
   /// No description provided for @confirmCodeAction.
@@ -2941,19 +2959,19 @@ abstract class AppLocalizations {
   /// No description provided for @resetHelp.
   ///
   /// In fr, this message translates to:
-  /// **'Saisis l’adresse de ton compte : un code à 6 chiffres t’y sera envoyé pour choisir un nouveau mot de passe.'**
+  /// **'Saisis l’adresse de ton compte : un e-mail t’y sera envoyé pour choisir un nouveau mot de passe.'**
   String get resetHelp;
 
   /// No description provided for @resetCodeSent.
   ///
   /// In fr, this message translates to:
-  /// **'Si un compte existe pour {email}, un code vient d’y être envoyé. Saisis-le avec ton nouveau mot de passe.'**
+  /// **'Si un compte existe pour {email}, un e-mail vient d’y être envoyé : colle son lien (appui long → copier, sans l’ouvrir) ou son code, avec ton nouveau mot de passe.'**
   String resetCodeSent(String email);
 
   /// No description provided for @sendResetCode.
   ///
   /// In fr, this message translates to:
-  /// **'Envoyer le code'**
+  /// **'Envoyer l’e-mail'**
   String get sendResetCode;
 
   /// No description provided for @newPasswordLabel.
@@ -3559,7 +3577,7 @@ abstract class AppLocalizations {
   /// No description provided for @storeHapticsHelp.
   ///
   /// In fr, this message translates to:
-  /// **'Mode Magasin : 1 forte = déjà possédé, 2 = en envie, 3 légères = tome manquant d’une série, 1 brève = inconnu'**
+  /// **'Mode Magasin : 1 longue = déjà possédé, 2 = en envie, 3 courtes = tome manquant d’une série, 1 brève = inconnu'**
   String get storeHapticsHelp;
 
   /// No description provided for @voiceSearchTitle.
@@ -3799,7 +3817,7 @@ abstract class AppLocalizations {
   /// No description provided for @missingCoversHelp.
   ///
   /// In fr, this message translates to:
-  /// **'Cherche par ISBN une couverture pour chaque livre qui n’en a pas ou dont la couverture ne se charge pas (sans rien changer d’autre ; tes photos sont gardées)'**
+  /// **'Cherche par ISBN une couverture pour chaque livre qui n’en a pas ou dont la couverture ne se charge pas (sans rien changer d’autre ; tes photos sont gardées). Un livre déjà cherché sans succès n’est retenté qu’après 30 jours.'**
   String get missingCoversHelp;
 
   /// No description provided for @missingCoversProgress.

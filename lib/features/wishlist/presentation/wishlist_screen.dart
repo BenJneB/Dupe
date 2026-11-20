@@ -120,11 +120,7 @@ class _WishTile extends ConsumerWidget {
     return ListTile(
       key: ValueKey('wish-${item.id}'),
       leading: CoverImage(url: item.coverUrl, width: 40, height: 60),
-      title: Text(
-        item.volumeNumber == null
-            ? item.title
-            : l10n.volumeTitle(item.title, item.volumeNumber!),
-      ),
+      title: Text(item.displayTitle(l10n)),
       subtitle: Text(
         [
           item.type.label(l10n),

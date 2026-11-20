@@ -6,52 +6,61 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'store_haptics.g.dart';
 
-/// One vibration of a pattern; null = a pause between two.
-typedef HapticStep = Future<void> Function()?;
+/// A vibration: `timings` off, on, off, on… in ms, one 0-255 `amplitudes`
+/// value per timing (ignored by phones without amplitude control).
+typedef Waveform = ({List<int> timings, List<int> amplitudes});
 
 /// Store mode: a different vibration per verdict, to know the answer
-/// without looking (PLAN_V2 phase 13). Uses the system haptic feedback:
-/// nothing happens when it is turned off in the phone settings.
+/// without looking (PLAN_V2 phase 13). Real vibrations with explicit
+/// durations (MainActivity): the system haptic constants of HapticFeedback
+/// all felt like the same short tick. Nothing on desktop (no vibrator).
 class StoreHaptics {
-  new(this._settings, {this._gap = const Duration(milliseconds: 160)});
+  new(this._settings);
 
   final AppSettingsStore _settings;
-  final Duration _gap;
 
   static const enabledKey = 'store_haptics_enabled';
+  static const channel = MethodChannel('dev.dupe.dupe/vibration');
 
-  Future<bool> get enabled async => await _settings.get(enabledKey) != '0';
+  Future<bool> get enabled => _settings.getBool(enabledKey, orElse: true);
 
   Future<void> setEnabled({required bool enabled}) =>
-      _settings.set(enabledKey, enabled ? '1' : '0');
+      _settings.setBool(enabledKey, value: enabled);
 
-  /// Owned: one strong. Wished: two medium. Missing volume of a series:
-  /// three light. Unknown: one tick.
-  static List<HapticStep> pattern(StoreVerdict verdict) => switch (verdict) {
-    StoreVerdict.owned => [HapticFeedback.heavyImpact],
-    StoreVerdict.wished => [
-      HapticFeedback.mediumImpact,
-      null,
-      HapticFeedback.mediumImpact,
-    ],
-    StoreVerdict.seriesNotOwned => [
-      HapticFeedback.lightImpact,
-      null,
-      HapticFeedback.lightImpact,
-      null,
-      HapticFeedback.lightImpact,
-    ],
-    StoreVerdict.unknown => [HapticFeedback.selectionClick],
+  /// Owned: one long and strong. Wished: two medium. Missing volume of a
+  /// series: three short. Unknown: one brief tick.
+  static Waveform pattern(StoreVerdict verdict) => switch (verdict) {
+    StoreVerdict.owned => (timings: [0, 400], amplitudes: [0, 255]),
+    StoreVerdict.wished => (
+      timings: [0, 150, 150, 150],
+      amplitudes: [0, 180, 0, 180],
+    ),
+    StoreVerdict.seriesNotOwned => (
+      timings: [0, 60, 120, 60, 120, 60],
+      amplitudes: [0, 120, 0, 120, 0, 120],
+    ),
+    StoreVerdict.unknown => (timings: [0, 25], amplitudes: [0, 80]),
   };
 
-  Future<void> play(StoreVerdict verdict) async {
+  /// Burst mode: a light one per book queued, a brief tick for a duplicate.
+  static Waveform queuedPattern({required bool added}) => added
+      ? (timings: [0, 60], amplitudes: [0, 150])
+      : (timings: [0, 25], amplitudes: [0, 80]);
+
+  Future<void> play(StoreVerdict verdict) => _vibrate(pattern(verdict));
+
+  Future<void> queued({required bool added}) =>
+      _vibrate(queuedPattern(added: added));
+
+  Future<void> _vibrate(Waveform waveform) async {
     if (!await enabled) return;
-    for (final step in pattern(verdict)) {
-      if (step == null) {
-        await Future<void>.delayed(_gap);
-      } else {
-        await step();
-      }
+    try {
+      await channel.invokeMethod<void>('waveform', {
+        'timings': waveform.timings,
+        'amplitudes': waveform.amplitudes,
+      });
+    } on MissingPluginException {
+      // Desktop: no vibrator.
     }
   }
 }

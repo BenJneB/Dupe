@@ -5,7 +5,6 @@ import 'package:dupe/features/collection/data/collection_repository.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
 import 'package:dupe/features/collection/domain/series.dart';
 import 'package:dupe/features/collection/domain/series_completion.dart';
-import 'package:dupe/features/collection/domain/series_matching.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'series_completion_service.g.dart';
@@ -35,17 +34,6 @@ class BnfSeriesCatalogSource implements SeriesCatalogSource {
 @Riverpod(keepAlive: true)
 SeriesCatalogSource seriesCatalogSource(Ref ref) =>
     BnfSeriesCatalogSource(ref.watch(bnfSourceProvider));
-
-/// The series of [type] titled [title] in the collection, if any (same
-/// normalized title: "Blue lock" is "Blue Lock").
-Future<Series?> findSeriesByTitle(
-  CollectionRepository repo,
-  CollectionType type,
-  String title,
-) async =>
-    (await repo.listSeries(type: type))
-        .where((s) => normalizeTitle(s.title) == normalizeTitle(title))
-        .firstOrNull;
 
 /// Applies [chosen] to [series] (created when null, titled [title]) in one
 /// transaction; returns the series and the counts.

@@ -71,6 +71,18 @@ class SeriesEntry extends CollectionEntry {
   }
 }
 
+/// Owned volumes among [entries]: series volumes (as counted in the list)
+/// plus owned standalone books.
+int ownedVolumes(Iterable<CollectionEntry> entries) => entries.fold(
+  0,
+  (sum, e) =>
+      sum +
+      switch (e) {
+        SeriesEntry(:final ownedCount) => ownedCount,
+        ItemEntry(:final item) => item.ownership == Ownership.possede ? 1 : 0,
+      },
+);
+
 extension EntryReading on CollectionEntry {
   /// In "Ma pile à lire": owned and not read yet.
   bool get isToRead => switch (this) {

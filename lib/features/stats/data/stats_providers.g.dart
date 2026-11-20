@@ -20,9 +20,9 @@ final class CollectionStatsProvider
         $FunctionalProvider<
           AsyncValue<CollectionStats>,
           CollectionStats,
-          Stream<CollectionStats>
+          FutureOr<CollectionStats>
         >
-    with $FutureModifier<CollectionStats>, $StreamProvider<CollectionStats> {
+    with $FutureModifier<CollectionStats>, $FutureProvider<CollectionStats> {
   /// Statistics, recomputed on every change of the collection.
   CollectionStatsProvider._()
     : super(
@@ -40,17 +40,17 @@ final class CollectionStatsProvider
 
   @$internal
   @override
-  $StreamProviderElement<CollectionStats> $createElement(
+  $FutureProviderElement<CollectionStats> $createElement(
     $ProviderPointer pointer,
-  ) => $StreamProviderElement(pointer);
+  ) => $FutureProviderElement(pointer);
 
   @override
-  Stream<CollectionStats> create(Ref ref) {
+  FutureOr<CollectionStats> create(Ref ref) {
     return collectionStats(ref);
   }
 }
 
-String _$collectionStatsHash() => r'953c61753da373e2bc3e1ee773316bf1e0f9e48b';
+String _$collectionStatsHash() => r'afa6af2f7e3eddd6a586fad35127eb697deb6afa';
 
 /// Reading statistics, recomputed on every change of the collection.
 
@@ -64,9 +64,9 @@ final class ReadingStatsProvider
         $FunctionalProvider<
           AsyncValue<ReadingStats>,
           ReadingStats,
-          Stream<ReadingStats>
+          FutureOr<ReadingStats>
         >
-    with $FutureModifier<ReadingStats>, $StreamProvider<ReadingStats> {
+    with $FutureModifier<ReadingStats>, $FutureProvider<ReadingStats> {
   /// Reading statistics, recomputed on every change of the collection.
   ReadingStatsProvider._()
     : super(
@@ -84,14 +84,14 @@ final class ReadingStatsProvider
 
   @$internal
   @override
-  $StreamProviderElement<ReadingStats> $createElement(
+  $FutureProviderElement<ReadingStats> $createElement(
     $ProviderPointer pointer,
-  ) => $StreamProviderElement(pointer);
+  ) => $FutureProviderElement(pointer);
 
   @override
-  Stream<ReadingStats> create(Ref ref) {
+  FutureOr<ReadingStats> create(Ref ref) {
     return readingStats(ref);
   }
 }
 
-String _$readingStatsHash() => r'61c8ebcba66a3834d93333a050100df7fcd48f85';
+String _$readingStatsHash() => r'770e050bc8fc423acb069903dff3b9ffca025eea';

@@ -28,7 +28,12 @@ class SeriesMenu extends ConsumerWidget {
     final l10n = AppLocalizations.of(context);
     final messenger = ScaffoldMessenger.of(context);
     final lastOwned = grid.slots
-        .where((s) => s.number != null && s.item != null)
+        .where(
+          (s) =>
+              s.number != null &&
+              (s.status == VolumeSlotStatus.owned ||
+                  s.status == VolumeSlotStatus.loaned),
+        )
         .map((s) => s.number!)
         .fold(0, (a, b) => a > b ? a : b);
     final upTo = await askReadUpTo(

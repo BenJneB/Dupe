@@ -110,7 +110,8 @@ class LoansRepository {
       )
       ..orderBy([
         OrderingTerm.desc(l.returnedAt.isNull()),
-        OrderingTerm.asc(l.dueAt),
+        // No due date last: overdue loans stay on top.
+        OrderingTerm(expression: l.dueAt, nulls: NullsOrder.last),
         OrderingTerm.desc(l.returnedAt),
         OrderingTerm.desc(l.loanedAt),
       ]);

@@ -35,7 +35,11 @@ MetadataResult? parseUnimarcRecord(UnimarcRecord r) {
   final title = r.first('200', 'a');
   if (title == null) return null;
 
-  final isbn = r.first('010', 'a') ?? r.first('073', 'a');
+  // Valid ones only: an invalid 010 falls back on the EAN (073).
+  final isbn = [
+    for (final tag in ['010', '073'])
+      for (final f in r.fields(tag)) ...UnimarcRecord.subfields(f, 'a'),
+  ].map(Isbn.toIsbn13).nonNulls.firstOrNull;
   final price = _parsePrice(r.first('010', 'd'));
   final linkedSeries = r.first('461', 't');
   final ownVolume = r.first('200', 'h');
@@ -49,13 +53,13 @@ MetadataResult? parseUnimarcRecord(UnimarcRecord r) {
     source: MetadataSource.bnf,
     sourceId: r.id ?? r.control('001') ?? title,
     title: title,
-    subtitle: r.first('200', 'e') ?? r.first('200', 'i'),
+    subtitle: _subtitle(r),
     authors: _authors(r),
     publisher: r.first('214', 'c') ?? r.first('210', 'c'),
     publishDate: _year(r.first('214', 'd') ?? r.first('210', 'd')),
     pageCount: _pages(r.first('215', 'a')),
     language: _languages[r.first('101', 'a')],
-    isbn13: isbn == null ? null : Isbn.toIsbn13(isbn),
+    isbn13: isbn,
     description: r.first('330', 'a'),
     seriesTitle: linkedSeries ?? numberedCollection?.title,
     volumeNumber: cleanVolumeNumber(
@@ -86,6 +90,27 @@ MetadataResult? parseUnimarcRecord(UnimarcRecord r) {
     if (_fold(title) != _fold(linkedSeries)) continue;
     if ((int.tryParse(number.trim()) ?? 0) >= 1000) continue;
     return (title: title, number: number);
+  }
+  return null;
+}
+
+/// 200 $e that only names the genre (« roman », « nouvelles », « bande
+/// dessinée ») instead of a real subtitle: « Les fourmis : roman ».
+final _genreOnly = RegExp(
+  '^(romans?( (policier|noir|graphique|jeunesse|historique|fantastique))?'
+  '|r[ée]cits?|nouvelles?|contes?|essais?|po[ée]sies?|po[èe]mes?'
+  r'|th[ée][âa]tre|thriller|polar|bande dessin[ée]e|manga|comics?)$',
+  caseSensitive: false,
+);
+
+String? _subtitle(UnimarcRecord r) {
+  for (final code in ['e', 'i']) {
+    for (final value
+        in r.fields('200').expand((f) => UnimarcRecord.subfields(f, code))) {
+      // subfields() already trims and drops empty values.
+      final cleaned = value.replaceAll(RegExp(r'\s+'), ' ');
+      if (!_genreOnly.hasMatch(cleaned)) return cleaned;
+    }
   }
   return null;
 }

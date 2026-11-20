@@ -104,6 +104,27 @@ void main() {
       expect(grid.isComplete, isFalse);
     });
 
+    test('unknown total: every owned volume counts, specials too', () {
+      // Recette 2026-11-19: La clé des vents as "3,5", L'assassin royal
+      // "Première époque" were not counted.
+      final grid = VolumeGrid.compute(
+        items: [
+          testItem('a', volume: '1'),
+          testItem('b', volume: '3,5'),
+          testItem('c', volume: 'Première époque'),
+          testItem('d'),
+          testItem('e', volume: '2', ownership: Ownership.envie),
+          testItem('f', volume: '0'),
+        ],
+        totalVolumes: null,
+        followed: true,
+      );
+
+      // Volume "0" is shown (with the specials) and counted, as in the list.
+      expect(grid.slots.map((s) => s.label), contains('0'));
+      expect(grid.ownedCount, 5);
+    });
+
     test('owned volume beyond total extends the grid without counting', () {
       final grid = VolumeGrid.compute(
         items: [testItem('a', volume: '3')],

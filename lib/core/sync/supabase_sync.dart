@@ -13,7 +13,10 @@ import 'package:supabase/supabase.dart';
 /// `app_settings` table and its token refreshed automatically.
 class SupabaseSyncAuth implements SyncAuth {
   new(this.client, this._settings) {
-    _sub = client.auth.onAuthStateChange.listen(_onAuthChange);
+    _sub = client.auth.onAuthStateChange.listen(
+      _onAuthChange,
+      onError: _onAuthError,
+    );
   }
 
   final SupabaseClient client;
@@ -40,6 +43,14 @@ class SupabaseSyncAuth implements SyncAuth {
       await _settings.set(_sessionKey, jsonEncode(session.toJson()));
     }
     _changes.add(null);
+  }
+
+  /// gotrue reports a failed background token refresh on the stream. Offline
+  /// it fails every tick (retried later, session kept): not worth a log entry,
+  /// the sync status already says offline.
+  void _onAuthError(Object error) {
+    if (error is AuthRetryableFetchException) return;
+    appLog.warning('auth', error);
   }
 
   @override
@@ -85,13 +96,20 @@ class SupabaseSyncAuth implements SyncAuth {
   );
 
   @override
-  Future<void> confirmSignUp(String email, String code) => _signInGuard(
-    () => client.auth.verifyOTP(
-      email: email.trim(),
-      token: code.trim(),
-      type: OtpType.signup,
-    ),
-  );
+  Future<void> confirmSignUp(String email, String code) =>
+      _signInGuard(() => _verify(email, code, OtpType.signup));
+
+  /// A 6-digit code, or the link of the email pasted (its token hash).
+  Future<AuthResponse> _verify(String email, String code, OtpType type) {
+    final hash = emailLinkToken(code);
+    return hash != null
+        ? client.auth.verifyOTP(tokenHash: hash, type: type)
+        : client.auth.verifyOTP(
+            email: email.trim(),
+            token: code.trim(),
+            type: type,
+          );
+  }
 
   @override
   Future<void> resendConfirmation(String email) => _signInGuard(
@@ -105,11 +123,12 @@ class SupabaseSyncAuth implements SyncAuth {
   @override
   Future<void> resetPassword(String email, String code, String password) =>
       _signInGuard(() async {
-        await client.auth.verifyOTP(
-          email: email.trim(),
-          token: code.trim(),
-          type: OtpType.recovery,
-        );
+        // Retried after a refused password: the code is already used and
+        // the session open, so only the password is set again.
+        final user = client.auth.currentUser;
+        if (user?.email?.toLowerCase() != email.trim().toLowerCase()) {
+          await _verify(email, code, OtpType.recovery);
+        }
         await client.auth.updateUser(UserAttributes(password: password));
       });
 
@@ -195,7 +214,30 @@ class SupabaseSyncRemote implements SyncRemote {
     }
   }
 
+  /// A REST error as a [SyncFailure]. PGRST301/303: JWT invalid or expired;
+  /// 42501 (insufficient privilege): the request went without a session
+  /// (anonymous role), e.g. after a failed token refresh. A 3-digit code is
+  /// the HTTP status of a non-JSON error page (gateway, paused project); a
+  /// 5-character one is a Postgres SQLSTATE, not a status.
+  static SyncFailure failureOf(PostgrestException e) {
+    final code = e.code ?? '';
+    // 42501 is also a row-level security refusal (rows of another account):
+    // signing in again would not help, it is a rejection.
+    if (code == '42501' && e.message.contains('row-level security')) {
+      return SyncFailure.rejected;
+    }
+    if (const {'PGRST301', 'PGRST303', '42501'}.contains(code)) {
+      return SyncFailure.session;
+    }
+    final status = code.length == 3 ? int.tryParse(code) ?? 0 : 0;
+    return status >= 500 ? SyncFailure.unavailable : SyncFailure.rejected;
+  }
+
   Future<T> _guard<T>(Future<T> Function() call) async {
+    // No session (refresh refused meanwhile): never query as anonymous.
+    if (client.auth.currentSession == null) {
+      throw const SyncException('not signed in', failure: SyncFailure.session);
+    }
     try {
       return await call();
     } on SocketException catch (e) {
@@ -205,17 +247,9 @@ class SupabaseSyncRemote implements SyncRemote {
     } on TimeoutException {
       throw const SyncException.network('timeout');
     } on PostgrestException catch (e) {
-      // PGRST301/303: JWT invalid or expired.
-      final expired = e.code == 'PGRST301' || e.code == 'PGRST303';
-      // Non-JSON error pages (gateway, paused project) carry the HTTP status.
-      final status = int.tryParse(e.code ?? '') ?? 0;
       throw SyncException(
         e.message.length > 300 ? e.message.substring(0, 300) : e.message,
-        failure: expired
-            ? SyncFailure.session
-            : status >= 500
-            ? SyncFailure.unavailable
-            : SyncFailure.rejected,
+        failure: failureOf(e),
       );
     } on AuthException catch (e) {
       throw SyncException(e.message, failure: SyncFailure.session);

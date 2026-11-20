@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:dupe/core/logging/app_log.dart';
 import 'package:dupe/core/sync/sync_remote.dart';
 import 'package:dupe/features/covers/data/cover_photos.dart';
 import 'package:supabase/supabase.dart';
@@ -42,7 +43,10 @@ class SupabaseCoverStore implements CoverStore {
   Future<Uint8List?> download(String name) async {
     try {
       return await _bucket.download(_path(name));
-    } on StorageException {
+    } on Object catch (e) {
+      // Missing file, offline, signed out: unavailable, not an error to
+      // retry in a loop (the placeholder is shown).
+      if (e is! StorageException) appLog.warning('covers', e);
       return null;
     }
   }

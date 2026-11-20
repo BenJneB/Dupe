@@ -1,8 +1,11 @@
 import 'package:dupe/core/metadata/metadata_result.dart';
+import 'package:dupe/core/metadata/providers/bnf/unimarc_parser.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
 import 'package:dupe/features/collection/domain/series.dart';
 import 'package:dupe/features/collection/domain/series_matching.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+import '../../../helpers/fake_http.dart';
 
 final _t = DateTime.utc(2026);
 
@@ -82,9 +85,75 @@ void main() {
     expect(findMatchingSeries(r, [cycle]), cycle);
   });
 
-  test('same title from another publisher (other edition) does not match', () {
-    final perfect = series('p', 'One Piece', publisher: 'Kana');
-    expect(findMatchingSeries(volume(), [perfect]), isNull);
+  test('another edition (other publisher) goes into the same series', () {
+    // Recette 2026-11-19: other editions must not create a new series.
+    final other = series('p', 'One Piece', publisher: 'Kana');
+    expect(findMatchingSeries(volume(), [other]), other);
+  });
+
+  test('another publisher needs a common author (not another work)', () {
+    final spirou = series(
+      's',
+      'Spirou',
+      publisher: 'Dupuis',
+      type: CollectionType.bd,
+    ).copyWith(authors: ['Franquin']);
+    MetadataResult spirouBy(String author, String publisher) => volume(
+      title: 'Spirou',
+      publisher: publisher,
+    ).copyWith(authors: [author]);
+    // Another edition of the same work: joins the series.
+    expect(
+      findMatchingSeries(spirouBy('Franquin', 'Niffle'), [spirou]),
+      spirou,
+    );
+    // Another work with the same title, from another publisher: no.
+    expect(
+      findMatchingSeries(spirouBy('Émile Bravo', 'Niffle'), [spirou]),
+      isNull,
+    );
+    // Same publisher: the author is not checked.
+    expect(
+      findMatchingSeries(spirouBy('Émile Bravo', 'Dupuis'), [spirou]),
+      spirou,
+    );
+  });
+
+  test('a compatible publisher wins among same-title series', () {
+    final kana = series('k', 'One Piece', publisher: 'Kana');
+    final glenat = series('g', 'One Piece', publisher: 'Glénat');
+    expect(findMatchingSeries(volume(), [kana, glenat]), glenat);
+  });
+
+  test('publishers sharing their first word match', () {
+    expect(publishersMatch('Panini France', 'Panini comics'), isTrue);
+    expect(publishersMatch('Éditions Delcourt', 'Delcourt Tonkam'), isTrue);
+    expect(publishersMatch('Le Lombard', 'Le Livre de poche'), isFalse);
+  });
+
+  test('The Magic Order 4 (Panini comics) joins its series', () {
+    final magic = series(
+      'm',
+      'The magic order',
+      publisher: 'Panini France',
+      type: CollectionType.comic,
+    );
+    final t4 = parseUnimarcResponse(fixture('bnf/isbn_9791039124744.xml'))
+        .single;
+    expect(t4.publisher, 'Panini comics');
+    expect(findMatchingSeries(t4, [magic]), magic);
+  });
+
+  test("Jupiter's Legacy T. 04 joins its series through its 200 subtitle", () {
+    final jupiter = series(
+      'j',
+      "Jupiter's legacy",
+      publisher: 'Panini comics',
+      type: CollectionType.comic,
+    );
+    final t4 = parseUnimarcResponse(fixture('bnf/isbn_9791039142922.xml'))
+        .single;
+    expect(findMatchingSeries(t4, [jupiter]), jupiter);
   });
 
   test('unnumbered standalone book never matches by its own title', () {

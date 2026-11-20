@@ -883,7 +883,20 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get attachedToSeriesHelper => 'Rangé automatiquement dans cette série';
+  String get seriesNone => 'Aucune série';
+
+  @override
+  String get seriesUnknown =>
+      'Série pas encore synchronisée sur cet appareil (gardée)';
+
+  @override
+  String get seriesPickerHelper => 'Appuie pour choisir la série (ou aucune)';
+
+  @override
+  String get changeSeriesTooltip => 'Choisir la série';
+
+  @override
+  String get seriesPickerHint => 'Chercher une série ou nommer une nouvelle';
 
   @override
   String createSeriesNamed(String title) {
@@ -1456,7 +1469,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String confirmEmailSent(String email) {
-    return 'Compte créé : saisis ci-dessous le code à 6 chiffres envoyé à $email (ou ouvre le lien de l’e-mail, puis « Se connecter »).';
+    return 'Compte créé : colle ci-dessous le lien de l’e-mail envoyé à $email (appui long sur le lien → copier, sans l’ouvrir), ou son code s’il en a un.';
   }
 
   @override
@@ -1717,9 +1730,6 @@ class AppLocalizationsFr extends AppLocalizations {
   String get statsSigned => 'Dédicacés';
 
   @override
-  String get csvSigned => 'Dédicacé';
-
-  @override
   String get fullArchiveExport => 'Archive complète (avec photos)';
 
   @override
@@ -1775,10 +1785,11 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get releasesHelp =>
-      'Une nouveauté apparaît dès qu’une source la connaît (souvent à la parution). Vérifié au plus une fois par jour au démarrage.';
+      'Séries suivies : les tomes après ton dernier, et auteurs suivis : leurs nouveaux livres. Une nouveauté apparaît dès que la BnF la catalogue (souvent quelques semaines après la sortie) ; la première vérification montre les sorties de l’année et de l’an dernier. Vérifié une fois par jour au démarrage (12 séries à tour de rôle) ; « Vérifier maintenant » passe tout en revue.';
 
   @override
-  String get releasesNone => 'Aucune nouveauté pour l’instant.';
+  String get releasesNone =>
+      'Aucune nouveauté pour l’instant. Suis une série (interrupteur « Série suivie ») ou un auteur (cloche sur sa page) pour être prévenu.';
 
   @override
   String get releasesCheckNow => 'Vérifier maintenant';
@@ -1878,13 +1889,14 @@ class AppLocalizationsFr extends AppLocalizations {
   String get unfollowAuthor => 'Ne plus suivre cet auteur';
 
   @override
-  String get emailCodeLabel => 'Code reçu par e-mail';
+  String get emailCodeLabel => 'Code ou lien reçu par e-mail';
 
   @override
-  String get emailCodeHelp => '6 chiffres, valable une heure';
+  String get emailCodeHelp =>
+      'Le code à 6 chiffres, ou le lien de l’e-mail copié (appui long, sans l’ouvrir)';
 
   @override
-  String get emailCodeMissing => 'Saisis le code à 6 chiffres de l’e-mail';
+  String get emailCodeMissing => 'Saisis le code de l’e-mail ou colle son lien';
 
   @override
   String get confirmCodeAction => 'Confirmer mon adresse';
@@ -1897,15 +1909,15 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get resetHelp =>
-      'Saisis l’adresse de ton compte : un code à 6 chiffres t’y sera envoyé pour choisir un nouveau mot de passe.';
+      'Saisis l’adresse de ton compte : un e-mail t’y sera envoyé pour choisir un nouveau mot de passe.';
 
   @override
   String resetCodeSent(String email) {
-    return 'Si un compte existe pour $email, un code vient d’y être envoyé. Saisis-le avec ton nouveau mot de passe.';
+    return 'Si un compte existe pour $email, un e-mail vient d’y être envoyé : colle son lien (appui long → copier, sans l’ouvrir) ou son code, avec ton nouveau mot de passe.';
   }
 
   @override
-  String get sendResetCode => 'Envoyer le code';
+  String get sendResetCode => 'Envoyer l’e-mail';
 
   @override
   String get newPasswordLabel => 'Nouveau mot de passe';
@@ -2279,7 +2291,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get storeHapticsHelp =>
-      'Mode Magasin : 1 forte = déjà possédé, 2 = en envie, 3 légères = tome manquant d’une série, 1 brève = inconnu';
+      'Mode Magasin : 1 longue = déjà possédé, 2 = en envie, 3 courtes = tome manquant d’une série, 1 brève = inconnu';
 
   @override
   String get voiceSearchTitle => 'Recherche vocale';
@@ -2433,7 +2445,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get missingCoversHelp =>
-      'Cherche par ISBN une couverture pour chaque livre qui n’en a pas ou dont la couverture ne se charge pas (sans rien changer d’autre ; tes photos sont gardées)';
+      'Cherche par ISBN une couverture pour chaque livre qui n’en a pas ou dont la couverture ne se charge pas (sans rien changer d’autre ; tes photos sont gardées). Un livre déjà cherché sans succès n’est retenté qu’après 30 jours.';
 
   @override
   String missingCoversProgress(int done, int total, int found) {

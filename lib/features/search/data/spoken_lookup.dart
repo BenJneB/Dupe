@@ -60,7 +60,5 @@ Future<SpokenLookup> lookUpSpoken(
       : SpokenVolumeFound(copies.first);
 }
 
-bool _sameVolume(String? stored, String spoken) {
-  final n = VolumeNumber.asInt(stored);
-  return n != null ? '$n' == spoken : stored?.trim() == spoken;
-}
+bool _sameVolume(String? stored, String spoken) =>
+    VolumeNumber.key(stored) == VolumeNumber.key(spoken);

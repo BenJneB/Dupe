@@ -62,8 +62,13 @@ class FullArchive {
     for (final entry in archive.files) {
       if (!entry.isFile || !entry.name.startsWith(photosDir)) continue;
       final name = entry.name.substring(photosDir.length);
-      // A name, never a path: nothing written outside the photo folder.
-      if (name.isEmpty || name.contains('/') || name.contains('..')) continue;
+      // A name, never a path: nothing written outside the photo folder (no
+      // separator of any platform, no Windows drive "C:", no "..").
+      if (name.isEmpty ||
+          name.contains('..') ||
+          name.contains(RegExp(r'[/\\:]'))) {
+        continue;
+      }
       final file = await _photos.fileOf(name);
       if (file.existsSync()) continue;
       await file.parent.create(recursive: true);

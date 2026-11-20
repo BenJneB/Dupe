@@ -43,7 +43,10 @@ Description détaillée des choix techniques et de l'organisation du code (dépl
 ## Architecture (`lib/`)
 - `app/` : `app.dart` (MaterialApp.router), `router.dart` (go_router, `AppRoutes`), `theme.dart`,
   `adaptive_shell.dart` (NavigationBar < 600 px, NavigationRail ≥ 600, rail étendu ≥ 1100, enveloppé par
-  `exit_guard.dart` : double retour pour quitter sur Android), `widgets/` partagés. « Voir la série » = `context.go`
+  `exit_guard.dart` : double retour pour quitter sur Android), `widgets/` partagés (dont `LoadErrorView` pour l'état
+  d'erreur d'un provider, `ListSectionHeader` pour les titres de section de liste). Titre « Série — tome N » :
+  `Item.displayTitle(l10n)` (`collection/presentation/labels.dart`) ; même tome (« 07 » = « 7 ») :
+  `VolumeNumber.key` ; réglages on/off : `AppSettingsStore.getBool` / `setBool`. « Voir la série » = `context.go`
   (pile onglet > série), jamais `push`. Un onglet s'ouvre toujours sur sa liste (`initialLocation: true`).
 - `core/` : `config/env.dart`, `database/` (`app_database.dart`, `tables/` un fichier par table,
   `converters.dart`), `sync/`, `network/`, `metadata/`, `utils/`.
@@ -93,7 +96,9 @@ Description détaillée des choix techniques et de l'organisation du code (dépl
   sans total, pré-remplie, délai 5 s) ; `VolumeCountScan` + `volume_counts_screen.dart` (Plus → Qualité, en
   lot, propositions à valider). Vue liste des tomes : `volume_list_view.dart`, bascule `VolumesAsList`.
 - Éditions et couvertures (v4 phase 25) : `covers/domain/edition_match.dart` (`sameWork`, `sameStandaloneBook`) ;
-  `proposeCover` (recherche texte sans BnF après échec par ISBN) → `CoverProposals` (mémoire) validées dans Qualité ; « Compléter les couvertures manquantes » n'est plus que dans
+  « Compléter les couvertures manquantes » (`missing_covers.dart`) ne vérifie que les livres sans couverture ou
+  dont la couverture n'est pas en cache (`coverCandidates`, test local), et saute 30 jours un ISBN cherché sans
+  succès (`covers_not_found` dans `app_settings`) ; `proposeCover` (recherche texte sans BnF après échec par ISBN) → `CoverProposals` (mémoire) validées dans Qualité ; « Compléter les couvertures manquantes » n'est plus que dans
   Qualité (`MissingCoversTile`) →
   « Couvertures proposées », refus locaux `RefusedCovers` (`cover_refused`) ; `StoreChecker` reconnaît un livre hors
   série possédé dans une autre édition (titre + auteur).
@@ -107,19 +112,24 @@ Description détaillée des choix techniques et de l'organisation du code (dépl
   `20261116120000_volume_title.sql`) ; `volumeTitleOf` (`metadata_mapping.dart`) pour l'ajout et le scan,
   `VolumeTitleFill` (Plus → Qualité) pour l'existant, `VolumeSlot.ownTitle` (repli sur l'ancien titre) pour
   l'affichage : vue liste, fiche, sous les pastilles ; colonne CSV « Titre du tome ».
+- Ligne de total en haut de l'onglet (`_TabSummary`, `collection_tab_screen.dart`) : séries · livres · possédés des
+  entrées visibles (suit les filtres) ; `ownedVolumes` partagé avec les groupes d'auteurs.
+- Nombre de tomes possédés (liste et grille) : avec un total, numéros simples de 1 au total ; sans total, tous les
+  tomes possédés distincts (« 3,5 », « HS 1 », sans numéro).
 - Progression des séries (`collection_tab/series_progress_bar.dart`) : barre réelle si `totalVolumes` est connu,
   sinon barre **indicative** grise (`SeriesEntry.indicativeProgress` = possédés / `highestVolume`, plus haut numéro
-  simple calculé en SQL dans `collection_entries_query.dart`).
+  simple). Tous les compteurs d'une série (possédés, à lire, couverture, ISBN manquants, dédicacés) viennent de
+  `VolumeGrid.compute` dans `collection_entries_query.dart` (calcul en Dart, plus de recopie SQL de la règle).
 - Recherche : l'ISBN est ajouté au sous-titre des résultats texte (`resultSubtitle(withIsbn: true)`) et des livres
   de la recherche locale ; pas dans le bandeau du magasin ni la revue de rafale (code qu'on vient de scanner).
 - Lecture (`collection/data/reading_actions.dart`, extension du repository) : statut en un appui
   (`ItemReadingBar`, puces qui passent à la ligne : un SegmentedButton déborde sur téléphone), « Marquer comme
-  lus jusqu'au tome N » (`series_menu.dart`), filtre « À lire » (`ViewSettings.toReadOnly`, `unreadCount` de
-  `collection_entries_query.dart`, statuts `toReadStatuses`).
+  lus jusqu'au tome N » (`series_menu.dart`), filtre « À lire » (`ViewSettings.toReadOnly`, `unreadCount` =
+  `VolumeGrid.toReadCount`, statuts `toReadStatuses`).
 - Envies (`features/wishlist/`) : items `envie` triés par priorité, retirés d'un glissement (avec « Annuler ») ; « Prochains tomes à acheter » =
   `nextVolumesToBuy` (séries suivies, manquants non déjà en envie), ajout en un appui.
 - Auteurs (`features/authors/`) : `groupByAuthor` (`authorKey` : « Nom, Prénom » remis dans l'ordre, sans accents ni
-  casse ; une série prend aussi les auteurs de ses tomes via `seriesItemAuthorsProvider`), vue « Par auteur » de
+  casse, mots triés : « Di Mio Federica » = « Federica Di Mio » ; une série prend aussi les auteurs de ses tomes via `seriesItemAuthorsProvider`), vue « Par auteur » de
   l'onglet (`ViewSettings.byAuthor`, suit les filtres), `AuthorScreen` (`AppRoutes.author`, non filtrée),
   `AuthorMenu` (page auteur : « Marquer comme lus », `markOwnedRead` de `reading_actions.dart`),
   `AuthorLinks` sur les fiches livre/série (`context.go`, comme « Voir la série »). `EntryTile` (`entries_list.dart`) partagé par l'onglet et la page auteur.
@@ -146,9 +156,13 @@ Description détaillée des choix techniques et de l'organisation du code (dépl
   auth.uid(), pas de DELETE, pas de FK entre tables, bucket privé `covers/<uid>/`).
 - Pull (phase 9) : pagination par clé `(server_updated_at, id)` (`SyncCursor`, filtre PostgREST `or` avec valeurs
   entre guillemets, instants envoyés en UTC `Z`) et relecture de `SyncEngine.overlap` (1 min) avant le curseur :
-  une ligne commitée tard peut porter un horodatage antérieur. `SyncCodec.apply` ignore une ligne déjà
+  une ligne commitée tard peut porter un horodatage antérieur. `SyncCodec.apply` n'écrit que les colonnes présentes
+  dans la ligne (serveur pas migré, vieille sauvegarde : valeur locale ou par défaut gardée) et ignore une ligne déjà
   identique (même `updated_at` + `user_id`) → suppose que deux écritures d'une ligne n'ont jamais le même
   `updated_at` (horloge µs ; le `Device` de test avance son horloge à chaque lecture, `test/helpers/sync_device.dart`).
+  Premières pages de toutes les tables lues en parallèle, appliquées dans l'ordre des tables. Rattrapage après
+  migration (recette 2026-11-19) : quand `schemaVersion` diffère de `sync_schema_version`, la synchro relit tout et
+  réécrit aussi les lignes de même `updated_at` (`apply(refetch: true)`), pour remplir les colonnes ajoutées.
 - Erreurs de synchro typées : `SyncException.failure` (`offline` / `session` / `rejected`), `SignInException`
   (`SupabaseSyncAuth` traduit les `AuthException`).
 - **Supabase local autorisé pour les tests** (phase 17, `PLAN_V3.md`) : `tool/supabase_tests.sh` (CLI 2.122.1,
@@ -176,7 +190,7 @@ Description détaillée des choix techniques et de l'organisation du code (dépl
   d'effacement). CSV maison (`csv_codec.dart` : `;` + BOM en écriture, séparateur détecté en lecture, lignes
   vides gardées pour les numéros de ligne). Import : `guessMapping` (en-têtes FR/EN, Mangacollec, CLZ, notre
   export), écran de correspondance, doublons ignorés (ISBN / tome de série / livre isolé, autre ISBN =
-  nouvelle édition). Fichiers : `FileIo` (desktop : dialogues file_selector ; Android : feuille de partage
+  nouvelle édition) ; colonnes de dédicace relues (aller-retour sans perte). Fichiers : `FileIo` (desktop : dialogues file_selector ; Android : feuille de partage
   share_plus) — `FakeFileIo` en test.
 - Journal (phase 9, `core/logging/`) : global `appLog` (pas un provider, utilisable partout), 500 entrées,
   fichier JSON-lines `dupe_log.jsonl` du dossier support (attaché dans `main.dart`, compacté à 2× la capacité),
@@ -224,13 +238,25 @@ Description détaillée des choix techniques et de l'organisation du code (dépl
 - `SyncFailure.unavailable` : erreur 5xx (page non JSON → `PostgrestException.code` = statut HTTP), message
   « projet Supabase peut-être en pause ».
 - Rattachement auto d'un tome scanné (`features/collection/domain/series_matching.dart`) : titre de série
-  normalisé (accents, ponctuation, qualificatifs entre parenthèses ignorés) + éditeur compatible (inclusion).
+  normalisé (accents, ponctuation, qualificatifs entre parenthèses ignorés) ; une autre édition rejoint la série
+  existante (recette 2026-11-19), mais d'un autre éditeur il faut aussi un auteur commun (`authorsCompatible`,
+  inconnu accepté) ; l'éditeur (compatible = inclusion ou même premier mot significatif : Panini France / Panini
+  comics) et le type départagent ensuite. Même règle de titre pour `CollectionRepository.findSeries` (import CSV,
+  série complète, suggestions).
   Candidats : BnF 461$t, 225$a **seulement si numéroté ($v) et confirmé par le 461** (un 225 sans 461 est une
-  collection d'éditeur : Folio junior, Tracts Gallimard, Poches Jouvence), titre du volume
-  s'il est numéroté. Sans correspondance → proposition de créer la série (`SeriesAttachment`). Le type de la
+  collection d'éditeur : Folio junior, Tracts Gallimard, Poches Jouvence), titre et sous-titre du volume
+  s'il est numéroté (pré-notice BnF sans 461 : 200 $a « Requiem (II), Finale » $h T. 04 $i « Jupiter's Legacy »).
+  Sous-titre BnF purement générique (« roman », « nouvelles »…) ignoré.
+  Sans correspondance → proposition de créer la série (`SeriesAttachment`). Rangement manuel (recette 2026-11-19) :
+  tuile « Série » du formulaire (`series_attachment_tile.dart` → `series_picker_sheet.dart` : série existante du même
+  type, nouvelle série nommée, ou aucune) ; `SeriesAttachment` scellée (`KeepSeries`, `AttachToSeries`,
+  `CreateSeries`, `DetachSeries`) : `loadItemDraft` part de la série actuelle (supprimée → détaché, pas encore
+  synchronisée → gardée) et `applyAttachment` applique le choix. Le type de la
   série trouvée prime sur le type de l'onglet.
-- Confort magasin (phase 13) : vibrations par verdict (`scan/presentation/store/store_haptics.dart`, retour
-  haptique système, `store_haptics_enabled`, déclenchées par `ref.listen` dans `StoreResultBanner` au verdict
+- Confort magasin (phase 13) : vibrations par verdict (`scan/presentation/store/store_haptics.dart` :
+  vraies vibrations à durées explicites via le canal `dev.dupe.dupe/vibration` de `MainActivity.kt`, permission
+  `VIBRATE` — les constantes de `HapticFeedback` donnaient le même petit clic partout ; aussi pour la rafale ;
+  `store_haptics_enabled`, déclenchées par `ref.listen` dans `StoreResultBanner` au verdict
   final), lampe torche (`camera_scanner_view.dart`), raccourci Android (`scan/data/app_shortcuts.dart`,
   quick_actions 1.1.1, icône `res/drawable/ic_shortcut_scan.xml`; `FakeAppShortcuts` injecté par `pumpApp`).
   Anti-doublon : `DetectionSpeed.noDuplicates` + `enqueue` qui refuse un ISBN déjà en file.
@@ -281,10 +307,14 @@ Description détaillée des choix techniques et de l'organisation du code (dépl
 - Nouveautés (v4 phase 33, schéma v6, `features/releases/`) : `ReleaseChecker` (démarrage, 1×/jour, Wi-Fi par
   défaut) → séries suivies via `SeriesCatalogSource` + `nextVolumes`, auteurs suivis via `SuggestionSources` +
   `newBooks` → `ReleasesRepository.addIfNew` (id UUID v5 de la clé, une alerte par clé ou ISBN) →
-  `ReleaseNotifications`. Premier passage d'une série ou d'un auteur = référence sans alerte (relevés locaux
-  `releases_base_*`, `releases_seen_*`) ; `closeOwned` passe « ajoutée » les alertes déjà en collection. Écran
+  `ReleaseNotifications`. Premier passage d'une série ou d'un auteur : seulement les sorties de l'année et de l'an
+  dernier (`isRecentRelease`, l'année de la notice), puis référence (relevés locaux `releases_base_*`,
+  `releases_seen_*` = ISBN + clés d'œuvre `workKey` : une réédition d'une œuvre vue ou possédée n'est pas une
+  nouveauté ; `release_author_check.dart`). Passage automatique : 12 séries à tour de rôle ; « Vérifier maintenant »
+  (`run(all: true)`) : toutes ; `closeOwned` passe « ajoutée » les alertes déjà en collection. Écran
   `/plus/nouveautes`, réglages `ReleaseSettingsSection`, cloche `FollowAuthorButton`.
 - Compte (v4 phase 34) : confirmation d'inscription et mot de passe oublié par **code à 6 chiffres** de l'e-mail
-  Supabase (`verifyOTP` signup / recovery, `{{ .Token }}` dans les modèles d'e-mail) : `SyncAuth.confirmSignUp`,
+  Supabase (`verifyOTP` signup / recovery, `{{ .Token }}` dans les modèles d'e-mail, qui exige un SMTP) **ou lien de
+  l'e-mail collé** (`emailLinkToken` → `verifyOTP(tokenHash:)`) : `SyncAuth.confirmSignUp`,
   `resendConfirmation`, `sendPasswordReset`, `resetPassword` ; écrans `sign_in_screen.dart` (champ du code) et
   `reset_password_screen.dart` (`/connexion/mot-de-passe-oublie`). Pas de lien profond.

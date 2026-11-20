@@ -16,9 +16,11 @@ MetadataResult? _parseVolume(Map<String, dynamic> item) {
 
   final identifiers = (info['industryIdentifiers'] as List<dynamic>? ?? [])
       .cast<Map<String, dynamic>>();
+  // Valid ones only: an invalid ISBN_13 falls back on the ISBN_10.
   String? isbnOf(String type) => identifiers
       .where((i) => i['type'] == type)
-      .map((i) => i['identifier'] as String)
+      .map((i) => Isbn.toIsbn13(i['identifier'] as String))
+      .nonNulls
       .firstOrNull;
   final isbn = isbnOf('ISBN_13') ?? isbnOf('ISBN_10');
 
@@ -39,7 +41,7 @@ MetadataResult? _parseVolume(Map<String, dynamic> item) {
     publishDate: info['publishedDate'] as String?,
     pageCount: info['pageCount'] as int?,
     language: info['language'] as String?,
-    isbn13: isbn == null ? null : Isbn.toIsbn13(isbn),
+    isbn13: isbn,
     // Google returns http URLs with a page curl; https and flat look better.
     coverUrl: cover
         ?.replaceFirst('http://', 'https://')

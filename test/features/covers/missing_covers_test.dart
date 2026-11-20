@@ -91,7 +91,8 @@ void main() {
     await container.read(missingCoversFillProvider.notifier).run();
 
     final state = container.read(missingCoversFillProvider);
-    expect((state.total, state.done, state.found), (5, 5, 2));
+    // The photo is not even counted (never replaced).
+    expect((state.total, state.done, state.found), (4, 4, 2));
     expect(state.finished, isTrue);
     expect((await repo.getItem(found.id))!.coverUrl, google);
     expect((await repo.getItem(notFound.id))!.coverUrl, '');
@@ -106,6 +107,17 @@ void main() {
     expect(bnf.calls, 0);
     // The found cover is already on the device (offline).
     expect(cache.cached, contains(google));
+
+    // Second run: covers on the device are skipped at once, and the book
+    // searched for nothing is not searched again for 30 days.
+    await container.read(missingCoversFillProvider.notifier).run();
+    expect(container.read(missingCoversFillProvider).total, 0);
+    final skipped = await env.db
+        .customSelect(
+          "SELECT value FROM app_settings WHERE key = '$notFoundKey'",
+        )
+        .getSingle();
+    expect(skipped.read<String>('value'), contains(brokenCover));
   });
 
   test(

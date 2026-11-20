@@ -12,6 +12,7 @@ import 'package:dupe/features/backup/data/full_archive.dart';
 import 'package:dupe/features/backup/data/json_backup.dart';
 import 'package:dupe/features/backup/presentation/restore_dialog.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
+import 'package:dupe/features/collection/domain/volume_number.dart';
 import 'package:dupe/features/covers/data/cover_providers.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -172,9 +173,7 @@ class BackupActions {
         series[b.seriesId]?.title ?? b.title,
       );
       if (byTitle != 0) return byTitle;
-      return (int.tryParse(a.volumeNumber ?? '') ?? 0).compareTo(
-        int.tryParse(b.volumeNumber ?? '') ?? 0,
-      );
+      return VolumeNumber.compare(a.volumeNumber, b.volumeNumber);
     });
     final saved = await ref
         .read(fileIoProvider)

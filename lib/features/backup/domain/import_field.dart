@@ -17,6 +17,12 @@ enum ImportField {
   coverPrice,
   location,
   notes,
+  // Signed copies (phase 31), as the app's own CSV export writes them.
+  signed,
+  signedBy,
+  signedOn,
+  signedPlace,
+  signingNote,
 }
 
 /// Header names recognised automatically (folded: lowercase, no accents),
@@ -101,6 +107,11 @@ const _synonyms = <ImportField, List<String>>{
   ],
   ImportField.location: ['emplacement', 'location', 'rangement', 'storage box'],
   ImportField.notes: ['notes', 'note', 'commentaire', 'comments', 'remarques'],
+  ImportField.signed: ['dedicace', 'signed', 'autographed'],
+  ImportField.signedBy: ['dedicace par', 'signed by'],
+  ImportField.signedOn: ['date de dedicace', 'signed on', 'signing date'],
+  ImportField.signedPlace: ['lieu de dedicace', 'signing place'],
+  ImportField.signingNote: ['texte de dedicace', 'inscription'],
 };
 
 String _norm(String header) =>

@@ -10,6 +10,14 @@ abstract final class VolumeNumber {
     return RegExp(r'^\d+$').hasMatch(value) ? int.parse(value) : null;
   }
 
+  /// The volume a free-text number stands for: "07" and "7" are the same
+  /// volume, other labels ("HS 1") as typed (trimmed). Null when empty.
+  static String? key(String? raw) {
+    final value = raw?.trim();
+    if (value == null || value.isEmpty) return null;
+    return asInt(value)?.toString() ?? value;
+  }
+
   /// Natural order: plain/decimal numbers first by value, then special
   /// volumes ("HS 2", "Annual 1") by prefix and number, then empty ones.
   static int compare(String? a, String? b) {

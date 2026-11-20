@@ -1,5 +1,5 @@
-import 'package:dupe/app/error_text.dart';
 import 'package:dupe/app/widgets/cover_image.dart';
+import 'package:dupe/app/widgets/load_error_view.dart';
 import 'package:dupe/core/metadata/series_metadata.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
 import 'package:dupe/features/collection/presentation/providers/series_lookup_provider.dart';
@@ -97,9 +97,7 @@ class _SeriesLookupSheetState extends ConsumerState<_SeriesLookupSheet> {
                     ),
                 ],
               ),
-              AsyncError(:final error) => Center(
-                child: Text(l10n.loadError(errorText(l10n, error))),
-              ),
+              AsyncError(:final error) => LoadErrorView(error),
               _ => const Center(child: CircularProgressIndicator()),
             },
           ),

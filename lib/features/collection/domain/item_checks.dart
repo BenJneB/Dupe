@@ -6,6 +6,6 @@ extension ItemChecks on Item {
   bool get hasNoIsbn => (isbn13 ?? '').trim().isEmpty;
 
   /// Owned book without ISBN (quality marker, phase 22). The list of series
-  /// counts them in SQL with the same rule (`collection_entries_query.dart`).
+  /// counts them with this rule too (`collection_entries_query.dart`).
   bool get lacksIsbn => ownership == Ownership.possede && hasNoIsbn;
 }

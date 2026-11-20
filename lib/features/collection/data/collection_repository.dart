@@ -10,6 +10,7 @@ import 'package:dupe/features/collection/domain/collection_type.dart';
 import 'package:dupe/features/collection/domain/enums.dart';
 import 'package:dupe/features/collection/domain/item.dart';
 import 'package:dupe/features/collection/domain/series.dart';
+import 'package:dupe/features/collection/domain/series_matching.dart';
 import 'package:dupe/features/collection/domain/volume_number.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -82,13 +83,7 @@ class CollectionRepository {
               t.title.equals(before.title) &
               t.deletedAt.isNull(),
         ))
-        .write(
-          ItemsTableCompanion(
-            title: Value(series.title),
-            updatedAt: Value(now),
-            syncPending: const Value(true),
-          ),
-        );
+        .write(_itemChange(now).copyWith(title: Value(series.title)));
   });
 
   Future<void> saveItem(Item item) => _db.upsertKeepingDeletion(
@@ -126,22 +121,12 @@ class CollectionRepository {
   /// Soft-deletes a series and all its items.
   Future<void> deleteSeries(String id) => _db.transaction(() async {
     final now = _now();
-    await (_db.update(_db.seriesTable)..where((t) => t.id.equals(id))).write(
-      SeriesTableCompanion(
-        deletedAt: Value(now),
-        updatedAt: Value(now),
-        syncPending: const Value(true),
-      ),
-    );
     await (_db.update(
-      _db.itemsTable,
-    )..where((t) => t.seriesId.equals(id) & t.deletedAt.isNull())).write(
-      ItemsTableCompanion(
-        deletedAt: Value(now),
-        updatedAt: Value(now),
-        syncPending: const Value(true),
-      ),
-    );
+      _db.seriesTable,
+    )..where((t) => t.id.equals(id))).write(_seriesChange(now, deletedAt: now));
+    await (_db.update(_db.itemsTable)
+          ..where((t) => t.seriesId.equals(id) & t.deletedAt.isNull()))
+        .write(_itemChange(now, deletedAt: Value(now)));
   });
 
   Future<void> deleteItem(String id) {
@@ -158,11 +143,7 @@ class CollectionRepository {
     if (deletedAt == null) return;
     final now = _now();
     await (_db.update(_db.seriesTable)..where((t) => t.id.equals(id))).write(
-      SeriesTableCompanion(
-        deletedAt: const Value(null),
-        updatedAt: Value(now),
-        syncPending: const Value(true),
-      ),
+      _seriesChange(now, deletedAt: null),
     );
     final items = await (_db.select(
       _db.itemsTable,
@@ -183,18 +164,38 @@ class CollectionRepository {
     required DateTime? deletedAt,
     required DateTime now,
   }) => (_db.update(_db.itemsTable)..where((t) => t.id.equals(id))).write(
-    ItemsTableCompanion(
-      deletedAt: Value(deletedAt),
-      updatedAt: Value(now),
-      syncPending: const Value(true),
-    ),
+    _itemChange(now, deletedAt: Value(deletedAt)),
+  );
+
+  /// A synced write at [now], with [deletedAt] when given.
+  static ItemsTableCompanion _itemChange(
+    DateTime now, {
+    Value<DateTime?> deletedAt = const Value.absent(),
+  }) => ItemsTableCompanion(
+    updatedAt: Value(now),
+    syncPending: const Value(true),
+    deletedAt: deletedAt,
+  );
+
+  static SeriesTableCompanion _seriesChange(
+    DateTime now, {
+    required DateTime? deletedAt,
+  }) => SeriesTableCompanion(
+    deletedAt: Value(deletedAt),
+    updatedAt: Value(now),
+    syncPending: const Value(true),
   );
 
   // ---- Reads --------------------------------------------------------------
 
-  Future<Series?> getSeries(String id) => (_db.select(
-    _db.seriesTable,
-  )..where((t) => t.id.equals(id) & t.deletedAt.isNull())).getSingleOrNull();
+  Future<Series?> getSeries(String id) => _activeSeries(id).getSingleOrNull();
+
+  /// Whether series [id] exists locally but was deleted.
+  Future<bool> isSeriesDeleted(String id) async =>
+      await (_db.select(_db.seriesTable)
+            ..where((t) => t.id.equals(id) & t.deletedAt.isNotNull()))
+          .getSingleOrNull() !=
+      null;
 
   /// All non-deleted series (optionally of one [type]).
   Future<List<Series>> listSeries({CollectionType? type}) =>
@@ -207,17 +208,15 @@ class CollectionRepository {
           ))
           .get();
 
-  /// Non-deleted series of [type] with exactly this [title].
-  Future<Series?> findSeries(CollectionType type, String title) =>
-      (_db.select(_db.seriesTable)
-            ..where(
-              (t) =>
-                  t.type.equalsValue(type) &
-                  t.title.equals(title) &
-                  t.deletedAt.isNull(),
-            )
-            ..limit(1))
-          .getSingleOrNull();
+  /// The series of [type] titled [title], by normalized title ("Blue lock"
+  /// is "Blue Lock", "Batman (DC Renaissance)" is "Batman"): the rule of the
+  /// scan, for the CSV import, the catalog and the suggestions.
+  Future<Series?> findSeries(CollectionType type, String title) async {
+    final wanted = normalizeTitle(title);
+    return (await listSeries(type: type))
+        .where((s) => normalizeTitle(s.title) == wanted)
+        .firstOrNull;
+  }
 
   /// Non-deleted standalone item (no series) of [type] with this [title].
   Future<Item?> findStandaloneItem(CollectionType type, String title) =>
@@ -248,17 +247,12 @@ class CollectionRepository {
             ..limit(1))
           .getSingleOrNull();
 
-  Future<Item?> getItem(String id) => (_db.select(
-    _db.itemsTable,
-  )..where((t) => t.id.equals(id) & t.deletedAt.isNull())).getSingleOrNull();
+  Future<Item?> getItem(String id) => _activeItem(id).getSingleOrNull();
 
-  Stream<Series?> watchSeries(String id) => (_db.select(
-    _db.seriesTable,
-  )..where((t) => t.id.equals(id) & t.deletedAt.isNull())).watchSingleOrNull();
+  Stream<Series?> watchSeries(String id) =>
+      _activeSeries(id).watchSingleOrNull();
 
-  Stream<Item?> watchItem(String id) => (_db.select(
-    _db.itemsTable,
-  )..where((t) => t.id.equals(id) & t.deletedAt.isNull())).watchSingleOrNull();
+  Stream<Item?> watchItem(String id) => _activeItem(id).watchSingleOrNull();
 
   Future<List<Item>> listSeriesItems(String seriesId) =>
       _activeItemsOfSeries(seriesId).get();
@@ -270,6 +264,14 @@ class CollectionRepository {
             (a, b) => VolumeNumber.compare(a.volumeNumber, b.volumeNumber),
           ),
       );
+
+  SimpleSelectStatement<$SeriesTableTable, Series> _activeSeries(String id) =>
+      _db.select(_db.seriesTable)
+        ..where((t) => t.id.equals(id) & t.deletedAt.isNull());
+
+  SimpleSelectStatement<$ItemsTableTable, Item> _activeItem(String id) =>
+      _db.select(_db.itemsTable)
+        ..where((t) => t.id.equals(id) & t.deletedAt.isNull());
 
   SimpleSelectStatement<$ItemsTableTable, Item> _activeItemsOfSeries(
     String seriesId,

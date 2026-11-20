@@ -60,6 +60,19 @@ class FormSection extends StatelessWidget {
   );
 }
 
+/// Section title of a settings or detail list ("Sources", "Séries").
+class ListSectionHeader extends StatelessWidget {
+  const new(this.title, {super.key});
+
+  final String title;
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
+    child: Text(title, style: Theme.of(context).textTheme.titleSmall),
+  );
+}
+
 /// Date picker field showing the formatted date, with a clear button.
 class FormDate extends StatelessWidget {
   const new({

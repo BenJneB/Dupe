@@ -10,14 +10,13 @@ class VolumesAsList extends _$VolumesAsList {
   static const settingKey = 'series_volumes_as_list';
 
   @override
-  Future<bool> build() async =>
-      await ref.watch(appSettingsStoreProvider).get(settingKey) == '1';
+  Future<bool> build() async => await ref
+      .watch(appSettingsStoreProvider)
+      .getBool(settingKey, orElse: false);
 
   Future<void> toggle() async {
     final asList = !(state.value ?? false);
     state = AsyncData(asList);
-    await ref
-        .read(appSettingsStoreProvider)
-        .set(settingKey, asList ? '1' : '0');
+    await ref.read(appSettingsStoreProvider).setBool(settingKey, value: asList);
   }
 }

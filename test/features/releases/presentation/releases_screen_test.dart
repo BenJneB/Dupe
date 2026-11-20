@@ -1,4 +1,6 @@
 import 'package:dupe/app/router.dart';
+import 'package:dupe/core/database/database_provider.dart';
+import 'package:dupe/core/database/local_stores.dart';
 import 'package:dupe/core/metadata/metadata_result.dart';
 import 'package:dupe/core/metadata/providers/bnf/unimarc_parser.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
@@ -97,6 +99,9 @@ void main() {
     await pumpApp(
       tester,
       suggestionSources: sources,
+      overrides: [
+        clockProvider.overrideWithValue(() => DateTime(2026, 11, 20, 10)),
+      ],
       seed: (db) async {
         final repo = repoOf(db);
         await repo.saveItem(
@@ -114,9 +119,13 @@ void main() {
     // Source off or failing: nothing found is no reference.
     await _check(tester);
     larcenet.addAll(parseUnimarcResponse(fixture('bnf/author_larcenet.xml')));
-    // First real check: what exists now is the reference, no alert.
+    // First real check: only the recent books not owned (Gymnographies,
+    // 2025; Blast is owned, even in other editions; older ones are not
+    // news), then what exists is the reference.
     await _check(tester);
-    expect(find.text('Aucune nouveauté'), findsOneWidget);
+    expect(find.text('1 nouveauté'), findsOneWidget);
+    expect(find.text('Gymnographies'), findsOneWidget);
+    expect(find.text('Le combat ordinaire'), findsNothing);
 
     larcenet.add(
       const MetadataResult(
@@ -130,5 +139,55 @@ void main() {
     await _check(tester);
     expect(find.text('1 nouveauté'), findsOneWidget);
     expect(find.text('Le nouveau Larcenet'), findsOneWidget);
+    // A re-edition of a work already seen (new ISBN) is not news.
+    larcenet.add(
+      const MetadataResult(
+        source: MetadataSource.bnf,
+        sourceId: 'reprint',
+        title: 'Gymnographies',
+        isbn13: '9782205000017',
+        authors: ['Manu Larcenet'],
+      ),
+    );
+    await _check(tester);
+    expect(find.text('Aucune nouveauté'), findsOneWidget);
+  });
+
+  testWidgets('a reference saved by the 1362cca build (sorted key) is used', (
+    tester,
+  ) async {
+    final sources = FakeSuggestionSources(
+      byAuthor: {
+        'Manu Larcenet': [
+          const MetadataResult(
+            source: MetadataSource.bnf,
+            sourceId: 'new',
+            title: 'Le nouveau Larcenet',
+            isbn13: '9782205000000',
+            authors: ['Manu Larcenet'],
+          ),
+        ],
+      },
+    );
+    await pumpApp(
+      tester,
+      suggestionSources: sources,
+      seed: (db) async {
+        final repo = repoOf(db);
+        await repo.saveItem(
+          repo
+              .newItem(CollectionType.bd)
+              .copyWith(title: 'Blast', authors: ['Manu Larcenet']),
+        );
+        await AppSettingsStore(db).set('releases_seen_larcenet manu', '[]');
+      },
+    );
+    await goTo(tester, '/bd/auteur?nom=Manu%20Larcenet');
+    await tester.tap(find.byKey(const Key('followAuthor')));
+    await tester.pumpAndSettle();
+
+    await goTo(tester, AppRoutes.releases);
+    await _check(tester);
+    expect(find.text('1 nouveauté'), findsOneWidget);
   });
 }

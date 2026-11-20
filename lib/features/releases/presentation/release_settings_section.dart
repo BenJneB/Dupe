@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dupe/app/widgets/form_helpers.dart';
 import 'package:dupe/features/releases/data/release_settings.dart';
 import 'package:dupe/features/releases/data/releases_repository.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
@@ -20,13 +21,7 @@ class ReleaseSettingsSection extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
-          child: Text(
-            l10n.releasesTitle,
-            style: Theme.of(context).textTheme.titleSmall,
-          ),
-        ),
+        ListSectionHeader(l10n.releasesTitle),
         SwitchListTile(
           key: const Key('releasesSwitch'),
           secondary: const Icon(Icons.new_releases_outlined),

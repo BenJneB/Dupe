@@ -122,7 +122,20 @@ void main() {
     await tester.tap(find.byKey(const Key('sendResetButton')));
     await tester.pumpAndSettle();
     expect(auth.sent, ['reset:moi@exemple.be']);
-    await tester.enterText(fieldIn('resetCodeField'), '654321');
+    // Default Supabase email (no SMTP): its link pasted instead of a code.
+    await tester.enterText(
+      fieldIn('resetCodeField'),
+      'https://abc.supabase.co/auth/v1/verify?token=654321&type=recovery'
+      '&redirect_to=http://localhost:3000',
+    );
+    // Too short: refused here, before the code is used up.
+    await tester.enterText(fieldIn('newPasswordField'), 'court');
+    await tester.enterText(fieldIn('newPasswordConfirmField'), 'court');
+    await tester.tap(find.byKey(const Key('resetPasswordButton')));
+    await tester.pumpAndSettle();
+    expect(auth.passwords['moi@exemple.be'], 'oublie');
+    expect(find.textContaining('trop court'), findsOneWidget);
+
     await tester.enterText(fieldIn('newPasswordField'), 'nouveau1');
     await tester.enterText(fieldIn('newPasswordConfirmField'), 'nouveau1');
     await tester.tap(find.byKey(const Key('resetPasswordButton')));

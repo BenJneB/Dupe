@@ -48,15 +48,15 @@ class PrefetchSettings {
   static const enabledKey = 'cover_prefetch_enabled';
   static const wifiOnlyKey = 'cover_prefetch_wifi_only';
 
-  Future<bool> get enabled async => await _settings.get(enabledKey) != '0';
+  Future<bool> get enabled => _settings.getBool(enabledKey, orElse: true);
 
-  Future<bool> get wifiOnly async => await _settings.get(wifiOnlyKey) != '0';
+  Future<bool> get wifiOnly => _settings.getBool(wifiOnlyKey, orElse: true);
 
   Future<void> setEnabled({required bool enabled}) =>
-      _settings.set(enabledKey, enabled ? '1' : '0');
+      _settings.setBool(enabledKey, value: enabled);
 
   Future<void> setWifiOnly({required bool wifiOnly}) =>
-      _settings.set(wifiOnlyKey, wifiOnly ? '1' : '0');
+      _settings.setBool(wifiOnlyKey, value: wifiOnly);
 }
 
 @riverpod
@@ -93,6 +93,13 @@ class CoverPrefetch extends _$CoverPrefetch {
   /// run that fails on the same covers (resume, connection changes) does not
   /// repeat them during this execution of the app.
   String? _loggedFailures;
+
+  /// Covers known to be on the device, and covers that failed, during this
+  /// execution of the app: a resume or a connection change does not check
+  /// thousands of files again, nor download the failing ones (404…) again.
+  /// "Télécharger maintenant" ([restart]) retries the failures.
+  final _onDevice = <String>{};
+  final _failed = <String, String>{};
 
   @override
   PrefetchState build() {
@@ -133,6 +140,7 @@ class CoverPrefetch extends _$CoverPrefetch {
   /// change or from the "Télécharger maintenant" button.
   Future<void> restart() {
     _run++;
+    _failed.clear();
     state = const PrefetchState();
     return start();
   }
@@ -158,17 +166,26 @@ class CoverPrefetch extends _$CoverPrefetch {
     var failed = 0;
     final failures = <String>[];
     for (final (i, url) in urls.indexed) {
-      if (await _fetch(url) case final error?) {
+      if (_onDevice.contains(url)) {
+        // Known: nothing to check.
+      } else if (_failed[url] ?? await _fetch(url) case final error?) {
+        _failed[url] = error;
         failed++;
         if (failures.length < 20) failures.add('$url ($error)');
+      } else {
+        _onDevice.add(url);
       }
       if (run != _run) return; // Cancelled: the new state is already set.
-      state = PrefetchState(
-        running: i + 1 < urls.length,
-        done: i + 1,
-        total: urls.length,
-        failed: failed,
-      );
+      // Progress every 25 covers (and at the end): not one rebuild each.
+      final last = i + 1 == urls.length;
+      if (last || (i + 1) % 25 == 0) {
+        state = PrefetchState(
+          running: !last,
+          done: i + 1,
+          total: urls.length,
+          failed: failed,
+        );
+      }
     }
     final report = '$failed\n${failures.join('\n')}';
     if (failed > 0 && report != _loggedFailures) {

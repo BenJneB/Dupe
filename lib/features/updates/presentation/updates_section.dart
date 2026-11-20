@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dupe/app/error_text.dart';
+import 'package:dupe/app/widgets/form_helpers.dart';
 import 'package:dupe/features/updates/data/update_checker.dart';
 import 'package:dupe/features/updates/presentation/update_notice.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
@@ -45,13 +46,7 @@ class UpdatesSection extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
-          child: Text(
-            l10n.updatesSection,
-            style: Theme.of(context).textTheme.titleSmall,
-          ),
-        ),
+        ListSectionHeader(l10n.updatesSection),
         SwitchListTile(
           key: const Key('updateCheckSwitch'),
           secondary: const Icon(Icons.new_releases_outlined),

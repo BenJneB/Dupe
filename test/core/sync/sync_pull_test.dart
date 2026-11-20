@@ -68,4 +68,73 @@ void main() {
     await Future<void>.delayed(Duration.zero);
     expect(writes, isEmpty);
   });
+
+  test('a row of an older schema (server not migrated, old backup) is '
+      'pulled: newer columns keep their default or local value', () async {
+    final id = await addBook(phone, 'Antidote');
+    await phone.sync();
+    // The server has no signing columns yet (phase 31 migration not run).
+    const newer = [
+      'is_signed',
+      'signed_by',
+      'signed_on',
+      'signed_place',
+      'signing_note',
+    ];
+    remote.tables['items']![id]!.removeWhere((k, _) => newer.contains(k));
+
+    await pc.sync();
+    final pulled = (await pc.repo.getItem(id))!;
+    expect((pulled.title, pulled.isSigned), ('Antidote', false));
+
+    // Signed on the PC, then changed elsewhere without those columns.
+    await pc.repo.saveItem(pulled.copyWith(isSigned: true, signedBy: 'O. H.'));
+    await pc.sync();
+    final row = {...remote.tables['items']![id]!}
+      ..removeWhere((k, _) => newer.contains(k) || k == 'server_updated_at');
+    final later = DateTime.parse(row['updated_at']! as String)
+        .add(const Duration(minutes: 1));
+    // Another app version, not knowing the columns, writes the row.
+    await remote.upsert('items', [
+      {
+        ...row,
+        'title': 'Antidote au culte de la performance',
+        'updated_at': later.toUtc().toIso8601String(),
+      },
+    ]);
+    await pc.sync();
+    final merged = (await pc.repo.getItem(id))!;
+    expect(
+      (merged.title, merged.isSigned, merged.signedBy),
+      ('Antidote au culte de la performance', true, 'O. H.'),
+    );
+  });
+
+  test('a new local schema pulls every row again (columns it added)', () async {
+    final id = await addBook(phone, 'Dédicacé');
+    final signed = (await phone.repo.getItem(id))!
+        .copyWith(isSigned: true, signedBy: 'L’autrice');
+    await phone.repo.saveItem(signed);
+    await phone.sync();
+    await pc.sync();
+    // Pulled before its migration added the signing columns: they hold
+    // their default, with the same updated_at as the server row.
+    await pc.db.customStatement(
+      "UPDATE items SET is_signed = 0, signed_by = NULL WHERE id = '$id'",
+    );
+    final quiet = await pc.sync();
+    expect(quiet.pulled, 0);
+    expect((await pc.repo.getItem(id))!.isSigned, isFalse);
+
+    // First sync on a new schema: everything is read again and rewritten.
+    await pc.db.customStatement(
+      "DELETE FROM app_settings WHERE key = 'sync_schema_version'",
+    );
+    await pc.sync();
+    final item = (await pc.repo.getItem(id))!;
+    expect(item.isSigned, isTrue);
+    expect(item.signedBy, 'L’autrice');
+    // Done once: the next sync is incremental again.
+    expect((await pc.sync()).pulled, 0);
+  });
 }

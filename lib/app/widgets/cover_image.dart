@@ -37,6 +37,10 @@ class CoverImage extends StatelessWidget {
       ),
     );
     final value = url;
+    // Decoded at the displayed size, not the full resolution.
+    final cacheHeight = height.isFinite
+        ? (height * MediaQuery.devicePixelRatioOf(context)).round()
+        : null;
     return ClipRRect(
       borderRadius: BorderRadius.circular(6),
       child: SizedBox(
@@ -49,10 +53,12 @@ class CoverImage extends StatelessWidget {
                 name: CoverPhotos.nameOf(value)!,
                 placeholder: placeholder,
                 fit: fit,
+                cacheHeight: cacheHeight,
               )
             : CachedNetworkImage(
                 imageUrl: value,
                 cacheManager: coverCacheManager,
+                memCacheHeight: cacheHeight,
                 fit: fit,
                 placeholder: (_, _) => placeholder,
                 errorWidget: (_, _, _) => placeholder,

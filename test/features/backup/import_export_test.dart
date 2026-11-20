@@ -59,6 +59,14 @@ void main() {
     final again = await importText(csv);
     expect(again.created, 0);
     expect(again.duplicates, 3);
+
+    // Another spelling of the series title joins it (rule of the scan).
+    final other = await importText(
+      'Série;Tome;Titre\n'
+      'ONE PIECE;3;\n',
+    );
+    expect(other.seriesCreated, 0);
+    expect(await env.repo.listSeriesItems(series.id), hasLength(3));
   });
 
   test('the CSV export is re-imported identically', () async {
@@ -77,6 +85,11 @@ void main() {
           purchaseDate: DateTime(2026, 2, 3),
           coverPrice: 14.5,
           notes: 'Dédicacé; "rare"',
+          isSigned: true,
+          signedBy: 'Marion Poinsot',
+          signedOn: DateTime(2026, 3, 4),
+          signedPlace: 'Angoulême',
+          signingNote: 'Pour Alice',
         );
     await env.repo.saveItem(item);
     final csv = itemsToCsv([item], {series.id: series});
@@ -102,6 +115,12 @@ void main() {
     expect(copy.purchaseDate, DateTime(2026, 2, 3));
     expect(copy.coverPrice, 14.5);
     expect(copy.notes, 'Dédicacé; "rare"');
+    // Signing columns come back too (they were exported only).
+    expect(copy.isSigned, isTrue);
+    expect(copy.signedBy, 'Marion Poinsot');
+    expect(copy.signedOn, DateTime(2026, 3, 4));
+    expect(copy.signedPlace, 'Angoulême');
+    expect(copy.signingNote, 'Pour Alice');
   });
 
   test('two copies without ISBN of a volume are both imported', () async {

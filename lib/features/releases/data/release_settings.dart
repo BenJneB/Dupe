@@ -26,7 +26,7 @@ class ReleaseSettings extends _$ReleaseSettings {
   @override
   Future<ReleaseOptions> build() async {
     final store = ref.watch(appSettingsStoreProvider);
-    Future<bool> on(String key) async => await store.get(key) != '0';
+    Future<bool> on(String key) => store.getBool(key, orElse: true);
     return (
       enabled: await on(_enabled),
       wifiOnly: await on(_wifi),
@@ -40,7 +40,7 @@ class ReleaseSettings extends _$ReleaseSettings {
       (_wifi, wifiOnly),
       (_notify, notify),
     ]) {
-      if (value != null) await _store.set(key, value ? '1' : '0');
+      if (value != null) await _store.setBool(key, value: value);
     }
     ref.invalidateSelf();
   }

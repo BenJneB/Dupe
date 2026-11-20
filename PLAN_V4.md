@@ -42,6 +42,16 @@ deux fonctions tournées vers la suite de la collection : être prévenu des nou
   complétés au scan.
 - **Fait en fin de v3** (2026-11-15) : obfuscation des Releases publiques (seulement elles ; les APK locaux de
   l'utilisateur restent lisibles), symboles joints à la Release, `coverError` sans `runtimeType`.
+- **Recette du 2026-11-19** (bugs de séries remontés par l'utilisateur) : autre édition rangée dans la série
+  existante, éditeurs « Panini France / Panini comics » compatibles, sous-titre BnF 200 $i comme série candidate,
+  sous-titres génériques (« roman ») ignorés, tomes spéciaux comptés sans total, auteurs aux mots inversés fusionnés ;
+  ajoutés à la demande de l'utilisateur : **rangement manuel d'un livre dans une série** (formulaire) et **ligne de
+  total** en haut de l'onglet.
+  Puis revue de code du projet entier (4 zones) et nettoyages : série complète (série d'une recherche précédente,
+  double appui), ISBN-10 saisi converti, traitements en lot jamais bloqués « en cours », scan du widget d'accueil
+  empilé (retour = onglet), dédicaces relues par l'import CSV, rattrapage de synchro après migration (colonnes
+  ajoutées), mot de passe oublié (code non consommé par un mot de passe trop court), alertes de série non bloquées
+  par une alerte d'auteur ; compteurs de liste calculés par `VolumeGrid`, synchro en parallèle, helpers partagés.
 - **Tests reportés après la v4** (décision de l'utilisateur) : mode rafale `R-01` à `R-04`, à dérouler dans la
   recette de la v4 (phase 35).
 
@@ -520,6 +530,15 @@ alerte apparaît une seule fois, sur les deux appareils, et part en envie en un 
   « Mot de passe oublié ? » → `/connexion/mot-de-passe-oublie` (adresse reprise, code + nouveau mot de passe,
   connecté à la fin). Le lien de l'e-mail reste utilisable. Tests : inscription confirmée par code (code faux puis
   bon, renvoi), mot de passe oublié.
+- **Retour de l'utilisateur (2026-11-18)** : sans SMTP personnalisé, Supabase interdit de modifier les modèles
+  d'e-mail (pas de `{{ .Token }}`). Le champ accepte donc aussi **le lien de l'e-mail collé** (copié par appui long,
+  sans l'ouvrir) : son jeton (`token=`) est vérifié par `verifyOTP(tokenHash:)` (`emailLinkToken`). Marche avec les
+  e-mails par défaut ; le code reste possible si un SMTP est configuré un jour.
+- **Correctif synchro (même retour)** : « Erreur de synchronisation » = migration de la phase 31 non appliquée
+  (colonne `is_signed` inconnue du serveur), **et** bug : une ligne reçue sans une colonne récente (serveur pas
+  migré, vieille sauvegarde) écrivait NULL (`NOT NULL constraint failed: items.is_signed`). `SyncCodec.apply`
+  n'écrit plus que les colonnes présentes : les autres gardent leur valeur locale ou par défaut
+  (`sync_pull_test.dart`).
 - **Écarts** : pas de lien profond ; le lien des e-mails mène toujours à la *Site URL* du projet (à régler).
 - **Non vérifié** : vrais e-mails Supabase (`K2-01`, `K2-02`).
 
@@ -587,9 +606,8 @@ tome de série ; mettre à jour **une** série (menu de la série) **ou toutes**
 - **Phase 31** : tester l'archive complète sur un appareil vierge (ou une installation propre).
 - **Phase 32** : créer un compte Metron et générer un jeton ; relire le bilan avant priorisation.
 - **Phase 33** : appliquer la migration `20261117180000_release_alerts.sql` avant d'installer (pas de tâche de fond).
-- **Phase 34** : dans Supabase (Authentication → Email Templates), ajouter `{{ .Token }}` (le code à 6 chiffres) aux
-  modèles « Confirm signup » et « Reset password » ; régler la *Site URL* (sinon le lien des e-mails ouvre
-  `localhost`).
+- **Phase 34** : régler la *Site URL* (sinon le lien des e-mails ouvre `localhost` s'il est ouvert). Modèles
+  d'e-mail : `{{ .Token }}` seulement avec un SMTP personnalisé ; sinon coller le lien dans l'appli.
 
 ## 6. Hors périmètre
 iOS/macOS, partage de collection, scraping, cote automatique, notifications poussées par un serveur,

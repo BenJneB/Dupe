@@ -5,7 +5,6 @@ import 'package:dupe/core/database/local_stores.dart';
 import 'package:dupe/features/collection/domain/collection_type.dart';
 import 'package:dupe/features/scan/domain/store_check.dart';
 import 'package:dupe/features/scan/presentation/store/store_haptics.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -14,23 +13,16 @@ import '../../../helpers/fake_app_shortcuts.dart';
 import '../../../helpers/fake_sources.dart';
 import '../../../helpers/scan_helpers.dart';
 
-/// Records the haptic feedback sent to the platform.
-List<String> recordHaptics(WidgetTester tester) {
-  final calls = <String>[];
-  tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
-    SystemChannels.platform,
-    (call) async {
-      if (call.method == 'HapticFeedback.vibrate') {
-        calls.add('${call.arguments}'.split('.').last);
-      }
+/// Records the vibrations sent to Android (timings of each waveform).
+List<List<Object?>> recordHaptics(WidgetTester tester) {
+  final calls = <List<Object?>>[];
+  final messenger = tester.binding.defaultBinaryMessenger
+    ..setMockMethodCallHandler(StoreHaptics.channel, (call) async {
+      calls.add((call.arguments as Map<Object?, Object?>)['timings']! as List);
       return null;
-    },
-  );
+    });
   addTearDown(
-    () => tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
-      SystemChannels.platform,
-      null,
-    ),
+    () => messenger.setMockMethodCallHandler(StoreHaptics.channel, null),
   );
   return calls;
 }
@@ -38,10 +30,21 @@ List<String> recordHaptics(WidgetTester tester) {
 void main() {
   test('each verdict has its own vibration pattern', () {
     final patterns = {
-      for (final v in StoreVerdict.values)
-        v: StoreHaptics.pattern(v).map((s) => s?.hashCode).toList(),
+      for (final v in StoreVerdict.values) '${StoreHaptics.pattern(v).timings}',
     };
-    expect(patterns.values.map((p) => p.toString()).toSet(), hasLength(4));
+    expect(patterns, hasLength(4));
+    for (final v in StoreVerdict.values) {
+      final p = StoreHaptics.pattern(v);
+      expect(p.amplitudes, hasLength(p.timings.length));
+    }
+  });
+
+  test('only "owned" vibrates long: the others are short pulses', () {
+    expect(StoreHaptics.pattern(StoreVerdict.owned).timings[1], 400);
+    for (final v in StoreVerdict.values.where((v) => v != StoreVerdict.owned)) {
+      final pulses = StoreHaptics.pattern(v).timings.skip(1);
+      expect(pulses.every((ms) => ms <= 150), isTrue, reason: '$v');
+    }
   });
 
   testWidgets('store mode vibrates with the verdict, unless turned off', (
@@ -66,7 +69,7 @@ void main() {
     await openScan(tester);
     await typeCode(tester, duneIsbn);
     expect(find.byKey(const Key('store_owned')), findsOneWidget);
-    expect(haptics, ['heavyImpact']);
+    expect(haptics, [StoreHaptics.pattern(StoreVerdict.owned).timings]);
 
     await tester.runAsync(
       () => AppSettingsStore(database).set(StoreHaptics.enabledKey, '0'),
@@ -74,7 +77,7 @@ void main() {
     await typeCode(tester, '9782070360024');
     await tester.pump(const Duration(seconds: 1));
     expect(find.byKey(const Key('store_unknown')), findsOneWidget);
-    expect(haptics, ['heavyImpact']);
+    expect(haptics, [StoreHaptics.pattern(StoreVerdict.owned).timings]);
   }, variant: linux);
 
   testWidgets('the home-screen shortcut opens the scan', (tester) async {

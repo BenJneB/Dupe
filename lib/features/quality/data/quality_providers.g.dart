@@ -20,11 +20,11 @@ final class CollectionQualityProvider
         $FunctionalProvider<
           AsyncValue<CollectionQuality>,
           CollectionQuality,
-          Stream<CollectionQuality>
+          FutureOr<CollectionQuality>
         >
     with
         $FutureModifier<CollectionQuality>,
-        $StreamProvider<CollectionQuality> {
+        $FutureProvider<CollectionQuality> {
   /// Gaps of the live collection, updated as it changes.
   CollectionQualityProvider._()
     : super(
@@ -42,17 +42,17 @@ final class CollectionQualityProvider
 
   @$internal
   @override
-  $StreamProviderElement<CollectionQuality> $createElement(
+  $FutureProviderElement<CollectionQuality> $createElement(
     $ProviderPointer pointer,
-  ) => $StreamProviderElement(pointer);
+  ) => $FutureProviderElement(pointer);
 
   @override
-  Stream<CollectionQuality> create(Ref ref) {
+  FutureOr<CollectionQuality> create(Ref ref) {
     return collectionQuality(ref);
   }
 }
 
-String _$collectionQualityHash() => r'c9f4153ba47b8d595f6b1078c4a70327b5d98dc0';
+String _$collectionQualityHash() => r'5dc66f4a83f0f8febd5909943b4de3ada4373504';
 
 /// Setting: mark the owned volumes without ISBN (dot on the series grid,
 /// icon on series, books and authors in the lists). On by default (user's
@@ -88,7 +88,7 @@ final class MissingIsbnInGridProvider
   MissingIsbnInGrid create() => MissingIsbnInGrid();
 }
 
-String _$missingIsbnInGridHash() => r'54f02dd5f3ab8dee3e09e357baa7ec0798f54f42';
+String _$missingIsbnInGridHash() => r'6b8828b26750c3ab3eecb06476275d96ffda0399';
 
 /// Setting: mark the owned volumes without ISBN (dot on the series grid,
 /// icon on series, books and authors in the lists). On by default (user's

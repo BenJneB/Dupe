@@ -49,12 +49,15 @@ class SyncCodec {
   /// Writes a remote/backup row locally unless a local row is newer
   /// (last write wins). [pending]: whether the row must be pushed later.
   /// [force]: write even over a newer local row (full restore).
+  /// [refetch]: rewrite a row received again (same `updated_at`), to fill
+  /// the columns added by a migration since it was pulled.
   /// Returns whether the row was written.
   Future<bool> apply(
     TableInfo<Table, Object?> table,
     Map<String, Object?> row, {
     required bool pending,
     bool force = false,
+    bool refetch = false,
   }) async {
     final name = table.actualTableName;
     final local = await _db
@@ -74,20 +77,32 @@ class SyncCodec {
       final localMayWin = pending || local.data['sync_pending'] == 1;
       if (localMayWin && !rowAt.isAfter(localAt)) return false;
       // Same write received again (pull overlap): nothing to change.
-      if (rowAt.isAtSameMomentAs(localAt) &&
+      if (!refetch &&
+          rowAt.isAtSameMomentAs(localAt) &&
           local.data['user_id'] == row['user_id']) {
         return false;
       }
     }
-    final columns = syncedColumns(table).map((c) => c.name).toList();
+    // Only the columns the row has: a row of an older schema (a server not
+    // migrated yet, an old backup) keeps the local value of a newer column,
+    // or its default (`is_signed`), instead of an invalid NULL.
+    final present = [
+      for (final c in syncedColumns(table))
+        if (row.containsKey(c.name)) c,
+    ];
+    final columns = [for (final c in present) c.name];
+    final updates = [
+      for (final c in columns)
+        if (c != 'id') '$c = excluded.$c',
+    ];
     final flag = pending ? 1 : 0;
     await _db.customInsert(
       'INSERT INTO $name (${columns.join(', ')}, sync_pending) '
       'VALUES (${List.filled(columns.length, '?').join(', ')}, $flag) '
       'ON CONFLICT(id) DO UPDATE SET '
-      '${[for (final c in columns.skip(1)) '$c = excluded.$c'].join(', ')}, '
+      '${updates.join(', ')}, '
       'sync_pending = $flag',
-      variables: toLocal(table, row),
+      variables: [for (final c in present) Variable(_in(c, row[c.name]))],
       updates: {table},
     );
     return true;
@@ -99,12 +114,6 @@ class SyncCodec {
     final value = _db.typeMapping.read(c.type, raw);
     return value is DateTime ? value.toUtc().toIso8601String() : value;
   }
-
-  /// Remote JSON -> drift variables, in [syncedColumns] order.
-  List<Variable<Object>> toLocal(
-    TableInfo<Table, Object?> table,
-    Map<String, Object?> remote,
-  ) => [for (final c in syncedColumns(table)) Variable(_in(c, remote[c.name]))];
 
   Object? _in(GeneratedColumn<Object> c, Object? value) {
     if (value == null) return null;

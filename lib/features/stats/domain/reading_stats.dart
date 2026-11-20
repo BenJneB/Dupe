@@ -46,7 +46,8 @@ class ReadingStats {
   bool get hasReadByMonth => readByMonth.any((m) => m.count > 0);
 }
 
-DateTime _day(DateTime d) => DateTime(d.year, d.month, d.day);
+// UTC: a day count across a daylight-saving change stays whole.
+DateTime _day(DateTime d) => DateTime.utc(d.year, d.month, d.day);
 
 /// Computes the reading statistics of [items] and [series].
 ReadingStats computeReadingStats(

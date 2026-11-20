@@ -47,6 +47,10 @@ void main() {
     widget.tap(Uri.parse('dupe://scan'));
     await tester.pumpAndSettle();
     expect(find.byKey(const Key('scanModeSelector')), findsOneWidget);
+    // Pushed over the tab: "back" returns to it instead of leaving the app.
+    await goBack(tester);
+    expect(find.byKey(const Key('scanModeSelector')), findsNothing);
+    expect(find.byKey(const ValueKey('collectionTab-livre')), findsOneWidget);
   });
 
   test('counters: owned copies and overdue loans, grouped updates', () async {

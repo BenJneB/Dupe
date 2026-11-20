@@ -1,13 +1,13 @@
 # Dupe — Tests manuels
 
-> Document autonome, à jour au **2026-11-16**. Dupe est une appli Flutter personnelle de catalogue de
+> Document autonome, à jour au **2026-11-18**. Dupe est une appli Flutter personnelle de catalogue de
 > collection (mangas, BD, comics, livres) pour Android, Linux et Windows, avec synchro Supabase optionnelle.
 > Contexte : `PLAN_V2.md` (phases 9-13) et `PLAN_V3.md`. Une petite partie de ces tests est faite **maintenant**
 > (phase 14, vérifications de base) ; tout le reste l'est à la fin (**phase 21, recette finale**), sur la version
 > finale. Les phases 15 à 20 ajoutent leurs tests ici et marquent « automatisé (phase N) » ceux que leurs tests
 > automatiques couvrent désormais.
 
-Ce fichier liste ce que les **354 tests automatiques (et 4 parcours d'intégration) ne couvrent pas** : matériel (caméra, vibrations,
+Ce fichier liste ce que les **361 tests automatiques (et 4 parcours d'intégration) ne couvrent pas** : matériel (caméra, vibrations,
 notifications, raccourci), services réels (Supabase, API GitHub, sources de métadonnées), plateformes non
 compilées ici (Windows) et workflows GitHub (jamais exécutés).
 
@@ -84,9 +84,10 @@ Tous les tests non faits en phase 14 et non marqués « automatisé ». Le but :
       — OK 2026-11-14 (Linux) : compte créé, lien confirmé, connexion réussie.
 - [x] **P-05** (phase 16) Migration `20261115090000_keep_alive.sql` appliquée (fonction `keep_alive()`).
       — OK 2026-11-15 : migration appliquée dans le SQL Editor du projet.
-- [ ] **P-06** (phase 16) `.github/dependabot.yml` présent sur la branche par défaut (Dependabot ne lit sa
+- [x] **P-06** (phase 16) `.github/dependabot.yml` présent sur la branche par défaut (Dependabot ne lit sa
       configuration que là). Branche par défaut = `dev` depuis le 2026-11-15, qui contient le fichier : **probablement
       levé** ; à confirmer dans Insights → Dependency graph → Dependabot (dernière vérification sans erreur).
+      — OK 2026-11-18
 - [x] **P-07** (phase 17) Docker utilisable sans sudo, Supabase CLI 2.122.1 et `psql` installés ;
       `tool/supabase_tests.sh` passe (README « Tests de synchro contre un Supabase local »).
       — OK 2026-11-14 (Linux) : accès Docker donné, CLI via `npx` (sans installation), 8 tests verts.
@@ -113,10 +114,12 @@ Tous les tests non faits en phase 14 et non marqués « automatisé ». Le but :
       — OK 2026-11-15 (téléphone, v0.1.0).
 - [ ] **M-08** Code UPC de comic US → message d'aide.
       — REPORTÉ (2026-11-15, choix de l'utilisateur).
-- [ ] **M-09** (phase 13) Vibrations : 1 forte (vert), 2 moyennes (jaune), 3 légères (bleu), 1 brève (gris),
-      au verdict final et une seule fois par scan. Si rien ne vibre : vérifier le retour haptique système.
+- [ ] **M-09** (phase 13) Vibrations : 1 longue et forte (vert), 2 moyennes (jaune), 3 courtes (bleu), 1 brève (gris),
+      au verdict final et une seule fois par scan. Si rien ne vibre : vérifier les vibrations dans les réglages du téléphone.
       — À REFAIRE 2026-11-15 : aucune vibration ; retour haptique système (vibration au toucher) et mode
       silencieux à vérifier sur le téléphone.
+      — ÉCHEC 2026-11-18 : vibrations reçues, mais vert indiscernable des autres (les constantes haptiques
+        Android donnent toutes un petit clic). Corrigé : vraies vibrations à durées explicites ; à refaire.
 - [ ] **M-10** (phase 13) Paramètres → Scan → couper « Vibrer selon le résultat » : plus de vibration.
       — REPORTÉ avec `M-09` (2026-11-15).
 - [x] **M-11** (phase 13) Lampe torche : le bouton allume / éteint ; absent si le téléphone n'a pas de flash.
@@ -167,12 +170,15 @@ Tous les tests non faits en phase 14 et non marqués « automatisé ». Le but :
       — OK 2026-11-15 (téléphone + PC, v0.1.0).
 - [x] **F-02** Export JSON et CSV → feuille de partage Android (Drive, Fichiers, email).
       — OK 2026-11-15 (téléphone + PC, v0.1.0).
-- [ ] **F-03** Le CSV s'ouvre correctement (accents) dans un tableur.
+- [x] **F-03** Le CSV s'ouvre correctement (accents) dans un tableur.
       — REPORTÉ (2026-11-15, choix de l'utilisateur).
-- [ ] **F-04** Import CSV depuis le téléphone (sélection de fichier).
+      — OK 2026-11-18
+- [x] **F-04** Import CSV depuis le téléphone (sélection de fichier).
       — REPORTÉ (2026-11-15, choix de l'utilisateur).
-- [ ] **F-05** PC : export/import via les fenêtres « Enregistrer sous » / « Ouvrir ».
+      — OK 2026-11-18
+- [x] **F-05** PC : export/import via les fenêtres « Enregistrer sous » / « Ouvrir ».
       — REPORTÉ (2026-11-15, choix de l'utilisateur).
+      — OK 2026-11-18
 
 ## 5. Compte et synchro Supabase (téléphone + PC)
 Couvert contre un Supabase **local** par les tests `supabase` (phase 17, verts le 2026-11-14) : `S-04` à `S-08`
@@ -181,30 +187,39 @@ appareils (reportés de la phase 14).
 - [x] **S-01** *(reporté de la phase 14)* Connexion email + mot de passe sur chaque appareil ; mauvais mot de passe → « Email ou mot de
       passe incorrect ».
       — OK 2026-11-15 (téléphone, PC, et instance Linux vide : mauvais mot de passe refusé).
-- [ ] **S-02** Créer un compte avec un autre email (si Supabase peut lui écrire) : lien de confirmation ouvert
+- [x] **S-02** Créer un compte avec un autre email (si Supabase peut lui écrire) : lien de confirmation ouvert
       dans le navigateur, puis connexion OK ; avant confirmation → « pas encore confirmé ».
+      — OK 2026-11-18
 - [ ] **S-03** Le gestionnaire de mots de passe propose d'enregistrer le mot de passe.
+      — ÉCART ACCEPTÉ 2026-11-18 : compte créé sur Linux, où Flutter n'a pas de remplissage automatique (aucun
+        gestionnaire de mots de passe possible). Reste à voir sur Android : se déconnecter puis se reconnecter →
+        Google propose d'enregistrer le mot de passe.
 - [x] **S-04** *(reporté de la phase 14)* Ajout sur le téléphone → visible sur le PC (≤ 30 s ou bouton synchro), et inversement.
       — OK 2026-11-15 (téléphone ↔ PC, dans les deux sens).
 - [x] **S-05** *(reporté de la phase 14)* **(critique, phase 9)** Après la mise à jour, la synchro reçoit toujours les changements de
       l'autre appareil : le filtre du pull a changé et n'a été testé que contre un faux serveur.
       — OK 2026-11-15 (téléphone ↔ PC avec la version de la recette).
-- [ ] **S-06** Même tome modifié des deux côtés hors ligne → la modification la plus récente gagne.
+- [x] **S-06** Même tome modifié des deux côtés hors ligne → la modification la plus récente gagne.
       — REPORTÉ (2026-11-15, choix de l'utilisateur).
-- [ ] **S-07** Modifier sur les deux appareils et synchroniser en même temps (bouton) : identiques à la fin.
+      — OK 2026-11-18
+- [x] **S-07** Modifier sur les deux appareils et synchroniser en même temps (bouton) : identiques à la fin.
       — REPORTÉ (2026-11-15, choix de l'utilisateur).
-- [ ] **S-08** Suppression propagée.
+      — OK 2026-11-18
+- [x] **S-08** Suppression propagée.
       — REPORTÉ (2026-11-15, choix de l'utilisateur).
+      — OK 2026-11-18
 - [x] **S-09** Icône d'état de synchro cohérente (en cours, hors ligne, à jour, erreur).
       — OK 2026-11-15 (v0.1.0) : en cours, hors ligne, à jour cohérents (« erreur » non provoquée, voir `J-06`).
-- [ ] **S-10** (phase 10) Changer le mot de passe sur un appareil : l'autre reste connecté et synchronise ;
+- [x] **S-10** (phase 10) Changer le mot de passe sur un appareil : l'autre reste connecté et synchronise ;
       une nouvelle connexion n'accepte que le nouveau mot de passe.
       — REPORTÉ (2026-11-15, choix de l'utilisateur) : à faire plus tard dans la recette.
+      — OK 2026-11-18
 - [x] **S-11** (phase 10) Inscription avec un mot de passe trop court → « Mot de passe refusé : trop court ou
       trop simple » ; deux mots de passe différents → message, rien n'est envoyé.
       — OK 2026-11-15 (instance Linux de test) : mot de passe trop court refusé ; mots de passe différents signalés.
-- [ ] **S-13** (phase 17) Avancer l'heure d'un appareil de 10 minutes (réglage manuel), synchroniser : le
+- [x] **S-13** (phase 17) Avancer l'heure d'un appareil de 10 minutes (réglage manuel), synchroniser : le
       statut affiche « l'heure de cet appareil semble fausse (écart de 10 min…) » ; une entrée au journal.
+      — OK 2026-11-18
 - [x] **S-12** (phase 10) Se déconnecter puis se reconnecter au même compte : rien n'est dupliqué, la
       collection est identique sur les deux appareils.
       — OK 2026-11-15 (PC) : déconnexion puis reconnexion, aucun doublon constaté ; à revoir si un doublon apparaît.
@@ -223,13 +238,16 @@ appareils (reportés de la phase 14).
       — OK 2026-11-15 (téléphone : feuille de partage ; PC : « Enregistrer sous »).
 - [x] **J-04** Le journal est conservé après redémarrage de l'appli.
       — OK 2026-11-15 (Linux) : vu pendant `J-02`, entrées du 2026-11-14 affichées après redémarrage.
-- [ ] **J-05** Messages en français à l'écran (hors ligne, fichier invalide, mauvais mot de passe).
+- [x] **J-05** Messages en français à l'écran (hors ligne, fichier invalide, mauvais mot de passe).
       — PARTIEL 2026-11-15 : mauvais mot de passe et hors ligne (« sources indisponibles ») en français ; fichier
       invalide à la restauration reporté par l'utilisateur.
-- [ ] **J-06** (phase 12, facultatif) Mettre le projet Supabase en pause depuis son tableau de bord, puis
+      — ÉCART ACCEPTÉ 2026-11-18 : écran en français ; pour une erreur non prévue, l'écran dit « Une erreur est
+        survenue (détails dans À propos → Journal) » et seul le détail technique du journal reste en anglais.
+- [x] **J-06** (phase 12, facultatif) Mettre le projet Supabase en pause depuis son tableau de bord, puis
       synchroniser → « Serveur de synchronisation indisponible… en pause ». Le réactiver ensuite (quelques
       minutes). Si le message est différent, copier le journal : le code d'erreur d'un projet en pause n'a
       jamais été observé.
+      — OK 2026-11-18
 
 ## 7. Filets de sécurité (phase 11)
 - [x] **B-01** Supprimer un ouvrage puis « Annuler » : il revient, aussi sur l'autre appareil après synchro.
@@ -435,20 +453,26 @@ l'onglet, onglet toujours ouvert sur sa liste, couverture d'une série = celle d
 quitter, type du scan choisi et mémorisé, pastille « ? » pour un tome sans numéro, indicateur « lu »,
 proposition d'ajouter les tomes précédents, « Compléter les couvertures manquantes » (adresses cassées
 remplacées, photos gardées), vue et page par auteur. Simulés : les sources et le cache des couvertures.
-- [ ] **Q-01** Android : sur la liste d'un onglet, retour → « Appuie de nouveau sur retour pour quitter » ;
+- [x] **Q-01** Android : sur la liste d'un onglet, retour → « Appuie de nouveau sur retour pour quitter » ;
       un second appui dans les 2 s ferme l'appli, après 2 s il ne fait que réafficher le message.
-- [ ] **Q-02** Scanner en magasin un tome d'une série nouvelle (Free Quest 1, Jumeaux Fowl 3) : le formulaire
+      — OK 2026-11-18
+- [x] **Q-02** Scanner en magasin un tome d'une série nouvelle (Free Quest 1, Jumeaux Fowl 3) : le formulaire
       propose de créer la bonne série (pas « Folio junior ») avec le bon numéro.
-- [ ] **Q-03** Ajouter le tome 9 possédé d'une série qui n'a que le 1 : « Il te manque 7 tomes avant le 9 » →
+      — OK 2026-11-18
+- [x] **Q-03** Ajouter le tome 9 possédé d'une série qui n'a que le 1 : « Il te manque 7 tomes avant le 9 » →
       Ajouter → les tomes 2 à 8 apparaissent en vert.
-- [ ] **Q-04** Plus → Qualité → « Compléter les couvertures manquantes » (déplacé des Paramètres le 2026-11-16) sur la vraie collection : progression,
+      — OK 2026-11-18
+- [x] **Q-04** Plus → Qualité → « Compléter les couvertures manquantes » (déplacé des Paramètres le 2026-11-16) sur la vraie collection : progression,
       couvertures ajoutées visibles dans les listes ; le journal liste les livres restés sans couverture et les
       sources qui ont répondu ; « Télécharger maintenant » liste les adresses en échec avec leur cause.
-- [ ] **Q-05** Scan ouvert depuis Plus / le journal : choisir « BD » dans le menu de type ; au scan suivant
+      — OK 2026-11-18
+- [x] **Q-05** Scan ouvert depuis Plus / le journal : choisir « BD » dans le menu de type ; au scan suivant
       ouvert hors d'un onglet, « BD » est déjà choisi.
-- [ ] **Q-06** Livres → « Par auteur » sur la vraie collection : un auteur écrit de deux façons selon la source
+      — OK 2026-11-18
+- [x] **Q-06** Livres → « Par auteur » sur la vraie collection : un auteur écrit de deux façons selon la source
       n'apparaît qu'une fois ; sa page liste toutes ses séries et livres ; toucher un nom d'auteur sur une fiche
       ouvre la même page.
+      — OK 2026-11-18
 - [x] **Q-07** Recherche (locale, et en ligne par texte) : l'ISBN apparaît dans le sous-titre des livres.
       — OK 2026-11-16 : ISBN affiché quand la source en donne un (pas toujours en recherche en ligne : Open
       Library ou Comic Vine n'en fournissent pas pour tous les résultats).
@@ -458,10 +482,12 @@ remplacées, photos gardées), vue et page par auteur. Simulés : les sources et
 - [x] **Q-09** Page d'un auteur → menu ⋮ → « Marquer les livres hors série comme lus » / « Tout marquer comme lu » :
       confirmation avec le nombre de livres, puis livres marqués « Lu » avec la date du jour.
       — OK 2026-11-16.
-- [ ] **Q-10** Tome créé vide (« Ajouter des tomes », ou « Il te manque … → Ajouter ») puis scanné en mode Magasin :
+- [x] **Q-10** Tome créé vide (« Ajouter des tomes », ou « Il te manque … → Ajouter ») puis scanné en mode Magasin :
       « ISBN mémorisé », et la fiche du tome a maintenant couverture, auteurs, éditeur, prix (ce que tu avais saisi
       reste inchangé).
-- [ ] **Q-11** Envies : glisser un livre vers la gauche le retire, « Annuler » le remet.
+      — OK 2026-11-18
+- [x] **Q-11** Envies : glisser un livre vers la gauche le retire, « Annuler » le remet.
+      — OK 2026-11-18
 
 ## 16. Séries : nombre de tomes et vue liste (v4, phase 23)
 Automatisé (phase 23) : seul un titre identique propose un total ; vérification depuis le menu d'une série et en
@@ -581,15 +607,17 @@ de tomes MangaUpdates, repli AniList → MangaUpdates.
 notifications.
 - [ ] **AL-01** Plus → Nouveautés → « Vérifier maintenant » sur la vraie collection : les tomes parus après ton dernier
       tome d'une série suivie apparaissent (pas de déluge pour une série abandonnée : 3 au plus) ; notification
-      « N nouveautés dans tes séries » ; « Ajouter aux envies » range le tome dans sa série.
+      « N nouveautés dans tes séries » ; « Ajouter aux envies » range le tome dans sa série. Dès la première
+      vérification (recette 2026-11-20), les tomes et livres d'auteurs suivis parus cette année ou l'an dernier
+      apparaissent ; une réédition (poche, club) d'un livre déjà vu ou possédé n'est pas annoncée.
 - [ ] **AL-02** Cloche sur la page d'un auteur → Paramètres → Nouveautés : « 1 auteur suivi ». Une alerte ignorée sur le
       téléphone ne revient pas sur le PC après synchro (et pas en double si les deux vérifient).
 
 ## 26. Compte : code par e-mail (v4, phase 34)
-**Avant** : Supabase → Authentication → Email Templates : ajouter `{{ .Token }}` dans « Confirm signup » et « Reset
-password » (ex. « Ton code : {{ .Token }} ») ; régler la *Site URL*. Automatisé : confirmation par code (faux puis bon,
-renvoi), mot de passe oublié complet. Simulé : Supabase.
-- [ ] **K2-01** Créer un compte avec une nouvelle adresse : l'e-mail contient un code à 6 chiffres ; le saisir dans
-      l'appli → connecté, synchro lancée.
-- [ ] **K2-02** Déconnecté : « Mot de passe oublié ? » → code reçu → nouveau mot de passe → connecté ; l'ancien mot de
-      passe ne marche plus sur l'autre appareil.
+Sans SMTP personnalisé, les e-mails Supabase n'ont qu'un lien : le **copier (appui long) sans l'ouvrir** et le coller
+dans le champ « Code ou lien ». Automatisé : confirmation par code (faux puis bon, renvoi), mot de passe oublié avec
+lien collé. Simulé : Supabase.
+- [ ] **K2-01** Créer un compte avec une nouvelle adresse : coller le lien de l'e-mail de confirmation dans l'appli →
+      connecté, synchro lancée.
+- [ ] **K2-02** Déconnecté : « Mot de passe oublié ? » → e-mail reçu → coller son lien + nouveau mot de passe →
+      connecté ; l'ancien mot de passe ne marche plus sur l'autre appareil.

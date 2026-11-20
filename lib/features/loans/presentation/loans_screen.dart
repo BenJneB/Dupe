@@ -3,6 +3,7 @@ import 'package:dupe/app/widgets/cover_image.dart';
 import 'package:dupe/app/widgets/placeholder_body.dart';
 import 'package:dupe/core/database/database_provider.dart';
 import 'package:dupe/core/utils/formatters.dart';
+import 'package:dupe/features/collection/presentation/labels.dart';
 import 'package:dupe/features/loans/data/loan_actions.dart';
 import 'package:dupe/features/loans/data/loans_repository.dart';
 import 'package:dupe/features/loans/domain/loan_status.dart';
@@ -73,11 +74,7 @@ class _LoanList extends ConsumerWidget {
             key: ValueKey('loan-${loan.id}'),
             tileColor: loan.isOverdue(now) ? scheme.errorContainer : null,
             leading: CoverImage(url: item.coverUrl, width: 40, height: 60),
-            title: Text(
-              item.volumeNumber == null
-                  ? item.title
-                  : l10n.volumeTitle(item.title, item.volumeNumber!),
-            ),
+            title: Text(item.displayTitle(l10n)),
             subtitle: Text(
               [
                 l10n.loanedTo(loan.borrowerName),

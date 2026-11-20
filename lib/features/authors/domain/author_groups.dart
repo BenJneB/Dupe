@@ -1,6 +1,5 @@
 import 'package:dupe/core/utils/text_fold.dart';
 import 'package:dupe/features/collection/domain/collection_entry.dart';
-import 'package:dupe/features/collection/domain/enums.dart';
 
 /// "Colfer, Eoin" (library order) -> "Eoin Colfer"; other names unchanged.
 String displayAuthorName(String raw) {
@@ -11,11 +10,25 @@ String displayAuthorName(String raw) {
       : name;
 }
 
-/// Same author whatever the source wrote: order, accents, case, dots.
-String authorKey(String raw) =>
+/// Name folded for comparison: accents, case and dots removed, word order
+/// kept. Stable: persisted in keys (`releases_seen_…`), unlike [authorKey].
+String authorNameKey(String raw) =>
     foldForSearch(displayAuthorName(raw))
         .replaceAll(RegExp('[^a-z0-9]+'), ' ')
         .trim();
+
+/// Same author whatever the source wrote: accents, case, dots, and word
+/// order ("Federica Di Mio" / "Di Mio Federica", without a comma).
+String authorKey(String raw) =>
+    (authorNameKey(raw).split(' ')..sort()).join(' ');
+
+/// [a] and [b] name a common author, or one of them names none (unknown
+/// is not a contradiction).
+bool authorsCompatible(List<String> a, List<String> b) {
+  final keys = {for (final n in a) authorKey(n)}..remove('');
+  final others = {for (final n in b) authorKey(n)}..remove('');
+  return keys.isEmpty || others.isEmpty || others.any(keys.contains);
+}
 
 /// Series and standalone books of one author in a tab.
 class AuthorGroup {
@@ -31,16 +44,14 @@ class AuthorGroup {
   bool get isUnknown => key.isEmpty;
 
   /// Owned volumes: series volumes plus owned standalone books.
-  int get volumes =>
-      series.fold(0, (sum, s) => sum + s.ownedCount) +
-      books.where((b) => b.item.ownership == Ownership.possede).length;
+  int get volumes => ownedVolumes(entries);
 
   /// Owned books without ISBN among its series and books (quality marker).
   int get missingIsbnCount =>
       entries.fold(0, (sum, e) => sum + e.missingIsbnCount);
 
   /// Sorted by last name ("Colfer" for "Eoin Colfer").
-  String get sortKey => key.split(' ').reversed.join(' ');
+  late final String sortKey = authorNameKey(name).split(' ').reversed.join(' ');
 
   List<CollectionEntry> get entries => [...series, ...books];
 }
@@ -69,11 +80,8 @@ List<AuthorGroup> groupByAuthor(
       },
       ItemEntry(:final item) => item.authors.toSet(),
     };
-    final keys = <String>{};
-    final targets = [
-      for (final name in names)
-        if (keys.add(authorKey(name))) groupOf(name),
-    ];
+    // Same group for two spellings of an author: listed once.
+    final targets = {for (final name in names) groupOf(name)};
     if (targets.isEmpty) targets.add(groupOf(''));
     for (final group in targets) {
       switch (entry) {

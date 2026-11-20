@@ -39,7 +39,7 @@ final class VolumesAsListProvider
   VolumesAsList create() => VolumesAsList();
 }
 
-String _$volumesAsListHash() => r'5b0bf38969177da28a7b69ddde1a953f6594033d';
+String _$volumesAsListHash() => r'aa89ef4c71d6bde890a8ecee3c6f3996a68d5388';
 
 /// Series screen: volumes as a list (cover, title, status) instead of the
 /// grid of pastilles. Remembered on this device.

@@ -33,15 +33,45 @@ class SyncEngine {
 
   static String _cursorKey(String table) => 'sync_cursor_$table';
 
+  /// Local schema of the last complete pull. A migration adds synced
+  /// columns (`volume_title`, `is_signed`…) to rows pulled before it, with
+  /// their default: the first sync on a new schema reads every row again,
+  /// rewriting even rows of the same `updated_at`, so that those columns
+  /// are filled (and not pushed back empty over other devices).
+  static const _schemaKey = 'sync_schema_version';
+
   Future<SyncReport> sync(String userId) async {
     var pushed = 0;
     var pulled = 0;
     for (final table in _codec.tables) {
       pushed += await _push(table, userId);
     }
-    for (final table in _codec.tables) {
-      pulled += await _pull(table);
+    final schema = '${_db.schemaVersion}';
+    final refetch = await _settings.get(_schemaKey) != schema;
+    // First pages of every table fetched at once (one round trip instead
+    // of one per table, every 30 s), then applied in table order: a row
+    // only refers to rows of tables before it.
+    final starts = [
+      for (final table in _codec.tables)
+        await _start(table.actualTableName, refetch: refetch),
+    ];
+    final firstPages = await Future.wait([
+      for (final (i, table) in _codec.tables.indexed)
+        _remote.changesSince(
+          table.actualTableName,
+          starts[i].after,
+          limit: pageSize,
+        ),
+    ]);
+    for (final (i, table) in _codec.tables.indexed) {
+      pulled += await _pull(
+        table,
+        newest: starts[i].newest,
+        firstPage: firstPages[i],
+        refetch: refetch,
+      );
     }
+    if (refetch) await _settings.set(_schemaKey, schema);
     return (pushed: pushed, pulled: pulled);
   }
 
@@ -113,30 +143,58 @@ class SyncEngine {
     return rows.length;
   }
 
-  Future<int> _pull(TableInfo<Table, Object?> table) async {
-    final name = table.actualTableName;
-    final stored = await _settings.get(_cursorKey(name));
-    var newest = stored == null || stored.isEmpty
+  /// Where the pull of [name] starts: its cursor minus [overlap], or the
+  /// beginning (first sync, [refetch]).
+  Future<({DateTime? newest, SyncCursor? after})> _start(
+    String name, {
+    required bool refetch,
+  }) async {
+    final stored = refetch ? null : await _settings.get(_cursorKey(name));
+    final newest = stored == null || stored.isEmpty
         ? null
         : DateTime.parse(stored);
     // Re-read the last [overlap]: see [overlap].
-    SyncCursor? after = newest == null
-        ? null
-        : (at: _utc(newest.subtract(overlap)), id: null);
+    return (
+      newest: newest,
+      after: newest == null
+          ? null
+          : (at: _utc(newest.subtract(overlap)), id: null),
+    );
+  }
+
+  Future<int> _pull(
+    TableInfo<Table, Object?> table, {
+    required DateTime? newest,
+    required List<Map<String, Object?>> firstPage,
+    required bool refetch,
+  }) async {
+    final name = table.actualTableName;
+    var latest = newest;
     var applied = 0;
+    var changes = firstPage;
+    SyncCursor? after;
     while (true) {
-      final changes = await _remote.changesSince(name, after, limit: pageSize);
+      if (after != null) {
+        changes = await _remote.changesSince(name, after, limit: pageSize);
+      }
       if (changes.isEmpty) break;
       await _db.transaction(() async {
         for (final remote in changes) {
-          if (await _codec.apply(table, remote, pending: false)) applied++;
+          if (await _codec.apply(
+            table,
+            remote,
+            pending: false,
+            refetch: refetch,
+          )) {
+            applied++;
+          }
         }
       });
       final last = changes.last;
       final lastAt = DateTime.parse(last['server_updated_at']! as String);
       after = (at: _utc(lastAt), id: last['id']! as String);
-      if (newest == null || lastAt.isAfter(newest)) {
-        newest = lastAt;
+      if (latest == null || lastAt.isAfter(latest)) {
+        latest = lastAt;
         await _settings.set(_cursorKey(name), _utc(lastAt));
       }
       if (changes.length < pageSize) break;

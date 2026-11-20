@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dupe/app/widgets/form_helpers.dart';
 import 'package:dupe/features/covers/data/cover_cache.dart';
 import 'package:dupe/features/covers/data/cover_prefetch.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
@@ -44,13 +45,7 @@ class OfflineCoversSection extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
-          child: Text(
-            l10n.offlineCoversSection,
-            style: Theme.of(context).textTheme.titleSmall,
-          ),
-        ),
+        ListSectionHeader(l10n.offlineCoversSection),
         SwitchListTile(
           key: const Key('prefetchSwitch'),
           secondary: const Icon(Icons.download_for_offline_outlined),

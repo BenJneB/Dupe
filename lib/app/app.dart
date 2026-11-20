@@ -73,7 +73,15 @@ class _DupeAppState extends ConsumerState<DupeApp> {
     super.dispose();
   }
 
-  void _openScan() => ref.read(appRouterProvider).go(AppRoutes.scanFor(null));
+  /// Pushed over the current page (not `go`, which dropped the tabs: "back"
+  /// then left the app); nothing when the scan is already open.
+  void _openScan() {
+    final router = ref.read(appRouterProvider);
+    final scan = AppRoutes.scanFor(null);
+    final current = router.routerDelegate.currentConfiguration.uri.path;
+    if (current == Uri.parse(scan).path) return;
+    unawaited(router.push<void>(scan));
+  }
 
   Future<void> _listenToHomeWidget() async {
     final widget = ref.read(homeScreenWidgetProvider);

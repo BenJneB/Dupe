@@ -55,11 +55,10 @@ SpokenQuery parseSpokenQuery(String phrase) {
 
   // « Blacksad 3 »
   final trailing = RegExp(r'^(.+?) (\d+)$').firstMatch(clean);
-  if (trailing != null) {
-    return SpokenQuery(
-      trailing[1]!.trim(),
-      volume: '${int.parse(trailing[2]!)}',
-    );
+  // tryParse: a dictated run of digits can exceed an int.
+  final n = trailing == null ? null : int.tryParse(trailing[2]!);
+  if (trailing != null && n != null) {
+    return SpokenQuery(trailing[1]!.trim(), volume: '$n');
   }
   return SpokenQuery(clean);
 }
@@ -67,6 +66,6 @@ SpokenQuery parseSpokenQuery(String phrase) {
 /// Digits or number words → digits.
 String? _number(String raw) {
   final text = raw.trim();
-  if (RegExp(r'^\d+$').hasMatch(text)) return '${int.parse(text)}';
+  if (RegExp(r'^\d+$').hasMatch(text)) return int.tryParse(text)?.toString();
   return parseFrenchNumber(text)?.toString();
 }
