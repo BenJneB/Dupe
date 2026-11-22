@@ -1,5 +1,6 @@
 import 'package:dupe/core/database/database_provider.dart';
 import 'package:dupe/core/database/local_stores.dart';
+import 'package:dupe/features/releases/data/release_background.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'release_settings.g.dart';
@@ -43,5 +44,13 @@ class ReleaseSettings extends _$ReleaseSettings {
       if (value != null) await _store.setBool(key, value: value);
     }
     ref.invalidateSelf();
+    await scheduleBackground();
+  }
+
+  /// The Android background check follows these settings (start-up and
+  /// every change).
+  Future<void> scheduleBackground() async {
+    final options = await future;
+    await ref.read(releaseBackgroundProvider).schedule(options);
   }
 }

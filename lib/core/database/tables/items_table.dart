@@ -68,4 +68,9 @@ class ItemsTable extends Table with SyncedColumns {
   DateTimeColumn get signedOn => dateTime().nullable()();
   TextColumn get signedPlace => text().nullable()();
   TextColumn get signingNote => text().nullable()();
+
+  /// Refused proposed covers, as `coverImageKey`s (schema v7).
+  TextColumn get refusedCovers => text()
+      .map(const StringListConverter())
+      .withDefault(const Constant('[]'))();
 }

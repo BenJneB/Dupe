@@ -1,17 +1,17 @@
 # Dupe — Tests manuels
 
-> Document autonome, à jour au **2026-11-18**. Dupe est une appli Flutter personnelle de catalogue de
+> Document autonome, à jour au **2026-11-22**. Dupe est une appli Flutter personnelle de catalogue de
 > collection (mangas, BD, comics, livres) pour Android, Linux et Windows, avec synchro Supabase optionnelle.
-> Contexte : `PLAN_V2.md` (phases 9-13) et `PLAN_V3.md`. Une petite partie de ces tests est faite **maintenant**
-> (phase 14, vérifications de base) ; tout le reste l'est à la fin (**phase 21, recette finale**), sur la version
-> finale. Les phases 15 à 20 ajoutent leurs tests ici et marquent « automatisé (phase N) » ceux que leurs tests
-> automatiques couvrent désormais.
+> Contexte : `PLAN_V3.md` (recette v3, phase 21) et `PLAN_V4.md` (sections 16 à 26). Chaque phase ajoute ses tests
+> ici et marque « automatisé (phase N) » ceux que ses tests automatiques couvrent désormais.
 
-Ce fichier liste ce que les **361 tests automatiques (et 4 parcours d'intégration) ne couvrent pas** : matériel (caméra, vibrations,
+Ce fichier liste ce que les **394 tests automatiques (et 4 parcours d'intégration) ne couvrent pas** : matériel (caméra, vibrations,
 notifications, raccourci), services réels (Supabase, API GitHub, sources de métadonnées), plateformes non
 compilées ici (Windows) et workflows GitHub (jamais exécutés).
 
-**Statut au 2026-11-14 : phase 14 close (`Y-01`, `P-01`, `P-04` faits ; le reste reporté en phase 21).**
+**Statut au 2026-11-20 : recette v3 en grande partie faite (phase 21) ; ses tests reportés et ceux de la v4
+(sections 16 à 26, dont le mode rafale `R-*`) attendent la recette de la v4, plus tard (décision de l'utilisateur).
+Migrations Supabase de la v4 appliquées.**
 
 ## Comment tester et rapporter
 - Lancer : `flutter run -d <id> --dart-define-from-file=env.json` (`flutter devices` pour l'id), ou installer
@@ -164,6 +164,12 @@ Tous les tests non faits en phase 14 et non marqués « automatisé ». Le but :
 - [ ] **N-02** Marquer rendu avant la date → pas de notification.
 - [ ] **N-03** Redémarrer le téléphone avant la date → la notification vient quand même.
 - [ ] **N-04** PC (Linux/Windows) : notification « prêts en retard » au démarrage, une fois par jour.
+- [ ] **N-06** (2026-11-22) Prêts → icône « Vider l’historique » (visible seulement s'il y a des prêts rendus) →
+      confirmation → l'historique est vide, les prêts en cours restent ; sur l'autre appareil après synchro aussi.
+      Automatisé : confirmation, prêts en cours gardés, suppression logique à synchroniser.
+- [ ] **N-05** Android (2026-11-21) : l'icône d'une notification (prêt, nouveautés) dans la barre d'état et la liste
+      est la silhouette de Dupe (deux livres et la pastille cochée), plus un carré noir ou blanc. APK **release** aussi
+      (`res/raw/keep.xml` garde l'icône malgré la réduction des ressources).
 
 ## 4. Photos, export, fichiers
 - [x] **F-01** Photo de couverture depuis la fiche : visible dans la grille ; sur l'autre appareil après synchro.
@@ -539,11 +545,13 @@ point sur les pastilles. Simulées : les sources.
 
 ## 19. Éditions et couvertures (v4, phase 25)
 Automatisé (phase 25) : correspondance d'une autre édition (titre, auteur, numéro), couverture proposée puis gardée,
-refus non reproposé, « autre édition » d'un livre hors série en magasin et homonyme ignoré. Simulées : les sources.
+image refusée jamais reproposée (même sous une autre URL), autre image proposée, refus enregistré sur l'ouvrage
+pour la synchro (2026-11-20, schéma v7), « autre édition » d'un livre hors série en magasin et homonyme ignoré. Simulées : les sources.
 - [ ] **X-01** Plus → Qualité → « Compléter les couvertures manquantes » sur la vraie collection, puis
       Qualité → « Couvertures proposées » : les images proposées sont bien celles des bons livres (autre édition).
-- [ ] **X-02** Garder une proposition → la couverture apparaît dans les listes ; en refuser une → elle n'est plus
-      proposée au passage suivant (sur cet appareil).
+- [ ] **X-02** Garder une proposition → la couverture apparaît dans les listes ; en refuser une → cette image n'est
+      plus proposée pour ce livre (ni sur l'autre appareil après synchro) ; une autre image peut l'être. **Avant
+      d'installer** : appliquer `supabase/migrations/20261120120000_cover_refused.sql`.
 - [ ] **X-03** En magasin, scanner un roman que tu possèdes dans une autre édition (poche / grand format) : bandeau
       vert « Tu as ce livre dans une autre édition ».
 
@@ -610,8 +618,15 @@ notifications.
       « N nouveautés dans tes séries » ; « Ajouter aux envies » range le tome dans sa série. Dès la première
       vérification (recette 2026-11-20), les tomes et livres d'auteurs suivis parus cette année ou l'an dernier
       apparaissent ; une réédition (poche, club) d'un livre déjà vu ou possédé n'est pas annoncée.
+      *2026-11-20 : une notification de nouveauté reçue sur le téléphone (le reste est encore à vérifier).*
 - [ ] **AL-02** Cloche sur la page d'un auteur → Paramètres → Nouveautés : « 1 auteur suivi ». Une alerte ignorée sur le
       téléphone ne revient pas sur le PC après synchro (et pas en double si les deux vérifient).
+- [ ] **AL-03** Tâche de fond (Android, 2026-11-20) : l'appli **fermée** (balayée des applis récentes) depuis plus
+      d'un jour, en Wi-Fi, une nouveauté d'une série suivie donne la notification sans ouvrir l'appli ; l'alerte est
+      dans Plus → Nouveautés à l'ouverture et passe sur le PC après synchro. Couper « Nouveautés » dans Paramètres →
+      plus aucune vérification en fond. Automatisé : la tâche (vérifie, notifie, attend un jour, respecte le Wi-Fi) et
+      sa planification ; simulés : WorkManager, BnF, notifications. Certains téléphones (Xiaomi) bloquent les tâches
+      de fond : autoriser le démarrage automatique de Dupe si rien n'arrive.
 
 ## 26. Compte : code par e-mail (v4, phase 34)
 Sans SMTP personnalisé, les e-mails Supabase n'ont qu'un lien : le **copier (appui long) sans l'ouvrir** et le coller
@@ -621,3 +636,14 @@ lien collé. Simulé : Supabase.
       connecté, synchro lancée.
 - [ ] **K2-02** Déconnecté : « Mot de passe oublié ? » → e-mail reçu → coller son lien + nouveau mot de passe →
       connecté ; l'ancien mot de passe ne marche plus sur l'autre appareil.
+
+## 27. Que lire maintenant ? et Série complète ! (2026-11-21, avant la 1.0)
+Automatisé : choix d'un tome par série (le premier non lu, pas une série en cours de lecture, exemplaire lu compté),
+tirage pondéré, « Un autre », « Je le commence », pile vide ; série complète annoncée après un ajout ici, pas après une
+synchro ni un ajout en masse (plus de 5 séries). Simulé : rien (base en mémoire).
+- [ ] **Q-01** Plus → « Que lire maintenant ? » sur la vraie collection : la proposition est un livre possédé non
+      commencé, le tome suivant d'une série déjà commencée le dit ; « Un autre » change de livre ; « Je le commence »
+      le passe « En cours » ; « Voir la fiche » ouvre sa fiche.
+- [ ] **Q-02** Ajouter (scan, appui long sur une pastille, formulaire) le dernier tome manquant d'une série dont le
+      nombre de tomes est connu → « Série complète : … ! 🎉 ». L'autre appareil, après synchro, n'affiche rien.
+

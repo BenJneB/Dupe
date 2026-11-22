@@ -53,7 +53,7 @@ class AppDatabase extends $AppDatabase {
       AppDatabase(NativeDatabase.memory(setup: setupConnection));
 
   @override
-  int get schemaVersion => 6;
+  int get schemaVersion => 7;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -92,6 +92,10 @@ class AppDatabase extends $AppDatabase {
         await m.createTable(releaseAlertsTable);
         await m.createTable(followedAuthorsTable);
       }
+      if (from < 7) {
+        // v7: refused cover proposals, synced (2026-11-20).
+        await m.addColumn(itemsTable, itemsTable.refusedCovers);
+      }
     },
     beforeOpen: (details) async {
       await customStatement('PRAGMA foreign_keys = ON');
@@ -101,15 +105,19 @@ class AppDatabase extends $AppDatabase {
 
 /// Registers custom SQL functions on every connection.
 void setupConnection(sqlite.Database db) {
-  db.createFunction(
-    functionName: 'fold',
-    argumentCount: const sqlite.AllowedArgumentCount(1),
-    deterministic: true,
-    function: (args) {
-      final value = args[0];
-      return value is String ? foldForSearch(value) : value;
-    },
-  );
+  // The background release check (Android) may write while the app does:
+  // wait for the other connection instead of failing at once.
+  db
+    ..execute('PRAGMA busy_timeout = 5000')
+    ..createFunction(
+      functionName: 'fold',
+      argumentCount: const sqlite.AllowedArgumentCount(1),
+      deterministic: true,
+      function: (args) {
+        final value = args[0];
+        return value is String ? foldForSearch(value) : value;
+      },
+    );
 }
 
 /// SQL `fold(expr)`: lowercase without diacritics.

@@ -24,7 +24,9 @@ Description détaillée des choix techniques et de l'organisation du code (dépl
   JSON sur Linux/Windows (pas besoin de sqflite desktop). Tout nouvel affichage d'image réseau passe par lui.
 - Notifications : flutter_local_notifications 23 + timezone ; plugin et initialisation unique (permission Android
   comprise) partagés dans `core/notifications/local_notifications.dart` (prêts : `features/loans/data/loan_reminders.dart`,
-  nouveautés : `features/releases/data/release_notifications.dart`). Android
+  nouveautés : `features/releases/data/release_notifications.dart`). Petite icône Android : silhouette blanche
+  vectorielle `res/drawable/ic_stat_dupe.xml` (jamais l'icône couleur : carré plein), gardée en release par
+  `res/raw/keep.xml`. Android
   seulement planifie (inexact, `zonedSchedule` à 10 h le jour de retour, instant absolu `tz.UTC`, pas de base
   de fuseaux) ; Linux n'a pas de planificateur et Windows hors MSIX ne sait pas annuler → sur desktop,
   notification « prêts en retard » au démarrage, une fois par jour (`loans_overdue_notified_on`).
@@ -100,7 +102,10 @@ Description détaillée des choix techniques et de l'organisation du code (dépl
   dont la couverture n'est pas en cache (`coverCandidates`, test local), et saute 30 jours un ISBN cherché sans
   succès (`covers_not_found` dans `app_settings`) ; `proposeCover` (recherche texte sans BnF après échec par ISBN) → `CoverProposals` (mémoire) validées dans Qualité ; « Compléter les couvertures manquantes » n'est plus que dans
   Qualité (`MissingCoversTile`) →
-  « Couvertures proposées », refus locaux `RefusedCovers` (`cover_refused`) ; `StoreChecker` reconnaît un livre hors
+  « Couvertures proposées », refus `RefusedCovers` : `items.refused_covers` (schéma v7, synchronisé, liste de clés `coverImageKey` de
+  `covers/domain/cover_image_key.dart` : id Google Books, id / ISBN Open Library, sinon hôte + chemin ; une image
+  refusée ne revient jamais pour ce livre, même sous une autre URL, d'autres images peuvent l'être ; anciens refus
+  locaux `cover_refused` `id|url` encore lus) ; `StoreChecker` reconnaît un livre hors
   série possédé dans une autre édition (titre + auteur).
 - Qualité de la collection (v4 phase 22, `features/quality/`) : `computeQuality` / `collectionQualityProvider`
   (en direct), écran Plus → Qualité (compteurs → listes), `IsbnAssignment` (contrôles doublon / titre via
@@ -126,6 +131,10 @@ Description détaillée des choix techniques et de l'organisation du code (dépl
   (`ItemReadingBar`, puces qui passent à la ligne : un SegmentedButton déborde sur téléphone), « Marquer comme
   lus jusqu'au tome N » (`series_menu.dart`), filtre « À lire » (`ViewSettings.toReadOnly`, `unreadCount` =
   `VolumeGrid.toReadCount`, statuts `toReadStatuses`).
+- Que lire maintenant ? (Plus, `collection/domain/next_read.dart` + `presentation/next_read/`) : un livre possédé non
+  commencé tiré au hasard, un par série (premier tome non lu), suite d'une série commencée favorisée.
+- Série complète ! (`collection/data/completed_series.dart`, `completedSeriesNewsProvider` écouté par `app.dart`) :
+  message quand un ajout fait ici complète une série (`sync_pending`), jamais après une synchro, rien au-delà de 5.
 - Envies (`features/wishlist/`) : items `envie` triés par priorité, retirés d'un glissement (avec « Annuler ») ; « Prochains tomes à acheter » =
   `nextVolumesToBuy` (séries suivies, manquants non déjà en envie), ajout en un appui.
 - Auteurs (`features/authors/`) : `groupByAuthor` (`authorKey` : « Nom, Prénom » remis dans l'ordre, sans accents ni
@@ -134,7 +143,8 @@ Description détaillée des choix techniques et de l'organisation du code (dépl
   `AuthorMenu` (page auteur : « Marquer comme lus », `markOwnedRead` de `reading_actions.dart`),
   `AuthorLinks` sur les fiches livre/série (`context.go`, comme « Voir la série »). `EntryTile` (`entries_list.dart`) partagé par l'onglet et la page auteur.
 - Prêts (`features/loans/`) : `LoansRepository` (lend/markReturned/borrowerNames), `LoanActions` (prêt + rappel),
-  `ItemLoanSection` sur la fiche, `LoansScreen` (en cours/historique, retards surlignés).
+  `ItemLoanSection` sur la fiche, `LoansScreen` (en cours/historique, retards surlignés ; « Vider l’historique » =
+  `clearHistory`, suppression logique synchronisée des prêts rendus, `clear_loan_history.dart`).
 - Exemplaires : plusieurs items par numéro (éditions) ; `VolumeSlot.copies`, badge ×N + `volume_copies_sheet` ;
   « Ajouter un exemplaire » = `newItem(copyOf:)` → `newCopy` ; en magasin `StoreCheck.otherEdition`.
 - Prix (phase 6) : « Je l'ai acheté » = `confirmBought` (`item/bought_action.dart`, prix pré-rempli par le prix
@@ -305,7 +315,11 @@ Description détaillée des choix techniques et de l'organisation du code (dépl
   utilisé par `MissingCoversFill` après la recherche par ISBN) et MangaUpdates (`providers/mangaupdates/`,
   `SeriesMetadataProvider`, après AniList dans `SeriesLookup` pour les mangas). `SourceId.mangaUpdates` / `mangadex`.
 - Nouveautés (v4 phase 33, schéma v6, `features/releases/`) : `ReleaseChecker` (démarrage, 1×/jour, Wi-Fi par
-  défaut) → séries suivies via `SeriesCatalogSource` + `nextVolumes`, auteurs suivis via `SuggestionSources` +
+  défaut ; sur Android aussi en tâche de fond, appli fermée : `release_background.dart`, WorkManager toutes les 12 h,
+  réseau requis, Wi-Fi si demandé, batterie pas faible, même `runIfDue` dans son propre `ProviderContainer` et sa
+  propre connexion à la base (`runReleaseTask`) ; replanifiée au démarrage et à chaque changement de réglage par
+  `ReleaseSettings.scheduleBackground`, annulée si les nouveautés sont coupées ; `busy_timeout` SQLite de 5 s pour
+  les écritures simultanées ; `FakeReleaseBackground` en test) → séries suivies via `SeriesCatalogSource` + `nextVolumes`, auteurs suivis via `SuggestionSources` +
   `newBooks` → `ReleasesRepository.addIfNew` (id UUID v5 de la clé, une alerte par clé ou ISBN) →
   `ReleaseNotifications`. Premier passage d'une série ou d'un auteur : seulement les sorties de l'année et de l'an
   dernier (`isRecentRelease`, l'année de la notice), puis référence (relevés locaux `releases_base_*`,

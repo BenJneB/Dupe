@@ -101,6 +101,50 @@ void main() {
     expect(find.textContaining('Prêté à Bob · Rendu le'), findsOneWidget);
   });
 
+  testWidgets('history emptied after confirmation, current loans kept', (
+    tester,
+  ) async {
+    var id = 0;
+    final db = await pumpApp(
+      tester,
+      seed: (db) async {
+        await seedDune(db);
+        final loans = LoansRepository(
+          db,
+          now: () => DateTime(2026, 10),
+          newId: () => 'loan-${++id}',
+        );
+        await loans.markReturned(await loans.lend(dune.id, borrower: 'Bob'));
+        await loans.lend(dune.id, borrower: 'Eve');
+      },
+    );
+    final container = ProviderScope.containerOf(
+      tester.element(find.byType(Scaffold).first),
+    );
+    container.read(appRouterProvider).go(AppRoutes.loans);
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const Key('clearLoanHistory')));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('Le prêt rendu sera supprimé'), findsOneWidget);
+    await tester.tap(find.byKey(const Key('confirmClearLoanHistory')));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Historique des prêts vidé'), findsOneWidget);
+    expect(find.text('En cours (1)'), findsOneWidget);
+    expect(find.byKey(const Key('clearLoanHistory')), findsNothing);
+    await tester.tap(find.text('Historique'));
+    await tester.pumpAndSettle();
+    expect(find.text('Aucun prêt rendu'), findsOneWidget);
+    // Soft-deleted, to be synced to the other devices.
+    final bob = await tester.runAsync(
+      () => (db.select(
+        db.loansTable,
+      )..where((t) => t.borrowerName.equals('Bob'))).getSingle(),
+    );
+    expect((bob!.deletedAt != null, bob.syncPending), (true, true));
+  });
+
   test('desktop: overdue loans are notified once a day at start-up', () async {
     final db = AppDatabase.memory();
     addTearDown(db.close);

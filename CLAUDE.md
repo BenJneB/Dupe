@@ -2,20 +2,18 @@
 
 Application Flutter personnelle de gestion de collection (mangas, BD, comics, livres), pour Android, Linux et
 Windows, avec synchro Supabase optionnelle.
-**État courant et suite du projet : `PLAN_V3.md`** (à relire avant chaque phase ; tenir à jour son tableau §3 et
+**État courant et suite du projet : `PLAN_V4.md`** (à relire avant chaque phase ; tenir à jour son tableau §3 et
 ajouter un bilan « Réalisé / Écarts / Non vérifié » sous chaque phase terminée).
 Historique : `PLAN.md` (spécification v1, phases 0-8) et `PLAN_V2.md` (phases 9-13, état au 2026-11-14).
-Suite : `PLAN_V4.md` (phases 22-37, ordre d'exécution dans son §3), commencée pendant la recette v3 ; la fin de
-cette recette (phase 26) vient juste avant les livres numériques (27-28), placés en fin de v4.
+Suite : `PLAN_V4.md` (phases 22-37, ordre d'exécution et décisions dans son §3). Phases 22-25, 29-34 et 37 faites ;
+PWA (36) et livres numériques (27-28) abandonnés pour le moment (2026-11-20) ; tests manuels (recette v3 restante
+et recette v4, phases 26 et 35) plus tard. En cours : corrections et améliorations tirées des écarts des bilans.
 `PLAN_V3.md` prime en cas de contradiction (ex. Supabase **local** autorisé pour les tests, projet distant
-toujours interdit). Phases 14 (vérifications de base, courte) et 21 (recette finale) pilotées par l'utilisateur : il rapporte les
-échecs de `TESTS_MANUELS.md` et des workflows ; pour chaque échec, le reproduire par un test automatisé si
-possible, puis corriger. Chaque phase 15-20 ajoute ses tests manuels à `TESTS_MANUELS.md` et marque
-« automatisé (phase N) » ceux que ses tests couvrent désormais. On avance phase par phase ;
-s'arrêter à la fin de chaque phase et attendre le retour de l'utilisateur.
-- **Phase 21 en cours : gel des fonctionnalités** (2026-11-15). Ne corriger que des bugs ou des écarts aux tests ;
-  toute nouvelle idée (de Claude ou de l'utilisateur) va dans « Après la v3 — idées notées » de `PLAN_V3.md`,
-  sans être codée.
+toujours interdit). Recettes (21, 26, 35) pilotées par l'utilisateur : il rapporte les échecs de
+`TESTS_MANUELS.md` et des workflows ; pour chaque échec, le reproduire par un test automatisé si possible, puis
+corriger. Chaque phase ajoute ses tests manuels à `TESTS_MANUELS.md` et marque « automatisé (phase N) » ceux que
+ses tests couvrent désormais. On avance phase par phase ; s'arrêter à la fin de chaque phase et attendre le retour
+de l'utilisateur.
 
 **Architecture : lire `docs/ARCHITECTURE.md`** avant de modifier ou d'ajouter du code dans un module, ou pour
 savoir où vit une fonctionnalité (stack et versions, organisation de `lib/`, fonctionnement de chaque feature :
@@ -64,7 +62,7 @@ sources de métadonnées, scan, synchro, sauvegardes, couvertures, CI…). Le me
 - Schéma versionné : après changement de tables, incrémenter `schemaVersion`, écrire la migration, puis
   `dart run drift_dev schema dump lib/core/database/app_database.dart drift_schemas/` puis
   `dart run drift_dev schema generate drift_schemas/ test/core/database/generated/` et compléter
-  `test/core/database/migration_test.dart` (schéma actuel : v6, tables `release_alerts` et `followed_authors`). Toute nouvelle colonne
+  `test/core/database/migration_test.dart` (schéma actuel : v7, colonne `items.refused_covers`). Toute nouvelle colonne
   synchronisée exige sa migration Supabase, appliquée par l'utilisateur **avant** d'installer la version.
 - Lecture ponctuelle : méthodes `get*` du repository, jamais `watch*().first` (bloque en test widget).
 
@@ -77,7 +75,7 @@ sources de métadonnées, scan, synchro, sauvegardes, couvertures, CI…). Le me
 - `flutter test` doit passer à chaque fin de phase.
 - `pumpApp` injecte des faux pour tout ce qui touche le matériel ou le réseau : `FakeLoanReminders`,
   `FakeAppShortcuts`, `FakeHomeScreenWidget`, `FakeVoiceInput`, `FakeNetworkStatus` (aucune connexion par défaut),
-  `FakeCoverCache`, `FakeCoverScanner`, `FakeSuggestionSources`, `FakeSeriesCatalogSource`, `FakeReleaseNotifications`, `MemoryBackupStore`, un `SeriesLookup` sans source (param `seriesLookup:`), pas de MangaDex (param `mangaDex:`) ; jamais les vrais
+  `FakeCoverCache`, `FakeCoverScanner`, `FakeSuggestionSources`, `FakeSeriesCatalogSource`, `FakeReleaseNotifications`, `FakeReleaseBackground`, `MemoryBackupStore`, un `SeriesLookup` sans source (param `seriesLookup:`), pas de MangaDex (param `mangaDex:`) ; jamais les vrais
   plugins ni le réseau.
 - Journal en test : `appLog.clear()` en début de test.
 - Tests de Paramètres : la liste est longue ; une tuile peut être construite (cache) mais hors écran →
@@ -110,7 +108,7 @@ sources de métadonnées, scan, synchro, sauvegardes, couvertures, CI…). Le me
   en mémoire, `goBack` car `tester.pageBack()` ne connaît pas le BackButton de material_ui),
   `test_repositories.dart` (repo + horloge contrôlable).
 - En test widget, la base se ferme via `tester.runAsync` (sinon blocage en temps simulé).
-  `dart_test.yaml` : timeout 30 s par test. Suite complète ~60 s (376 tests, 2026-11-20) : le temps vient surtout
+  `dart_test.yaml` : timeout 30 s par test. Suite complète ~60 s (394 tests, 2026-11-22) : le temps vient surtout
   de la compilation de chaque fichier de test widget. Helpers de navigation : `test/helpers/screen_helpers.dart`
   (`goTo`, `openSettings`, `tapTile`, `fillSignIn`) ; ne jamais importer un fichier `_test.dart` depuis un autre.
 

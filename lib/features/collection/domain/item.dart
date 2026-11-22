@@ -58,5 +58,9 @@ abstract class Item with _$Item {
     DateTime? signedOn,
     String? signedPlace,
     String? signingNote,
+
+    /// Proposed covers the user refused for this book (`coverImageKey`s):
+    /// never proposed again; other images still may be.
+    @Default(<String>[]) List<String> refusedCovers,
   }) = _Item;
 }

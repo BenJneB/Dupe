@@ -5,11 +5,13 @@ import 'package:dupe/app/theme.dart';
 import 'package:dupe/core/logging/app_log.dart';
 import 'package:dupe/core/sync/sync_controller.dart';
 import 'package:dupe/features/backup/data/auto_backups.dart';
+import 'package:dupe/features/collection/data/completed_series.dart';
 import 'package:dupe/features/covers/data/cover_prefetch.dart';
 import 'package:dupe/features/home_widget/data/home_screen_widget.dart';
 import 'package:dupe/features/home_widget/data/home_widget_updater.dart';
 import 'package:dupe/features/loans/data/loan_actions.dart';
 import 'package:dupe/features/releases/data/release_checker.dart';
+import 'package:dupe/features/releases/data/release_settings.dart';
 import 'package:dupe/features/scan/data/app_shortcuts.dart';
 import 'package:dupe/features/settings/data/theme_mode_provider.dart';
 import 'package:dupe/features/updates/data/update_checker.dart';
@@ -49,6 +51,26 @@ class _DupeAppState extends ConsumerState<DupeApp> {
       'releases',
       ref.read(releaseCheckerProvider.notifier).runIfDue,
     );
+    // Android: the same check in the background, app closed (WorkManager).
+    _inBackground(
+      'releases',
+      ref.read(releaseSettingsProvider.notifier).scheduleBackground,
+    );
+    // "Série complète !" when an addition here completes a series.
+    ref.listenManual(completedSeriesNewsProvider, (_, next) {
+      final messenger = rootMessengerKey.currentState;
+      if (next.value case final titles? when messenger != null) {
+        messenger.showSnackBar(
+          SnackBar(
+            content: Text(
+              titles.length == 1
+                  ? _l10n.seriesCompleted(titles.single)
+                  : _l10n.seriesCompletedMany(titles.length),
+            ),
+          ),
+        );
+      }
+    });
     // Covers downloaded for offline use (Wi-Fi only by default).
     _inBackground('covers', ref.read(coverPrefetchProvider.notifier).start);
     // Long press on the icon → store-mode scan (Android).

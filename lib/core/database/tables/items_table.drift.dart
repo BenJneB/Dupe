@@ -58,6 +58,7 @@ typedef $$ItemsTableTableCreateCompanionBuilder =
       i0.Value<DateTime?> signedOn,
       i0.Value<String?> signedPlace,
       i0.Value<String?> signingNote,
+      i0.Value<List<String>> refusedCovers,
       i0.Value<int> rowid,
     });
 typedef $$ItemsTableTableUpdateCompanionBuilder =
@@ -107,6 +108,7 @@ typedef $$ItemsTableTableUpdateCompanionBuilder =
       i0.Value<DateTime?> signedOn,
       i0.Value<String?> signedPlace,
       i0.Value<String?> signingNote,
+      i0.Value<List<String>> refusedCovers,
       i0.Value<int> rowid,
     });
 
@@ -375,6 +377,12 @@ class $$ItemsTableTableFilterComposer
     builder: (column) => i0.ColumnFilters(column),
   );
 
+  i0.ColumnWithTypeConverterFilters<List<String>, List<String>, String>
+  get refusedCovers => $composableBuilder(
+    column: $table.refusedCovers,
+    builder: (column) => i0.ColumnWithTypeConverterFilters(column),
+  );
+
   i8.$$SeriesTableTableFilterComposer get seriesId {
     final i8.$$SeriesTableTableFilterComposer composer = $composerBuilder(
       composer: this,
@@ -630,6 +638,11 @@ class $$ItemsTableTableOrderingComposer
     builder: (column) => i0.ColumnOrderings(column),
   );
 
+  i0.ColumnOrderings<String> get refusedCovers => $composableBuilder(
+    column: $table.refusedCovers,
+    builder: (column) => i0.ColumnOrderings(column),
+  );
+
   i8.$$SeriesTableTableOrderingComposer get seriesId {
     final i8.$$SeriesTableTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -828,6 +841,12 @@ class $$ItemsTableTableAnnotationComposer
     builder: (column) => column,
   );
 
+  i0.GeneratedColumnWithTypeConverter<List<String>, String> get refusedCovers =>
+      $composableBuilder(
+        column: $table.refusedCovers,
+        builder: (column) => column,
+      );
+
   i8.$$SeriesTableTableAnnotationComposer get seriesId {
     final i8.$$SeriesTableTableAnnotationComposer composer = $composerBuilder(
       composer: this,
@@ -930,6 +949,7 @@ class $$ItemsTableTableTableManager
                 i0.Value<DateTime?> signedOn = const i0.Value.absent(),
                 i0.Value<String?> signedPlace = const i0.Value.absent(),
                 i0.Value<String?> signingNote = const i0.Value.absent(),
+                i0.Value<List<String>> refusedCovers = const i0.Value.absent(),
                 i0.Value<int> rowid = const i0.Value.absent(),
               }) => i4.ItemsTableCompanion(
                 id: id,
@@ -977,6 +997,7 @@ class $$ItemsTableTableTableManager
                 signedOn: signedOn,
                 signedPlace: signedPlace,
                 signingNote: signingNote,
+                refusedCovers: refusedCovers,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -1027,6 +1048,7 @@ class $$ItemsTableTableTableManager
                 i0.Value<DateTime?> signedOn = const i0.Value.absent(),
                 i0.Value<String?> signedPlace = const i0.Value.absent(),
                 i0.Value<String?> signingNote = const i0.Value.absent(),
+                i0.Value<List<String>> refusedCovers = const i0.Value.absent(),
                 i0.Value<int> rowid = const i0.Value.absent(),
               }) => i4.ItemsTableCompanion.insert(
                 id: id,
@@ -1074,6 +1096,7 @@ class $$ItemsTableTableTableManager
                 signedOn: signedOn,
                 signedPlace: signedPlace,
                 signingNote: signingNote,
+                refusedCovers: refusedCovers,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -1670,6 +1693,16 @@ class $ItemsTableTable extends i5.ItemsTable
         requiredDuringInsert: false,
       );
   @override
+  late final i0.GeneratedColumnWithTypeConverter<List<String>, String>
+  refusedCovers = i0.GeneratedColumn<String>(
+    'refused_covers',
+    aliasedName,
+    false,
+    type: i0.DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const i6.Constant('[]'),
+  ).withConverter<List<String>>(i4.$ItemsTableTable.$converterrefusedCovers);
+  @override
   List<i0.GeneratedColumn> get $columns => [
     id,
     userId,
@@ -1716,6 +1749,7 @@ class $ItemsTableTable extends i5.ItemsTable
     signedOn,
     signedPlace,
     signingNote,
+    refusedCovers,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -2216,6 +2250,12 @@ class $ItemsTableTable extends i5.ItemsTable
         i0.DriftSqlType.string,
         data['${effectivePrefix}signing_note'],
       ),
+      refusedCovers: i4.$ItemsTableTable.$converterrefusedCovers.fromSql(
+        attachedDatabase.typeMapping.read(
+          i0.DriftSqlType.string,
+          data['${effectivePrefix}refused_covers'],
+        )!,
+      ),
     );
   }
 
@@ -2232,6 +2272,8 @@ class $ItemsTableTable extends i5.ItemsTable
       const i7.DbEnumConverter(i3.Ownership.values);
   static i0.TypeConverter<i3.ReadingStatus, String> $converterreadingStatus =
       const i7.DbEnumConverter(i3.ReadingStatus.values);
+  static i0.TypeConverter<List<String>, String> $converterrefusedCovers =
+      const i7.StringListConverter();
 }
 
 class ItemsTableCompanion extends i0.UpdateCompanion<i1.Item> {
@@ -2280,6 +2322,7 @@ class ItemsTableCompanion extends i0.UpdateCompanion<i1.Item> {
   final i0.Value<DateTime?> signedOn;
   final i0.Value<String?> signedPlace;
   final i0.Value<String?> signingNote;
+  final i0.Value<List<String>> refusedCovers;
   final i0.Value<int> rowid;
   const ItemsTableCompanion({
     this.id = const i0.Value.absent(),
@@ -2327,6 +2370,7 @@ class ItemsTableCompanion extends i0.UpdateCompanion<i1.Item> {
     this.signedOn = const i0.Value.absent(),
     this.signedPlace = const i0.Value.absent(),
     this.signingNote = const i0.Value.absent(),
+    this.refusedCovers = const i0.Value.absent(),
     this.rowid = const i0.Value.absent(),
   });
   ItemsTableCompanion.insert({
@@ -2375,6 +2419,7 @@ class ItemsTableCompanion extends i0.UpdateCompanion<i1.Item> {
     this.signedOn = const i0.Value.absent(),
     this.signedPlace = const i0.Value.absent(),
     this.signingNote = const i0.Value.absent(),
+    this.refusedCovers = const i0.Value.absent(),
     this.rowid = const i0.Value.absent(),
   }) : id = i0.Value(id),
        createdAt = i0.Value(createdAt),
@@ -2427,6 +2472,7 @@ class ItemsTableCompanion extends i0.UpdateCompanion<i1.Item> {
     i0.Expression<DateTime>? signedOn,
     i0.Expression<String>? signedPlace,
     i0.Expression<String>? signingNote,
+    i0.Expression<String>? refusedCovers,
     i0.Expression<int>? rowid,
   }) {
     return i0.RawValuesInsertable({
@@ -2475,6 +2521,7 @@ class ItemsTableCompanion extends i0.UpdateCompanion<i1.Item> {
       if (signedOn != null) 'signed_on': signedOn,
       if (signedPlace != null) 'signed_place': signedPlace,
       if (signingNote != null) 'signing_note': signingNote,
+      if (refusedCovers != null) 'refused_covers': refusedCovers,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -2525,6 +2572,7 @@ class ItemsTableCompanion extends i0.UpdateCompanion<i1.Item> {
     i0.Value<DateTime?>? signedOn,
     i0.Value<String?>? signedPlace,
     i0.Value<String?>? signingNote,
+    i0.Value<List<String>>? refusedCovers,
     i0.Value<int>? rowid,
   }) {
     return i4.ItemsTableCompanion(
@@ -2573,6 +2621,7 @@ class ItemsTableCompanion extends i0.UpdateCompanion<i1.Item> {
       signedOn: signedOn ?? this.signedOn,
       signedPlace: signedPlace ?? this.signedPlace,
       signingNote: signingNote ?? this.signingNote,
+      refusedCovers: refusedCovers ?? this.refusedCovers,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -2723,6 +2772,11 @@ class ItemsTableCompanion extends i0.UpdateCompanion<i1.Item> {
     if (signingNote.present) {
       map['signing_note'] = i0.Variable<String>(signingNote.value);
     }
+    if (refusedCovers.present) {
+      map['refused_covers'] = i0.Variable<String>(
+        i4.$ItemsTableTable.$converterrefusedCovers.toSql(refusedCovers.value),
+      );
+    }
     if (rowid.present) {
       map['rowid'] = i0.Variable<int>(rowid.value);
     }
@@ -2777,6 +2831,7 @@ class ItemsTableCompanion extends i0.UpdateCompanion<i1.Item> {
           ..write('signedOn: $signedOn, ')
           ..write('signedPlace: $signedPlace, ')
           ..write('signingNote: $signingNote, ')
+          ..write('refusedCovers: $refusedCovers, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -2834,6 +2889,7 @@ class _$ItemInsertable implements i0.Insertable<i1.Item> {
       signedOn: i0.Value(_object.signedOn),
       signedPlace: i0.Value(_object.signedPlace),
       signingNote: i0.Value(_object.signingNote),
+      refusedCovers: i0.Value(_object.refusedCovers),
     ).toColumns(false);
   }
 }

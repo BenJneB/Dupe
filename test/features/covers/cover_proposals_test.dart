@@ -20,6 +20,7 @@ import '../../helpers/screen_helpers.dart';
 const isbn = '9782266320481';
 const pocketCover = 'https://books.google.com/dune-pocket.jpg';
 const otherCover = 'https://books.google.com/dune-other.jpg';
+const largeCover = 'https://books.google.com/dune-large.jpg';
 late Item dune;
 
 Future<void> seedDune(AppDatabase db) async {
@@ -56,6 +57,22 @@ final Override sources = metadataAggregatorProvider.overrideWithValue(
             title: 'Dune : le cycle de Dune 1',
             authors: ['Frank Herbert'],
             coverUrl: pocketCover,
+          ),
+          // The same image under another URL: never proposed once refused.
+          MetadataResult(
+            source: MetadataSource.googleBooks,
+            sourceId: 'pocket-zoom',
+            title: 'Dune',
+            authors: ['Frank Herbert'],
+            coverUrl: '$pocketCover?zoom=2',
+          ),
+          // Another matching edition: next in line once the first is refused.
+          MetadataResult(
+            source: MetadataSource.googleBooks,
+            sourceId: 'large',
+            title: 'Dune',
+            authors: ['Frank Herbert'],
+            coverUrl: largeCover,
           ),
         ],
       ),
@@ -113,20 +130,38 @@ void main() {
     expect(find.text('Aucune couverture à valider.'), findsOneWidget);
   });
 
-  testWidgets('a refused cover is not proposed again on this device', (
+  testWidgets('a refused image is never proposed again, another one is', (
     tester,
   ) async {
-    await pumpApp(
+    final db = await pumpApp(
       tester,
       seed: seedDune,
       overrides: [sources],
       coverCache: coversWithoutGuess(),
     );
+    Future<void> refuseProposal() async {
+      await goTo(tester, AppRoutes.coverProposals);
+      await tester.tap(find.byKey(ValueKey('refuseCover-${dune.id}')));
+      await tester.pumpAndSettle();
+    }
+
+    await runFill(tester);
+    await refuseProposal();
+    // Stored on the book, to be synced.
+    final stored = await tester.runAsync(
+      () => db.select(db.itemsTable).getSingle(),
+    );
+    expect(stored!.syncPending, isTrue);
+    expect(stored.refusedCovers, ['books.google.com/dune-pocket.jpg']);
+
+    // Next pass: the same image under another URL is skipped, another
+    // edition's image is proposed.
     await runFill(tester);
     await goTo(tester, AppRoutes.coverProposals);
-    await tester.tap(find.byKey(ValueKey('refuseCover-${dune.id}')));
-    await tester.pumpAndSettle();
+    expect(find.text('Trouvée via Google Books : « Dune »'), findsOneWidget);
+    await refuseProposal();
 
+    // Every matching image refused: nothing left to propose.
     await runFill(tester);
     await goTo(tester, AppRoutes.quality);
     expect(find.byKey(const Key('qualityCoverProposals')), findsNothing);

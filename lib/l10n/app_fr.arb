@@ -670,6 +670,18 @@
   "loansHistory": "Historique",
   "loansEmpty": "Aucun prêt en cours",
   "loansHistoryEmpty": "Aucun prêt rendu",
+  "loansClearHistory": "Vider l’historique",
+  "loansClearHistoryQuestion": "Vider l’historique des prêts ?",
+  "loansClearHistoryHelp": "{count, plural, =1{Le prêt rendu sera supprimé} other{Les {count} prêts rendus seront supprimés}}, sur tous tes appareils après synchro. Les prêts en cours sont gardés.",
+  "@loansClearHistoryHelp": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "loansClearHistoryConfirm": "Vider",
+  "loansHistoryCleared": "Historique des prêts vidé",
   "wishlistItems": "Envies",
   "nextVolumes": "Prochains tomes à acheter",
   "wishlistEmpty": "Ta liste d’envies est vide",
@@ -829,6 +841,30 @@
   "invalidEmail": "Adresse email invalide",
   "moreSuggestions": "Suggestions",
   "moreSuggestionsSubtitle": "Des livres à découvrir, d’après ta collection",
+  "moreNextRead": "Que lire maintenant ?",
+  "moreNextReadSubtitle": "Un livre tiré au hasard dans ta pile à lire",
+  "nextReadContinues": "La suite d’une série commencée",
+  "nextReadEmpty": "Rien à proposer : tes livres possédés sont tous lus ou commencés.",
+  "nextReadAnother": "Un autre",
+  "nextReadStart": "Je le commence",
+  "nextReadOpen": "Voir la fiche",
+  "nextReadStarted": "Bonne lecture !",
+  "seriesCompleted": "Série complète : {title} ! 🎉",
+  "@seriesCompleted": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "seriesCompletedMany": "{count} séries complètes ! 🎉",
+  "@seriesCompletedMany": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "suggestionsTitle": "Suggestions",
   "suggestionsRefresh": "Recalculer",
   "suggestionsProgress": "Recherche des suggestions… {done}/{total}",

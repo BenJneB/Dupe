@@ -7,6 +7,7 @@ import 'package:dupe/features/collection/presentation/labels.dart';
 import 'package:dupe/features/loans/data/loan_actions.dart';
 import 'package:dupe/features/loans/data/loans_repository.dart';
 import 'package:dupe/features/loans/domain/loan_status.dart';
+import 'package:dupe/features/loans/presentation/clear_loan_history.dart';
 import 'package:dupe/features/loans/presentation/loans_providers.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -34,6 +35,10 @@ class LoansScreen extends ConsumerWidget {
       child: Scaffold(
         appBar: AppBar(
           title: Text(l10n.moreLoans),
+          actions: [
+            if (history.isNotEmpty)
+              ClearLoanHistoryButton(count: history.length),
+          ],
           bottom: TabBar(
             tabs: [
               Tab(text: '${l10n.loansCurrent} (${current.length})'),

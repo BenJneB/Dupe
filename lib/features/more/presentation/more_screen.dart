@@ -1,5 +1,6 @@
 import 'package:dupe/app/router.dart';
 import 'package:dupe/app/widgets/global_search_bar.dart';
+import 'package:dupe/features/collection/presentation/next_read/next_read_sheet.dart';
 import 'package:dupe/features/releases/presentation/releases_tile.dart';
 import 'package:dupe/l10n/gen/app_localizations.dart';
 import 'package:go_router/go_router.dart';
@@ -30,6 +31,13 @@ class MoreScreen extends StatelessWidget {
             leading: const Icon(Icons.bar_chart),
             title: Text(l10n.moreStats),
             onTap: () => context.go(AppRoutes.stats),
+          ),
+          ListTile(
+            key: const Key('moreNextRead'),
+            leading: const Icon(Icons.casino_outlined),
+            title: Text(l10n.moreNextRead),
+            subtitle: Text(l10n.moreNextReadSubtitle),
+            onTap: () => showNextRead(context),
           ),
           const ReleasesTile(),
           ListTile(

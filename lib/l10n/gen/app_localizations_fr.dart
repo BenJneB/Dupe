@@ -1272,6 +1272,29 @@ class AppLocalizationsFr extends AppLocalizations {
   String get loansHistoryEmpty => 'Aucun prêt rendu';
 
   @override
+  String get loansClearHistory => 'Vider l’historique';
+
+  @override
+  String get loansClearHistoryQuestion => 'Vider l’historique des prêts ?';
+
+  @override
+  String loansClearHistoryHelp(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Les $count prêts rendus seront supprimés',
+      one: 'Le prêt rendu sera supprimé',
+    );
+    return '$_temp0, sur tous tes appareils après synchro. Les prêts en cours sont gardés.';
+  }
+
+  @override
+  String get loansClearHistoryConfirm => 'Vider';
+
+  @override
+  String get loansHistoryCleared => 'Historique des prêts vidé';
+
+  @override
   String get wishlistItems => 'Envies';
 
   @override
@@ -1529,6 +1552,42 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get moreSuggestionsSubtitle =>
       'Des livres à découvrir, d’après ta collection';
+
+  @override
+  String get moreNextRead => 'Que lire maintenant ?';
+
+  @override
+  String get moreNextReadSubtitle =>
+      'Un livre tiré au hasard dans ta pile à lire';
+
+  @override
+  String get nextReadContinues => 'La suite d’une série commencée';
+
+  @override
+  String get nextReadEmpty =>
+      'Rien à proposer : tes livres possédés sont tous lus ou commencés.';
+
+  @override
+  String get nextReadAnother => 'Un autre';
+
+  @override
+  String get nextReadStart => 'Je le commence';
+
+  @override
+  String get nextReadOpen => 'Voir la fiche';
+
+  @override
+  String get nextReadStarted => 'Bonne lecture !';
+
+  @override
+  String seriesCompleted(String title) {
+    return 'Série complète : $title ! 🎉';
+  }
+
+  @override
+  String seriesCompletedMany(int count) {
+    return '$count séries complètes ! 🎉';
+  }
 
   @override
   String get suggestionsTitle => 'Suggestions';

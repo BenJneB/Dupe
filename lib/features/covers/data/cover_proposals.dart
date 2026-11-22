@@ -7,6 +7,7 @@ import 'package:dupe/core/metadata/metadata_result.dart';
 import 'package:dupe/features/collection/data/collection_repository.dart';
 import 'package:dupe/features/collection/domain/item.dart';
 import 'package:dupe/features/covers/data/cover_cache.dart';
+import 'package:dupe/features/covers/domain/cover_image_key.dart';
 import 'package:dupe/features/covers/domain/edition_match.dart';
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -28,24 +29,36 @@ class CoverProposal {
   String get key => '${item.id}|$url';
 }
 
-/// Covers refused by the user, on this device only (decision 2026-11-16):
-/// not proposed again here.
+/// Refused cover proposals: an image refused for a book is never proposed
+/// again for it, whatever its URL variant (`coverImageKey`); other images
+/// still may be. Stored on the item (`refusedCovers`, synced). Before
+/// 2026-11-20 refusals were kept on the device only (`cover_refused`,
+/// `id|url`): still read here.
 class RefusedCovers {
   const new(this._settings);
 
   final AppSettingsStore _settings;
   static const settingKey = 'cover_refused';
 
-  Future<Set<String>> load() async {
+  /// Whether [url] was refused for [item], on the item or by a [legacy]
+  /// device key.
+  static bool refuses(Set<String> legacy, Item item, String url) {
+    final key = coverImageKey(url);
+    return item.refusedCovers.contains(key) ||
+        legacy.any((k) {
+          final (id, old) = switch (k.indexOf('|')) {
+            -1 => (k, ''),
+            final i => (k.substring(0, i), k.substring(i + 1)),
+          };
+          return id == item.id && coverImageKey(old) == key;
+        });
+  }
+
+  /// Device keys written before 2026-11-20.
+  Future<Set<String>> loadLegacy() async {
     final raw = await _settings.get(settingKey);
     if (raw == null || raw.isEmpty) return {};
     return {for (final k in jsonDecode(raw) as List<dynamic>) k as String};
-  }
-
-  Future<void> add(String key) async {
-    final keys = await load()
-      ..add(key);
-    await _settings.set(settingKey, jsonEncode(keys.toList()));
   }
 }
 
@@ -77,7 +90,7 @@ Future<CoverProposal?> proposeCover(
   for (final r in results) {
     final url = r.coverUrl;
     if (url == null || url.isEmpty || url == item.coverUrl) continue;
-    if (refused.contains('${item.id}|$url')) continue;
+    if (RefusedCovers.refuses(refused, item, url)) continue;
     final fits = sameWork(
       r,
       title: item.title,
@@ -106,7 +119,7 @@ class CoverProposals extends _$CoverProposals {
   RefusedCovers get _refused =>
       RefusedCovers(ref.read(appSettingsStoreProvider));
 
-  Future<Set<String>> refusedKeys() => _refused.load();
+  Future<Set<String>> refusedKeys() => _refused.loadLegacy();
 
   void add(CoverProposal p) {
     if (state.any((o) => o.item.id == p.item.id)) return;
@@ -128,8 +141,16 @@ class CoverProposals extends _$CoverProposals {
     _remove(p);
   }
 
+  /// Refuses this image for this book (synced); others may come later.
   Future<void> refuse(CoverProposal p) async {
-    await _refused.add(p.key);
+    final repo = ref.read(collectionRepositoryProvider);
+    final fresh = await repo.getItem(p.item.id);
+    final key = coverImageKey(p.url);
+    if (fresh != null && !fresh.refusedCovers.contains(key)) {
+      await repo.saveItem(
+        fresh.copyWith(refusedCovers: [...fresh.refusedCovers, key]),
+      );
+    }
     _remove(p);
   }
 

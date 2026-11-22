@@ -2026,6 +2026,36 @@ abstract class AppLocalizations {
   /// **'Aucun prêt rendu'**
   String get loansHistoryEmpty;
 
+  /// No description provided for @loansClearHistory.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vider l’historique'**
+  String get loansClearHistory;
+
+  /// No description provided for @loansClearHistoryQuestion.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vider l’historique des prêts ?'**
+  String get loansClearHistoryQuestion;
+
+  /// No description provided for @loansClearHistoryHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{Le prêt rendu sera supprimé} other{Les {count} prêts rendus seront supprimés}}, sur tous tes appareils après synchro. Les prêts en cours sont gardés.'**
+  String loansClearHistoryHelp(int count);
+
+  /// No description provided for @loansClearHistoryConfirm.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vider'**
+  String get loansClearHistoryConfirm;
+
+  /// No description provided for @loansHistoryCleared.
+  ///
+  /// In fr, this message translates to:
+  /// **'Historique des prêts vidé'**
+  String get loansHistoryCleared;
+
   /// No description provided for @wishlistItems.
   ///
   /// In fr, this message translates to:
@@ -2439,6 +2469,66 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Des livres à découvrir, d’après ta collection'**
   String get moreSuggestionsSubtitle;
+
+  /// No description provided for @moreNextRead.
+  ///
+  /// In fr, this message translates to:
+  /// **'Que lire maintenant ?'**
+  String get moreNextRead;
+
+  /// No description provided for @moreNextReadSubtitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Un livre tiré au hasard dans ta pile à lire'**
+  String get moreNextReadSubtitle;
+
+  /// No description provided for @nextReadContinues.
+  ///
+  /// In fr, this message translates to:
+  /// **'La suite d’une série commencée'**
+  String get nextReadContinues;
+
+  /// No description provided for @nextReadEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rien à proposer : tes livres possédés sont tous lus ou commencés.'**
+  String get nextReadEmpty;
+
+  /// No description provided for @nextReadAnother.
+  ///
+  /// In fr, this message translates to:
+  /// **'Un autre'**
+  String get nextReadAnother;
+
+  /// No description provided for @nextReadStart.
+  ///
+  /// In fr, this message translates to:
+  /// **'Je le commence'**
+  String get nextReadStart;
+
+  /// No description provided for @nextReadOpen.
+  ///
+  /// In fr, this message translates to:
+  /// **'Voir la fiche'**
+  String get nextReadOpen;
+
+  /// No description provided for @nextReadStarted.
+  ///
+  /// In fr, this message translates to:
+  /// **'Bonne lecture !'**
+  String get nextReadStarted;
+
+  /// No description provided for @seriesCompleted.
+  ///
+  /// In fr, this message translates to:
+  /// **'Série complète : {title} ! 🎉'**
+  String seriesCompleted(String title);
+
+  /// No description provided for @seriesCompletedMany.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count} séries complètes ! 🎉'**
+  String seriesCompletedMany(int count);
 
   /// No description provided for @suggestionsTitle.
   ///

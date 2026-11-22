@@ -70,11 +70,11 @@ deux fonctions tournées vers la suite de la collection : être prévenu des nou
 | 9 | 32 | Nouvelles sources de métadonnées (réduite : MangaDex, MangaUpdates) | ✅ fait (2026-11-17) | oui | non (`SR-*`) |
 | 10 | 33 | Alertes de nouveautés | ✅ fait (2026-11-17) | oui (+ Supabase local) | non (`AL-*`) |
 | 11 | 34 | Compte : mot de passe oublié, liens de confirmation | ✅ fait (2026-11-17) | oui | non (`K2-*`) |
-| 12 | 26 | Fin de la recette de la v3 (reprise de la phase 21) | à faire, juste avant les livres numériques | — | — |
-| 13 | 27 | Livres numériques (1/2) : support numérique, import Calibre | à faire | — | — |
-| 14 | 28 | Livres numériques (2/2) : dossier EPUB/CBZ, Kobo | à faire | — | — |
-| 15 | 36 | Version web installable (PWA) | à faire | — | — |
-| 16 | 35 | Recette de la v4 (dont mode rafale) | à faire | — | — |
+| 12 | 26 | Fin de la recette de la v3 (reprise de la phase 21) | reportée (tests manuels plus tard), fusionnée avec la 35 | — | — |
+| — | 27-28 | Livres numériques | ❌ abandonnées pour le moment (2026-11-20) | — | — |
+| — | 36 | Version web installable (PWA) | ❌ abandonnée (2026-11-20) | — | — |
+| 13 | — | Corrections et améliorations d'après les écarts (voir sous le tableau) | en cours (2026-11-20) | — | — |
+| 14 | 35 | Recette de la v4 (dont mode rafale et reste de la recette v3) | plus tard | — | — |
 
 L'ordre compte : 22 est rapide et utile tout de suite ; 29 sert à 31 ; 32 fournit les données dont 33 a besoin.
 **Décisions de l'utilisateur (2026-11-16)** : les livres numériques (27-28) passent à la fin, juste avant la recette
@@ -84,6 +84,61 @@ actuelles (AniList, BnF, Google Books, Open Library) ; Wikidata et MangaUpdates 
 ensuite. **Décisions du 2026-11-17** : une version web installable (PWA, phase 36) en fin de v4, juste avant la
 recette ; l'ajout d'une série complète (phase 37, idée de l'utilisateur) juste après les recommandations. L'ordre
 reste ajustable.
+
+**Décisions du 2026-11-20** : PWA (36) et livres numériques (27-28) abandonnés pour le moment ; tests manuels
+(26 et 35) plus tard ; **les quatre migrations Supabase de la v4 sont appliquées** (titre de tome, refus de
+recommandations, dédicaces, alertes). Reste à faire, dans l'ordre : couvertures refusées qui revenaient (fait,
+ci-dessous) ; alertes de nouveautés en tâche de fond (Android, fait ci-dessous) ; au choix, propositions de couvertures gardées en base,
+tomes MangaDex numérotés 1.1, 1.2…, écran de série complète sous 250 lignes. Autres idées proposées le 2026-11-20
+(fusion de séries, annulation d'un traitement en lot, état d'une série, emplacements, budget) : **refusées** par
+l'utilisateur.
+- **Corrigé (2026-11-20)** : une couverture refusée revenait au passage suivant de « Compléter les couvertures »
+  (refus local par URL exacte : la même image sous une autre URL, taille ou zoom, n'était pas reconnue). Après un
+  premier essai « refus = tout le livre », **décision de l'utilisateur** : le refus porte sur l'**image**, d'autres
+  images restant proposables. Image reconnue par `coverImageKey` (id Google Books, id / ISBN Open Library quelle que
+  soit la taille, sinon hôte + chemin sans protocole ni paramètres). Refus **synchronisés** : schéma **v7**,
+  `items.refused_covers` (liste JSON), écrit par le repository donc synchronisé et sauvegardé ; les anciens refus
+  locaux (`cover_refused`) restent lus. Migration Supabase `20261120120000_cover_refused.sql` (validée sur le
+  Supabase local, tests `-P supabase` verts) **à appliquer avant d'installer**. Tests : `cover_proposals_test.dart`
+  (même image sous une autre URL écartée, autre image proposée, plus rien quand tout est refusé),
+  `refused_covers_test.dart`, `cover_image_key_test.dart`, migration v6 → v7.
+- **Limite** : une même image servie par deux sources différentes (Google Books et Open Library) n'est pas
+  reconnue comme identique (il faudrait comparer le contenu de l'image).
+- Retour de l'utilisateur (2026-11-20) : une notification de nouveauté reçue sur le téléphone (`AL-01` en partie).
+- **Alertes de nouveautés en tâche de fond (2026-11-20)** : écart de la phase 33 comblé sur Android.
+  `release_background.dart` : `WorkManagerReleaseBackground` (package `workmanager` 0.10.10, maintenu, Android
+  seulement ; `NoReleaseBackground` ailleurs) planifie une tâche périodique de 12 h (réseau requis, Wi-Fi si
+  « Wi-Fi seulement », batterie pas faible) ; `runReleaseTask` lance le même `ReleaseChecker.runIfDue` (garde de
+  20 h : une vérification par jour au plus, démarrage compris) dans son propre `ProviderContainer` et sa propre
+  connexion SQLite. Replanifiée au démarrage et à chaque changement de réglage (`ReleaseSettings.scheduleBackground`),
+  annulée si les nouveautés sont coupées. `PRAGMA busy_timeout = 5000` pour les écritures simultanées de l'appli et
+  de la tâche. Tests : `release_background_test.dart` (vérifie, notifie, attend un jour ; Wi-Fi respecté ;
+  planification suivant les réglages), `FakeReleaseBackground` dans `pumpApp`. Builds Linux et APK OK.
+- **Écarts** : pas de réglage de fréquence (une fois par jour) ; le journal de la tâche de fond reste en mémoire (pas
+  écrit dans `dupe_log.jsonl`, pour ne pas écrire le même fichier depuis deux moteurs) : ses erreurs ne sont pas
+  visibles dans l'écran Journal ; `workmanager_android` applique le plugin Kotlin Gradle (avertissement Flutter, comme
+  `home_widget`) : à surveiller lors des montées de Flutter.
+- **Non vérifié** : sur le téléphone, appli fermée (`AL-03`) ; Xiaomi peut bloquer les tâches de fond.
+- **Ajouts pour la 1.0 (2026-11-21, choisis par l'utilisateur parmi trois idées ; sans schéma, réseau ni package)** :
+  - **Que lire maintenant ?** (Plus) : `domain/next_read.dart` (`nextReadCandidates` : livres possédés non commencés,
+    un seul par série, son premier tome non lu, aucune série en cours de lecture ; `pickNextRead` : tirage au hasard,
+    tome suivant d'une série commencée trois fois plus probable, jamais deux fois de suite le même) ; feuille
+    `presentation/next_read/next_read_sheet.dart` (« Un autre », « Je le commence » → En cours, « Voir la fiche »).
+  - **Série complète !** : `data/completed_series.dart` (`completeSeries`, même règle que les onglets via
+    `VolumeGrid` ; `newlyCompleted` : seulement une série dont un tome vient d'être écrit ici, `sync_pending`, jamais
+    une synchro ; rien au-delà de 5 séries d'un coup, restauration ou import) ; écouté par `app.dart` (message dans
+    la file des snackbars, après « Tome N marqué comme possédé »).
+  - Tests : `next_read_test.dart`, `next_read_sheet_test.dart`, `completed_series_test.dart`,
+    `series_completed_test.dart`. Non vérifié en réel : `Q-01`, `Q-02`.
+  - Idée non retenue : « Ton année en livres » (rétrospective annuelle).
+- **Vider l'historique des prêts (2026-11-22, demande de l'utilisateur)** : icône dans la barre de l'écran Prêts
+  (seulement s'il y a des prêts rendus), confirmation, `LoansRepository.clearHistory` (suppression logique des prêts
+  rendus, synchronisée ; prêts en cours gardés ; `clear_loan_history.dart`). Conséquence : les emprunteurs de
+  l'historique vidé ne sont plus proposés à la saisie d'un prêt. Test dans `loans_flow_test.dart` ; réel : `N-06`.
+- **Corrigé (2026-11-21, retour de l'utilisateur)** : icône des notifications Android en carré noir (l'icône
+  couleur `@mipmap/ic_launcher` servait de petite icône : Android n'en garde que la forme opaque). Nouvelle
+  silhouette blanche vectorielle `res/drawable/ic_stat_dupe.xml` (deux livres, pastille à coche évidée), gardée en
+  release par `res/raw/keep.xml` (vérifié avec `aapt2` dans l'APK release). Non testable automatiquement (`N-05`).
 
 ## 4. Phases
 
@@ -608,8 +663,10 @@ tome de série ; mettre à jour **une** série (menu de la série) **ou toutes**
 - **Phase 33** : appliquer la migration `20261117180000_release_alerts.sql` avant d'installer (pas de tâche de fond).
 - **Phase 34** : régler la *Site URL* (sinon le lien des e-mails ouvre `localhost` s'il est ouvert). Modèles
   d'e-mail : `{{ .Token }}` seulement avec un SMTP personnalisé ; sinon coller le lien dans l'appli.
+- **2026-11-20** : appliquer la migration `20261120120000_cover_refused.sql` avant d'installer la version suivante.
 
 ## 6. Hors périmètre
-iOS/macOS, partage de collection, scraping, cote automatique, notifications poussées par un serveur,
+iOS/macOS, version web (PWA, abandonnée le 2026-11-20), livres numériques (phases 27-28, mises de côté le
+2026-11-20), partage de collection, scraping, cote automatique, notifications poussées par un serveur,
 recommandations par service d'IA externe, service externe de suivi d'erreurs, recherche du nombre de tomes des
 BD et des livres (abandonnée par l'utilisateur le 2026-11-16).

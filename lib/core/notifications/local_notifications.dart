@@ -18,7 +18,9 @@ Future<bool> initLocalNotifications() => _ready ??= () async {
   try {
     await localNotifications.initialize(
       settings: InitializationSettings(
-        android: const AndroidInitializationSettings('@mipmap/ic_launcher'),
+        // White silhouette (res/drawable/ic_stat_dupe.xml): the coloured
+        // launcher icon shows as a filled square in the status bar.
+        android: const AndroidInitializationSettings('@drawable/ic_stat_dupe'),
         linux: LinuxInitializationSettings(
           defaultActionName: l10n.notificationOpen,
         ),

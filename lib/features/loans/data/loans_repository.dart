@@ -57,6 +57,21 @@ class LoansRepository {
         );
   }
 
+  /// Soft-deletes the returned loans ("Vider l'historique", synced): the
+  /// current ones stay. Returns how many were removed.
+  Future<int> clearHistory() {
+    final at = now();
+    return (_db.update(
+      _db.loansTable,
+    )..where((t) => t.returnedAt.isNotNull() & t.deletedAt.isNull())).write(
+      LoansTableCompanion(
+        deletedAt: Value(at),
+        updatedAt: Value(at),
+        syncPending: const Value(true),
+      ),
+    );
+  }
+
   /// Ids of items currently on loan.
   Stream<Set<String>> watchLoanedItemIds() {
     final l = _db.loansTable;
